@@ -1,0 +1,32 @@
+{
+  "name": "encre",
+  "version": "0.0.1",
+  "private": "true",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "yarn@4.0.0-rc.45",
+  "workspaces": [
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VictorS67/encre.git"
+  },
+  "author": "Encre",
+  "license": "MIT",
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "prettier --write --ignore-unknown",
+      "eslint --cache --fix"
+    ],
+    "*.md": "prettier --write"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
