@@ -1,4 +1,4 @@
-import Environment from "./environments/environment.js";
+import Environment from './environments/environment.js';
 
 declare global {
   var environment: Environment;

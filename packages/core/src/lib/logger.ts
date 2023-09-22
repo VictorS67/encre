@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync } from 'fs';
+import path from 'path';
 import { createStream } from 'rotating-file-stream';
 import { Logger } from 'tslog';
 
@@ -8,10 +9,11 @@ if (!existsSync(logDir)) {
   mkdirSync(logDir);
 }
 
-const stream = createStream(`${logDir}/tslog.log`, {
-  size: '10B',
+const stream = createStream('tslog.log', {
+  size: '10M',
   interval: '1d',
   compress: 'gzip',
+  path: path.join(logDir, ''),
 });
 
 const logger = new Logger();
