@@ -36,6 +36,7 @@
     "no-underscore-dangle": "off",
     "no-shadow": "off",
     "no-new": 0,
+    "no-var": 0,
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-unused-vars": "warn",
     "quotes": [2, "single", { "avoidEscape": true }],
@@ -66,9 +67,12 @@
       "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      },
       "typescript": {
         "alwaysTryTypes": true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-        "extensions": [".ts"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
         "extensionAlias": { ".js": [".ts"] },
         "project": "tsconfig.json"
       }
