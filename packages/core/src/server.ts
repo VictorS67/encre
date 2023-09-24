@@ -1,4 +1,4 @@
-// import 'reflect-metadata';
+import 'reflect-metadata';
 import http from 'http';
 import { AddressInfo } from 'net';
 import App from './app.js';
