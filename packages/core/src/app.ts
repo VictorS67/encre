@@ -10,6 +10,7 @@ import express, {
 import helmet from 'helmet';
 import { Func } from './abstractions/types.type.js';
 import addErrorHandler from './middleware/errorhandler.js';
+import registerRoutes from './routes.js';
 
 export default class App {
   public express!: Application;
@@ -24,7 +25,8 @@ export default class App {
     // add all global middleware
     this.middleware();
 
-    //TODO: Add router
+    // add router
+    this.routes();
 
     // add the middleware to handle error.
     // make sure to add if after registering routes method
@@ -52,10 +54,25 @@ export default class App {
   }
 
   /**
+   * Register all routes
+   */
+  private routes(): void {
+    this.express.get('/server/api/', this.basePathRoute);
+    this.express.use('/server/api/', registerRoutes());
+  }
+
+  /**
    * Parse request header
    */
   private parseRequestHeader(req: Request, res: Response, next: Func): void {
     console.log('header access token: ', req.headers.access_token);
     next();
+  }
+
+  /**
+   * Info Response as basePathRoute
+   */
+  private basePathRoute(req: Request, res: Response): void {
+    res.json({ message: 'this is base path' });
   }
 }

@@ -1,9 +1,9 @@
 export enum Methods {
-  GET,
-  POST
+  GET = 'get',
+  POST = 'post'
 }
 
 export enum BaseRouterKeys {
-  BASE_PATH,
-  ROUTERS
+  BASE_PATH = 'base_path',
+  ROUTERS = 'routers'
 }

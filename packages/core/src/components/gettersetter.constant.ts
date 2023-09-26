@@ -1,4 +1,4 @@
 export enum Class {
-  GETTER,
-  SETTER,
+  GETTER = 'getter',
+  SETTER = 'setter',
 }
