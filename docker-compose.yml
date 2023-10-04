@@ -1,6 +1,20 @@
 version: "3"
 
 services:
+  app:
+    build:
+      context: ./packages/app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./packages/core/.env
+      - ./packages/core/.env.local
+      - ./packages/core/.env.test.local
+      - ./packages/core/.env.staging.local
+      - ./packages/core/.env.production.local
+    volumes:
+      - ./yarn.lock:/home/encre/packages/app/yarn.lock
+
   core:
     build: 
       context: ./packages/core
@@ -12,3 +26,5 @@ services:
       - ./packages/core/.env.test.local
       - ./packages/core/.env.staging.local
       - ./packages/core/.env.production.local
+    volumes:
+      - ./yarn.lock:/home/encre/packages/core/yarn.lock

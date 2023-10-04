@@ -35,6 +35,10 @@
     "prettier": "^3.0.3"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/joy": "^5.0.0-beta.8",
+    "clsx": "^2.0.0",
     "langchain": "^0.0.149",
     "marked": "^9.0.0",
     "openai": "^4.7.0",
@@ -42,17 +46,22 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.1.2",
     "react-scripts": "5.0.1",
+    "recoil": "^0.7.7",
+    "recoil-persist": "^5.1.0",
     "tslog": "^4.9.2",
     "tsx": "^3.12.10",
     "web-vitals": "^3.5.0",
     "ws": "^8.14.1",
-    "yaml": "^2.3.2"
+    "yaml": "^2.3.2",
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.{ts,tsx} --quiet --fix",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx}"
   },
   "eslintConfig": {
     "extends": [
