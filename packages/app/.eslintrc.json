@@ -24,7 +24,7 @@
   "plugins": ["prettier", "react", "import", "@atlaskit/design-system"],
   "rules": {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
-    "@atlaskit/design-system/ensure-design-token-usage": "warn",
+    // "@atlaskit/design-system/ensure-design-token-usage": "warn",
     "@atlaskit/design-system/no-deprecated-design-token-usage": "warn",
     "@atlaskit/design-system/no-unsafe-design-token-usage": "error",
     "@atlaskit/design-system/use-visually-hidden": "error",
