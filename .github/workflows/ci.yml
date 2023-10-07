@@ -6,8 +6,7 @@ name: App Build CI
 on:
   push:
     branches:
-      branches-ignore:
-        - 'dependabot/**'
+      - '**'
   pull_request:
     branches: [ "master" ]
 
