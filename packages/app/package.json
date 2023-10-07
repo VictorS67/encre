@@ -44,6 +44,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/joy": "^5.0.0-beta.8",
+    "ahooks": "^3.7.8",
     "clsx": "^2.0.0",
     "langchain": "^0.0.149",
     "marked": "^9.0.0",
