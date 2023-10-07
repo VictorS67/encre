@@ -11,8 +11,8 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  build-app:
+    name: Environment Tests
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,9 +26,10 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache: "yarn"
     - name: Install dependencies
-      run: yarn --immutable
+      run: yarn install --immutable
     - name: Build
-      run: yarn run build
+      run: yarn workspace encre-app build
     - name: Test
       run: yarn run test
