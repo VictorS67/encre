@@ -9,6 +9,7 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "plugin:@atlaskit/design-system/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
@@ -20,9 +21,15 @@
     },
     "project": "./tsconfig.json"
   },
-  "plugins": ["prettier", "react", "import"],
+  "plugins": ["prettier", "react", "import", "@atlaskit/design-system"],
   "rules": {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
+    "@atlaskit/design-system/ensure-design-token-usage": "warn",
+    "@atlaskit/design-system/no-deprecated-design-token-usage": "warn",
+    "@atlaskit/design-system/no-unsafe-design-token-usage": "error",
+    "@atlaskit/design-system/use-visually-hidden": "error",
+    "@atlaskit/design-system/no-deprecated-imports": "error",
+    "@atlaskit/design-system/no-deprecated-apis": "error",
     "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "linebreak-style": "off",
     "prettier/prettier": [
@@ -59,9 +66,19 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "parent", "sibling", "index"],
+        "groups": ["builtin", "external", "internal"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "newlines-between": "always",
         "alphabetize": {
-          "order": "asc"
+          "order": "asc",
+          "caseInsensitive": true
         }
       }
     ],

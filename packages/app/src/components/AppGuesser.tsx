@@ -1,10 +1,12 @@
+import React, { FC, useState } from 'react';
+
 import { css } from '@emotion/react';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Textarea from '@mui/joy/Textarea';
 import clsx from 'clsx';
-import React, { FC, useState } from 'react';
 import { useSetRecoilState } from 'recoil';
+
 import { userInputGuesserModalState } from '../state/userInput';
 
 const styles = css`
