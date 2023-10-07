@@ -5,10 +5,11 @@ import { persistAtom } from './persist';
 export enum Theme {
   DARK = 'dark',
   LIGHT = 'light',
+  AUTO = 'auto',
 }
 
 export const themeState = atom<Theme>({
   key: 'theme',
-  default: Theme.LIGHT,
+  default: Theme.AUTO,
   effects_UNSTABLE: [persistAtom],
 });
