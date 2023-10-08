@@ -2,6 +2,7 @@ name: Issue Template
 description: Create a bug report to help us improve
 title: "[BUG] "
 labels: bug
+assignees: []
 body:
   - type: markdown
     attributes:
@@ -49,7 +50,7 @@ body:
     id: terms
     attributes:
       label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/Ironclad/rivet)
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/VictorS67/encre)
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true
