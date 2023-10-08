@@ -1,8 +1,7 @@
 name: Issue Template
-about: Create a bug report to help us improve
+description: Create a bug report to help us improve
 title: "[BUG] "
 labels: bug
-assignees: ''
 body:
   - type: markdown
     attributes:
