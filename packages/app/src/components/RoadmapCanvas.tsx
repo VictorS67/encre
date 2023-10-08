@@ -1,20 +1,21 @@
 /** @jsxImportSource @emotion/react */
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from "react";
 
-import { DN100 } from '@atlaskit/theme/colors';
-import { DndContext } from '@dnd-kit/core';
-import { css } from '@emotion/react';
-import { useThrottleFn } from 'ahooks';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { DN100 } from "@atlaskit/theme/colors";
+import { DndContext } from "@dnd-kit/core";
+import { css } from "@emotion/react";
+import { useThrottleFn } from "ahooks";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
-import { useCanvasPosition } from '../hooks/useCanvasPosition';
-import { useStableCallback } from '../hooks/useStableCallback';
+import { useCanvasPosition } from "../hooks/useCanvasPosition";
+import { useStableCallback } from "../hooks/useStableCallback";
 import {
   CanvasPosition,
   canvasPositionState,
   lastMousePositionState,
-} from '../state/canvas';
-import { hexToRgba } from '../utils/colorConverter';
+} from "../state/canvas";
+import { hexToRgba } from "../utils/colorConverter";
+import { useContextMenu } from "../hooks/useContextMenu";
 
 const styles = css`
   position: relative;
@@ -33,11 +34,19 @@ const styles = css`
     linear-gradient(90deg, ${hexToRgba(DN100, 0.25)} 1px, transparent 1px) !important;
 `;
 
+type MouseInfo = {
+  x: number;
+  y: number;
+  target: EventTarget | undefined;
+};
+
 export const RoadmapCanvas: FC = () => {
   const { canvasPosition, canvasToClientPosition, clientToCanvasPosition } =
     useCanvasPosition();
   const setCanvasPosition = useSetRecoilState(canvasPositionState);
-  const setLastMousePosition = useSetRecoilState(lastMousePositionState);
+  const [lastMousePosition, setLastMousePosition] = useRecoilState(
+    lastMousePositionState
+  );
 
   const [isDraggingCanvas, setIsDraggingCanvas] = useState(false);
   const [dragStart, setDragStart] = useState({
@@ -47,13 +56,33 @@ export const RoadmapCanvas: FC = () => {
     canvasStartY: 0,
   });
 
+  const lastMouseInfoRef = useRef<MouseInfo>({
+    x: lastMousePosition.x,
+    y: lastMousePosition.y,
+    target: undefined,
+  });
+
+  const {
+    contextMenuRef,
+    showContextMenu,
+    contextMenu,
+    setShowContextMenu,
+    setContextMenu,
+    handleContextMenu,
+  } = useContextMenu();
+
+  const canvasContextMenu = useStableCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    handleContextMenu(event);
+  });
+
   const canvasMouseDown = useStableCallback((event: React.MouseEvent) => {
     // Check if main button (ususally the left button) is pressed
     if (event.button !== 0) return;
 
     // Check if canvas is mouse-down
     if (
-      (event.target as HTMLElement).classList.contains('my-canvas') === false
+      (event.target as HTMLElement).classList.contains("my-canvas") === false
     ) {
       return;
     }
@@ -76,6 +105,11 @@ export const RoadmapCanvas: FC = () => {
     (event: React.MouseEvent) => {
       // Record last mouse position
       setLastMousePosition({ x: event.clientX, y: event.clientY });
+      lastMouseInfoRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        target: event.target,
+      };
 
       if (isDraggingCanvas) {
         // Compute dragging distance
@@ -91,7 +125,7 @@ export const RoadmapCanvas: FC = () => {
         setCanvasPosition(position);
       }
     },
-    { wait: 10 },
+    { wait: 10 }
   );
 
   const canvasMouseUp = (event: React.MouseEvent) => {
@@ -102,9 +136,9 @@ export const RoadmapCanvas: FC = () => {
   const isScrollable = (element: HTMLElement): boolean => {
     const style: CSSStyleDeclaration = window.getComputedStyle(element);
     const isVerticalScrollable: boolean =
-      style.overflowY === 'auto' && element.scrollHeight > element.clientHeight;
+      style.overflowY === "auto" && element.scrollHeight > element.clientHeight;
     const isHorizontalScrollable: boolean =
-      style.overflowX === 'auto' && element.scrollWidth > element.clientWidth;
+      style.overflowX === "auto" && element.scrollWidth > element.clientWidth;
 
     return isVerticalScrollable || isHorizontalScrollable;
   };
@@ -126,7 +160,7 @@ export const RoadmapCanvas: FC = () => {
       target: HTMLElement,
       wheelDelta: number,
       clientX: number,
-      clientY: number,
+      clientY: number
     ) => {
       // Check if mouse is placed on the background
       if (isAnyParentScrollable(target)) return;
@@ -139,7 +173,7 @@ export const RoadmapCanvas: FC = () => {
       // compute current mouse position in canvas space
       const currentMouseCanvasPosition = clientToCanvasPosition(
         clientX,
-        clientY,
+        clientY
       );
 
       // compute distance between mouse and canvas position
@@ -161,7 +195,7 @@ export const RoadmapCanvas: FC = () => {
 
       setCanvasPosition(position);
     },
-    { wait: 25 },
+    { wait: 25 }
   );
 
   const handleZoom = useStableCallback((event: React.WheelEvent) => {
@@ -169,7 +203,7 @@ export const RoadmapCanvas: FC = () => {
       event.target as HTMLElement,
       event.deltaY,
       event.clientX,
-      event.clientY,
+      event.clientY
     );
   });
 
@@ -178,6 +212,7 @@ export const RoadmapCanvas: FC = () => {
       <div
         css={styles}
         className="my-canvas"
+        onContextMenu={canvasContextMenu}
         onMouseDown={canvasMouseDown}
         onMouseMove={canvasMouseMove.run}
         onMouseUp={canvasMouseUp}
