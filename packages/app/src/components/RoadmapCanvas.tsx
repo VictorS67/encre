@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 
 import { DN100 } from '@atlaskit/theme/colors';
 import { DndContext } from '@dnd-kit/core';
@@ -8,6 +8,7 @@ import { useThrottleFn } from 'ahooks';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
+import { useContextMenu } from '../hooks/useContextMenu';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   CanvasPosition,
@@ -33,11 +34,19 @@ const styles = css`
     linear-gradient(90deg, ${hexToRgba(DN100, 0.25)} 1px, transparent 1px) !important;
 `;
 
+type MouseInfo = {
+  x: number;
+  y: number;
+  target: EventTarget | undefined;
+};
+
 export const RoadmapCanvas: FC = () => {
   const { canvasPosition, canvasToClientPosition, clientToCanvasPosition } =
     useCanvasPosition();
   const setCanvasPosition = useSetRecoilState(canvasPositionState);
-  const setLastMousePosition = useSetRecoilState(lastMousePositionState);
+  const [lastMousePosition, setLastMousePosition] = useRecoilState(
+    lastMousePositionState,
+  );
 
   const [isDraggingCanvas, setIsDraggingCanvas] = useState(false);
   const [dragStart, setDragStart] = useState({
@@ -45,6 +54,26 @@ export const RoadmapCanvas: FC = () => {
     y: 0,
     canvasStartX: 0,
     canvasStartY: 0,
+  });
+
+  const lastMouseInfoRef = useRef<MouseInfo>({
+    x: lastMousePosition.x,
+    y: lastMousePosition.y,
+    target: undefined,
+  });
+
+  const {
+    contextMenuRef,
+    showContextMenu,
+    contextMenu,
+    setShowContextMenu,
+    setContextMenu,
+    handleContextMenu,
+  } = useContextMenu();
+
+  const canvasContextMenu = useStableCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    handleContextMenu(event);
   });
 
   const canvasMouseDown = useStableCallback((event: React.MouseEvent) => {
@@ -76,6 +105,11 @@ export const RoadmapCanvas: FC = () => {
     (event: React.MouseEvent) => {
       // Record last mouse position
       setLastMousePosition({ x: event.clientX, y: event.clientY });
+      lastMouseInfoRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        target: event.target,
+      };
 
       if (isDraggingCanvas) {
         // Compute dragging distance
@@ -178,6 +212,7 @@ export const RoadmapCanvas: FC = () => {
       <div
         css={styles}
         className="my-canvas"
+        onContextMenu={canvasContextMenu}
         onMouseDown={canvasMouseDown}
         onMouseMove={canvasMouseMove.run}
         onMouseUp={canvasMouseUp}
