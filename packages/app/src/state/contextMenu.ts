@@ -1,5 +1,5 @@
-import SvgIcon from "@mui/material/SvgIcon";
-import AbcIcon from "@mui/icons-material/Abc";
+import AbcIcon from '@mui/icons-material/Abc';
+import SvgIcon from '@mui/material/SvgIcon';
 
 export type ContextMenuData = {
   type: string;
@@ -31,7 +31,7 @@ export type ContextMenuConfig = {
   contexts: {
     [T in keyof ContextMenuConfigContexts]: {
       type: T;
-      items: ContextMenuConfigContexts[T]["items"];
+      items: ContextMenuConfigContexts[T]['items'];
     };
   };
   commands: ContextMenuConfigCommands;
@@ -40,6 +40,6 @@ export type ContextMenuConfig = {
 export type ContextMenuProps = {
   x: number;
   y: number;
-  context: ContextMenuConfig["contexts"][keyof ContextMenuConfig["contexts"]];
+  context: ContextMenuConfig['contexts'][keyof ContextMenuConfig['contexts']];
   disabled?: boolean;
 };

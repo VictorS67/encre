@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { ContextMenuData, ContextMenu } from "../state/contextMenu";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+import { ContextMenuData, ContextMenu } from '../state/contextMenu';
 
 /**
  * `useContextMenu` hook
@@ -59,10 +60,10 @@ export function useContextMenu() {
       const detail = (event as CustomEvent)
         .detail as React.MouseEvent<HTMLDivElement>;
 
-      const listener = (event: React.MouseEvent<HTMLDivElement>) => {
+      const listener = (e: React.MouseEvent<HTMLDivElement>) => {
         // Close context menu if mouse click outside the context menu
         const el: HTMLDivElement | null = contextMenuRef?.current;
-        if (!el || el.contains(event.target as Node) || null) {
+        if (!el || el.contains(e.target as Node) || null) {
           return;
         }
 
@@ -75,25 +76,25 @@ export function useContextMenu() {
     const handleEscapePress = (event: Event) => {
       const detail = (event as CustomEvent).detail as React.KeyboardEvent;
 
-      const listener = (event: React.KeyboardEvent) => {
+      const listener = (e: React.KeyboardEvent) => {
         // Close context menu if esc key is pressed
-        if (event.key === "Escape") setShowContextMenu(false);
+        if (e.key === 'Escape') setShowContextMenu(false);
       };
 
       listener(detail);
     };
 
-    window.addEventListener("click", handleWindowClick);
-    window.addEventListener("keydown", handleEscapePress);
+    window.addEventListener('click', handleWindowClick);
+    window.addEventListener('keydown', handleEscapePress);
 
     return () => {
-      window.removeEventListener("click", handleWindowClick);
-      window.removeEventListener("keydown", handleEscapePress);
+      window.removeEventListener('click', handleWindowClick);
+      window.removeEventListener('keydown', handleEscapePress);
     };
   }, [contextMenuRef]);
 
   const getContextMenuDataFromTarget = (
-    target: HTMLElement | null
+    target: HTMLElement | null,
   ): ContextMenuData | null => {
     while (target && !target.dataset.contextMenuType) {
       target = target.parentElement;
@@ -108,17 +109,17 @@ export function useContextMenu() {
     (
       event: Pick<
         React.MouseEvent<HTMLDivElement>,
-        "clientX" | "clientY" | "target"
-      >
+        'clientX' | 'clientY' | 'target'
+      >,
     ) => {
       const data: ContextMenuData | null = getContextMenuDataFromTarget(
-        event.target as HTMLElement
+        event.target as HTMLElement,
       );
 
       setShowContextMenu(true);
       setContextMenu({ x: event.clientX, y: event.clientY, data });
     },
-    []
+    [],
   );
 
   return {

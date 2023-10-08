@@ -1,13 +1,14 @@
-import { useMemo } from "react";
+import { useMemo } from 'react';
+
+import { useContextMenuConfigCommands } from './useContextMenuConfigCommands';
+import { useContextMenuConfigContexts } from './useContextMenuConfigContexts';
 import {
   ContextMenuConfig,
   ContextMenuConfigCommands,
   ContextMenuConfigContextItem,
   ContextMenuConfigContexts,
-} from "../state/contextMenu";
-import { useContextMenuConfigContexts } from "./useContextMenuConfigContexts";
-import { useContextMenuConfigCommands } from "./useContextMenuConfigCommands";
-import { entries } from "../utils/safeTypes";
+} from '../state/contextMenu';
+import { entries } from '../utils/safeTypes';
 
 export function useContextMenuConfig(): ContextMenuConfig {
   const contexts: ContextMenuConfigContexts = useContextMenuConfigContexts();
@@ -18,7 +19,7 @@ export function useContextMenuConfig(): ContextMenuConfig {
       contexts: entries(contexts)
         .map(([key, value]) => ({
           type: key,
-          items: value["items"],
+          items: value['items'],
         }))
         .reduce<{
           [key: string]: {
@@ -31,7 +32,7 @@ export function useContextMenuConfig(): ContextMenuConfig {
         }, {}),
       commands,
     }),
-    [contexts, commands]
+    [contexts, commands],
   );
 
   return config;
