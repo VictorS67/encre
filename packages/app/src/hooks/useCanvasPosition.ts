@@ -2,7 +2,8 @@ import { useCallback } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
-import { CanvasPosition, canvasPositionState } from '../state/canvas';
+import { canvasPositionState } from '../state/canvas';
+import { CanvasPosition } from '../types/canvas.type';
 
 /**
  * canvasToClientPosition

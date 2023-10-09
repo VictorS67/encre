@@ -17,9 +17,10 @@ import { CSSTransition } from 'react-transition-group';
 import { Icon } from './Icon';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
+  ContextMenuConfigContext,
   ContextMenuConfigContextItem,
   ContextMenuItemProps,
-} from '../state/contextMenu';
+} from '../types/contextmenu.type';
 import { hexToRgba } from '../utils/colorConverter';
 
 const subMenuStyles = css`
@@ -52,6 +53,20 @@ const subMenuStyles = css`
   &.submenu-box-exit-active {
     opacity: 0;
     transition: opacity 100ms ease-out;
+  }
+
+  .context-submenu-item-list hr {
+    border: none;
+    border-bottom: 1px solid ${token('color.text.subtle')};
+  }
+
+  .context-submenu-item-list .context-submenu-item-label {
+    display: flex;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    color: ${token('color.text')};
   }
 `;
 
@@ -138,7 +153,7 @@ export const ContextMenuItem: FC<ContextMenuItemProps> = (
 ) => {
   const { config, context, active, onSelect, onHover } = props;
 
-  const hasSubMenu = (config.items?.length ?? 0) > 0;
+  const hasSubMenu = (config.contexts?.length ?? 0) > 0;
 
   const [isSubMenuVisible, setIsSubMenuVisiable] = useState(false);
   const subMenuFloating = useFloating({
@@ -202,14 +217,31 @@ export const ContextMenuItem: FC<ContextMenuItemProps> = (
           style={subMenuFloating.floatingStyles}
         >
           {hasSubMenu &&
-            config.items?.map((subItem: ContextMenuConfigContextItem) => (
-              <ContextMenuItem
-                key={subItem.id}
-                config={subItem}
-                onSelect={onSelect}
-                context={context}
-              />
-            ))}
+            config.contexts?.map(
+              (subItemList: ContextMenuConfigContext, index: number) => (
+                <div
+                  className="context-submenu-item-list"
+                  key={`submenu-${subItemList.metadata.label}-${index}`}
+                >
+                  {index > 0 && <hr />}
+                  {subItemList.metadata.showLabel && (
+                    <span className="context-submenu-item-label">
+                      {subItemList.metadata.label}
+                    </span>
+                  )}
+                  {subItemList.items.map(
+                    (subItem: ContextMenuConfigContextItem) => (
+                      <ContextMenuItem
+                        key={`submenu-${subItemList.metadata.label}-${subItem.id}`}
+                        config={subItem}
+                        onSelect={onSelect}
+                        context={context}
+                      />
+                    ),
+                  )}
+                </div>
+              ),
+            )}
         </div>
       </CSSTransition>
     </MyContextMenuItem>

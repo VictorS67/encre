@@ -5,9 +5,10 @@ import { useContextMenuConfigContexts } from './useContextMenuConfigContexts';
 import {
   ContextMenuConfig,
   ContextMenuConfigCommands,
+  ContextMenuConfigContext,
   ContextMenuConfigContextItem,
   ContextMenuConfigContexts,
-} from '../state/contextMenu';
+} from '../types/contextmenu.type';
 import { entries } from '../utils/safeTypes';
 
 export function useContextMenuConfig(): ContextMenuConfig {
@@ -19,12 +20,12 @@ export function useContextMenuConfig(): ContextMenuConfig {
       contexts: entries(contexts)
         .map(([key, value]) => ({
           type: key,
-          items: value['items'],
+          data: value,
         }))
         .reduce<{
           [key: string]: {
             type: string;
-            items: ContextMenuConfigContextItem[];
+            data: readonly ContextMenuConfigContext[];
           };
         }>((accumulator, dict) => {
           accumulator[dict.type] = dict;

@@ -15,9 +15,10 @@ import clsx from 'clsx';
 import { ContextMenuItem } from './ContextMenuItem';
 import { useContextMenuConfig } from '../hooks/useContextMenuConfig';
 import {
+  ContextMenuConfigContext,
   type ContextMenuConfigContextItem,
   type ContextMenuProps,
-} from '../state/contextMenu';
+} from '../types/contextmenu.type';
 import { hexToRgba } from '../utils/colorConverter';
 
 const styles = css`
@@ -46,6 +47,21 @@ const contextMenuStyles = css`
     margin: 0;
     padding: 0;
   }
+
+  .context-menu-item-list hr {
+    border: none;
+    border-bottom: 1px solid ${token('color.text.subtle')};
+    margin: 6px 5px;
+  }
+
+  .context-menu-item-list .context-menu-item-label {
+    display: flex;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    color: ${token('color.text')};
+  }
 `;
 
 export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
@@ -65,13 +81,13 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
     const mergedRef = useMergeRefs([ref, refs.setReference]);
 
     const { contexts, commands } = useContextMenuConfig();
-    const { items } = contexts[context['type']];
+    const { type, data } = contexts[context['type']];
 
     useEffect(() => {
       update();
     }, [update, x, y]);
 
-    const showItems: ContextMenuConfigContextItem[] = items;
+    const showContext: readonly ContextMenuConfigContext[] = data;
 
     return (
       <div
@@ -88,7 +104,32 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
           style={floatingStyles}
           ref={refs.setFloating}
         >
-          <div className="context-menu-item-list">
+          {showContext.map(
+            (itemList: ContextMenuConfigContext, index: number) => (
+              <div
+                className="context-menu-item-list"
+                key={`${type}-${itemList.metadata.label}-${index}`}
+              >
+                {index > 0 && <hr />}
+                {itemList.metadata.showLabel && (
+                  <span className="context-menu-item-label">
+                    {itemList.metadata.label}
+                  </span>
+                )}
+                {itemList.items.map(
+                  (item: ContextMenuConfigContextItem, listIndex: number) => (
+                    <ContextMenuItem
+                      key={`${type}-${itemList.metadata.label}-${item.id}`}
+                      config={item}
+                      context={context.data}
+                      active={listIndex === selectedItemIndex}
+                    />
+                  ),
+                )}
+              </div>
+            ),
+          )}
+          {/* <div className="context-menu-item-list">
             {showItems.map(
               (item: ContextMenuConfigContextItem, index: number) => (
                 <ContextMenuItem
@@ -99,7 +140,7 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
                 />
               ),
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     );

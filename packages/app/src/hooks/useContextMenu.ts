@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { ContextMenuData, ContextMenu } from '../state/contextMenu';
-
+import { ContextMenuData, ContextMenu } from '../types/contextmenu.type';
 /**
  * `useContextMenu` hook
  *

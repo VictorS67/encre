@@ -1,4 +1,4 @@
-import { IconProps, SVGIcon } from './icon';
+import { IconProps } from '../types/icon.type';
 
 export type ContextMenuData = {
   type: string;
@@ -16,14 +16,27 @@ export type ContextMenuConfigContextItem = {
   name: string;
   description?: string;
   icon?: IconProps;
-  items?: Array<ContextMenuConfigContextItem>;
+  contexts?: Array<ContextMenuConfigContext>;
   onSelect?: () => void;
 };
 
+export type ContextMenuConfigContextMetadata = {
+  label: string;
+  showLabel?: boolean;
+} & Omit<
+  {
+    [key: string]: string | number | boolean | null | undefined;
+  },
+  'label' | 'showLabel'
+>;
+
+export type ContextMenuConfigContext = {
+  metadata: ContextMenuConfigContextMetadata;
+  items: readonly ContextMenuConfigContextItem[];
+};
+
 export type ContextMenuConfigContexts = {
-  [key in string]: {
-    items: Array<ContextMenuConfigContextItem>;
-  };
+  [key in string]: readonly ContextMenuConfigContext[];
 };
 
 export type ContextMenuConfigCommands = Array<ContextMenuConfigContextItem>;
@@ -32,7 +45,7 @@ export type ContextMenuConfig = {
   contexts: {
     [T in keyof ContextMenuConfigContexts]: {
       type: T;
-      items: ContextMenuConfigContexts[T]['items'];
+      data: ContextMenuConfigContexts[T];
     };
   };
   commands: ContextMenuConfigCommands;

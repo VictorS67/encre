@@ -1,15 +1,6 @@
 import { atom } from 'recoil';
 
-export type CanvasPosition = {
-  x: number;
-  y: number;
-  zoom: number;
-};
-
-export type MousePosition = {
-  x: number;
-  y: number;
-};
+import { CanvasPosition, MousePosition } from '../types/canvas.type';
 
 export const canvasPositionState = atom<CanvasPosition>({
   key: 'canvasPosition',
