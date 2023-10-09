@@ -11,7 +11,10 @@
   ],
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "yarn workspace encre-app run electron-dev",
+    "build": "yarn workspace encre-app run build && yarn workspace encre-core run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "yarn workspace encre-app run lint && yarn workspace encre-core run lint"
   },
   "repository": {
     "type": "git",
