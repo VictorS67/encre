@@ -50,7 +50,7 @@ export function useContextMenu() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
-    x: 0,
+    x: -1000,
     y: 0,
     data: null,
   });
@@ -117,6 +117,7 @@ export function useContextMenu() {
       );
 
       setShowContextMenu(true);
+      console.log(`hx: ${event.clientX}, hy: ${event.clientY}`);
       setContextMenu({ x: event.clientX, y: event.clientY, data });
     },
     [],

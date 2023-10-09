@@ -1,5 +1,4 @@
-import AbcIcon from '@mui/icons-material/Abc';
-import SvgIcon from '@mui/material/SvgIcon';
+import { IconProps, SVGIcon } from './icon';
 
 export type ContextMenuData = {
   type: string;
@@ -16,7 +15,9 @@ export type ContextMenuConfigContextItem = {
   id: string;
   name: string;
   description?: string;
-  icon?: typeof SvgIcon;
+  icon?: IconProps;
+  items?: Array<ContextMenuConfigContextItem>;
+  onSelect?: () => void;
 };
 
 export type ContextMenuConfigContexts = {
@@ -37,9 +38,21 @@ export type ContextMenuConfig = {
   commands: ContextMenuConfigCommands;
 };
 
+export type ContextMenuConfigContextData =
+  ContextMenuConfig['contexts'][keyof ContextMenuConfig['contexts']];
+
 export type ContextMenuProps = {
   x: number;
   y: number;
-  context: ContextMenuConfig['contexts'][keyof ContextMenuConfig['contexts']];
+  context: ContextMenuConfigContextData;
   disabled?: boolean;
+  onSelect?: () => void;
+};
+
+export type ContextMenuItemProps = {
+  config: ContextMenuConfigContextItem;
+  context: unknown;
+  active?: boolean;
+  onSelect?: () => void;
+  onHover?: () => void;
 };
