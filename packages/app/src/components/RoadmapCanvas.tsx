@@ -1,20 +1,28 @@
 /** @jsxImportSource @emotion/react */
-import React, { FC, useRef, useState } from 'react';
+import React, { FC, useMemo, useRef, useState } from 'react';
 
 import { DN100 } from '@atlaskit/theme/colors';
 import { DndContext } from '@dnd-kit/core';
 import { css } from '@emotion/react';
 import { useThrottleFn } from 'ahooks';
+import { CSSTransition } from 'react-transition-group';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
+import { ContextMenu } from './ContextMenu';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
-  CanvasPosition,
+  type CanvasPosition,
   canvasPositionState,
   lastMousePositionState,
 } from '../state/canvas';
+import {
+  type ContextMenuConfigContextData,
+  type ContextMenuConfigContextItem,
+  type ContextMenuConfigContexts,
+  type ContextMenuData,
+} from '../state/contextMenu';
 import { hexToRgba } from '../utils/colorConverter';
 
 const styles = css`
@@ -32,6 +40,38 @@ const styles = css`
     linear-gradient(90deg, ${hexToRgba(DN100, 0.5)} 1px, transparent 1px),
     linear-gradient(${hexToRgba(DN100, 0.25)} 1px, transparent 1px),
     linear-gradient(90deg, ${hexToRgba(DN100, 0.25)} 1px, transparent 1px) !important;
+
+  .canvas-contents {
+    transform-origin: top left;
+  }
+
+  .context-menu-box {
+    position: absolute;
+    display: none;
+  }
+
+  .context-menu-box-enter {
+    position: absolute;
+    display: block;
+    opacity: 0;
+  }
+
+  .context-menu-box-enter-active {
+    position: absolute;
+    opacity: 1;
+    transition: opacity 100ms ease-out;
+  }
+
+  .context-menu-box-exit {
+    position: absolute;
+    opacity: 1;
+  }
+
+  .context-menu-box-exit-done {
+    position: absolute;
+    opacity: 0;
+    left: -1000px;
+  }
 `;
 
 type MouseInfo = {
@@ -55,10 +95,11 @@ export const RoadmapCanvas: FC = () => {
     canvasStartX: 0,
     canvasStartY: 0,
   });
+  const [isContextMenuDisabled, setIsContextMenuDisabled] = useState(true);
 
   const lastMouseInfoRef = useRef<MouseInfo>({
-    x: lastMousePosition.x,
-    y: lastMousePosition.y,
+    x: -1000,
+    y: 0,
     target: undefined,
   });
 
@@ -71,8 +112,17 @@ export const RoadmapCanvas: FC = () => {
     handleContextMenu,
   } = useContextMenu();
 
+  const defaultCanvasContextMenu: ContextMenuConfigContextData | null =
+    useMemo(() => {
+      return {
+        type: 'blankSpace',
+        items: [],
+      };
+    }, [contextMenu]);
+
   const canvasContextMenu = useStableCallback((event: React.MouseEvent) => {
     event.preventDefault();
+    console.log(`x: ${event.clientX}, y: ${event.clientY}`);
     handleContextMenu(event);
   });
 
@@ -88,6 +138,9 @@ export const RoadmapCanvas: FC = () => {
     }
 
     event.preventDefault();
+
+    // Cancel Context Menu
+    setIsContextMenuDisabled(true);
 
     // Start dragging
     setIsDraggingCanvas(true);
@@ -199,12 +252,15 @@ export const RoadmapCanvas: FC = () => {
   );
 
   const handleZoom = useStableCallback((event: React.WheelEvent) => {
-    zoomDebounced.run(
-      event.target as HTMLElement,
-      event.deltaY,
-      event.clientX,
-      event.clientY,
-    );
+    // do not zoom if context menu is enabled
+    if (isContextMenuDisabled) {
+      zoomDebounced.run(
+        event.target as HTMLElement,
+        event.deltaY,
+        event.clientX,
+        event.clientY,
+      );
+    }
   });
 
   return (
@@ -229,7 +285,35 @@ export const RoadmapCanvas: FC = () => {
           ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px
           `,
         }}
-      ></div>
+      >
+        <div
+          className="canvas-contents"
+          style={{
+            transform: `scale(${canvasPosition.zoom}, ${canvasPosition.zoom}) translate(${canvasPosition.x}px, ${canvasPosition.y}px) translateZ(-1px)`,
+          }}
+        ></div>
+        <CSSTransition
+          classNames="context-menu-box"
+          nodeRef={contextMenuRef}
+          in={showContextMenu && !!defaultCanvasContextMenu}
+          timeout={200}
+          onEnter={() => {
+            setIsContextMenuDisabled(false);
+          }}
+          onExit={() => {
+            setContextMenu({ x: 0, y: 0, data: null });
+            setIsContextMenuDisabled(true);
+          }}
+        >
+          <ContextMenu
+            ref={contextMenuRef}
+            x={contextMenu.x}
+            y={contextMenu.y}
+            disabled={isContextMenuDisabled}
+            context={defaultCanvasContextMenu!}
+          ></ContextMenu>
+        </CSSTransition>
+      </div>
     </DndContext>
   );
 };

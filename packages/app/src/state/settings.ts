@@ -10,6 +10,6 @@ export enum Theme {
 
 export const themeState = atom<Theme>({
   key: 'theme',
-  default: Theme.AUTO,
+  default: Theme.DARK,
   effects_UNSTABLE: [persistAtom],
 });
