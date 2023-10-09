@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import { token } from '@atlaskit/tokens';
 import { css } from '@emotion/react';
 
-import { IconProps } from '../state/icon';
+import { IconProps } from '../types/icon.type';
 
 const styles = css`
   display: flex;

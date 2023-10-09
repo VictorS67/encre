@@ -12,17 +12,14 @@ import { ContextMenu } from './ContextMenu';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useStableCallback } from '../hooks/useStableCallback';
-import {
-  type CanvasPosition,
-  canvasPositionState,
-  lastMousePositionState,
-} from '../state/canvas';
+import { canvasPositionState, lastMousePositionState } from '../state/canvas';
+import { type CanvasPosition } from '../types/canvas.type';
 import {
   type ContextMenuConfigContextData,
   type ContextMenuConfigContextItem,
   type ContextMenuConfigContexts,
   type ContextMenuData,
-} from '../state/contextMenu';
+} from '../types/contextmenu.type';
 import { hexToRgba } from '../utils/colorConverter';
 
 const styles = css`
@@ -116,7 +113,7 @@ export const RoadmapCanvas: FC = () => {
     useMemo(() => {
       return {
         type: 'blankSpace',
-        items: [],
+        data: [],
       };
     }, [contextMenu]);
 
