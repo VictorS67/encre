@@ -1,4 +1,4 @@
-import { IconProps } from '../types/icon.type';
+import { IconProps } from "../types/icon.type";
 
 export type ContextMenuData = {
   type: string;
@@ -16,7 +16,7 @@ export type ContextMenuConfigContextItem = {
   name: string;
   description?: string;
   icon?: IconProps;
-  contexts?: Array<ContextMenuConfigContext>;
+  contexts?: readonly ContextMenuConfigContext[];
   onSelect?: () => void;
 };
 
@@ -27,12 +27,17 @@ export type ContextMenuConfigContextMetadata = {
   {
     [key: string]: string | number | boolean | null | undefined;
   },
-  'label' | 'showLabel'
+  "label" | "showLabel"
 >;
 
 export type ContextMenuConfigContext = {
   metadata: ContextMenuConfigContextMetadata;
   items: readonly ContextMenuConfigContextItem[];
+};
+
+export type ContextMenuSearchContext = {
+  path: string[];
+  contexts: readonly ContextMenuConfigContext[];
 };
 
 export type ContextMenuConfigContexts = {
@@ -52,7 +57,7 @@ export type ContextMenuConfig = {
 };
 
 export type ContextMenuConfigContextData =
-  ContextMenuConfig['contexts'][keyof ContextMenuConfig['contexts']];
+  ContextMenuConfig["contexts"][keyof ContextMenuConfig["contexts"]];
 
 export type ContextMenuProps = {
   x: number;
