@@ -45,6 +45,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: "yarn"
     - name: Install dependencies
-      run: yarn install --immutable
+      run: yarn install --immutable --network-timeout 500000
     - name: Test
       run: yarn workspace encre-core run test:single
