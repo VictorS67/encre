@@ -47,4 +47,4 @@ jobs:
     - name: Install dependencies
       run: yarn install --immutable
     - name: Test
-      run: yarn workspace encre-core run test:integration
+      run: yarn workspace encre-core run test:single

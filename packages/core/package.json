@@ -16,8 +16,7 @@
     "lint": "eslint src/**/*.ts",
     "lint-fix": "eslint --fix src/**/*.ts",
     "test": "jest --testPathIgnorePatterns=\\.int\\.test.ts --testTimeout 30000 --maxWorkers=50%",
-    "test:single": "yarn run jest --config jest.config.cjs --testTimeout 100000",
-    "test:integration": "jest --testPathPattern=\\.int\\.test.ts --testTimeout 100000 --maxWorkers=50%"
+    "test:single": "yarn run jest --config jest.config.cjs --testTimeout 100000"
   },
   "packageManager": "yarn@4.0.0-rc.45",
   "devDependencies": {
