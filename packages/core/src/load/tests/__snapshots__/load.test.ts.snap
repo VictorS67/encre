@@ -16,3 +16,38 @@ _kwargs:
   hello: 3
 "
 `;
+
+exports[`test custom serializable 2`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - tests
+  - SubTest
+_kwargs:
+  a_field: hello
+  api_key:
+    _grp: 1
+    _type: secret
+    _id:
+      - TEST_API_KEY
+  new_api_key:
+    _grp: 1
+    _type: secret
+    _id:
+      - NEW_API_KEY
+  new_attr: 42
+  hello: 3
+  inherit_api_key:
+    _grp: 1
+    _type: secret
+    _id:
+      - INHERIT_API_KEY
+  nested:
+    api:
+      key:
+        _grp: 1
+        _type: secret
+        _id:
+          - NESTED_API_KEY
+"
+`;
