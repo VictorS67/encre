@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test custom serializable 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - tests
+  - Test
+_kwargs:
+  a_field: hello
+  api_key:
+    _grp: 1
+    _type: secret
+    _id:
+      - TEST_API_KEY
+  hello: 3
+"
+`;
