@@ -131,3 +131,5 @@ dist
 
 # build
 packages/*/build/
+
+packages/test
