@@ -17,6 +17,7 @@ export function listExternals(packageJson) {
     ...Object.keys(packageJson.dependencies || {}),
     ...Object.keys(packageJson.peerDependencies || {}),
     // Add external dependencies here
+    /node\:/,
   ];
 }
 

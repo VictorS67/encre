@@ -44,12 +44,14 @@
     "typedoc": "^0.25.2"
   },
   "dependencies": {
+    "@types/pdf-parse": "^1.1.2",
     "camelcase": "^8.0.0",
     "decamelize": "^6.0.0",
     "langchain": "^0.0.149",
     "nanoid": "^5.0.2",
     "openai": "^4.7.0",
     "p-queue": "^7.4.1",
+    "pdf-parse": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
@@ -65,6 +67,26 @@
       "import": "./load/serializable.js",
       "require": "./load/serializable.cjs"
     },
+    "./events/input/load/base": {
+      "types": "./events/input/load/base.d.ts",
+      "import": "./events/input/load/base.js",
+      "require": "./events/input/load/base.cjs"
+    },
+    "./events/input/load/context": {
+      "types": "./events/input/load/context.d.ts",
+      "import": "./events/input/load/context.js",
+      "require": "./events/input/load/context.cjs"
+    },
+    "./events/input/load/docs/buffer": {
+      "types": "./events/input/load/docs/buffer.d.ts",
+      "import": "./events/input/load/docs/buffer.js",
+      "require": "./events/input/load/docs/buffer.cjs"
+    },
+    "./events/input/load/docs/pdf": {
+      "types": "./events/input/load/docs/pdf.d.ts",
+      "import": "./events/input/load/docs/pdf.js",
+      "require": "./events/input/load/docs/pdf.cjs"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -75,6 +97,18 @@
     "load/serializable.cjs",
     "load/serializable.js",
     "load/serializable.d.ts",
+    "events/input/load/base.cjs",
+    "events/input/load/base.js",
+    "events/input/load/base.d.ts",
+    "events/input/load/context.cjs",
+    "events/input/load/context.js",
+    "events/input/load/context.d.ts",
+    "events/input/load/docs/buffer.cjs",
+    "events/input/load/docs/buffer.js",
+    "events/input/load/docs/buffer.d.ts",
+    "events/input/load/docs/pdf.cjs",
+    "events/input/load/docs/pdf.js",
+    "events/input/load/docs/pdf.d.ts",
     "index.cjs",
     "index.js",
     "index.d.ts"

@@ -61,6 +61,16 @@ function replaceSecret(
   return result;
 }
 
+function safeAssign<T extends object>(target: T, source: T): T {
+  for (const key in source) {
+    if (!Object.prototype.hasOwnProperty.call(target, key)) {
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
 export abstract class Serializable {
   _isSerializable = false;
 
@@ -116,9 +126,9 @@ export abstract class Serializable {
       return this.toJSONNotImplemented();
     }
 
-    const aliases: SerializedKeyAlias = {};
-    const secrets: SecretFields = {};
-    const kwargs: SerializedFields = Object.keys(this._kwargs).reduce(
+    let aliases: SerializedKeyAlias = {};
+    let secrets: SecretFields = {};
+    let kwargs: SerializedFields = Object.keys(this._kwargs).reduce(
       (accumulator, key) => {
         accumulator[key] =
           key in this ? this[key as keyof this] : this._kwargs[key];
@@ -133,9 +143,9 @@ export abstract class Serializable {
       sub;
       sub = Object.getPrototypeOf(sub)
     ) {
-      Object.assign(aliases, Reflect.get(sub, '_aliases', this));
-      Object.assign(secrets, Reflect.get(sub, '_secrets', this));
-      Object.assign(kwargs, Reflect.get(sub, '_attributes', this));
+      aliases = safeAssign<SerializedKeyAlias>(aliases, Reflect.get(sub, '_aliases', this));
+      secrets = safeAssign<SecretFields>(secrets, Reflect.get(sub, '_secrets', this));
+      kwargs = safeAssign<SerializedFields>(kwargs, Reflect.get(sub, '_attributes', this));
     }
 
     Object.keys(secrets).forEach((keyPath: string) => {
