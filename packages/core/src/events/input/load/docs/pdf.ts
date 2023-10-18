@@ -1,4 +1,12 @@
-import { type Result, type Options, type Version } from 'pdf-parse';
+import type {
+  Result,
+  Options,
+  Version,
+  PDFPageProxy,
+  getTextContentParameters,
+  TextItem,
+  TextContent,
+} from 'pdf-parse';
 import { Context } from '../context';
 import { BufferLoader } from './buffer';
 
@@ -44,20 +52,18 @@ export class PDFLoader<
     const { PdfParse } = await this._pdfjs();
 
     const pageContents: string[] = [];
-    const renderPage = (pageData): string => {
-      const renderOptions = {
-        // replaces all occurrences of whitespace with standard spaces (0x20).
-        // The default value is `false`.
+    const renderPage = (pageData: PDFPageProxy): Promise<string> => {
+      const renderOptions: getTextContentParameters = {
         normalizeWhitespace: true,
-        // do not attempt to combine same line TextItem's. The default value
-        // is `false`.
         disableCombineTextItems: false,
       };
 
       return pageData
         .getTextContent(renderOptions)
-        .then(function (textContent) {
-          const text = textContent.items.map((item) => item.str).join('\n');
+        .then((textContent: TextContent) => {
+          const text = textContent.items
+            .map((item) => (item as TextItem).str)
+            .join('\n');
           pageContents.push(text);
 
           return text;
