@@ -4,8 +4,8 @@ import { BufferLoader } from './buffer';
 
 async function PDFLoaderImports() {
   try {
-    const { default: Pdf } = await import('pdf-parse');
-    return { Pdf };
+    const { default: PdfParse } = await import('pdf-parse');
+    return { PdfParse };
   } catch (e) {
     console.error(e);
     throw new Error('Failed to load pdf-parse. Please install pdf-parse.');
@@ -16,14 +16,14 @@ async function PDFLoaderImports() {
  * Class that extends the `BufferLoader` class. It is a
  * document loader that loads documents from PDF files.
  */
-export class PDFLoader extends BufferLoader {
+export class PDFLoader<
+  T extends string | Blob = string | Blob,
+> extends BufferLoader<T> {
   private _splitPages: boolean;
 
   private _pdfjs: typeof PDFLoaderImports;
 
-  constructor(
-    { splitPages = true, pdfjs = PDFLoaderImports } = {}
-  ) {
+  constructor({ splitPages = true, pdfjs = PDFLoaderImports } = {}) {
     super();
 
     this._splitPages = splitPages;
@@ -41,15 +41,15 @@ export class PDFLoader extends BufferLoader {
     rawData: Buffer,
     metadata: Context['metadata']
   ): Promise<Context[]> {
-    const { Pdf } = await this._pdfjs();
+    const { PdfParse } = await this._pdfjs();
 
     const pageContents: string[] = [];
-    const renderPage = (pageData) => {
+    const renderPage = (pageData): string => {
       const renderOptions = {
-        // replaces all occurrences of whitespace with standard spaces (0x20). 
+        // replaces all occurrences of whitespace with standard spaces (0x20).
         // The default value is `false`.
         normalizeWhitespace: true,
-        // do not attempt to combine same line TextItem's. The default value 
+        // do not attempt to combine same line TextItem's. The default value
         // is `false`.
         disableCombineTextItems: false,
       };
@@ -69,7 +69,7 @@ export class PDFLoader extends BufferLoader {
       version: 'v1.10.100',
     };
 
-    const pdf: Result = await Pdf(rawData, options);
+    const pdf: Result = await PdfParse(rawData, options);
     const meta: any = pdf.metadata;
     const info: any = pdf.info;
     const version: Version = pdf.version;
