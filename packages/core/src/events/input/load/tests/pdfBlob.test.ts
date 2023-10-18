@@ -17,7 +17,7 @@ test('test PDF loader from blob', async () => {
   const provider = new FileProvider(
     new Blob([fs.readFileSync(filePath)], { type: 'application/pdf' })
   );
-  const loader = new PDFLoader();
+  const loader = new PDFLoader<Blob>();
   const docs: Context[] = await loadInput(loader, provider);
 
   expect(docs.length).toBe(9);

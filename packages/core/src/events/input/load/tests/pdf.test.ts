@@ -13,7 +13,7 @@ test('test PDF loader from file', async () => {
   );
 
   const provider = new FileProvider(filePath);
-  const loader = new PDFLoader();
+  const loader = new PDFLoader<string>();
   const docs: Context[] = await loadInput(loader, provider);
 
   expect(docs.length).toBe(9);
@@ -27,7 +27,7 @@ test('test PDF loader from file to single document', async () => {
   );
 
   const provider = new FileProvider(filePath);
-  const loader = new PDFLoader({ splitPages: false });
+  const loader = new PDFLoader<string>({ splitPages: false });
   const docs: Context[] = await loadInput(loader, provider);
 
   expect(docs.length).toBe(1);
