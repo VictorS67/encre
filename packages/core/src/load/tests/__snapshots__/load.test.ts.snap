@@ -29,7 +29,7 @@ _kwargs:
     _grp: 1
     _type: secret
     _id:
-      - TEST_API_KEY
+      - OVERRIDE_API_KEY
   new_api_key:
     _grp: 1
     _type: secret

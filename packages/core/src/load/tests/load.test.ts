@@ -31,7 +31,7 @@ test('test custom serializable', async () => {
     get _secrets(): SecretFields | undefined {
       return {
         newApiKey: 'NEW_API_KEY',
-        apiKey: 'CANNOT_OVERRIDE_API_KEY',
+        apiKey: 'OVERRIDE_API_KEY',
         inheritApiKey: 'INHERIT_API_KEY',
         'nested.api.key': 'NESTED_API_KEY',
       };
@@ -68,7 +68,7 @@ test('test custom serializable', async () => {
   // In the serializable class, we test the following cases:
   // 1. attributes are decamalized (e.g. aField -> a_field, etcs.);
   // 2. attributes matchs kwargs after convert to JSON (e.g. a_fireld etcs.);
-  // 3. loading serializable class (e.g. load<Test>(...))
+  // 3. serializedStr matchs after loading serializable class (e.g. load<Test>(...))
   const test = new Test({ aField: 'hello', apiKey: 'this-is-a-key' });
   const argumentsBefore = test._kwargs;
   const serializedStr: string = JSON.stringify(test, null, 2);
@@ -88,7 +88,7 @@ test('test custom serializable', async () => {
   // In the class that extends the parent serializable class,
   // we test the following cases:
   // 1. Inherit all attributes and secrets in the parent class (e.g. aField, etcs.);
-  // 2. Cannot override the secret keys (e.g. apiKey in parent requries TEST_API_KEY);
+  // 2. Override the secret keys (e.g. apiKey in parent requries TEST_API_KEY that is overrided to OVERRIDE_API_KEY);
   // 3. Add new attributes (e.g. newAttr etcs.);
   // 4. Nested secret (e.g. nested.api.key);
   // 5. default secret key values (e.g. inheritApiKey, etcs.).
@@ -104,7 +104,7 @@ test('test custom serializable', async () => {
   const subTest2 = await load<Test>(
     serializedStr2,
     {
-      CANNOT_OVERRIDE_API_KEY: 'this-is-a-key',
+      OVERRIDE_API_KEY: 'this-is-a-key',
       TEST_API_KEY: 'this-is-a-key',
       NEW_API_KEY: 'this-is-another-key',
       INHERIT_API_KEY: 'this-is-default-key',
