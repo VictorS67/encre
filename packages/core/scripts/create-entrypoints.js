@@ -9,11 +9,21 @@ import { identifySecrets } from "./identify-secrets.js";
 const entrypoints = {
   load: "load/index",
   "load/serializable": "load/serializable",
+  // events/input/load
+  "events/input/load/base": "events/input/load/base",
+  "events/input/load/context": "events/input/load/context",
+  // events/input/load/docs
+  "events/input/load/docs/buffer": "events/input/load/docs/buffer",
+  "events/input/load/docs/pdf": "events/input/load/docs/pdf",
 };
 
 const deprecatedNodeOnly = [];
 
-const reuqiresOptionalDependency = [];
+const reuqiresOptionalDependency = [
+  // events/input/load/docs
+  "events/input/load/docs/buffer",
+  "events/input/load/docs/pdf",
+];
 
 // const testExports = [
 //   [
