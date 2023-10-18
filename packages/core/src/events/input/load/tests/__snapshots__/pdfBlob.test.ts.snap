@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test PDF loader from blob 1`] = `
+"source: blob
+bolbType: application/pdf
+blobSize: 539761
+pdf:
+  version: 1.10.100
+  info:
+    PDFFormatVersion: "1.3"
+    IsAcroFormPresent: false
+    IsXFAPresent: false
+    Title: Generative Adversarial Nets
+    Author: Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David
+      Warde-Farley, Sherjil Ozair, Aaron Courville, Yoshua Bengio
+    Subject: Neural Information Processing Systems http://nips.cc/
+    Producer: PyPDF2
+    ModDate: D:20141202174320-08'00'
+  metadata: null
+  totalPages: 9
+loc:
+  pageNumber: 1
+"
+`;
