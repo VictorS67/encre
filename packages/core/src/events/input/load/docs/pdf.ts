@@ -22,10 +22,9 @@ export class PDFLoader extends BufferLoader {
   private _pdfjs: typeof PDFLoaderImports;
 
   constructor(
-    filePathOrBlob: string | Blob,
     { splitPages = true, pdfjs = PDFLoaderImports } = {}
   ) {
-    super(filePathOrBlob);
+    super();
 
     this._splitPages = splitPages;
     this._pdfjs = pdfjs;

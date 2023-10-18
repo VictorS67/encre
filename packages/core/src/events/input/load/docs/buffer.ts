@@ -1,21 +1,34 @@
 import { type readFile } from 'node:fs/promises';
-import { BaseLoader } from '../base';
+import { BaseLoader, BaseSourceProvider } from '../base';
 import { Context, ContextMetadata } from '../context';
 
 /**
- * Abstract class that extends the `BaseLoader` class. It is
- * a document loader that loads document from a buffer. The
- * `load()` method is implemented to read the buffer contents
- * and metadata, and then calls the `parse()` method to parse
- * the buffer and return the documents.
+ * Class that provide file source as a file path or a file Blob.
  */
-export abstract class BufferLoader extends BaseLoader {
+export class FileProvider extends BaseSourceProvider {
   public filePathOrBlob: string | Blob;
 
   constructor(filePathOrBlob: string | Blob) {
     super();
 
     this.filePathOrBlob = filePathOrBlob;
+  }
+
+  provide(): string | Blob {
+    return this.filePathOrBlob;
+  }
+}
+
+/**
+ * Abstract class that extends the `BaseLoader` class. It is a
+ * document loader that loads document from a buffer. The `load()`
+ * method is implemented to read the buffer contents and metadata,
+ * and then calls the `parse()` method to parse the buffer and
+ * return the documents.
+ */
+export abstract class BufferLoader extends BaseLoader {
+  constructor() {
+    super();
   }
 
   /**
@@ -45,22 +58,22 @@ export abstract class BufferLoader extends BaseLoader {
    * calls the `parse()` method to parse the buffer and return the documents.
    * @returns Promise that resolves with an array of `Context` objects.
    */
-  public async load(): Promise<Context[]> {
+  public async load(filePathOrBlob: string | Blob): Promise<Context[]> {
     let buffer: Buffer;
     let metadata: ContextMetadata;
 
-    if (typeof this.filePathOrBlob === 'string') {
+    if (typeof filePathOrBlob === 'string') {
       const { readFile } = await BufferLoader.imports();
-      buffer = await readFile(this.filePathOrBlob);
-      metadata = { source: this.filePathOrBlob };
+      buffer = await readFile(filePathOrBlob);
+      metadata = { source: filePathOrBlob };
     } else {
-      buffer = await this.filePathOrBlob
+      buffer = await filePathOrBlob
         .arrayBuffer()
         .then((arrayBuffer) => Buffer.from(arrayBuffer));
       metadata = {
         source: 'blob',
-        bolbType: this.filePathOrBlob.type,
-        blobSize: this.filePathOrBlob.size,
+        bolbType: filePathOrBlob.type,
+        blobSize: filePathOrBlob.size,
       };
     }
 
