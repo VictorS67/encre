@@ -73,7 +73,7 @@ exports[`test custom record serializable 1`] = `
   "_metadata": {
     "_inputs": {
       "_grp": 2,
-      "_id": Array [
+      "_id": [
         "tests",
         "Test",
       ],
@@ -86,7 +86,7 @@ exports[`test custom record serializable 1`] = `
     },
     "_outputs": {
       "_grp": 2,
-      "_id": Array [
+      "_id": [
         "tests",
         "Test",
       ],
@@ -99,7 +99,7 @@ exports[`test custom record serializable 1`] = `
     "_recordType": "event",
     "_secrets": {
       "_grp": 2,
-      "_id": Array [
+      "_id": [
         "TEST_API_KEY",
       ],
       "_recordId": Any<String>,
