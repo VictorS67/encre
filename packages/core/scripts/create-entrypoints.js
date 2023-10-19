@@ -15,6 +15,7 @@ const entrypoints = {
   // events/input/load/docs
   "events/input/load/docs/buffer": "events/input/load/docs/buffer",
   "events/input/load/docs/pdf": "events/input/load/docs/pdf",
+  "utils/nanoid": "utils/nanoid",
 };
 
 const deprecatedNodeOnly = [];
@@ -23,6 +24,7 @@ const reuqiresOptionalDependency = [
   // events/input/load/docs
   "events/input/load/docs/buffer",
   "events/input/load/docs/pdf",
+  "utils/nanoid",
 ];
 
 // const testExports = [

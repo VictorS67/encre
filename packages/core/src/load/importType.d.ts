@@ -7,6 +7,9 @@ export interface OptionalImportMap {
   'events/input/load/docs/pdf'?:
     | typeof import('./events/input/load/docs/pdf.js')
     | Promise<typeof import('./events/input/load/docs/pdf.js')>;
+  'utils/nanoid'?:
+    | typeof import('./utils/nanoid.js')
+    | Promise<typeof import('./utils/nanoid.js')>;
 }
 
 export interface SecretMap {

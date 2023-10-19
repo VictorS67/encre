@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test custom serializable 1`] = `
+exports[`test custom module serializable 1`] = `
 "_grp: 1
 _type: constructor
 _id:
@@ -17,7 +17,7 @@ _kwargs:
 "
 `;
 
-exports[`test custom serializable 2`] = `
+exports[`test custom module serializable 2`] = `
 "_grp: 1
 _type: constructor
 _id:
@@ -50,4 +50,152 @@ _kwargs:
         _id:
           - NESTED_API_KEY
 "
+`;
+
+exports[`test custom record serializable 1`] = `
+Object {
+  "_grp": 2,
+  "_id": Array [
+    "tests",
+    "Test",
+  ],
+  "_kwargs": Object {
+    "a_field": "hello",
+    "api_key": Object {
+      "_grp": 1,
+      "_id": Array [
+        "TEST_API_KEY",
+      ],
+      "_type": "secret",
+    },
+    "hello": 3,
+  },
+  "_metadata": Object {
+    "_inputs": Object {
+      "_grp": 2,
+      "_id": Array [
+        "tests",
+        "Test",
+      ],
+      "_kwargs": Object {
+        "a_field": "string",
+        "hello": "number",
+      },
+      "_recordId": Any<String>,
+      "_type": "input_record",
+    },
+    "_outputs": Object {
+      "_grp": 2,
+      "_id": Array [
+        "tests",
+        "Test",
+      ],
+      "_kwargs": Object {
+        "a_output": "string",
+      },
+      "_recordId": Any<String>,
+      "_type": "output_record",
+    },
+    "_recordType": "event",
+    "_secrets": Object {
+      "_grp": 2,
+      "_id": Array [
+        "TEST_API_KEY",
+      ],
+      "_recordId": Any<String>,
+      "_type": "secret_record",
+    },
+  },
+  "_recordId": Any<String>,
+  "_type": "event_record",
+}
+`;
+
+exports[`test custom record serializable 2`] = `
+Object {
+  "_grp": 2,
+  "_id": Array [
+    "tests",
+    "SubTest",
+  ],
+  "_kwargs": Object {
+    "a_field": "hello",
+    "api_key": Object {
+      "_grp": 1,
+      "_id": Array [
+        "OVERRIDE_API_KEY",
+      ],
+      "_type": "secret",
+    },
+    "hello": 3,
+    "inherit_api_key": Object {
+      "_grp": 1,
+      "_id": Array [
+        "INHERIT_API_KEY",
+      ],
+      "_type": "secret",
+    },
+    "nested": Object {
+      "api": Object {
+        "key": Object {
+          "_grp": 1,
+          "_id": Array [
+            "NESTED_API_KEY",
+          ],
+          "_type": "secret",
+        },
+      },
+    },
+    "new_api_key": Object {
+      "_grp": 1,
+      "_id": Array [
+        "NEW_API_KEY",
+      ],
+      "_type": "secret",
+    },
+    "new_attr": 42,
+  },
+  "_metadata": Object {
+    "_inputs": Object {
+      "_grp": 2,
+      "_id": Array [
+        "tests",
+        "SubTest",
+      ],
+      "_kwargs": Object {
+        "a_field": "string",
+        "hello": "number",
+        "new_attr": "number",
+      },
+      "_recordId": Any<String>,
+      "_type": "input_record",
+    },
+    "_outputs": Object {
+      "_grp": 2,
+      "_id": Array [
+        "tests",
+        "SubTest",
+      ],
+      "_kwargs": Object {
+        "a_output": "string",
+      },
+      "_recordId": Any<String>,
+      "_type": "output_record",
+    },
+    "_recordType": "event",
+    "_secrets": Object {
+      "_grp": 2,
+      "_id": Array [
+        "NEW_API_KEY",
+        "OVERRIDE_API_KEY",
+        "INHERIT_API_KEY",
+        "NESTED_API_KEY",
+      ],
+      "_recordId": Any<String>,
+      "_type": "secret_record",
+    },
+  },
+  "_recordId": Any<String>,
+  "_type": "event_record",
+}
 `;

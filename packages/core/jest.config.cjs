@@ -7,10 +7,11 @@ module.exports = {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   transform: {
+    // "^.+\\.jsx?$": "babel-jest",
     "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   transformIgnorePatterns: [
-    "/node_modules/(?!camelcase|decamelize)",
-    "./scripts/jest-setup-after-env.js"
-  ]
+    "/node_modules/(?!camelcase|decamelize|nanoid)",
+    "./scripts/jest-setup-after-env.js",
+  ],
 };

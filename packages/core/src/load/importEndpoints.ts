@@ -2,5 +2,6 @@
 
 export const optionalImportEndpoints = [
   'events/input/load/docs/buffer',
-  'events/input/load/docs/pdf'
+  'events/input/load/docs/pdf',
+  'utils/nanoid'
 ] as string[];
