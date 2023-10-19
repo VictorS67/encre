@@ -7,7 +7,7 @@ blobSize: 539761
 pdf:
   version: 1.10.100
   info:
-    PDFFormatVersion: \\"1.3\\"
+    PDFFormatVersion: "1.3"
     IsAcroFormPresent: false
     IsXFAPresent: false
     Title: Generative Adversarial Nets

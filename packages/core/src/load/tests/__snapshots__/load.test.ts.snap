@@ -53,51 +53,51 @@ _kwargs:
 `;
 
 exports[`test custom record serializable 1`] = `
-Object {
+{
   "_grp": 2,
-  "_id": Array [
+  "_id": [
     "tests",
     "Test",
   ],
-  "_kwargs": Object {
+  "_kwargs": {
     "a_field": "hello",
-    "api_key": Object {
+    "api_key": {
       "_grp": 1,
-      "_id": Array [
+      "_id": [
         "TEST_API_KEY",
       ],
       "_type": "secret",
     },
     "hello": 3,
   },
-  "_metadata": Object {
-    "_inputs": Object {
+  "_metadata": {
+    "_inputs": {
       "_grp": 2,
       "_id": Array [
         "tests",
         "Test",
       ],
-      "_kwargs": Object {
+      "_kwargs": {
         "a_field": "string",
         "hello": "number",
       },
       "_recordId": Any<String>,
       "_type": "input_record",
     },
-    "_outputs": Object {
+    "_outputs": {
       "_grp": 2,
       "_id": Array [
         "tests",
         "Test",
       ],
-      "_kwargs": Object {
+      "_kwargs": {
         "a_output": "string",
       },
       "_recordId": Any<String>,
       "_type": "output_record",
     },
     "_recordType": "event",
-    "_secrets": Object {
+    "_secrets": {
       "_grp": 2,
       "_id": Array [
         "TEST_API_KEY",
@@ -112,57 +112,57 @@ Object {
 `;
 
 exports[`test custom record serializable 2`] = `
-Object {
+{
   "_grp": 2,
-  "_id": Array [
+  "_id": [
     "tests",
     "SubTest",
   ],
-  "_kwargs": Object {
+  "_kwargs": {
     "a_field": "hello",
-    "api_key": Object {
+    "api_key": {
       "_grp": 1,
-      "_id": Array [
+      "_id": [
         "OVERRIDE_API_KEY",
       ],
       "_type": "secret",
     },
     "hello": 3,
-    "inherit_api_key": Object {
+    "inherit_api_key": {
       "_grp": 1,
-      "_id": Array [
+      "_id": [
         "INHERIT_API_KEY",
       ],
       "_type": "secret",
     },
-    "nested": Object {
-      "api": Object {
-        "key": Object {
+    "nested": {
+      "api": {
+        "key": {
           "_grp": 1,
-          "_id": Array [
+          "_id": [
             "NESTED_API_KEY",
           ],
           "_type": "secret",
         },
       },
     },
-    "new_api_key": Object {
+    "new_api_key": {
       "_grp": 1,
-      "_id": Array [
+      "_id": [
         "NEW_API_KEY",
       ],
       "_type": "secret",
     },
     "new_attr": 42,
   },
-  "_metadata": Object {
-    "_inputs": Object {
+  "_metadata": {
+    "_inputs": {
       "_grp": 2,
-      "_id": Array [
+      "_id": [
         "tests",
         "SubTest",
       ],
-      "_kwargs": Object {
+      "_kwargs": {
         "a_field": "string",
         "hello": "number",
         "new_attr": "number",
@@ -170,22 +170,22 @@ Object {
       "_recordId": Any<String>,
       "_type": "input_record",
     },
-    "_outputs": Object {
+    "_outputs": {
       "_grp": 2,
-      "_id": Array [
+      "_id": [
         "tests",
         "SubTest",
       ],
-      "_kwargs": Object {
+      "_kwargs": {
         "a_output": "string",
       },
       "_recordId": Any<String>,
       "_type": "output_record",
     },
     "_recordType": "event",
-    "_secrets": Object {
+    "_secrets": {
       "_grp": 2,
-      "_id": Array [
+      "_id": [
         "NEW_API_KEY",
         "OVERRIDE_API_KEY",
         "INHERIT_API_KEY",
