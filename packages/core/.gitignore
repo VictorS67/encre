@@ -16,6 +16,9 @@ events/input/load/docs/buffer.d.ts
 events/input/load/docs/pdf.cjs
 events/input/load/docs/pdf.js
 events/input/load/docs/pdf.d.ts
+utils/nanoid.cjs
+utils/nanoid.js
+utils/nanoid.d.ts
 index.cjs
 index.js
 index.d.ts

@@ -41,7 +41,8 @@
       "src/events/input/load/base.ts",
       "src/events/input/load/context.ts",
       "src/events/input/load/docs/buffer.ts",
-      "src/events/input/load/docs/pdf.ts"
+      "src/events/input/load/docs/pdf.ts",
+      "src/utils/nanoid.ts"
     ]
   }
 }

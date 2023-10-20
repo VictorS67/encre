@@ -1,10 +1,35 @@
 import camelcase from 'camelcase';
 import decamelize from 'decamelize';
-// import snakeCase from 'decamelize';
+
+import type { Opaque } from 'type-fest';
+
+export type RecordId = Opaque<string, 'RecordId'>;
+
+export enum RecordType {
+  EVENT = 'event',
+  TEMPLATE = 'template',
+}
 
 export type SerializedFields = {
   [key: string]: unknown;
 };
+
+export type EventSerializedFields = SerializedFields & {
+  _recordType: RecordType;
+  _secrets: SerializedFields;
+  _inputs: SerializedFields;
+  _outputs: SerializedFields;
+  _parent?: RecordId;
+};
+
+export type TemplateSerializedFields = SerializedFields & {
+  _recordType: RecordType;
+  _children: RecordId[];
+};
+
+export type RecordSerializedFields =
+  | EventSerializedFields
+  | TemplateSerializedFields;
 
 export type SecretFields = {
   [key: string]: string;
@@ -30,11 +55,29 @@ export function mapKeys(
   const mapToKeys: SerializedFields = {};
 
   for (const key in fields) {
-    // console.log(`Map Keys: key: ${key}, fields: ${JSON.stringify(fields)}`);
     if (Object.hasOwn(fields, key)) {
       mapToKeys[mapper(key, map)] = fields[key];
     }
   }
 
   return mapToKeys;
+}
+
+export function mapKeyTypes(
+  fields: SerializedFields,
+  mapper: typeof keyFromJson,
+  map?: SerializedKeyAlias
+): SerializedFields {
+  const mapToKeyTypes: SerializedFields = {};
+
+  for (const key in fields) {
+    if (Object.hasOwn(fields, key)) {
+      mapToKeyTypes[mapper(key, map)] =
+        typeof fields[key] === 'object'
+          ? mapKeyTypes(fields[key] as SerializedFields, mapper, map)
+          : typeof fields[key];
+    }
+  }
+
+  return mapToKeyTypes;
 }
