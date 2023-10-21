@@ -4,10 +4,9 @@ import path from 'path';
 import url from 'url';
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
-import { loadInput } from '../base';
+import { FileProvider } from '../../../../output/provide/file';
 import { Context } from '../context';
-import { FileProvider } from '../docs/buffer';
-import { PDFLoader } from '../docs/pdf';
+import { PDFLoader } from '../pdf';
 
 test('test PDF loader from blob', async () => {
   const filePath: string = path.resolve(
@@ -18,8 +17,9 @@ test('test PDF loader from blob', async () => {
   const provider = new FileProvider(
     new Blob([fs.readFileSync(filePath)], { type: 'application/pdf' })
   );
-  const loader = new PDFLoader<Blob>();
-  const docs: Context[] = await loadInput(loader, provider);
+  const loader = new PDFLoader();
+  // const docs: Context[] = await loadInput(loader, provider);
+  const docs: Context[] = await loader.load(provider.provide());
 
   expect(docs.length).toBe(9);
   expect(docs[0].pageContent).toContain('Generative Adversarial Nets');

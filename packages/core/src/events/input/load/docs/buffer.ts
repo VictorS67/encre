@@ -1,23 +1,6 @@
 import { type readFile } from 'node:fs/promises';
-import { BaseLoader, BaseSourceProvider } from '../base';
-import { Context, ContextMetadata } from '../context';
-
-/**
- * Class that provide file source as a file path or a file Blob.
- */
-export class FileProvider extends BaseSourceProvider {
-  public filePathOrBlob: string | Blob;
-
-  constructor(filePathOrBlob: string | Blob) {
-    super();
-
-    this.filePathOrBlob = filePathOrBlob;
-  }
-
-  provide(): string | Blob {
-    return this.filePathOrBlob;
-  }
-}
+import { BaseLoader } from './base';
+import { Context } from './context';
 
 /**
  * Abstract class that extends the `BaseLoader` class. It is a
@@ -26,7 +9,9 @@ export class FileProvider extends BaseSourceProvider {
  * and then calls the `parse()` method to parse the buffer and
  * return the documents.
  */
-export abstract class BufferLoader<T extends string | Blob = string | Blob> extends BaseLoader<T> {
+export abstract class BufferLoader<
+  T extends string | Blob = string | Blob,
+> extends BaseLoader<T> {
   constructor() {
     super();
   }
@@ -60,7 +45,7 @@ export abstract class BufferLoader<T extends string | Blob = string | Blob> exte
    */
   public async load(filePathOrBlob: T): Promise<Context[]> {
     let buffer: Buffer;
-    let metadata: ContextMetadata;
+    let metadata: Context['metadata'];
 
     if (typeof filePathOrBlob === 'string') {
       const { readFile } = await BufferLoader.imports();
