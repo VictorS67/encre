@@ -7,8 +7,8 @@ import type {
   TextItem,
   TextContent,
 } from 'pdf-parse';
-import { Context } from '../context';
 import { BufferLoader } from './buffer';
+import { Context } from './context';
 
 async function PDFLoaderImports() {
   try {

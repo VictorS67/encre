@@ -125,8 +125,8 @@ export abstract class Serializable {
 
   private _idProvider: IdProvider;
 
-  constructor(kwargs?: SerializedFields, ..._args: never[]) {
-    this._kwargs = kwargs || {};
+  constructor(kwargs?: object, ..._args: never[]) {
+    this._kwargs = toSerializedFields(kwargs || {});
     this._idProvider = new IdProvider();
   }
 
@@ -520,4 +520,8 @@ export function getUniqueName(serializableClass: typeof Serializable): string {
   if (isSubclassed) return serializableClass._name();
 
   return serializableClass.name;
+}
+
+export function toSerializedFields<T>(input: T): SerializedFields {
+  return input as SerializedFields;
 }

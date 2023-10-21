@@ -48,34 +48,6 @@ function combineAliasesAndInvert(constructor: typeof Serializable) {
   );
 }
 
-function validateValue(value: unknown, type: SerializableType): boolean {
-  if (!(typeof value === 'object')) return false;
-
-  if (typeof value === 'object' && value === null) return false;
-
-  if (!Array.isArray(value)) {
-    if (type === SerializableType.MODULE) {
-      return (
-        '_grp' in value &&
-        '_type' in value &&
-        '_id' in value &&
-        value._grp === 1
-      );
-    } else if (type === SerializableType.RECORD) {
-      return (
-        '_grp' in value &&
-        '_type' in value &&
-        '_id' in value &&
-        '_recordId' in value &&
-        value._grp === 2
-      );
-    }
-  }
-
-  return true;
-}
-
-
 async function build(
   optionalImportsMap: OptionalImportMap,
   name: string,
