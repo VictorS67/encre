@@ -11,7 +11,7 @@ module.exports = {
     "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   transformIgnorePatterns: [
-    "/node_modules/(?!camelcase|decamelize|nanoid)",
+    // "/node_modules/(?!camelcase|decamelize|nanoid|eventemitter3)",
     "./scripts/jest-setup-after-env.js",
   ],
 };
