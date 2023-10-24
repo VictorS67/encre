@@ -130,7 +130,7 @@ export abstract class Serializable {
     this._idProvider = new IdProvider();
   }
 
-  private _initKwargs(): SerializedFields {
+  protected _initKwargs(): SerializedFields {
     return Object.keys(this._kwargs).reduce((accumulator, key) => {
       accumulator[key] =
         key in this ? this[key as keyof this] : this._kwargs[key];
@@ -139,13 +139,13 @@ export abstract class Serializable {
     }, {} as SerializedFields);
   }
 
-  private async _getRecordId(): Promise<RecordId> {
+  protected async _getRecordId(): Promise<RecordId> {
     const nanoId = await this._idProvider.provideNanoId();
 
     return nanoId as RecordId;
   }
 
-  private _replaceSecret(
+  protected _replaceSecret(
     root: SerializedFields,
     secretsMap: SecretFields
   ): SerializedFields {
@@ -172,7 +172,7 @@ export abstract class Serializable {
     return result;
   }
 
-  private _removeSecret(
+  protected _removeSecret(
     root: SerializedFields,
     secretsMap: SecretFields
   ): SerializedFields {
@@ -203,7 +203,7 @@ export abstract class Serializable {
     return result;
   }
 
-  private async _getSecretRecord(
+  protected async _getSecretRecord(
     root: SerializedFields,
     secretsMap: SecretFields
   ): Promise<SerializedFields> {
@@ -330,9 +330,16 @@ export abstract class Serializable {
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
     kwargs: SerializedFields,
-    outputs: SerializedFields,
+    outputs: unknown | SerializedFields,
     parent?: RecordId
   ): Promise<Serialized> {
+    let serializedOutputs: SerializedFields;
+    if (typeof outputs === 'object') {
+      serializedOutputs = (outputs ?? {}) as SerializedFields;
+    } else {
+      serializedOutputs = (outputs ? { outputs } : {}) as SerializedFields;
+    }
+
     return {
       _grp: 2,
       _type: 'event_record',
@@ -356,7 +363,7 @@ export abstract class Serializable {
         _outputs: (await this.toOutputRecord(
           aliases,
           secrets,
-          outputs
+          serializedOutputs
         )) as SerializedFields,
         _parent: parent,
       },
@@ -377,7 +384,7 @@ export abstract class Serializable {
   }
 
   async toRecord(
-    outputs: SerializedFields,
+    outputs?: unknown | SerializedFields,
     parent?: RecordId
   ): Promise<Serialized> {
     if (!this._isSerializable) {
@@ -441,7 +448,13 @@ export abstract class Serializable {
       }
     });
 
-    return this.toEventRecord(aliases, secrets, kwargs, outputs, parent);
+    return this.toEventRecord(
+      aliases,
+      secrets,
+      kwargs,
+      outputs,
+      parent
+    );
   }
 
   toJSON(): Serialized {
