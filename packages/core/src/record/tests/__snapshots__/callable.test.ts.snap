@@ -274,6 +274,131 @@ _kwargs:
 "
 `;
 
+exports[`test CallableEach 2`] = `
+{
+  "_grp": 2,
+  "_id": [
+    "record",
+    "callable",
+    "CallableEach",
+  ],
+  "_kwargs": {
+    "bound": {
+      "_grp": 1,
+      "_id": [
+        "tests",
+        "Test",
+      ],
+      "_kwargs": {
+        "bye": "bye",
+        "hello": "hello",
+        "serializable_field": true,
+        "test_api": {
+          "_grp": 1,
+          "_id": [
+            "TEST_API",
+          ],
+          "_type": "secret",
+        },
+      },
+      "_type": "constructor",
+    },
+  },
+  "_metadata": {
+    "_inputs": {
+      "_grp": 2,
+      "_id": [
+        "record",
+        "callable",
+        "CallableEach",
+      ],
+      "_kwargs": {
+        "bound": {
+          "_grp": 2,
+          "_id": [
+            "tests",
+            "Test",
+          ],
+          "_kwargs": {
+            "bye": "bye",
+            "hello": "hello",
+            "serializable_field": true,
+            "test_api": {
+              "_grp": 1,
+              "_id": [
+                "TEST_API",
+              ],
+              "_type": "secret",
+            },
+          },
+          "_metadata": {
+            "_inputs": {
+              "_grp": 2,
+              "_id": [
+                "tests",
+                "Test",
+              ],
+              "_kwargs": {
+                "bye": "string",
+                "hello": "string",
+                "serializable_field": "boolean",
+              },
+              "_recordId": Any<String>,
+              "_type": "input_record",
+            },
+            "_outputs": {
+              "_grp": 2,
+              "_id": [
+                "tests",
+                "Test",
+              ],
+              "_kwargs": {
+                "outputs": "string",
+              },
+              "_recordId": Any<String>,
+              "_type": "output_record",
+            },
+            "_recordType": "event",
+            "_secrets": {
+              "_grp": 2,
+              "_id": [
+                "TEST_API",
+              ],
+              "_recordId": Any<String>,
+              "_type": "secret_record",
+            },
+          },
+          "_recordId": Any<String>,
+          "_type": "event_record",
+        },
+      },
+      "_recordId": Any<String>,
+      "_type": "input_record",
+    },
+    "_outputs": {
+      "_grp": 2,
+      "_id": [
+        "record",
+        "callable",
+        "CallableEach",
+      ],
+      "_kwargs": {
+        "outputs": {
+          "0": "string",
+          "1": "string",
+        },
+      },
+      "_recordId": Any<String>,
+      "_type": "output_record",
+    },
+    "_recordType": "event",
+    "_secrets": {},
+  },
+  "_recordId": Any<String>,
+  "_type": "event_record",
+}
+`;
+
 exports[`test custom callable 1`] = `
 "_grp: 1
 _type: constructor
