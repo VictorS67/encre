@@ -64,6 +64,11 @@ export type CallableEachArgs<
   bound: Callable<CallInput, CallOutput, CallOptions>;
 };
 
+export type CallableWithFallbacksArg<CallInput, CallOutput> = {
+  callable: Callable<CallInput, CallOutput>;
+  fallbacks: Callable<CallInput, CallOutput>[];
+};
+
 export type CallableBatchOptions = {
   maxConcurrency?: number;
   returnExceptions?: boolean;
@@ -600,10 +605,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
 
   protected fallbacks: Callable<CallInput, CallOutput>[];
 
-  constructor(fields: {
-    callable: Callable<CallInput, CallOutput>;
-    fallbacks: Callable<CallInput, CallOutput>[];
-  }) {
+  constructor(fields: CallableWithFallbacksArg<CallInput, CallOutput>) {
     super(fields);
     this.callable = fields.callable;
     this.fallbacks = fields.fallbacks;
@@ -697,5 +699,92 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     }
 
     throw firstError;
+  }
+
+  async toInputRecord(
+    aliases: SerializedKeyAlias,
+    secrets: SecretFields,
+    kwargs: SerializedFields
+  ): Promise<Serialized> {
+    return {
+      _grp: 2,
+      _type: 'input_record',
+      _id: this._id,
+      _recordId: await this._getRecordId(),
+      _kwargs: mapKeys(
+        Object.keys(secrets).length
+          ? this._removeSecret(kwargs, secrets)
+          : kwargs,
+        keyToJson,
+        aliases
+      ),
+    };
+  }
+
+  async toEventRecord(
+    aliases: SerializedKeyAlias,
+    secrets: SecretFields,
+    kwargs: SerializedFields,
+    outputs: CallOutput,
+    parent?: RecordId | undefined
+  ): Promise<Serialized> {
+    let serializedOutputs: SerializedFields;
+    if (typeof outputs === 'object') {
+      serializedOutputs = (outputs ?? {}) as SerializedFields;
+    } else {
+      serializedOutputs = (outputs ? { outputs } : {}) as SerializedFields;
+    }
+
+    const inputKwargs = (await this.toInputRecord(
+      aliases,
+      secrets,
+      kwargs
+    )) as SerializedInputRecord;
+
+    const { _kwargs, ...args } = inputKwargs;
+
+    const currCallableWithFallbacksArgs = _kwargs as CallableWithFallbacksArg<
+      CallInput,
+      CallOutput
+    >;
+
+    const callable: Serialized =
+      await currCallableWithFallbacksArgs.callable.toRecord(outputs, parent);
+    const fallbacks: Serialized[] = await Promise.all(
+      currCallableWithFallbacksArgs.fallbacks.map((fallback) =>
+        fallback.toRecord(outputs, parent)
+      )
+    );
+
+    return {
+      _grp: 2,
+      _type: 'event_record',
+      _id: this._id,
+      _recordId: await this._getRecordId(),
+      _kwargs: mapKeys(
+        Object.keys(secrets).length
+          ? this._replaceSecret(kwargs, secrets)
+          : kwargs,
+        keyToJson,
+        aliases
+      ),
+      _metadata: {
+        _recordType: RecordType.EVENT,
+        _secrets: await this._getSecretRecord(kwargs, secrets),
+        _inputs: {
+          ...args,
+          _kwargs: {
+            callable: callable,
+            fallbacks: [...fallbacks],
+          },
+        },
+        _outputs: (await this.toOutputRecord(
+          aliases,
+          secrets,
+          serializedOutputs
+        )) as SerializedFields,
+        _parent: parent,
+      },
+    };
   }
 }

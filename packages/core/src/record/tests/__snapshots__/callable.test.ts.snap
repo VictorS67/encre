@@ -399,6 +399,343 @@ exports[`test CallableEach 2`] = `
 }
 `;
 
+exports[`test CallableWithFallbacks 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - record
+  - callable
+  - CallableWithFallbacks
+_kwargs:
+  callable:
+    _grp: 1
+    _type: constructor
+    _id:
+      - tests
+      - Test
+    _kwargs:
+      hello: hello
+      bye: bye
+      should_throw_error: true
+      test_api:
+        _grp: 1
+        _type: secret
+        _id:
+          - TEST_API
+  fallbacks:
+    - _grp: 1
+      _type: constructor
+      _id:
+        - tests
+        - Test
+      _kwargs:
+        hello: fallback-hello
+        bye: fallback-bye
+        should_throw_error: true
+        test_api:
+          _grp: 1
+          _type: secret
+          _id:
+            - TEST_API
+    - _grp: 1
+      _type: constructor
+      _id:
+        - tests
+        - Test
+      _kwargs:
+        hello: fallback-hello-2
+        bye: fallback-hello-2
+        should_throw_error: false
+        test_api:
+          _grp: 1
+          _type: secret
+          _id:
+            - TEST_API
+"
+`;
+
+exports[`test CallableWithFallbacks 2`] = `
+{
+  "_grp": 2,
+  "_id": [
+    "record",
+    "callable",
+    "CallableWithFallbacks",
+  ],
+  "_kwargs": {
+    "callable": {
+      "_grp": 1,
+      "_id": [
+        "tests",
+        "Test",
+      ],
+      "_kwargs": {
+        "bye": "bye",
+        "hello": "hello",
+        "should_throw_error": true,
+        "test_api": {
+          "_grp": 1,
+          "_id": [
+            "TEST_API",
+          ],
+          "_type": "secret",
+        },
+      },
+      "_type": "constructor",
+    },
+    "fallbacks": [
+      {
+        "_grp": 1,
+        "_id": [
+          "tests",
+          "Test",
+        ],
+        "_kwargs": {
+          "bye": "fallback-bye",
+          "hello": "fallback-hello",
+          "should_throw_error": true,
+          "test_api": {
+            "_grp": 1,
+            "_id": [
+              "TEST_API",
+            ],
+            "_type": "secret",
+          },
+        },
+        "_type": "constructor",
+      },
+      {
+        "_grp": 1,
+        "_id": [
+          "tests",
+          "Test",
+        ],
+        "_kwargs": {
+          "bye": "fallback-hello-2",
+          "hello": "fallback-hello-2",
+          "should_throw_error": false,
+          "test_api": {
+            "_grp": 1,
+            "_id": [
+              "TEST_API",
+            ],
+            "_type": "secret",
+          },
+        },
+        "_type": "constructor",
+      },
+    ],
+  },
+  "_metadata": {
+    "_inputs": {
+      "_grp": 2,
+      "_id": [
+        "record",
+        "callable",
+        "CallableWithFallbacks",
+      ],
+      "_kwargs": {
+        "callable": {
+          "_grp": 2,
+          "_id": [
+            "tests",
+            "Test",
+          ],
+          "_kwargs": {
+            "bye": "bye",
+            "hello": "hello",
+            "should_throw_error": true,
+            "test_api": {
+              "_grp": 1,
+              "_id": [
+                "TEST_API",
+              ],
+              "_type": "secret",
+            },
+          },
+          "_metadata": {
+            "_inputs": {
+              "_grp": 2,
+              "_id": [
+                "tests",
+                "Test",
+              ],
+              "_kwargs": {
+                "bye": "string",
+                "hello": "string",
+                "should_throw_error": "boolean",
+              },
+              "_recordId": Any<String>,
+              "_type": "input_record",
+            },
+            "_outputs": {
+              "_grp": 2,
+              "_id": [
+                "tests",
+                "Test",
+              ],
+              "_kwargs": {
+                "outputs": "string",
+              },
+              "_recordId": Any<String>,
+              "_type": "output_record",
+            },
+            "_recordType": "event",
+            "_secrets": {
+              "_grp": 2,
+              "_id": [
+                "TEST_API",
+              ],
+              "_recordId": Any<String>,
+              "_type": "secret_record",
+            },
+          },
+          "_recordId": Any<String>,
+          "_type": "event_record",
+        },
+        "fallbacks": [
+          {
+            "_grp": 2,
+            "_id": [
+              "tests",
+              "Test",
+            ],
+            "_kwargs": {
+              "bye": "fallback-bye",
+              "hello": "fallback-hello",
+              "should_throw_error": true,
+              "test_api": {
+                "_grp": 1,
+                "_id": [
+                  "TEST_API",
+                ],
+                "_type": "secret",
+              },
+            },
+            "_metadata": {
+              "_inputs": {
+                "_grp": 2,
+                "_id": [
+                  "tests",
+                  "Test",
+                ],
+                "_kwargs": {
+                  "bye": "string",
+                  "hello": "string",
+                  "should_throw_error": "boolean",
+                },
+                "_recordId": Any<String>,
+                "_type": "input_record",
+              },
+              "_outputs": {
+                "_grp": 2,
+                "_id": [
+                  "tests",
+                  "Test",
+                ],
+                "_kwargs": {
+                  "outputs": "string",
+                },
+                "_recordId": Any<String>,
+                "_type": "output_record",
+              },
+              "_recordType": "event",
+              "_secrets": {
+                "_grp": 2,
+                "_id": [
+                  "TEST_API",
+                ],
+                "_recordId": Any<String>,
+                "_type": "secret_record",
+              },
+            },
+            "_recordId": Any<String>,
+            "_type": "event_record",
+          },
+          {
+            "_grp": 2,
+            "_id": [
+              "tests",
+              "Test",
+            ],
+            "_kwargs": {
+              "bye": "fallback-hello-2",
+              "hello": "fallback-hello-2",
+              "should_throw_error": false,
+              "test_api": {
+                "_grp": 1,
+                "_id": [
+                  "TEST_API",
+                ],
+                "_type": "secret",
+              },
+            },
+            "_metadata": {
+              "_inputs": {
+                "_grp": 2,
+                "_id": [
+                  "tests",
+                  "Test",
+                ],
+                "_kwargs": {
+                  "bye": "string",
+                  "hello": "string",
+                  "should_throw_error": "boolean",
+                },
+                "_recordId": Any<String>,
+                "_type": "input_record",
+              },
+              "_outputs": {
+                "_grp": 2,
+                "_id": [
+                  "tests",
+                  "Test",
+                ],
+                "_kwargs": {
+                  "outputs": "string",
+                },
+                "_recordId": Any<String>,
+                "_type": "output_record",
+              },
+              "_recordType": "event",
+              "_secrets": {
+                "_grp": 2,
+                "_id": [
+                  "TEST_API",
+                ],
+                "_recordId": Any<String>,
+                "_type": "secret_record",
+              },
+            },
+            "_recordId": Any<String>,
+            "_type": "event_record",
+          },
+        ],
+      },
+      "_recordId": Any<String>,
+      "_type": "input_record",
+    },
+    "_outputs": {
+      "_grp": 2,
+      "_id": [
+        "record",
+        "callable",
+        "CallableWithFallbacks",
+      ],
+      "_kwargs": {
+        "outputs": "string",
+      },
+      "_recordId": Any<String>,
+      "_type": "output_record",
+    },
+    "_recordType": "event",
+    "_secrets": {},
+  },
+  "_recordId": Any<String>,
+  "_type": "event_record",
+}
+`;
+
 exports[`test custom callable 1`] = `
 "_grp: 1
 _type: constructor
