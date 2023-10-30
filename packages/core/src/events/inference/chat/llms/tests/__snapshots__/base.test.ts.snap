@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test BaseLLM 1`] = `
+"_grp: 1
+_type: not_implemented
+_id:
+  - inference
+  - chat
+  - llms
+  - test_llm
+  - TestLLM
+"
+`;
+
+exports[`test BaseLLM 2`] = `
+"{
+  "_grp": 1,
+  "_type": "constructor",
+  "_id": [
+    "input",
+    "load",
+    "msgs",
+    "BotMessage"
+  ],
+  "_kwargs": {
+    "content": "System: this is a system message\\nHuman: this is a human message"
+  }
+}"
+`;
+
+exports[`test BaseLLM 3`] = `
+"{
+  "generations": [
+    [
+      {
+        "output": "System: this is a system message",
+        "info": {
+          "index": 0
+        }
+      },
+      {
+        "output": "Human: this is a human message",
+        "info": {
+          "index": 1
+        }
+      }
+    ],
+    [
+      {
+        "output": "AI: thhis is a bot message",
+        "info": {
+          "index": 0
+        }
+      }
+    ],
+    null
+  ],
+  "llmOutput": {}
+}"
+`;
+
+exports[`test BaseLLM 4`] = `
+"{
+  "generations": [
+    [
+      {
+        "output": "this is a prompt.",
+        "info": {
+          "index": 0
+        }
+      }
+    ],
+    [
+      {
+        "output": "System: this is a system message\\nHuman: this is a human message",
+        "info": {
+          "index": 0
+        }
+      }
+    ],
+    [
+      {
+        "output": "this is a prompt.",
+        "info": {
+          "index": 0
+        }
+      }
+    ]
+  ],
+  "llmOutput": {}
+}"
+`;
+
+exports[`test BaseLM 1`] = `
+"_grp: 1
+_type: not_implemented
+_id:
+  - tests
+  - TestLM
+"
+`;
+
+exports[`test BaseLM 2`] = `
+"{
+  "_grp": 1,
+  "_type": "constructor",
+  "_id": [
+    "input",
+    "load",
+    "msgs",
+    "BotMessage"
+  ],
+  "_kwargs": {
+    "content": "System: this is a system message\\nHuman: this is a human message"
+  }
+}"
+`;
+
+exports[`test BaseLM 3`] = `
+"{
+  "generations": [
+    [
+      {
+        "output": "System: this is a system message",
+        "info": {
+          "index": 0
+        }
+      },
+      {
+        "output": "Human: this is a human message",
+        "info": {
+          "index": 1
+        }
+      }
+    ],
+    [
+      {
+        "output": "AI: thhis is a bot message",
+        "info": {
+          "index": 0
+        }
+      }
+    ]
+  ]
+}"
+`;
+
+exports[`test BaseLM 4`] = `
+"{
+  "generations": [
+    [
+      {
+        "output": "this is a prompt.",
+        "info": {
+          "index": 0
+        }
+      },
+      {
+        "output": "System: this is a system message\\nHuman: this is a human message",
+        "info": {
+          "index": 1
+        }
+      }
+    ],
+    [
+      {
+        "output": "this is a prompt.",
+        "info": {
+          "index": 0
+        }
+      }
+    ]
+  ]
+}"
+`;

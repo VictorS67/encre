@@ -18,7 +18,9 @@ export function listExternals(packageJson) {
     ...Object.keys(packageJson.peerDependencies || {}),
     // Add external dependencies here
     /node\:/,
-    "nanoid/non-secure"
+    "nanoid/non-secure",
+    "p-retry",
+    "js-tiktoken/lite"
   ];
 }
 

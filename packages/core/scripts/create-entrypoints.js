@@ -6,25 +6,65 @@ import { identifySecrets } from "./identify-secrets.js";
 // console.log(`Current path: ${currentPath}`);
 // console.log(`Parent path: ${path.dirname(currentPath)}`);
 
+// This lists all the entrypoints for the library. Each key corresponds to an
+// importable path, eg. `import { Callable } from "record/callable"`.
+// The value is the path to the file in `src/` that exports the entrypoint.
+// This is used to generate the `exports` field in package.json.
+// Order is not important.
 const entrypoints = {
+  // load
   load: "load/index",
   "load/serializable": "load/serializable",
-  // events/input/load
-  "events/input/load/base": "events/input/load/base",
-  "events/input/load/context": "events/input/load/context",
+  // record
+  "record/callable": "record/callable",
+  // cache
+  cache: "cache/index",
+  "cache/base": "cache/base",
   // events/input/load/docs
+  "events/input/load/docs/base": "events/input/load/docs/base",
   "events/input/load/docs/buffer": "events/input/load/docs/buffer",
+  "events/input/load/docs/context": "events/input/load/docs/context",
   "events/input/load/docs/pdf": "events/input/load/docs/pdf",
+  // events/input/load/msgs
+  "events/input/load/msgs/base": "events/input/load/msgs/base",
+  // events/input/load/prompts
+  "events/input/load/prompts/base": "events/input/load/prompts/base",
+  "events/input/load/prompts/chat": "events/input/load/prompts/chat",
+  // events/output/provide
+  "events/output/provide/base": "events/output/provide/base",
+  "events/output/provide/file": "events/output/provide/file",
+  "events/output/provide/generation": "events/output/provide/generation",
+  "events/output/provide/llmresult": "events/output/provide/llmresult",
+  "events/output/provide/message": "events/output/provide/message",
+  // events/inference/chat/llms
+  "events/inference/chat/llms/base": "events/inference/chat/llms/base",
+  // utils
   "utils/nanoid": "utils/nanoid",
 };
 
 const deprecatedNodeOnly = [];
 
+// Entrypoints in this list require an optional dependency to be installed.
 const reuqiresOptionalDependency = [
+  // record
+  "record/callable",
+  // cache
+  "cache",
+  "cache/base",
   // events/input/load/docs
   "events/input/load/docs/buffer",
   "events/input/load/docs/pdf",
-  "utils/nanoid",
+  "events/input/load/docs/base",
+  // events/input/load/msgs
+  "events/input/load/msgs/base",
+  // events/input/load/prompts
+  "events/input/load/prompts/base",
+  "events/input/load/prompts/chat",
+  // events/output/provide
+  "events/output/provide/base",
+  "events/output/provide/file",
+  "events/output/provide/llmresult",
+  "events/output/provide/message"
 ];
 
 // const testExports = [

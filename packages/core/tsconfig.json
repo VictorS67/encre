@@ -38,10 +38,22 @@
     "entrypoints": [
       "src/load/index.ts",
       "src/load/serializable.ts",
-      "src/events/input/load/base.ts",
-      "src/events/input/load/context.ts",
+      "src/record/callable.ts",
+      "src/cache/index.ts",
+      "src/cache/base.ts",
+      "src/events/input/load/docs/base.ts",
       "src/events/input/load/docs/buffer.ts",
+      "src/events/input/load/docs/context.ts",
       "src/events/input/load/docs/pdf.ts",
+      "src/events/input/load/msgs/base.ts",
+      "src/events/input/load/prompts/base.ts",
+      "src/events/input/load/prompts/chat.ts",
+      "src/events/output/provide/base.ts",
+      "src/events/output/provide/file.ts",
+      "src/events/output/provide/generation.ts",
+      "src/events/output/provide/llmresult.ts",
+      "src/events/output/provide/message.ts",
+      "src/events/inference/chat/llms/base.ts",
       "src/utils/nanoid.ts"
     ]
   }
