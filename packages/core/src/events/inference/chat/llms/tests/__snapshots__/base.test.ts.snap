@@ -47,7 +47,7 @@ exports[`test BaseLLM 3`] = `
     ],
     [
       {
-        "output": "AI: thhis is a bot message",
+        "output": "AI: this is a bot message",
         "info": {
           "index": 0
         }
@@ -89,6 +89,34 @@ exports[`test BaseLLM 4`] = `
   ],
   "llmOutput": {}
 }"
+`;
+
+exports[`test BaseLLM 5`] = `
+"this is a prompt.
+"
+`;
+
+exports[`test BaseLLM 6`] = `
+"|-
+System: this is a system message
+Human: this is a human message
+AI: this is a bot message
+"
+`;
+
+exports[`test BaseLLM 7`] = `
+"|-
+Human: this is a human message 1
+Human: this is a human message 2
+Human: this is a human message 3
+"
+`;
+
+exports[`test BaseLLM 8`] = `
+"|-
+System: this is a system message
+Human: this is a human message
+"
 `;
 
 exports[`test BaseLM 1`] = `
@@ -135,7 +163,7 @@ exports[`test BaseLM 3`] = `
     ],
     [
       {
-        "output": "AI: thhis is a bot message",
+        "output": "AI: this is a bot message",
         "info": {
           "index": 0
         }
@@ -172,4 +200,44 @@ exports[`test BaseLM 4`] = `
     ]
   ]
 }"
+`;
+
+exports[`test BaseLM 5`] = `
+"generations:
+  - - output: this is a prompt.
+      info:
+        index: 0
+"
+`;
+
+exports[`test BaseLM 6`] = `
+"generations:
+  - - output: |-
+        System: this is a system message
+        Human: this is a human message
+        AI: this is a bot message
+      info:
+        index: 0
+"
+`;
+
+exports[`test BaseLM 7`] = `
+"generations:
+  - - output: |-
+        Human: this is a human message 1
+        Human: this is a human message 2
+        Human: this is a human message 3
+      info:
+        index: 0
+"
+`;
+
+exports[`test BaseLM 8`] = `
+"generations:
+  - - output: |-
+        System: this is a system message
+        Human: this is a human message
+      info:
+        index: 0
+"
 `;

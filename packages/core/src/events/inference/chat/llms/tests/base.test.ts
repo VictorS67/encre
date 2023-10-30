@@ -190,7 +190,7 @@ test('test BaseLM', async () => {
   const prompts: string[] = [
     'System: this is a system message',
     'Human: this is a human message',
-    'AI: thhis is a bot message',
+    'AI: this is a bot message',
   ];
   const result3: LLMResult = await testLM.provide(prompts);
   expect(JSON.stringify(result3, null, 2)).toMatchSnapshot();
@@ -202,6 +202,28 @@ test('test BaseLM', async () => {
   ];
   const result4: LLMResult = await testLM.provideWithPrompts(basePrompts);
   expect(JSON.stringify(result4, null, 2)).toMatchSnapshot();
+
+  expect(stringify(await testLM.invoke('this is a prompt.'))).toMatchSnapshot();
+  expect(
+    stringify(
+      await testLM.invoke([
+        ['system', 'this is a system message'],
+        ['human', 'this is a human message'],
+        ['assistant', 'this is a bot message'],
+      ])
+    )
+  ).toMatchSnapshot();
+  expect(
+    stringify(
+      await testLM.invoke([
+        'this is a human message 1',
+        'this is a human message 2',
+        'this is a human message 3',
+      ])
+    )
+  ).toMatchSnapshot();
+  expect(stringify(await testLM.invoke(messages))).toMatchSnapshot();
+
 });
 
 test('test BaseLLM', async () => {
@@ -257,7 +279,7 @@ test('test BaseLLM', async () => {
   const prompts: string[] = [
     'System: this is a system message',
     'Human: this is a human message',
-    'AI: thhis is a bot message',
+    'AI: this is a bot message',
   ];
   const result3: LLMResult = await testLLMWithCustomCache.provide(prompts);
   expect(JSON.stringify(result3, null, 2)).toMatchSnapshot();
@@ -270,4 +292,25 @@ test('test BaseLLM', async () => {
   const result4: LLMResult =
     await testLLMWithCustomCache.provideWithPrompts(basePrompts);
   expect(JSON.stringify(result4, null, 2)).toMatchSnapshot();
+
+  expect(stringify(await testLLMWithCustomCache.invoke('this is a prompt.'))).toMatchSnapshot();
+  expect(
+    stringify(
+      await testLLMWithCustomCache.invoke([
+        ['system', 'this is a system message'],
+        ['human', 'this is a human message'],
+        ['assistant', 'this is a bot message'],
+      ])
+    )
+  ).toMatchSnapshot();
+  expect(
+    stringify(
+      await testLLMWithCustomCache.invoke([
+        'this is a human message 1',
+        'this is a human message 2',
+        'this is a human message 3',
+      ])
+    )
+  ).toMatchSnapshot();
+  expect(stringify(await testLLMWithCustomCache.invoke(messages))).toMatchSnapshot();
 });
