@@ -1,6 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`test PDF loader from blob 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - docs
+  - pdf
+_kwargs: {}
+"
+`;
+
+exports[`test PDF loader from blob 2`] = `
 "source: blob
 bolbType: application/pdf
 blobSize: 539761

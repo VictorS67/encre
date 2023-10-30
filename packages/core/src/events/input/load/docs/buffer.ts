@@ -10,10 +10,17 @@ import { Context } from './context';
  * return the documents.
  */
 export abstract class BufferLoader<
-  T extends string | Blob = string | Blob,
-> extends BaseLoader<T> {
-  constructor() {
-    super();
+  CallInput extends string | Blob = string | Blob,
+> extends BaseLoader<CallInput> {
+
+  _isSerializable = true;
+
+  static _name(): string {
+    return 'buffer';    
+  }
+
+  _loaderType(): string {
+    return 'buffer';
   }
 
   /**
@@ -43,7 +50,7 @@ export abstract class BufferLoader<
    * calls the `parse()` method to parse the buffer and return the documents.
    * @returns Promise that resolves with an array of `Context` objects.
    */
-  public async load(filePathOrBlob: T): Promise<Context[]> {
+  public async load(filePathOrBlob: CallInput): Promise<Context[]> {
     let buffer: Buffer;
     let metadata: Context['metadata'];
 
