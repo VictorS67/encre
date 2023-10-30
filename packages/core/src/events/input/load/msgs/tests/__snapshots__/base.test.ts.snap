@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test convertMessageLikeToMessage 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - msgs
+  - HumanMessage
+_kwargs:
+  content: this is a message.
+"
+`;
+
+exports[`test convertMessageLikeToMessage 2`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - msgs
+  - BotMessage
+_kwargs:
+  content: this is a bot message
+"
+`;
+
+exports[`test custom BaseMessage 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - msgs
+  - TestHumanMessage
+_kwargs:
+  content: this is a message.
+"
+`;
+
+exports[`test custom BaseMessage 2`] = `
+"role: human
+json:
+  content: this is a message.
+"
+`;
+
+exports[`test custom BaseMessage 3`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - msgs
+  - TestHumanMessage
+_kwargs:
+  content: this is a message with a name
+  name: Mike
+"
+`;
+
+exports[`test custom BaseMessage 4`] = `
+"role: human
+json:
+  content: this is a message with a name
+  name: Mike
+"
+`;

@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test custom BasePrompt 1`] = `
+"_grp: 1
+_type: not_implemented
+_id:
+  - tests
+  - TestPrompt
+"
+`;
+
+exports[`test custom BasePrompt 2`] = `
+"- _grp: 1
+  _type: constructor
+  _id:
+    - input
+    - load
+    - msgs
+    - SystemMessage
+  _kwargs:
+    content: this is a system message.
+- _grp: 1
+  _type: constructor
+  _id:
+    - input
+    - load
+    - msgs
+    - SystemMessage
+  _kwargs:
+    content: this is a test prompt.
+"
+`;
+
+exports[`test custom StringPrompt 1`] = `
+"_grp: 1
+_type: not_implemented
+_id:
+  - events
+  - input
+  - load
+  - prompts
+  - StringPrompt
+"
+`;
+
+exports[`test custom StringPrompt 2`] = `
+"- _grp: 1
+  _type: constructor
+  _id:
+    - input
+    - load
+    - msgs
+    - HumanMessage
+  _kwargs:
+    content: this is a test prompt.
+"
+`;
