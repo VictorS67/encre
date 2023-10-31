@@ -18,10 +18,15 @@ test('test PDF loader from blob', async () => {
     new Blob([fs.readFileSync(filePath)], { type: 'application/pdf' })
   );
   const loader = new PDFLoader();
-  // const docs: Context[] = await loadInput(loader, provider);
+
+  const serializedStr: string = JSON.stringify(loader, null, 2);
+  expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
+
   const docs: Context[] = await loader.load(provider.provide());
 
   expect(docs.length).toBe(9);
   expect(docs[0].pageContent).toContain('Generative Adversarial Nets');
   expect(stringify(docs[0].metadata)).toMatchSnapshot();
+
+  expect(await loader.invoke(provider.provide())).toStrictEqual(docs);
 });

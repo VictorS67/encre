@@ -7,8 +7,11 @@ import type {
   TextItem,
   TextContent,
 } from 'pdf-parse';
+import { BaseLoaderParams } from './base';
 import { BufferLoader } from './buffer';
 import { Context } from './context';
+
+export interface PDFLoaderParams extends BaseLoaderParams {}
 
 async function PDFLoaderImports() {
   try {
@@ -25,17 +28,22 @@ async function PDFLoaderImports() {
  * document loader that loads documents from PDF files.
  */
 export class PDFLoader<
-  T extends string | Blob = string | Blob,
-> extends BufferLoader<T> {
-  private _splitPages: boolean;
+  CallInput extends string | Blob = string | Blob,
+> extends BufferLoader<CallInput> {
+
+  _isSerializable = true;
 
   private _pdfjs: typeof PDFLoaderImports;
 
-  constructor({ splitPages = true, pdfjs = PDFLoaderImports } = {}) {
-    super();
+  static _name(): string {
+    return 'pdf';    
+  }
 
-    this._splitPages = splitPages;
-    this._pdfjs = pdfjs;
+  constructor(fields?: PDFLoaderParams, pdfjs?: typeof PDFLoaderImports) {
+    super(fields ?? {});
+
+    this.shouldSplit = fields?.shouldSplit ?? true;
+    this._pdfjs = pdfjs ?? PDFLoaderImports;
   }
 
   /**
@@ -102,7 +110,7 @@ export class PDFLoader<
       );
     }
 
-    if (this._splitPages) {
+    if (this.shouldSplit) {
       return PdfDocuments;
     }
 
