@@ -20,7 +20,8 @@ export function listExternals(packageJson) {
     /node\:/,
     "nanoid/non-secure",
     "p-retry",
-    "js-tiktoken/lite"
+    "js-tiktoken/lite",
+    "fs"
   ];
 }
 

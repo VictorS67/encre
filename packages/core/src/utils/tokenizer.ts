@@ -11,6 +11,31 @@ const cache: Record<string, Promise<TiktokenBPE>> = {};
 
 const caller = new AsyncCaller({});
 
+export async function getNumTokens(
+  text: string,
+  model: string
+) {
+  // fallback for calulating text's tokens
+  // 1 token ~= 4 chars in English
+
+  let numTokens: number = Math.ceil(text.length / 4);
+
+  let token: Tiktoken | undefined;
+  try {
+    token = await encodingForModel(getTiktokenModel(model));
+  } catch (e) {
+    console.warn(
+      `Failed to calculate correct number of tokens, now we use 1 token ~= 4 chars in English for approximate token calculation: ${e}`
+    );
+  }
+
+  if (token) {
+    numTokens = token.encode(text).length;
+  }
+
+  return numTokens;
+}
+
 export async function encodingForModel(
   model: TiktokenModel,
   options?: {
