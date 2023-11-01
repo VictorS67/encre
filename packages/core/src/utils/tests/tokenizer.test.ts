@@ -1,6 +1,16 @@
-import { expect, test } from '@jest/globals';
-import { Tiktoken, TiktokenEncoding, TiktokenModel, getEncodingNameForModel } from 'js-tiktoken';
-import { encodingForModel, getEncoding, getTiktokenModel } from '../tokenizer';
+import { expect, jest, test } from '@jest/globals';
+import {
+  Tiktoken,
+  TiktokenEncoding,
+  TiktokenModel,
+  getEncodingNameForModel,
+} from 'js-tiktoken';
+import {
+  encodingForModel,
+  getEncoding,
+  getNumTokens,
+  getTiktokenModel,
+} from '../tokenizer';
 
 test('test getTiktokenModel', () => {
   const modelName = 'gpt-3.5-turbo-16k-0613';
@@ -50,4 +60,19 @@ test('test getEncoding', async () => {
 
   expect(newTiktoken.decode(tokens)).toBe(prompt);
   expect(newTiktoken.encode(prompt)).toStrictEqual(tokens);
+});
+
+test('test getNumTokens', async () => {
+  const model = 'gpt-3.5-turbo-16k';
+  const prompt = 'this is a prompt';
+
+  expect(await getNumTokens(prompt, model)).toBe(4);
+
+  const modelNonExist = 'gpt-399';
+  jest.spyOn(global.console, 'warn');
+  expect(await getNumTokens(prompt, modelNonExist)).toBe(4);
+  expect(console.warn).toHaveBeenCalledTimes(1);
+  expect(console.warn).toHaveBeenLastCalledWith(
+    'Failed to calculate correct number of tokens, now we use 1 token ~= 4 chars in English for approximate token calculation: Error: Unknown model'
+  );
 });
