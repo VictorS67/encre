@@ -1,5 +1,89 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`test BaseChatLM 1`] = `
+"_grp: 1
+_type: not_implemented
+_id:
+  - inference
+  - chat
+  - llms
+  - test_chatlm
+  - TestChatLM
+"
+`;
+
+exports[`test BaseChatLM 2`] = `
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 3`] = `
+"generations:
+  - output: this is a system message
+    info:
+      index: 0
+  - output: this is a human message
+    info:
+      index: 1
+  - output: this is a bot message
+    info:
+      index: 2
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 4`] = `
+"generations:
+  - output: this is a human message 1
+    info:
+      index: 0
+  - output: this is a human message 2
+    info:
+      index: 1
+  - output: this is a human message 3
+    info:
+      index: 2
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 5`] = `
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 6`] = `
+"generations:
+  - output: this is a system message
+    info:
+      index: 0
+  - output: this is a human message
+    info:
+      index: 1
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 7`] = `
+"generations:
+  - output: this is a system message
+    info:
+      index: 0
+  - output: this is a human message
+    info:
+      index: 1
+llmOutput: {}
+"
+`;
+
 exports[`test BaseLLM 1`] = `
 "_grp: 1
 _type: not_implemented
