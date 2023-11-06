@@ -5,7 +5,7 @@ import {
   MessageRole,
   SystemMessage,
 } from '../../input/load/msgs/base';
-import { Generation } from './generation';
+import { Generation, GenerationChunk } from './generation';
 
 export interface SerializedMessageData {
   content: string;
@@ -32,6 +32,33 @@ export interface MessageGeneration extends Generation {
 
 export interface ChatGeneration extends MessageGeneration {
   message: BaseMessage;
+}
+
+export interface ChatGenerationChunkField extends ChatGeneration {}
+
+export class ChatGenerationChunk
+  extends GenerationChunk
+  implements ChatGeneration
+{
+  declare output: string;
+
+  message: BaseMessage;
+
+  constructor(fields: ChatGenerationChunkField) {
+    super(fields);
+    this.message = fields.message;
+  }
+
+  concat(chunk: ChatGenerationChunk): ChatGenerationChunk {
+    return new ChatGenerationChunk({
+      output: this.output + chunk.output,
+      info: {
+        ...this.info,
+        ...chunk.info,
+      },
+      message: this.message.concat(chunk.message),
+    });
+  }
 }
 
 export function mapSerializedMessageToChatMessage(
