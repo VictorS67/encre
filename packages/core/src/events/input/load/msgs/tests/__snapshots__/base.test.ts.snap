@@ -67,3 +67,27 @@ json:
   name: Mike
 "
 `;
+
+exports[`test custom BaseMessage 5`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - msgs
+  - TestHumanMessage
+_kwargs:
+  content: this is a message.this is a message with a name
+  additional_kwargs: {}
+  name: Mike
+"
+`;
+
+exports[`test custom BaseMessage 6`] = `
+"role: human
+json:
+  content: this is a message.this is a message with a name
+  additional_kwargs: {}
+  name: Mike
+"
+`;
