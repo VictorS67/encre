@@ -5,9 +5,9 @@ import { Generation } from './generation';
  */
 export type LLMResult = {
   /**
-   * List of the things generated. Each input could have multiple {@link Generation}, hence this is a list of lists.
+   * One input could have multiple {@link Generation}, hence this is a list.
    */
-  generations: Generation[][];
+  generations: Generation[];
 
   /**
    * LLM-provider specific output.

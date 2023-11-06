@@ -13,7 +13,6 @@ import {
 } from 'openai/resources';
 
 import { SecretFields, SerializedFields } from '../../../../../load/keymap.js';
-import { batch } from '../../../../../utils/batch.js';
 import { getEnvironmentVariables } from '../../../../../utils/environment.js';
 import { Generation } from '../../../../output/provide/generation.js';
 import { LLMResult } from '../../../../output/provide/llmresult.js';
@@ -68,8 +67,6 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
   n = 1;
 
   stream = false;
-
-  batchSize = 20;
 
   bestOf?: number | undefined;
 
@@ -129,7 +126,6 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     this.stopWords = fields?.stopWords;
     this.timeout = fields?.timeout;
     this.stream = fields?.stream ?? this.stream;
-    this.batchSize = fields?.batchSize ?? this.batchSize;
 
     this.organization =
       fields?.configuration?.organization ??
@@ -190,70 +186,62 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
   }
 
   async _provide(
-    prompts: string[],
+    prompt: string,
     options: this['SerializedCallOptions']
   ): Promise<LLMResult> {
-    const promptsBatchGrp: string[][] = batch(prompts, this.batchSize);
     const choices: CompletionChoice[] = [];
     const tokenUsage: TokenUsage = {};
 
     const params = this.getParams(options);
     if (params.max_tokens === -1) {
-      if (prompts.length > 1) {
-        throw new Error('max_tokens set to -1 supported for multiple inputs');
-      }
-
       params.max_tokens = await calculateMaxToken(
-        prompts[0],
+        prompt,
         this.modelName as TiktokenModel
       );
     }
 
-    for (let i = 0; i < promptsBatchGrp.length; i++) {
-      const response = params.stream
-        ? await this._completionWithStream(params, promptsBatchGrp[i], options)
-        : await this.completionWithRetry(
-            {
-              ...params,
-              stream: false,
-              prompt: promptsBatchGrp[i],
-            },
-            {
-              signal: options.signal,
-              ...options.options,
-            }
-          );
+    const response = params.stream
+      ? await this._completionWithStream(params, prompt, options)
+      : await this.completionWithRetry(
+          {
+            ...params,
+            stream: false,
+            prompt: prompt,
+          },
+          {
+            signal: options.signal,
+            ...options.options,
+          }
+        );
 
-      choices.push(...response.choices);
+    choices.push(...response.choices);
 
-      const completionTokens: number | undefined =
-        response.usage?.completion_tokens;
-      const promptTokens: number | undefined = response.usage?.prompt_tokens;
-      const totalTokens: number | undefined = response.usage?.total_tokens;
+    const completionTokens: number | undefined =
+      response.usage?.completion_tokens;
+    const promptTokens: number | undefined = response.usage?.prompt_tokens;
+    const totalTokens: number | undefined = response.usage?.total_tokens;
 
-      if (completionTokens) {
-        tokenUsage.completionTokens =
-          (tokenUsage.completionTokens ?? 0) + completionTokens;
-      }
-
-      if (promptTokens) {
-        tokenUsage.promptTokens = (tokenUsage.promptTokens ?? 0) + promptTokens;
-      }
-
-      if (totalTokens) {
-        tokenUsage.totalTokens = (tokenUsage.totalTokens ?? 0) + totalTokens;
-      }
+    if (completionTokens) {
+      tokenUsage.completionTokens =
+        (tokenUsage.completionTokens ?? 0) + completionTokens;
     }
 
-    const generations: Generation[][] = batch(choices, this.n).map(
-      (promptChoices: CompletionChoice[]) =>
-        promptChoices.map((choice: CompletionChoice) => ({
-          output: choice.text ?? ('' as string),
-          info: {
-            finishReason: choice.finish_reason,
-            logprobs: choice.logprobs,
-          },
-        }))
+    if (promptTokens) {
+      tokenUsage.promptTokens = (tokenUsage.promptTokens ?? 0) + promptTokens;
+    }
+
+    if (totalTokens) {
+      tokenUsage.totalTokens = (tokenUsage.totalTokens ?? 0) + totalTokens;
+    }
+
+    const generations: Generation[] = choices.map(
+      (choice: CompletionChoice) => ({
+        output: choice.text ?? ('' as string),
+        info: {
+          finishReason: choice.finish_reason,
+          logprobs: choice.logprobs,
+        },
+      })
     );
 
     return { generations, llmOutput: { tokenUsage } };
@@ -300,7 +288,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   private async _completionWithStream(
     params: Omit<OpenAIClient.CompletionCreateParams, 'prompt'>,
-    prompts: string[],
+    prompt: string,
     options: this['SerializedCallOptions']
   ) {
     const choices: CompletionChoice[] = [];
@@ -311,7 +299,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
         {
           ...params,
           stream: true,
-          prompt: prompts,
+          prompt: prompt,
         },
         options
       );
@@ -341,6 +329,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     if (options.signal?.aborted) {
       throw new Error('AbortError');
     }
+
     return { ...res, choices };
   }
 

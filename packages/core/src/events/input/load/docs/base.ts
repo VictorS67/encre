@@ -1,5 +1,5 @@
 import { Callable } from '../../../../record/callable';
-import { BaseEventParams } from '../../../base';
+import { BaseEvent, BaseEventParams } from '../../../base';
 import { Context } from './context';
 
 /**
@@ -27,7 +27,7 @@ export abstract class BaseLoader<
     CallOutput = Context[],
     CallOptions extends BaseDocLoaderCallOptions = BaseDocLoaderCallOptions,
   >
-  extends Callable<CallInput, CallOutput, CallOptions>
+  extends BaseEvent<CallInput, CallOutput, CallOptions>
   implements DocLoader<CallInput, CallOutput>
 {
   declare CallOptions: CallOptions;
@@ -37,7 +37,7 @@ export abstract class BaseLoader<
   shouldSplit?: boolean;
 
   constructor(fields?: BaseLoaderParams) {
-    super(fields);
+    super(fields ?? {});
 
     this.shouldSplit = fields?.shouldSplit ?? false;
   }

@@ -17,12 +17,15 @@ test('test custom module serializable', async () => {
     }
 
     get _attributes(): SerializedFields | undefined {
-      return { hello: this.hello };
+      return { 
+        hello: this.hello,
+        shouldOverride: 'should override'
+      };
     }
 
     hello = 3;
 
-    constructor(fields: { aField: string; apiKey: string; hello?: number }) {
+    constructor(fields: { aField: string; apiKey: string; hello?: number, shouldOverride?: string }) {
       super(fields);
     }
   }
@@ -72,6 +75,7 @@ test('test custom module serializable', async () => {
   const test = new Test({
     aField: 'hello',
     apiKey: 'this-is-a-key',
+    shouldOverride: 'a new value'
   });
   const argumentsBefore = test._kwargs;
   const serializedStr: string = JSON.stringify(test, null, 2);

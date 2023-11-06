@@ -2,7 +2,6 @@ import {
   APIConnectionTimeoutError,
   APIUserAbortError,
   OpenAI as OpenAIClient,
-  ClientOptions as OpenAIClientOptions,
 } from 'openai';
 import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
 
@@ -149,9 +148,6 @@ export interface OpenAIBaseInput {
 }
 
 export interface OpenAIInput extends OpenAIBaseInput {
-  /** Batch size to use when passing multiple documents to generate */
-  batchSize: number;
-
   /**
    * Generates `bestOf` completions server-side and returns the "best" (the one with
    * the highest log probability per token). Results cannot be streamed.
