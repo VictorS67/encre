@@ -1,9 +1,7 @@
 import { TiktokenModel } from 'js-tiktoken/lite';
 import { BaseCache } from '../../../../cache/base.js';
 import { MemoryCache } from '../../../../cache/index.js';
-import {
-  type CallableConfig,
-} from '../../../../record/callable.js';
+import { type CallableConfig } from '../../../../record/callable.js';
 import {
   AsyncCaller,
   type AsyncCallerParams,
@@ -17,6 +15,7 @@ import { BaseEvent, BaseEventParams } from '../../../base.js';
 import {
   type BaseMessageLike,
   convertMessageLikeToMessage,
+  BaseMessage,
 } from '../../../input/load/msgs/base.js';
 import { BasePrompt, StringPrompt } from '../../../input/load/prompts/base.js';
 import { ChatPrompt } from '../../../input/load/prompts/chat.js';
@@ -114,18 +113,21 @@ export abstract class BaseLM<
    * @param options - Optional call options.
    * @returns {Promise<LLMResult>} The output llm result from the language model.
    */
-  abstract invoke(input: BaseLMInput, options?: Partial<CallOptions>): Promise<CallOutput>;
+  abstract invoke(
+    input: BaseLMInput,
+    options?: Partial<CallOptions>
+  ): Promise<CallOutput>;
 
   /**
    * Abstract method to provide the core logic to interface with the language model,
    * handling both cached and uncached predictions.
-   * @param {string} prompt - A prompt.
+   * @param {unknown} input - A given input to the language model, can be a prompt or an array of messages.
    * @param {string[] | CallOptions} [options] - Optional call options or an array of stop words.
    * @param {any} [callbacks] - Optional callbacks.
    * @returns {Promise<LLMResult>} The result from the language model.
    */
   abstract provide(
-    prompt: string,
+    input: unknown,
     options?: string[] | CallOptions,
     callbacks?: any
   ): Promise<LLMResult>;
@@ -235,6 +237,10 @@ export abstract class BaseLLM<
     return 'base_llm';
   }
 
+  abstract getParams(
+    options?: this['SerializedCallOptions']
+  ): Record<string, unknown>;
+
   /**
    * Invokes the language model with a given input and options.
    * @param input - The input for the language model.
@@ -281,11 +287,16 @@ export abstract class BaseLLM<
 
     const llmStrKey: string = this._getLLMStrKey(serializedCallOptions);
 
-    let generations: Generation[] | null | undefined = await this.cache?.lookup([prompt, llmStrKey]);
+    let generations: Generation[] | null | undefined = await this.cache?.lookup(
+      [prompt, llmStrKey]
+    );
 
     let llmOutput = {};
     if (generations === null || generations === undefined) {
-      const llmResult: LLMResult = await this._provideUncached(prompt, serializedCallOptions);
+      const llmResult: LLMResult = await this._provideUncached(
+        prompt,
+        serializedCallOptions
+      );
       await this.cache?.update([prompt, llmStrKey], llmResult.generations);
 
       generations = llmResult.generations;
@@ -352,23 +363,181 @@ export abstract class BaseLLM<
   }
 }
 
+export interface BaseChatLMCallOptions extends BaseLMCallOptions {}
+
+export interface BaseChatLMParams extends BaseLMParams {}
+
+/**
+ * Abstract class representing the BaseChatLM. This class provides core functionalities
+ * to interface with a language model, potentially allowing for both cached and uncached predictions.
+ *
+ * @template CallOptions - Represents the call options type. By default, it extends from {@link BaseChatLMCallOptions}.
+ */
+export abstract class BaseChatLM<
+  CallOptions extends BaseChatLMCallOptions = BaseChatLMCallOptions,
+> extends BaseLM<LLMResult, CallOptions> {
+  /**
+   * Represents the type for call options without some specified properties.
+   */
+  declare SerializedCallOptions: Omit<
+    CallOptions,
+    keyof CallableConfig & 'timeout'
+  >;
+
+  /**
+   * A predefined namespace array to identify the type of language model and other related namespaces.
+   */
+  _namespace: string[] = ['inference', 'chat', 'llms', this._llmType()];
+
+  constructor(fields: BaseChatLMParams) {
+    super(fields);
+  }
+
+  /**
+   * Returns the type of the model.
+   * @returns {string} The type of the model.
+   */
+  _modelType(): string {
+    return 'base_chatlm';
+  }
+
+  abstract getParams(
+    options?: this['SerializedCallOptions']
+  ): Record<string, unknown>;
+
+  /**
+   * Invokes the chat language model with a given input and options.
+   * @param input - The input for the chat language model.
+   * @param options - Optional call options.
+   * @returns {Promise<LLMResult>} The output llm result from the language model.
+   */
+  async invoke(input: BaseLMInput, options?: CallOptions): Promise<LLMResult> {
+    const prompt: BasePrompt = BaseChatLM._convertInputToPrompt(input);
+    const result: LLMResult = await this.provide(
+      prompt.toChatMessages(),
+      options,
+      options?.callbacks
+    );
+
+    return result;
+  }
+
+  /**
+   * Provides the core logic to interface with the chat language model, handling both cached and uncached predictions.
+   * @param {BaseMessageLike[]} messages - An array of messages.
+   * @param options - Optional call options or an array of stop words.
+   * @param callbacks - Optional callbacks.
+   * @returns {Promise<LLMResult>} The result from the language model.
+   */
+  async provide(
+    messages: BaseMessageLike[],
+    options?: CallOptions | string[],
+    callbacks?: any
+  ): Promise<LLMResult> {
+    if (!Array.isArray(messages)) {
+      throw new Error("Argument 'messages' must be array.");
+    }
+
+    const baseMessages: BaseMessage[] = messages.map(
+      convertMessageLikeToMessage
+    );
+
+    let parsedOptions: CallOptions | undefined;
+    if (Array.isArray(options)) {
+      parsedOptions = { stopWords: options } as CallOptions;
+    } else {
+      parsedOptions = options;
+    }
+
+    const [callableOptions, serializedCallOptions] =
+      this._splitCallableOptionsFromCallOptions(parsedOptions);
+    callableOptions.callbacks = callableOptions.callbacks ?? callbacks;
+
+    const llmStrKey: string = this._getLLMStrKey(serializedCallOptions);
+
+    const prompt: string =
+      BaseChatLM._convertInputToPrompt(baseMessages).toString();
+    let generations: Generation[] | null | undefined = await this.cache?.lookup(
+      [prompt, llmStrKey]
+    );
+
+    let llmOutput = {};
+    if (generations === null || generations === undefined) {
+      const llmResult: LLMResult = await this._provideUncached(
+        baseMessages,
+        serializedCallOptions
+      );
+      await this.cache?.update([prompt, llmStrKey], llmResult.generations);
+
+      generations = llmResult.generations;
+      llmOutput = llmResult.llmOutput ?? {};
+    }
+
+    return { generations, llmOutput };
+  }
+
+  /**
+   * Abstract method that interfaces with the underlying language model. Must be implemented by subclasses.
+   * @param {BaseMessage[]} messages - An array of messages.
+   * @param options - Call options.
+   * @returns {Promise<LLMResult>} The result from the language model.
+   */
+  abstract _provide(
+    messages: BaseMessage[],
+    options: this['SerializedCallOptions']
+  ): Promise<LLMResult>;
+
+  /**
+   * Handles uncached prompts and calls the `_provide` method.
+   * @param {BaseMessage[]} messages - An array of messages.
+   * @param serializedCallOptions - Serialized call options.
+   * @returns {Promise<LLMResult>} The result from the language model.
+   */
+  protected async _provideUncached(
+    messages: BaseMessage[],
+    serializedCallOptions: this['SerializedCallOptions']
+  ): Promise<LLMResult> {
+    let output: LLMResult;
+
+    /*eslint no-useless-catch: "warn"*/
+    try {
+      output = await this._provide(messages, serializedCallOptions);
+    } catch (e) {
+      throw e;
+    }
+
+    return output;
+  }
+
+  /**
+   * Splits the provided call options into callable options and serialized options.
+   * @param options - Call options.
+   * @returns A tuple containing callable options and serialized options.
+   */
+  protected _splitCallableOptionsFromCallOptions(
+    options?: Partial<CallOptions>
+  ): [CallableConfig, this['SerializedCallOptions']] {
+    const [callableOptions, serializedCallOptions] =
+      super._splitCallableOptionsFromCallOptions(options);
+
+    if (serializedCallOptions?.timeout && !serializedCallOptions.signal) {
+      serializedCallOptions.signal = AbortSignal.timeout(
+        serializedCallOptions.timeout
+      );
+    }
+
+    return [
+      callableOptions,
+      serializedCallOptions as this['SerializedCallOptions'],
+    ];
+  }
+}
+
 export async function calculateMaxToken(
   prompt: string,
   modelName: TiktokenModel
 ): Promise<number> {
-  let numTokens: number;
-
-  try {
-    numTokens = (await encodingForModel(getTiktokenModel(modelName))).encode(
-      prompt
-    ).length;
-  } catch (e) {
-    console.warn(
-      `Failed to calculate correct number of tokens, now we use 1 token ~= 4 chars in English for approximate token calculation: ${e}`
-    );
-
-    numTokens = Math.ceil(prompt.length / 4);
-  }
+  const numTokens: number = await getNumTokens(prompt, modelName);
 
   const maxTokens = getModelContextSize(modelName);
   return maxTokens - numTokens;
