@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { IdProvider } from '../utils/nanoid.js';
 // import { nanoid } from 'nanoid';
 import {
@@ -125,9 +127,12 @@ export abstract class Serializable {
 
   private _idProvider: IdProvider;
 
+  private _nodeId: RecordId;
+
   constructor(kwargs?: object, ..._args: never[]) {
     this._kwargs = toSerializedFields(kwargs || {});
     this._idProvider = new IdProvider();
+    this._nodeId = uuidv4() as RecordId;
   }
 
   protected _initKwargs(): SerializedFields {
@@ -231,6 +236,10 @@ export abstract class Serializable {
     return (
       secretKeys.length > 0 ? await this.toSecretRecord(secretKeys) : {}
     ) as SerializedFields;
+  }
+
+  getNodeId(): RecordId {
+    return this._nodeId;
   }
 
   toJSONNotImplemented(): Serialized {
@@ -344,7 +353,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._nodeId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -375,7 +384,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'template_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._nodeId,
       _metadata: {
         _recordType: RecordType.TEMPLATE,
         _children: children ?? [],
