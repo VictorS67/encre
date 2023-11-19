@@ -1,0 +1,21 @@
+class Calculator {
+  public int add(int num1, int num2) {
+    return num1 + num2;
+  }
+
+  public int subtract(int num1, int num2) {
+    return num1 - num2;
+  }
+}
+
+class CalculatorDemo {
+  public static void main(String[] args) {
+    Calculator calc = new Calculator();
+    
+    int sum = calc.add(5, 3);
+    System.out.println("Sum: " + sum);
+
+    int difference = calc.subtract(5, 3);
+    System.out.println("Difference: " + difference);
+  }
+}

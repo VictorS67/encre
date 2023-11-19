@@ -65,6 +65,7 @@ test('test getEncoding', async () => {
 test('test getNumTokens', async () => {
   const model = 'gpt-3.5-turbo-16k';
   const prompt = 'this is a prompt';
+  // const prompt = "This is a longer text that needs to be split into chunks. It has multiple lines to demonstrate chunking. It is longer to test the multi_lines mode.";
 
   expect(await getNumTokens(prompt, model)).toBe(4);
 

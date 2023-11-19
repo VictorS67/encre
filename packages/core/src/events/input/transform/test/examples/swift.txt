@@ -1,0 +1,21 @@
+func greet() {
+  print("Hello, welcome to Swift programming!")
+}
+
+class Vehicle {
+  var numberOfWheels: Int
+
+  init(numberOfWheels: Int) {
+    self.numberOfWheels = numberOfWheels
+  }
+
+  func describe() {
+    print("This is a vehicle with \(numberOfWheels) wheels.")
+  }
+}
+
+greet()
+
+let car = Vehicle(numberOfWheels: 4)
+
+car.describe()

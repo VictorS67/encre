@@ -1,0 +1,15 @@
+class MyClass:
+  def __init__(self, name):
+    self.name = name
+
+  def greet(self):
+    return f"Hello, my name is {self.name}!"
+
+def greet_everyone():
+  alice = MyClass("Alice")
+  bob = MyClass("Bob")
+
+  print(alice.greet())
+  print(bob.greet())
+
+greet_everyone()
