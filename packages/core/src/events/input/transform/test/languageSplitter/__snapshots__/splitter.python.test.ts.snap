@@ -1,43 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RecursiveTextSplitter from python 1`] = `
-"- "class MyClass:\\r
+exports[`RecursiveTextSplitter from python 1`] = `"["class MyClass:\\r\\n  def __init__(self, name):\\r\\n    self.name = name\\r\\n\\r\\n  def greet(self):\\r\\n    return f\\"Hello, my name is {self.name}!\\"","def greet_everyone():\\r\\n  alice = MyClass(\\"Alice\\")\\r\\n  bob = MyClass(\\"Bob\\")\\r\\n\\r\\n  print(alice.greet())\\r\\n  print(bob.greet())\\r\\n\\r\\ngreet_everyone()"]"`;
 
-  \\  def __init__(self, name):\\r
-
-  \\    self.name = name\\r
-
-  \\r
-
-  \\  def greet(self):\\r
-
-  \\    return f\\"Hello, my name is {self.name}!\\""
-- "def greet_everyone():\\r
-
-  \\  alice = MyClass(\\"Alice\\")\\r
-
-  \\  bob = MyClass(\\"Bob\\")\\r
-
-  \\r
-
-  \\  print(alice.greet())\\r
-
-  \\  print(bob.greet())\\r
-
-  \\r
-
-  greet_everyone()"
-"
-`;
-
-exports[`RecursiveTextSplitter from python 2`] = `
-"- loc:
-    lines:
-      from: 1
-      to: 6
-- loc:
-    lines:
-      from: 8
-      to: 15
-"
-`;
+exports[`RecursiveTextSplitter from python 2`] = `"[{"loc":{"lines":{"from":1,"to":6}}},{"loc":{"lines":{"from":8,"to":15}}}]"`;

@@ -1,48 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RecursiveTextSplitter from scala 1`] = `
-"- "class MyClass(val name: String, var age: Int) {\\r
+exports[`RecursiveTextSplitter from scala 1`] = `"["class MyClass(val name: String, var age: Int) {\\r\\n  def greet(): String = {\\r\\n    s\\"Hello, my name is $name and I am $age years old.\\"\\r\\n  }\\r\\n\\r\\n  def haveBirthday(): Unit = {\\r\\n    age += 1","def haveBirthday(): Unit = {\\r\\n    age += 1\\r\\n    println(s\\"Happy birthday! Now, I am $age years old.\\")\\r\\n  }\\r\\n}","val person = new MyClass(\\"Alice\\", 25)\\r\\nprintln(person.greet())\\r\\nperson.haveBirthday()"]"`;
 
-  \\  def greet(): String = {\\r
-
-  \\    s\\"Hello, my name is $name and I am $age years old.\\"\\r
-
-  \\  }\\r
-
-  \\r
-
-  \\  def haveBirthday(): Unit = {\\r
-
-  \\    age += 1"
-- "def haveBirthday(): Unit = {\\r
-
-  \\    age += 1\\r
-
-  \\    println(s\\"Happy birthday! Now, I am $age years old.\\")\\r
-
-  \\  }\\r
-
-  }"
-- "val person = new MyClass(\\"Alice\\", 25)\\r
-
-  println(person.greet())\\r
-
-  person.haveBirthday()"
-"
-`;
-
-exports[`RecursiveTextSplitter from scala 2`] = `
-"- loc:
-    lines:
-      from: 1
-      to: 7
-- loc:
-    lines:
-      from: 6
-      to: 10
-- loc:
-    lines:
-      from: 12
-      to: 14
-"
-`;
+exports[`RecursiveTextSplitter from scala 2`] = `"[{"loc":{"lines":{"from":1,"to":7}}},{"loc":{"lines":{"from":6,"to":10}}},{"loc":{"lines":{"from":12,"to":14}}}]"`;

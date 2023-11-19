@@ -30,8 +30,8 @@ test('RecursiveTextSplitter from scala', async () => {
   });
 
   const newContexts = await splitter.invoke(context);
-  expect(stringify(newContexts.map((c) => c.pageContent))).toMatchSnapshot();
-  expect(stringify(newContexts.map((c) => c.metadata))).toMatchSnapshot();
+  expect(JSON.stringify(newContexts.map((c) => c.pageContent))).toMatchSnapshot();
+  expect(JSON.stringify(newContexts.map((c) => c.metadata))).toMatchSnapshot();
 
   type Loc = {
     lines: {
