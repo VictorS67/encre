@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from sol 1`] = `
+"- pragma solidity ^0.8.0;
+- "interface IStorage {\\r
+
+  \\  function store(uint256 number) external;\\r
+
+  \\  function retrieve() external view returns (uint256);\\r
+
+  }"
+- "library SafeMath {\\r
+
+  \\  function add(uint256 a, uint256 b) internal pure returns (uint256) {\\r
+
+  \\    uint256 c = a + b;\\r
+
+  \\    require(c >= a, \\"SafeMath: addition overflow\\");\\r
+
+  \\    return c;\\r
+
+  \\  }\\r
+
+  }"
+- "contract MyContract is IStorage {\\r
+
+  \\  using SafeMath for uint256;\\r
+
+  \\r
+
+  \\  uint256 private _storedNumber;\\r
+
+  \\r
+
+  \\  function store(uint256 number) public override {\\r
+
+  \\    _storedNumber = number;\\r
+
+  \\  }"
+- "_storedNumber = number;\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  function retrieve() public view override returns (uint256) {\\r
+
+  \\    return _storedNumber;\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  function incrementStoredNumber(uint256 increment) public {"
+- "_storedNumber = _storedNumber.add(increment);\\r
+
+  \\  }\\r
+
+  }"
+"
+`;
+
+exports[`RecursiveTextSplitter from sol 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 1
+- loc:
+    lines:
+      from: 3
+      to: 6
+- loc:
+    lines:
+      from: 8
+      to: 14
+- loc:
+    lines:
+      from: 16
+      to: 23
+- loc:
+    lines:
+      from: 22
+      to: 29
+- loc:
+    lines:
+      from: 30
+      to: 32
+"
+`;

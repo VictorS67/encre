@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from php 1`] = `
+"- "function greet($name) {\\r
+
+  \\  return \\"Hello, \\" . $name . \\"!\\";\\r
+
+  }"
+- "class MyClass {\\r
+
+  \\  public $property;\\r
+
+  \\r
+
+  \\  public function __construct($value) {\\r
+
+  \\    $this->property = $value;\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  public function getProperty() {\\r
+
+  \\    return $this->property;\\r
+
+  \\  }"
+- "return $this->property;\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  public function setProperty($value) {\\r
+
+  \\    $this->property = $value;\\r
+
+  \\  }\\r
+
+  }\\r
+
+  \\r
+
+  echo greet(\\"Alice\\") . \\"\\\\n\\";\\r
+
+  \\r
+
+  $obj = new MyClass(\\"Initial Value\\");"
+- "$obj = new MyClass(\\"Initial Value\\");\\r
+
+  echo $obj->getProperty() . \\"\\\\n\\";\\r
+
+  $obj->setProperty(\\"New Value\\");\\r
+
+  echo $obj->getProperty() . \\"\\\\n\\";"
+"
+`;
+
+exports[`RecursiveTextSplitter from php 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 3
+- loc:
+    lines:
+      from: 5
+      to: 14
+- loc:
+    lines:
+      from: 13
+      to: 23
+- loc:
+    lines:
+      from: 23
+      to: 26
+"
+`;

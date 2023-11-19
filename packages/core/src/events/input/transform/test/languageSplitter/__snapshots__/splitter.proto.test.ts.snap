@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from proto 1`] = `
+"- "syntax = \\"proto3\\";\\r
+
+  \\r
+
+  package mypackage;"
+- "message UserProfile {\\r
+
+  \\  string id = 1;\\r
+
+  \\  string name = 2;\\r
+
+  \\  int32 age = 3;\\r
+
+  \\  string email = 4;\\r
+
+  \\  repeated string interests = 5;\\r
+
+  }"
+- "service ProfileService {\\r
+
+  \\  rpc CreateProfile(UserProfile) returns (UserProfile);\\r
+
+  \\r
+
+  \\  rpc GetProfile(GetProfileRequest) returns (UserProfile);"
+- "rpc UpdateProfile(UserProfile) returns (UserProfile);\\r
+
+  \\r
+
+  \\  rpc DeleteProfile(DeleteProfileRequest) returns
+  (DeleteProfileResponse);\\r
+
+  }"
+- "message GetProfileRequest {\\r
+
+  \\  string user_id = 1;\\r
+
+  }\\r
+
+  \\r
+
+  message DeleteProfileRequest {\\r
+
+  \\  string user_id = 1;\\r
+
+  }"
+- "message DeleteProfileResponse {\\r
+
+  \\  bool success = 1;\\r
+
+  }\\r
+
+  \\r
+
+  enum UserStatus {\\r
+
+  \\  ACTIVE = 0;\\r
+
+  \\  INACTIVE = 1;\\r
+
+  \\  SUSPENDED = 2;\\r
+
+  }"
+"
+`;
+
+exports[`RecursiveTextSplitter from proto 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 3
+- loc:
+    lines:
+      from: 5
+      to: 11
+- loc:
+    lines:
+      from: 13
+      to: 16
+- loc:
+    lines:
+      from: 18
+      to: 21
+- loc:
+    lines:
+      from: 23
+      to: 29
+- loc:
+    lines:
+      from: 31
+      to: 39
+"
+`;

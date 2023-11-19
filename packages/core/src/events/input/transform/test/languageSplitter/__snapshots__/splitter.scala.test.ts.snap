@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from scala 1`] = `
+"- "class MyClass(val name: String, var age: Int) {\\r
+
+  \\  def greet(): String = {\\r
+
+  \\    s\\"Hello, my name is $name and I am $age years old.\\"\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  def haveBirthday(): Unit = {\\r
+
+  \\    age += 1"
+- "def haveBirthday(): Unit = {\\r
+
+  \\    age += 1\\r
+
+  \\    println(s\\"Happy birthday! Now, I am $age years old.\\")\\r
+
+  \\  }\\r
+
+  }"
+- "val person = new MyClass(\\"Alice\\", 25)\\r
+
+  println(person.greet())\\r
+
+  person.haveBirthday()"
+"
+`;
+
+exports[`RecursiveTextSplitter from scala 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 7
+- loc:
+    lines:
+      from: 6
+      to: 10
+- loc:
+    lines:
+      from: 12
+      to: 14
+"
+`;

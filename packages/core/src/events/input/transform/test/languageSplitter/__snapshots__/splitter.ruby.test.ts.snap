@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from ruby 1`] = `
+"- "class MyClass\\r
+
+  \\  def initialize(name, age)\\r
+
+  \\    @name = name\\r
+
+  \\    @age = age\\r
+
+  \\  end\\r
+
+  \\r
+
+  \\  def display_info\\r
+
+  \\    \\"Name: #{@name}, Age: #{@age}\\"\\r
+
+  \\  end\\r
+
+  \\r
+
+  \\  def name=(name)\\r
+
+  \\    @name = name\\r
+
+  \\  end"
+- "def name=(name)\\r
+
+  \\    @name = name\\r
+
+  \\  end\\r
+
+  \\r
+
+  \\  def name\\r
+
+  \\    @name\\r
+
+  \\  end\\r
+
+  \\r
+
+  \\  def age=(age)\\r
+
+  \\    @age = age\\r
+
+  \\  end\\r
+
+  \\r
+
+  \\  def age\\r
+
+  \\    @age\\r
+
+  \\  end\\r
+
+  end\\r
+
+  \\r
+
+  person = MyClass.new(\\"Alice\\", 30)"
+- "end\\r
+
+  end\\r
+
+  \\r
+
+  person = MyClass.new(\\"Alice\\", 30)\\r
+
+  puts person.display_info\\r
+
+  \\r
+
+  person.name = \\"Bob\\"\\r
+
+  puts person.name"
+"
+`;
+
+exports[`RecursiveTextSplitter from ruby 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 13
+- loc:
+    lines:
+      from: 11
+      to: 28
+- loc:
+    lines:
+      from: 25
+      to: 32
+"
+`;

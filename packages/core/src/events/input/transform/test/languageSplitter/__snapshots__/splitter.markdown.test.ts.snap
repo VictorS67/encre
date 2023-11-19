@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from markdown 1`] = `
+"- "## Understanding Markdown Headings\\r
+
+  In this section, we'll explore how to use headings in Markdown to structure
+  a document effectively."
+- "### The Role of Second-Level Headings\\r
+
+  Second-level headings are crucial for dividing your document into major
+  sections. Each section should cover a distinct topic or theme."
+- "#### Details Under a Subsection\\r
+
+  Within each major section, you can use third and fourth-level headings to
+  discuss specific details or subtopics."
+- "### Using Lists and Bullet Points\\r
+
+  Lists are a great way to organize information succinctly. Here's an
+  example:\\r
+
+  - Point one\\r
+
+  - Point two\\r
+
+  - Point three"
+- "#### Adding Links and References\\r
+
+  To reference external sources, you can include links like this: \\r
+
+  [Example Website](https://www.example.com/)"
+- "## Conclusion\\r
+
+  Headings are a fundamental part of Markdown syntax, helping to structure
+  content in a readable and navigable format."
+"
+`;
+
+exports[`RecursiveTextSplitter from markdown 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 2
+- loc:
+    lines:
+      from: 4
+      to: 5
+- loc:
+    lines:
+      from: 7
+      to: 8
+- loc:
+    lines:
+      from: 10
+      to: 14
+- loc:
+    lines:
+      from: 16
+      to: 18
+- loc:
+    lines:
+      from: 20
+      to: 21
+"
+`;

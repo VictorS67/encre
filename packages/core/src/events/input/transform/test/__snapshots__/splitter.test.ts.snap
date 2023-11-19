@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test TextSplitter 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - transform
+  - splitter
+  - TextSplitter
+_kwargs:
+  max_size: 3
+  overlap: 1
+  separator: +++
+  keep_separator: false
+"
+`;
+
+exports[`test TextSplitter with newlines separator 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - transform
+  - splitter
+  - TextSplitter
+_kwargs:
+  max_size: 3
+  overlap: 1
+  separator: "\\n\\n\\n"
+  keep_separator: true
+"
+`;
+
+exports[`test custom ContextSplitter 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - transform
+  - splitter
+  - TestSplitter
+_kwargs: {}
+"
+`;

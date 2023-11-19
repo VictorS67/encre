@@ -57,16 +57,3 @@ export abstract class BaseLoader<
    */
   abstract load(source: CallInput): Promise<CallOutput>;
 }
-
-// /**
-//  * Function is the event to load the source to an array of `Context` instances.
-//  * @param loader The loader for loading readable source.
-//  * @param sourceProvider the source provider for providing readable source.
-//  * @returns A Promise that resolves with an array of `Context` instances.
-//  */
-// export async function loadInput(
-//   loader: Loader,
-//   sourceProvider: SourceProvider
-// ): Promise<Context[]> {
-//   return loader.load(sourceProvider.provide());
-// }

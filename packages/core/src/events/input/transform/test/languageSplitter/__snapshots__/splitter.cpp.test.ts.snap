@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from cpp 1`] = `
+"- "#include <iostream>"
+- "class Example {\\r
+
+  \\  public:\\r
+
+  \\    void function() {\\r
+
+  \\      std::cout << \\"Function of Example class called.\\" << std::endl;\\r
+
+  \\    }\\r
+
+  };"
+- "int main() {\\r
+
+  \\  Example ex;\\r
+
+  \\  ex.function();\\r
+
+  \\r
+
+  \\  if(true) {\\r
+
+  \\    std::cout << \\"The condition is true.\\" << std::endl;\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  for(int i = 0; i < 10; i++) {"
+- "}\\r
+
+  \\r
+
+  \\  for(int i = 0; i < 10; i++) {\\r
+
+  \\    std::cout << \\"Loop iteration: \\" << i << std::endl;\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  return 0;\\r
+
+  }"
+"
+`;
+
+exports[`RecursiveTextSplitter from cpp 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 1
+- loc:
+    lines:
+      from: 3
+      to: 8
+- loc:
+    lines:
+      from: 10
+      to: 18
+- loc:
+    lines:
+      from: 16
+      to: 23
+"
+`;

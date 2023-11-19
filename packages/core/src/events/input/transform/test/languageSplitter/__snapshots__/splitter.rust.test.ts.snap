@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from rust 1`] = `
+"- "fn main() {\\r
+
+  \\  let x = multiply_by_two(CONSTANT);\\r
+
+  \\  println!(\\"CONSTANT multiplied by two is {}\\", x);\\r
+
+  \\r
+
+  \\  let y = 20;\\r
+
+  \\  if y > x {\\r
+
+  \\    println!(\\"{} is greater than {}\\", y, x);\\r
+
+  \\  } else {"
+- "} else {\\r
+
+  \\    println!(\\"{} is not greater than {}\\", y, x);\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  let z = add(x, y);\\r
+
+  \\  println!(\\"The sum of {} and {} is {}\\", x, y, z);\\r
+
+  }"
+- "const CONSTANT: u32 = 10;"
+- "fn multiply_by_two(value: u32) -> u32 {\\r
+
+  \\  value * 2\\r
+
+  }\\r
+
+  \\r
+
+  fn add(a: u32, b: u32) -> u32 {\\r
+
+  \\  a + b\\r
+
+  }"
+"
+`;
+
+exports[`RecursiveTextSplitter from rust 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 8
+- loc:
+    lines:
+      from: 8
+      to: 14
+- loc:
+    lines:
+      from: 16
+      to: 16
+- loc:
+    lines:
+      from: 18
+      to: 24
+"
+`;

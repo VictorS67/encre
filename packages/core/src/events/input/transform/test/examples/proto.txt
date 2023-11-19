@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package mypackage;
+
+message UserProfile {
+  string id = 1;
+  string name = 2;
+  int32 age = 3;
+  string email = 4;
+  repeated string interests = 5;
+}
+
+service ProfileService {
+  rpc CreateProfile(UserProfile) returns (UserProfile);
+
+  rpc GetProfile(GetProfileRequest) returns (UserProfile);
+
+  rpc UpdateProfile(UserProfile) returns (UserProfile);
+
+  rpc DeleteProfile(DeleteProfileRequest) returns (DeleteProfileResponse);
+}
+
+message GetProfileRequest {
+  string user_id = 1;
+}
+
+message DeleteProfileRequest {
+  string user_id = 1;
+}
+
+message DeleteProfileResponse {
+  bool success = 1;
+}
+
+enum UserStatus {
+  ACTIVE = 0;
+  INACTIVE = 1;
+  SUSPENDED = 2;
+}

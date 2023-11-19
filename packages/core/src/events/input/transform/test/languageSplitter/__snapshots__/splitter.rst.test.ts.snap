@@ -1,0 +1,96 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from rst 1`] = `
+"- "=================\\r
+
+  My Awesome Title\\r
+
+  =================\\r
+
+  \\r
+
+  Introduction\\r
+
+  ------------"
+- "Introduction\\r
+
+  ------------\\r
+
+  \\r
+
+  This document explains how to use reStructuredText (RST) for basic
+  documentation needs. RST is widely used in the Python community for its
+  simplicity and readability."
+- "Basic Python Code Example\\r
+
+  -------------------------\\r
+
+  \\r
+
+  Below is a simple Python code example. This section demonstrates how to
+  include code blocks in your RST document."
+- ".. code-block:: python\\r
+
+  \\r
+
+  \\  # This is a simple Python script\\r
+
+  \\  print(\\"Hello, World!\\")\\r
+
+  \\r
+
+  Advanced Topics\\r
+
+  ---------------"
+- "Advanced Topics\\r
+
+  ---------------\\r
+
+  \\r
+
+  This section can be expanded to include more advanced topics or examples. It
+  serves as a placeholder for further content.\\r
+
+  \\r
+
+  Conclusion\\r
+
+  ----------"
+- "Conclusion\\r
+
+  ----------\\r
+
+  \\r
+
+  RST is a powerful tool for writing documentation. It's simple yet flexible,
+  making it an excellent choice for technical documentation."
+"
+`;
+
+exports[`RecursiveTextSplitter from rst 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 6
+- loc:
+    lines:
+      from: 5
+      to: 8
+- loc:
+    lines:
+      from: 10
+      to: 13
+- loc:
+    lines:
+      from: 15
+      to: 21
+- loc:
+    lines:
+      from: 20
+      to: 26
+- loc:
+    lines:
+      from: 25
+      to: 28
+"
+`;

@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from html 1`] = `
+"- "<!doctype html>\\r\\n<html lang=\\"en\\">"
+- "<head>\\r
+
+  \\    <meta charset=\\"UTF-8\\" />\\r
+
+  \\    <meta name=\\"viewport\\" content=\\"width=device-width,
+  initial-scale=1.0\\" />"
+- "<title>Sample Page with Tailwind CSS</title>\\r
+
+  \\r
+
+  \\    <link\\r
+
+  \\      href=\\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind\\
+  .min.css\\"\\r
+
+  \\      rel=\\"stylesheet\\"\\r
+
+  \\    />\\r
+
+  \\  </head>\\r
+
+  \\  <body class=\\"bg-gray-100 font-sans leading-normal tracking-normal\\">\\r
+
+  \\    <div class=\\"container mx-auto mt-10\\">\\r
+
+  \\      <div class=\\"bg-white rounded shadow-lg p-6\\">\\r
+
+  \\        <div class=\\"mb-4\\">\\r
+
+  \\          <div class=\\"bg-blue-100 p-4 rounded-lg shadow-md\\">\\r
+
+  \\            <p class=\\"text-blue-600 font-bold\\">Hello</p>"
+- "<div class=\\"mb-4\\">\\r
+
+  \\          <div class=\\"bg-blue-100 p-4 rounded-lg shadow-md\\">\\r
+
+  \\            <p class=\\"text-blue-600 font-bold\\">Hello</p>\\r
+
+  \\          </div>\\r
+
+  \\          <span class=\\"text-red-500 font-medium ml-4\\">World</span>\\r
+
+  \\        </div>\\r
+
+  \\r
+
+  \\        <table class=\\"min-w-full table-auto border-collapse bg-white\\">\\r
+
+  \\          <thead>\\r
+
+  \\            <tr\\r
+
+  \\              class=\\"bg-gray-200 text-gray-600 uppercase text-sm
+  leading-normal\\"\\r
+
+  \\            >"
+- "<thead>\\r
+
+  \\            <tr\\r
+
+  \\              class=\\"bg-gray-200 text-gray-600 uppercase text-sm
+  leading-normal\\"\\r
+
+  \\            >\\r
+
+  \\              <th class=\\"py-3 px-6 text-left\\">Header</th>\\r
+
+  \\            </tr>\\r
+
+  \\          </thead>\\r
+
+  \\          <tbody>\\r
+
+  \\            <tr class=\\"border-b hover:bg-gray-100\\">\\r
+
+  \\              <td class=\\"py-3 px-6 text-left\\">Cell</td>\\r
+
+  \\            </tr>\\r
+
+  \\          </tbody>\\r
+
+  \\        </table>\\r
+
+  \\      </div>\\r
+
+  \\    </div>\\r
+
+  \\  </body>\\r
+
+  </html>"
+"
+`;
+
+exports[`RecursiveTextSplitter from html 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 2
+- loc:
+    lines:
+      from: 3
+      to: 5
+- loc:
+    lines:
+      from: 6
+      to: 18
+- loc:
+    lines:
+      from: 16
+      to: 27
+- loc:
+    lines:
+      from: 24
+      to: 40
+"
+`;

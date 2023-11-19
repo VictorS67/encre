@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from latex 1`] = `
+"- "\\\\documentclass{article}\\r
+
+  \\r
+
+  \\\\usepackage[utf8]{inputenc}\\r
+
+  \\\\usepackage{graphicx}\\r
+
+  \\\\usepackage{lipsum}\\r
+
+  \\\\usepackage{hyperref}\\r
+
+  \\r
+
+  \\\\title{Your Document Title}\\r
+
+  \\\\author{Your Name}\\r
+
+  \\\\date{\\\\today}"
+- "\\\\author{Your Name}\\r
+
+  \\\\date{\\\\today}\\r
+
+  \\r
+
+  \\\\begin{document}\\r
+
+  \\r
+
+  \\\\maketitle\\r
+
+  \\r
+
+  \\\\tableofcontents\\r
+
+  \\\\newpage"
+- "\\\\section{Introduction}\\r
+
+  \\\\label{sec:introduction}\\r
+
+  Some introduction text. You can also use \\\\textit{italic}, \\\\textbf{bold},
+  or \\\\texttt{monospace} text styles.\\r
+
+  \\\\lipsum[1]"
+- "\\\\section{Main Content}\\r
+
+  \\\\label{sec:maincontent}\\r
+
+  Here you can include the main content of your document.\\r
+
+  \\\\lipsum[2-3]"
+- "\\\\subsection{Details}\\r
+
+  \\\\label{subsec:details}\\r
+
+  This subsection can include detailed information.\\r
+
+  \\\\begin{itemize}\\r
+
+  \\    \\\\item First item\\r
+
+  \\    \\\\item Second item\\r
+
+  \\    \\\\item Third item\\r
+
+  \\\\end{itemize}"
+- "\\\\subsection{Additional Information}\\r
+
+  \\\\label{subsec:additionalinfo}\\r
+
+  Further detailed information can be included here."
+- "\\\\begin{enumerate}\\r
+
+  \\    \\\\item First point\\r
+
+  \\    \\\\item Second point\\r
+
+  \\    \\\\item Third point\\r
+
+  \\\\end{enumerate}"
+- "\\\\section{Conclusion}\\r
+
+  \\\\label{sec:conclusion}\\r
+
+  The conclusion summarizes the main findings or the essence of the
+  document.\\r
+
+  \\\\lipsum[4]\\r
+
+  \\r
+
+  \\\\end{document}"
+"
+`;
+
+exports[`RecursiveTextSplitter from latex 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 10
+- loc:
+    lines:
+      from: 9
+      to: 17
+- loc:
+    lines:
+      from: 19
+      to: 22
+- loc:
+    lines:
+      from: 24
+      to: 27
+- loc:
+    lines:
+      from: 29
+      to: 36
+- loc:
+    lines:
+      from: 38
+      to: 40
+- loc:
+    lines:
+      from: 41
+      to: 45
+- loc:
+    lines:
+      from: 47
+      to: 52
+"
+`;

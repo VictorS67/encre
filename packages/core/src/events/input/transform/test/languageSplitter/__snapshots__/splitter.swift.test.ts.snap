@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from swift 1`] = `
+"- "func greet() {\\r
+
+  \\  print(\\"Hello, welcome to Swift programming!\\")\\r
+
+  }"
+- "class Vehicle {\\r
+
+  \\  var numberOfWheels: Int\\r
+
+  \\r
+
+  \\  init(numberOfWheels: Int) {\\r
+
+  \\    self.numberOfWheels = numberOfWheels\\r
+
+  \\  }\\r
+
+  \\r
+
+  \\  func describe() {"
+- "}\\r
+
+  \\r
+
+  \\  func describe() {\\r
+
+  \\    print(\\"This is a vehicle with \\\\(numberOfWheels) wheels.\\")\\r
+
+  \\  }\\r
+
+  }\\r
+
+  \\r
+
+  greet()\\r
+
+  \\r
+
+  let car = Vehicle(numberOfWheels: 4)\\r
+
+  \\r
+
+  car.describe()"
+"
+`;
+
+exports[`RecursiveTextSplitter from swift 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 3
+- loc:
+    lines:
+      from: 5
+      to: 12
+- loc:
+    lines:
+      from: 10
+      to: 21
+"
+`;

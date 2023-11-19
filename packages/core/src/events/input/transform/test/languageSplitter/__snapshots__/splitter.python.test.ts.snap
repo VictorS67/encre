@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecursiveTextSplitter from python 1`] = `
+"- "class MyClass:\\r
+
+  \\  def __init__(self, name):\\r
+
+  \\    self.name = name\\r
+
+  \\r
+
+  \\  def greet(self):\\r
+
+  \\    return f\\"Hello, my name is {self.name}!\\""
+- "def greet_everyone():\\r
+
+  \\  alice = MyClass(\\"Alice\\")\\r
+
+  \\  bob = MyClass(\\"Bob\\")\\r
+
+  \\r
+
+  \\  print(alice.greet())\\r
+
+  \\  print(bob.greet())\\r
+
+  \\r
+
+  greet_everyone()"
+"
+`;
+
+exports[`RecursiveTextSplitter from python 2`] = `
+"- loc:
+    lines:
+      from: 1
+      to: 6
+- loc:
+    lines:
+      from: 8
+      to: 15
+"
+`;
