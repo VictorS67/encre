@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 import path from 'path';
 import url from 'url';
 import { expect, test } from '@jest/globals';
