@@ -30,7 +30,7 @@ test('RecursiveTextSplitter from js', async () => {
   });
 
   const newContexts = await splitter.invoke(context);
-  expect(JSON.stringify(newContexts.map((c) => c.pageContent))).toMatchSnapshot();
+  expect(JSON.stringify(newContexts.map((c) => c.pageContent.replace(/\r/g, '')))).toMatchSnapshot();
   expect(JSON.stringify(newContexts.map((c) => c.metadata))).toMatchSnapshot();
 
   type Loc = {

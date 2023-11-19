@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RecursiveTextSplitter from cpp 1`] = `"["#include <iostream>","class Example {\\r\\n  public:\\r\\n    void function() {\\r\\n      std::cout << \\"Function of Example class called.\\" << std::endl;\\r\\n    }\\r\\n};","int main() {\\r\\n  Example ex;\\r\\n  ex.function();\\r\\n\\r\\n  if(true) {\\r\\n    std::cout << \\"The condition is true.\\" << std::endl;\\r\\n  }\\r\\n\\r\\n  for(int i = 0; i < 10; i++) {","}\\r\\n\\r\\n  for(int i = 0; i < 10; i++) {\\r\\n    std::cout << \\"Loop iteration: \\" << i << std::endl;\\r\\n  }\\r\\n\\r\\n  return 0;\\r\\n}"]"`;
+exports[`RecursiveTextSplitter from cpp 1`] = `"["#include <iostream>","class Example {\\n  public:\\n    void function() {\\n      std::cout << \\"Function of Example class called.\\" << std::endl;\\n    }\\n};","int main() {\\n  Example ex;\\n  ex.function();\\n\\n  if(true) {\\n    std::cout << \\"The condition is true.\\" << std::endl;\\n  }\\n\\n  for(int i = 0; i < 10; i++) {","}\\n\\n  for(int i = 0; i < 10; i++) {\\n    std::cout << \\"Loop iteration: \\" << i << std::endl;\\n  }\\n\\n  return 0;\\n}"]"`;
 
 exports[`RecursiveTextSplitter from cpp 2`] = `"[{"loc":{"lines":{"from":1,"to":1}}},{"loc":{"lines":{"from":3,"to":8}}},{"loc":{"lines":{"from":10,"to":18}}},{"loc":{"lines":{"from":16,"to":23}}}]"`;

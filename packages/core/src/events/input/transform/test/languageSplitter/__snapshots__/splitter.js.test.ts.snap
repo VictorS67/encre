@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`RecursiveTextSplitter from js 1`] = `"["function example() {\\r\\n  const x = 10;\\r\\n  if (x === 10) {\\r\\n    return \\"x is exactly 10!\\";\\r\\n  } else {\\r\\n    return \\"x is not 10.\\";\\r\\n  }\\r\\n}","class MyClass {\\r\\n  constructor(name) {\\r\\n    this.name = name;\\r\\n  }\\r\\n\\r\\n  greet() {\\r\\n    return \`Hello, my name is \${this.name}!\`;\\r\\n  }\\r\\n}","let result = example();\\r\\nconsole.log(result);\\r\\n\\r\\nlet myObject = new MyClass(\\"Alice\\");\\r\\nconsole.log(myObject.greet());"]"`;
+exports[`RecursiveTextSplitter from js 1`] = `"["function example() {\\n  const x = 10;\\n  if (x === 10) {\\n    return \\"x is exactly 10!\\";\\n  } else {\\n    return \\"x is not 10.\\";\\n  }\\n}","class MyClass {\\n  constructor(name) {\\n    this.name = name;\\n  }\\n\\n  greet() {\\n    return \`Hello, my name is \${this.name}!\`;\\n  }\\n}","let result = example();\\nconsole.log(result);\\n\\nlet myObject = new MyClass(\\"Alice\\");\\nconsole.log(myObject.greet());"]"`;
 
 exports[`RecursiveTextSplitter from js 2`] = `"[{"loc":{"lines":{"from":1,"to":8}}},{"loc":{"lines":{"from":10,"to":18}}},{"loc":{"lines":{"from":20,"to":24}}}]"`;
