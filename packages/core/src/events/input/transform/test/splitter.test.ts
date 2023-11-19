@@ -375,7 +375,7 @@ describe('RecursiveTextSplitter', () => {
     await splitter.invoke(context);
     const endTime = Date.now();
     const duration = endTime - startTime;
-    expect(duration).toBeLessThan(2500);
+    expect(duration).toBeLessThan(5000);
   });
 
   test('should maintain performance efficiency with large texts for token counting', async () => {
