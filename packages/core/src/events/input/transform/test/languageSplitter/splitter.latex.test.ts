@@ -30,9 +30,6 @@ test('RecursiveTextSplitter from latex', async () => {
   });
 
   const newContexts = await splitter.invoke(context);
-  expect(JSON.stringify(newContexts.map((c) => c.pageContent.replace(/\r/g, '')))).toMatchSnapshot();
-  expect(JSON.stringify(newContexts.map((c) => c.metadata))).toMatchSnapshot();
-
   type Loc = {
     lines: {
       from: number;

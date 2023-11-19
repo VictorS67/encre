@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`RecursiveTextSplitter from proto 1`] = `"["syntax = \\"proto3\\";\\n\\npackage mypackage;","message UserProfile {\\n  string id = 1;\\n  string name = 2;\\n  int32 age = 3;\\n  string email = 4;\\n  repeated string interests = 5;\\n}","service ProfileService {\\n  rpc CreateProfile(UserProfile) returns (UserProfile);\\n\\n  rpc GetProfile(GetProfileRequest) returns (UserProfile);","rpc UpdateProfile(UserProfile) returns (UserProfile);\\n\\n  rpc DeleteProfile(DeleteProfileRequest) returns (DeleteProfileResponse);\\n}","message GetProfileRequest {\\n  string user_id = 1;\\n}\\n\\nmessage DeleteProfileRequest {\\n  string user_id = 1;\\n}","message DeleteProfileResponse {\\n  bool success = 1;\\n}\\n\\nenum UserStatus {\\n  ACTIVE = 0;\\n  INACTIVE = 1;\\n  SUSPENDED = 2;\\n}"]"`;
-
-exports[`RecursiveTextSplitter from proto 2`] = `"[{"loc":{"lines":{"from":1,"to":3}}},{"loc":{"lines":{"from":5,"to":11}}},{"loc":{"lines":{"from":13,"to":16}}},{"loc":{"lines":{"from":18,"to":21}}},{"loc":{"lines":{"from":23,"to":29}}},{"loc":{"lines":{"from":31,"to":39}}}]"`;

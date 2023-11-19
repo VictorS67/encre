@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`RecursiveTextSplitter from java 1`] = `"["class Calculator {\\n  public int add(int num1, int num2) {\\n    return num1 + num2;\\n  }\\n\\n  public int subtract(int num1, int num2) {\\n    return num1 - num2;\\n  }\\n}","class CalculatorDemo {\\n  public static void main(String[] args) {\\n    Calculator calc = new Calculator();\\n    \\n    int sum = calc.add(5, 3);\\n    System.out.println(\\"Sum: \\" + sum);","System.out.println(\\"Sum: \\" + sum);\\n\\n    int difference = calc.subtract(5, 3);\\n    System.out.println(\\"Difference: \\" + difference);\\n  }\\n}"]"`;
-
-exports[`RecursiveTextSplitter from java 2`] = `"[{"loc":{"lines":{"from":1,"to":9}}},{"loc":{"lines":{"from":11,"to":16}}},{"loc":{"lines":{"from":16,"to":21}}}]"`;

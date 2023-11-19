@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`RecursiveTextSplitter from php 1`] = `"["function greet($name) {\\n  return \\"Hello, \\" . $name . \\"!\\";\\n}","class MyClass {\\n  public $property;\\n\\n  public function __construct($value) {\\n    $this->property = $value;\\n  }\\n\\n  public function getProperty() {\\n    return $this->property;\\n  }","return $this->property;\\n  }\\n\\n  public function setProperty($value) {\\n    $this->property = $value;\\n  }\\n}\\n\\necho greet(\\"Alice\\") . \\"\\\\n\\";\\n\\n$obj = new MyClass(\\"Initial Value\\");","$obj = new MyClass(\\"Initial Value\\");\\necho $obj->getProperty() . \\"\\\\n\\";\\n$obj->setProperty(\\"New Value\\");\\necho $obj->getProperty() . \\"\\\\n\\";"]"`;
-
-exports[`RecursiveTextSplitter from php 2`] = `"[{"loc":{"lines":{"from":1,"to":3}}},{"loc":{"lines":{"from":5,"to":14}}},{"loc":{"lines":{"from":13,"to":23}}},{"loc":{"lines":{"from":23,"to":26}}}]"`;

@@ -1,5 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`RecursiveTextSplitter from go 1`] = `"["package main\\n\\nimport (\\n  \\"fmt\\"\\n)\\n\\nfunc example(x int) {\\n  if x > 5 {\\n    fmt.Println(x, \\"is greater than 5\\")\\n  } else {\\n    fmt.Println(x, \\"is not greater than 5\\")\\n  }\\n}","func another(a, b int) int {\\n  return a + b\\n}\\n\\nfunc main() {\\n  example(3)\\n  example(6)\\n\\n  result := another(5, 7)\\n  fmt.Println(\\"The sum is:\\", result)\\n}"]"`;
-
-exports[`RecursiveTextSplitter from go 2`] = `"[{"loc":{"lines":{"from":1,"to":13}}},{"loc":{"lines":{"from":15,"to":25}}}]"`;
