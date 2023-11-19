@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample Page with Tailwind CSS</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto mt-10">
+      <div class="bg-white rounded shadow-lg p-6">
+        <div class="mb-4">
+          <div class="bg-blue-100 p-4 rounded-lg shadow-md">
+            <p class="text-blue-600 font-bold">Hello</p>
+          </div>
+          <span class="text-red-500 font-medium ml-4">World</span>
+        </div>
+
+        <table class="min-w-full table-auto border-collapse bg-white">
+          <thead>
+            <tr
+              class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal"
+            >
+              <th class="py-3 px-6 text-left">Header</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b hover:bg-gray-100">
+              <td class="py-3 px-6 text-left">Cell</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

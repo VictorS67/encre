@@ -1,0 +1,14 @@
+class MyClass(val name: String, var age: Int) {
+  def greet(): String = {
+    s"Hello, my name is $name and I am $age years old."
+  }
+
+  def haveBirthday(): Unit = {
+    age += 1
+    println(s"Happy birthday! Now, I am $age years old.")
+  }
+}
+
+val person = new MyClass("Alice", 25)
+println(person.greet())
+person.haveBirthday()

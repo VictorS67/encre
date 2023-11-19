@@ -1,0 +1,26 @@
+function greet($name) {
+  return "Hello, " . $name . "!";
+}
+
+class MyClass {
+  public $property;
+
+  public function __construct($value) {
+    $this->property = $value;
+  }
+
+  public function getProperty() {
+    return $this->property;
+  }
+
+  public function setProperty($value) {
+    $this->property = $value;
+  }
+}
+
+echo greet("Alice") . "\n";
+
+$obj = new MyClass("Initial Value");
+echo $obj->getProperty() . "\n";
+$obj->setProperty("New Value");
+echo $obj->getProperty() . "\n";
