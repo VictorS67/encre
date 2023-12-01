@@ -1,9 +1,9 @@
-import { expect, test } from "@jest/globals";
-import { stringify } from "yaml";
-import { load } from "../../load";
-import { OptionalImportMap, SecretMap } from "../../load/importType.js";
-import { SecretFields } from "../../load/keymap";
-import { SerializedConstructor } from "../../load/serializable";
+import { expect, test } from '@jest/globals';
+import { stringify } from 'yaml';
+import { load } from '../../load';
+import { OptionalImportMap, SecretMap } from '../../load/importType.js';
+import { SecretFields } from '../../load/keymap';
+import { SerializedConstructor } from '../../load/serializable';
 import {
   Callable,
   CallableConfigFields,
@@ -14,9 +14,9 @@ import {
   CallableWithFallbacks,
   CallableWithFallbacksArg,
   CallableLambda,
-} from "../callable";
+} from '../callable';
 
-test("test custom callable", async () => {
+test('test custom callable', async () => {
   type TestInput = {
     input: string | boolean;
   };
@@ -37,7 +37,7 @@ test("test custom callable", async () => {
     extends Callable<TestInput, string, CallOptions>
     implements TestParams
   {
-    _namespace: string[] = ["tests"];
+    _namespace: string[] = ['tests'];
 
     _isCallable = true;
 
@@ -45,13 +45,13 @@ test("test custom callable", async () => {
 
     get _secrets(): SecretFields | undefined {
       return {
-        testApi: "TEST_API",
+        testApi: 'TEST_API',
       };
     }
 
     get _aliases(): SecretFields | undefined {
       return {
-        testApi: "test_api",
+        testApi: 'test_api',
       };
     }
 
@@ -63,9 +63,9 @@ test("test custom callable", async () => {
 
     constructor(fields?: Partial<TestInput> & SerializableTestParams) {
       super(fields ?? {});
-      this.hello = fields?.hello ?? "default-hello";
-      this.bye = fields?.bye ?? "default-bye";
-      this.testApi = fields?.testApi ?? "default-api";
+      this.hello = fields?.hello ?? 'default-hello';
+      this.bye = fields?.bye ?? 'default-bye';
+      this.testApi = fields?.testApi ?? 'default-api';
     }
 
     async invoke(
@@ -82,10 +82,10 @@ test("test custom callable", async () => {
   }
 
   const test = new Test({
-    hello: "hello",
-    bye: "bye",
+    hello: 'hello',
+    bye: 'bye',
     serializableField: true,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
   const argumentsBefore = test._kwargs;
   const serializedStr: string = JSON.stringify(test, null, 2);
@@ -93,32 +93,32 @@ test("test custom callable", async () => {
   expect(test._kwargs).toEqual(argumentsBefore);
   expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
 
-  expect(await test.invoke({ input: "input" })).toBe("hello-input-bye-true");
-  expect(await test.invoke({ input: true })).toBe("hello-true-bye-true");
+  expect(await test.invoke({ input: 'input' })).toBe('hello-input-bye-true');
+  expect(await test.invoke({ input: true })).toBe('hello-true-bye-true');
 
   const test2 = await load<Test>(
     serializedStr,
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
 
   expect(test2).toBeInstanceOf(Test);
   expect(JSON.stringify(test2, null, 2)).toBe(serializedStr);
 
-  expect(await test2.invoke({ input: "input" })).toBe("hello-input-bye-true");
-  expect(await test2.invoke({ input: true })).toBe("hello-true-bye-true");
+  expect(await test2.invoke({ input: 'input' })).toBe('hello-input-bye-true');
+  expect(await test2.invoke({ input: true })).toBe('hello-true-bye-true');
 
   expect(
     await test2.invoke(
-      { input: "input" },
-      { hello: "new-hello", bye: "new-bye" }
+      { input: 'input' },
+      { hello: 'new-hello', bye: 'new-bye' }
     )
-  ).toBe("new-hello-input-new-bye-true");
+  ).toBe('new-hello-input-new-bye-true');
   expect(
-    await test2.invoke({ input: true }, { hello: "new-hello", bye: "new-bye" })
-  ).toBe("new-hello-true-new-bye-true");
+    await test2.invoke({ input: true }, { hello: 'new-hello', bye: 'new-bye' })
+  ).toBe('new-hello-true-new-bye-true');
 
-  const record = await test.toRecord("output");
+  const record = await test.toRecord('output');
   const recordStr = JSON.stringify(record, null, 2);
   expect(JSON.parse(recordStr)).toMatchSnapshot({
     _recordId: expect.any(String),
@@ -137,7 +137,7 @@ test("test custom callable", async () => {
 
   const test3 = await load<Test>(
     recordStr,
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
 
@@ -145,7 +145,7 @@ test("test custom callable", async () => {
   expect(JSON.stringify(test3, null, 2)).toBe(serializedStr);
 });
 
-test("test batch calling", async () => {
+test('test batch calling', async () => {
   type TestInput = {
     input: string | boolean;
   };
@@ -166,7 +166,7 @@ test("test batch calling", async () => {
     extends Callable<TestInput, string, CallOptions>
     implements TestParams
   {
-    _namespace: string[] = ["tests"];
+    _namespace: string[] = ['tests'];
 
     _isCallable = true;
 
@@ -174,13 +174,13 @@ test("test batch calling", async () => {
 
     get _secrets(): SecretFields | undefined {
       return {
-        testApi: "TEST_API",
+        testApi: 'TEST_API',
       };
     }
 
     get _aliases(): SecretFields | undefined {
       return {
-        testApi: "test_api",
+        testApi: 'test_api',
       };
     }
 
@@ -192,9 +192,9 @@ test("test batch calling", async () => {
 
     constructor(fields?: Partial<TestInput> & SerializableTestParams) {
       super(fields ?? {});
-      this.hello = fields?.hello ?? "default-hello";
-      this.bye = fields?.bye ?? "default-bye";
-      this.testApi = fields?.testApi ?? "default-api";
+      this.hello = fields?.hello ?? 'default-hello';
+      this.bye = fields?.bye ?? 'default-bye';
+      this.testApi = fields?.testApi ?? 'default-api';
     }
 
     async invoke(
@@ -205,7 +205,7 @@ test("test batch calling", async () => {
       this.bye = options?.bye ?? this.bye;
 
       if (options?.shouldThrowError === true) {
-        throw new Error("AbortError");
+        throw new Error('AbortError');
       }
 
       return `${this.hello}-${String(input.input)}-${this.bye}-${String(
@@ -215,18 +215,18 @@ test("test batch calling", async () => {
   }
 
   const test = new Test({
-    hello: "hello",
-    bye: "bye",
+    hello: 'hello',
+    bye: 'bye',
     shouldThrowError: false,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
 
   expect(
-    await test.batch([{ input: "input" }, { input: "input2" }])
-  ).toStrictEqual(["hello-input-bye-false", "hello-input2-bye-false"]);
+    await test.batch([{ input: 'input' }, { input: 'input2' }])
+  ).toStrictEqual(['hello-input-bye-false', 'hello-input2-bye-false']);
   expect(
-    await test.batch([{ input: true }, { input: "input2" }])
-  ).toStrictEqual(["hello-true-bye-false", "hello-input2-bye-false"]);
+    await test.batch([{ input: true }, { input: 'input2' }])
+  ).toStrictEqual(['hello-true-bye-false', 'hello-input2-bye-false']);
 
   const options: Partial<SerializableTestParams>[] = [
     {
@@ -244,14 +244,14 @@ test("test batch calling", async () => {
 
   expect(
     await test.batch(
-      [{ input: true }, { input: "input2" }],
+      [{ input: true }, { input: 'input2' }],
       options,
       batchOptions
     )
-  ).toStrictEqual([new Error("AbortError"), "hello-input2-bye-false"]);
+  ).toStrictEqual([new Error('AbortError'), 'hello-input2-bye-false']);
 });
 
-test("test CallableBind", async () => {
+test('test CallableBind', async () => {
   type TestInput = {
     input: string | boolean;
   };
@@ -272,7 +272,7 @@ test("test CallableBind", async () => {
     extends Callable<TestInput, string, CallOptions>
     implements TestParams
   {
-    _namespace: string[] = ["tests"];
+    _namespace: string[] = ['tests'];
 
     _isCallable = true;
 
@@ -280,13 +280,13 @@ test("test CallableBind", async () => {
 
     get _secrets(): SecretFields | undefined {
       return {
-        testApi: "TEST_API",
+        testApi: 'TEST_API',
       };
     }
 
     get _aliases(): SecretFields | undefined {
       return {
-        testApi: "test_api",
+        testApi: 'test_api',
       };
     }
 
@@ -298,9 +298,9 @@ test("test CallableBind", async () => {
 
     constructor(fields?: Partial<TestInput> & SerializableTestParams) {
       super(fields ?? {});
-      this.hello = fields?.hello ?? "default-hello";
-      this.bye = fields?.bye ?? "default-bye";
-      this.testApi = fields?.testApi ?? "default-api";
+      this.hello = fields?.hello ?? 'default-hello';
+      this.bye = fields?.bye ?? 'default-bye';
+      this.testApi = fields?.testApi ?? 'default-api';
     }
 
     async invoke(
@@ -322,7 +322,7 @@ test("test CallableBind", async () => {
     extends Callable<TestInput, string, CallOptions>
     implements TestParams
   {
-    _namespace: string[] = ["tests"];
+    _namespace: string[] = ['tests'];
 
     _isCallable = true;
 
@@ -330,13 +330,13 @@ test("test CallableBind", async () => {
 
     get _secrets(): SecretFields | undefined {
       return {
-        testApi: "TEST_API",
+        testApi: 'TEST_API',
       };
     }
 
     get _aliases(): SecretFields | undefined {
       return {
-        testApi: "test_api",
+        testApi: 'test_api',
       };
     }
 
@@ -348,39 +348,39 @@ test("test CallableBind", async () => {
 
     constructor(fields?: Partial<TestInput> & SerializableTestParams) {
       super(fields ?? {});
-      this.hello = fields?.hello ?? "default-hello";
-      this.bye = fields?.bye ?? "default-bye";
-      this.testApi = fields?.testApi ?? "default-api";
+      this.hello = fields?.hello ?? 'default-hello';
+      this.bye = fields?.bye ?? 'default-bye';
+      this.testApi = fields?.testApi ?? 'default-api';
     }
 
     async invoke(
       input: TestInput,
       options?: Partial<CallOptions> | undefined
     ): Promise<string> {
-      return "this-is-a-bind";
+      return 'this-is-a-bind';
     }
   }
 
   const test = new Test({
-    hello: "hello",
-    bye: "bye",
+    hello: 'hello',
+    bye: 'bye',
     serializableField: true,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
 
   const testbind = new TestBind({
-    hello: "bind-hello",
-    bye: "bind-bye",
+    hello: 'bind-hello',
+    bye: 'bind-bye',
     serializableField: true,
-    testApi: "bind-this-is-api",
+    testApi: 'bind-this-is-api',
   });
 
   const tBind = testbind.bind(test);
   const newTest = test.bind(testbind);
 
-  expect(await tBind.invoke({ input: "input" })).toBe("this-is-a-bind");
-  expect(await newTest.invoke({ input: "input" })).toBe(
-    "bind-hello-input-bind-bye-true"
+  expect(await tBind.invoke({ input: 'input' })).toBe('this-is-a-bind');
+  expect(await newTest.invoke({ input: 'input' })).toBe(
+    'bind-hello-input-bind-bye-true'
   );
 
   const serializedStr: string = JSON.stringify(newTest, null, 2);
@@ -390,7 +390,7 @@ test("test CallableBind", async () => {
     stringify(JSON.parse(JSON.stringify(tBind, null, 2)))
   ).toMatchSnapshot();
 
-  const record = await newTest.toRecord("output");
+  const record = await newTest.toRecord('output');
   const recordStr = JSON.stringify(record, null, 2);
   expect(JSON.parse(recordStr)).toMatchSnapshot({
     _recordId: expect.any(String),
@@ -429,20 +429,20 @@ test("test CallableBind", async () => {
 
   const newTest2 = await load<Test>(
     JSON.stringify(newBindArgs.bound, null, 2),
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
   expect(newTest2).toBeInstanceOf(Test);
 
   const newTest3 = await load<TestBind>(
     JSON.stringify(newBindArgs.kwargs, null, 2),
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { TestBind } } as OptionalImportMap
   );
   expect(newTest3).toBeInstanceOf(TestBind);
 });
 
-test("test CallableEach", async () => {
+test('test CallableEach', async () => {
   type TestInput = {
     input: string | boolean;
   };
@@ -463,7 +463,7 @@ test("test CallableEach", async () => {
     extends Callable<TestInput, string, CallOptions>
     implements TestParams
   {
-    _namespace: string[] = ["tests"];
+    _namespace: string[] = ['tests'];
 
     _isCallable = true;
 
@@ -471,13 +471,13 @@ test("test CallableEach", async () => {
 
     get _secrets(): SecretFields | undefined {
       return {
-        testApi: "TEST_API",
+        testApi: 'TEST_API',
       };
     }
 
     get _aliases(): SecretFields | undefined {
       return {
-        testApi: "test_api",
+        testApi: 'test_api',
       };
     }
 
@@ -489,9 +489,9 @@ test("test CallableEach", async () => {
 
     constructor(fields?: Partial<TestInput> & SerializableTestParams) {
       super(fields ?? {});
-      this.hello = fields?.hello ?? "default-hello";
-      this.bye = fields?.bye ?? "default-bye";
-      this.testApi = fields?.testApi ?? "default-api";
+      this.hello = fields?.hello ?? 'default-hello';
+      this.bye = fields?.bye ?? 'default-bye';
+      this.testApi = fields?.testApi ?? 'default-api';
     }
 
     async invoke(
@@ -508,10 +508,10 @@ test("test CallableEach", async () => {
   }
 
   const test = new Test({
-    hello: "hello",
-    bye: "bye",
+    hello: 'hello',
+    bye: 'bye',
     serializableField: true,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
 
   const testMap = test.map();
@@ -519,13 +519,13 @@ test("test CallableEach", async () => {
   expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
 
   expect(
-    await testMap.invoke([{ input: "input" }, { input: "input2" }])
-  ).toStrictEqual(["hello-input-bye-true", "hello-input2-bye-true"]);
+    await testMap.invoke([{ input: 'input' }, { input: 'input2' }])
+  ).toStrictEqual(['hello-input-bye-true', 'hello-input2-bye-true']);
   expect(
-    await testMap.invoke([{ input: true }, { input: "input2" }])
-  ).toStrictEqual(["hello-true-bye-true", "hello-input2-bye-true"]);
+    await testMap.invoke([{ input: true }, { input: 'input2' }])
+  ).toStrictEqual(['hello-true-bye-true', 'hello-input2-bye-true']);
 
-  const record = await testMap.toRecord(["output", "output2"]);
+  const record = await testMap.toRecord(['output', 'output2']);
   const recordStr = JSON.stringify(record, null, 2);
   expect(JSON.parse(recordStr)).toMatchSnapshot({
     _recordId: expect.any(String),
@@ -564,13 +564,13 @@ test("test CallableEach", async () => {
 
   const newTest2 = await load<Test>(
     JSON.stringify(newBindArgs.bound, null, 2),
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
   expect(newTest2).toBeInstanceOf(Test);
 });
 
-test("test CallableWithFallbacks", async () => {
+test('test CallableWithFallbacks', async () => {
   type TestInput = {
     input: string | boolean;
   };
@@ -591,7 +591,7 @@ test("test CallableWithFallbacks", async () => {
     extends Callable<TestInput, string, CallOptions>
     implements TestParams
   {
-    _namespace: string[] = ["tests"];
+    _namespace: string[] = ['tests'];
 
     _isCallable = true;
 
@@ -599,13 +599,13 @@ test("test CallableWithFallbacks", async () => {
 
     get _secrets(): SecretFields | undefined {
       return {
-        testApi: "TEST_API",
+        testApi: 'TEST_API',
       };
     }
 
     get _aliases(): SecretFields | undefined {
       return {
-        testApi: "test_api",
+        testApi: 'test_api',
       };
     }
 
@@ -617,9 +617,9 @@ test("test CallableWithFallbacks", async () => {
 
     constructor(fields?: Partial<TestInput> & SerializableTestParams) {
       super(fields ?? {});
-      this.hello = fields?.hello ?? "default-hello";
-      this.bye = fields?.bye ?? "default-bye";
-      this.testApi = fields?.testApi ?? "default-api";
+      this.hello = fields?.hello ?? 'default-hello';
+      this.bye = fields?.bye ?? 'default-bye';
+      this.testApi = fields?.testApi ?? 'default-api';
     }
 
     async invoke(
@@ -630,7 +630,7 @@ test("test CallableWithFallbacks", async () => {
       this.bye = options?.bye ?? this.bye;
 
       if (options?.shouldThrowError === true) {
-        throw new Error("AbortError");
+        throw new Error('AbortError');
       }
 
       return `${this.hello}-${String(input.input)}-${this.bye}-${String(
@@ -640,24 +640,24 @@ test("test CallableWithFallbacks", async () => {
   }
 
   const test = new Test({
-    hello: "hello",
-    bye: "bye",
+    hello: 'hello',
+    bye: 'bye',
     shouldThrowError: true,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
 
   const testFallback = new Test({
-    hello: "fallback-hello",
-    bye: "fallback-bye",
+    hello: 'fallback-hello',
+    bye: 'fallback-bye',
     shouldThrowError: true,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
 
   const testFallback2 = new Test({
-    hello: "fallback-hello-2",
-    bye: "fallback-hello-2",
+    hello: 'fallback-hello-2',
+    bye: 'fallback-hello-2',
     shouldThrowError: false,
-    testApi: "this-is-api",
+    testApi: 'this-is-api',
   });
 
   const testWithFallbacks: CallableWithFallbacks<TestInput, string> =
@@ -676,7 +676,7 @@ test("test CallableWithFallbacks", async () => {
 
   const test2 = await load<Test>(
     JSON.stringify(callable, null, 2),
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
 
@@ -685,7 +685,7 @@ test("test CallableWithFallbacks", async () => {
 
   const newFallback = await load<Test>(
     JSON.stringify(fallbacks[0], null, 2),
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
 
@@ -696,7 +696,7 @@ test("test CallableWithFallbacks", async () => {
 
   const newFallback2 = await load<Test>(
     JSON.stringify(fallbacks[1], null, 2),
-    { TEST_API: "this-is-a-key" } as SecretMap,
+    { TEST_API: 'this-is-a-key' } as SecretMap,
     { tests: { Test } } as OptionalImportMap
   );
 
@@ -705,7 +705,7 @@ test("test CallableWithFallbacks", async () => {
     JSON.stringify(testFallback2, null, 2)
   );
 
-  const record = await testWithFallbacks.toRecord("output");
+  const record = await testWithFallbacks.toRecord('output');
   const recordStr = JSON.stringify(record, null, 2);
   expect(JSON.parse(recordStr)).toMatchSnapshot({
     _recordId: expect.any(String),
@@ -766,7 +766,7 @@ test("test CallableWithFallbacks", async () => {
   });
 });
 
-test("test CallableLambda", async () => {
+test('test CallableLambda', async () => {
   type TestInput = {
     input: string | boolean;
   };
@@ -784,21 +784,21 @@ test("test CallableLambda", async () => {
   const serializedStr: string = JSON.stringify(callableLambda, null, 2);
   expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
 
-  expect(await callableLambda.invoke({ input: "input" })).toBe("input");
-  expect(await callableLambda.invoke({ input: true })).toBe("true");
+  expect(await callableLambda.invoke({ input: 'input' })).toBe('input');
+  expect(await callableLambda.invoke({ input: true })).toBe('true');
 
   const revivedCallableLambda = await load<
     CallableLambda<TestInput, TestOutput>
   >(
     serializedStr,
     {} as SecretMap,
-    { "record/callable": { CallableLambda } } as OptionalImportMap
+    { 'record/callable': { CallableLambda } } as OptionalImportMap
   );
 
-  expect(await revivedCallableLambda.invoke({ input: "input" })).toBe("input");
-  expect(await revivedCallableLambda.invoke({ input: true })).toBe("true");
+  expect(await revivedCallableLambda.invoke({ input: 'input' })).toBe('input');
+  expect(await revivedCallableLambda.invoke({ input: true })).toBe('true');
 
-  const record = await callableLambda.toRecord("output");
+  const record = await callableLambda.toRecord('output');
   const recordStr = JSON.stringify(record, null, 2);
   expect(JSON.parse(recordStr)).toMatchSnapshot({
     _recordId: expect.any(String),
@@ -815,7 +815,7 @@ test("test CallableLambda", async () => {
   const revivedFromRecord = await load<CallableLambda<TestInput, TestOutput>>(
     recordStr,
     {} as SecretMap,
-    { "record/callable": { CallableLambda } } as OptionalImportMap
+    { 'record/callable': { CallableLambda } } as OptionalImportMap
   );
 
   expect(revivedFromRecord).toBeInstanceOf(CallableLambda);
