@@ -13,6 +13,7 @@ import {
   CallableBatchOptions,
   CallableWithFallbacks,
   CallableWithFallbacksArg,
+  CallableLambda,
 } from '../callable';
 
 test('test custom callable', async () => {
@@ -763,4 +764,60 @@ test('test CallableWithFallbacks', async () => {
       },
     },
   });
+});
+
+test('test CallableLambda', async () => {
+  type TestInput = {
+    input: string | boolean;
+  };
+
+  type TestOutput = string;
+
+  const handlerFunc = async (input: TestInput): Promise<TestOutput> => {
+    return new Promise((resovle, reject) => resovle(String(input.input)));
+  };
+
+  const callableLambda = new CallableLambda<TestInput, TestOutput>({
+    func: handlerFunc,
+  });
+
+  const serializedStr: string = JSON.stringify(callableLambda, null, 2);
+  expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
+
+  expect(await callableLambda.invoke({ input: 'input' })).toBe('input');
+  expect(await callableLambda.invoke({ input: true })).toBe('true');
+
+  const revivedCallableLambda = await load<
+    CallableLambda<TestInput, TestOutput>
+  >(
+    serializedStr,
+    {} as SecretMap,
+    { 'record/callable': { CallableLambda } } as OptionalImportMap
+  );
+
+  expect(await revivedCallableLambda.invoke({ input: 'input' })).toBe('input');
+  expect(await revivedCallableLambda.invoke({ input: true })).toBe('true');
+
+  const record = await callableLambda.toRecord('output');
+  const recordStr = JSON.stringify(record, null, 2);
+  expect(JSON.parse(recordStr)).toMatchSnapshot({
+    _recordId: expect.any(String),
+    _metadata: {
+      _inputs: {
+        _recordId: expect.any(String),
+      },
+      _outputs: {
+        _recordId: expect.any(String),
+      },
+    },
+  });
+
+  const revivedFromRecord = await load<CallableLambda<TestInput, TestOutput>>(
+    recordStr,
+    {} as SecretMap,
+    { 'record/callable': { CallableLambda } } as OptionalImportMap
+  );
+
+  expect(revivedFromRecord).toBeInstanceOf(CallableLambda);
+  expect(JSON.stringify(revivedFromRecord, null, 2)).toBe(serializedStr);
 });

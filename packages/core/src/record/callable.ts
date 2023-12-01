@@ -7,13 +7,15 @@ import {
   keyToJson,
   mapKeyTypes,
   mapKeys,
-} from '../load/keymap';
+} from '../load/keymap.js';
 import {
   Serializable,
   Serialized,
   SerializedInputRecord,
-} from '../load/serializable';
-import { AsyncCallError, AsyncCaller } from '../utils/asyncCaller';
+} from '../load/serializable.js';
+import { AsyncCallError, AsyncCaller } from '../utils/asyncCaller.js';
+import { ReadableStreamAsyncIterable } from '../utils/stream.js';
+import { convertCallableLikeToCallable, isValidLambdaFunc } from './utils.js';
 
 export type CallableConfigFields = {
   [key: string]: unknown;
@@ -41,6 +43,11 @@ export type CallableConfig = {
    */
   callbacks?: any;
 };
+
+export type CallableLike<CallInput = unknown, CallOutput = unknown> =
+  | Callable<CallInput, CallOutput>
+  | CallableFunc<CallInput, CallOutput>
+  | { [key: string]: CallableLike<CallInput, CallOutput> };
 
 export type CallableFunc<CallInput, CallOutput> = (
   input: CallInput
@@ -80,6 +87,10 @@ export abstract class Callable<
   CallOptions extends CallableConfig = CallableConfig,
 > extends Serializable {
   _isCallable = true;
+
+  static isCallable(anything: any): anything is Callable {
+    return anything ? anything._isCallable : false;
+  }
 
   abstract invoke(
     input: CallInput,
@@ -233,6 +244,31 @@ export abstract class Callable<
     return Promise.all(batchCalls);
   }
 
+  async *_streamIterator(
+    input: CallInput,
+    options?: Partial<CallOptions>
+  ): AsyncGenerator<CallOutput> {
+    yield this.invoke(input, options);
+  }
+
+  async stream(
+    input: CallInput,
+    options?: Partial<CallOptions>
+  ): Promise<ReadableStreamAsyncIterable<CallOutput>> {
+    return ReadableStreamAsyncIterable.withAsyncGenerator(
+      this._streamIterator(input, options)
+    );
+  }
+
+  pipe<NewCallOutput>(
+    callableLike: CallableLike<CallOutput, NewCallOutput>
+  ): CallableSequence<CallInput, NewCallOutput> {
+    return new CallableSequence({
+      first: this,
+      last: convertCallableLikeToCallable(callableLike),
+    });
+  }
+
   async toRecord(
     outputs: CallOutput,
     parent?: RecordId | undefined
@@ -368,6 +404,16 @@ export class CallableBind<
     return this.batch(inputs, mergedOptions, batchOptions);
   }
 
+  async stream(
+    input: CallInput,
+    options?: Partial<CallOptions>
+  ): Promise<ReadableStreamAsyncIterable<CallOutput>> {
+    return this.bound.stream(
+      input,
+      this._mergeConfig({ ...options, ...this.kwargs })
+    );
+  }
+
   async toInputRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -464,6 +510,139 @@ export class CallableBind<
   }
 }
 
+export class CallableLambda<CallInput, CallOutput> extends Callable<
+  CallInput,
+  CallOutput
+> {
+  _isCallable = true;
+
+  _isSerializable = true;
+
+  _namespace: string[] = ['record', 'callable'];
+
+  static _name(): string {
+    return 'CallableLambda';
+  }
+
+  protected func: string;
+
+  constructor(fields: { func: CallableFunc<CallInput, CallOutput> | string }) {
+    let funcStr: string | undefined;
+
+    if (typeof fields.func === 'string') {
+      if (!isValidLambdaFunc(fields.func)) {
+        throw new Error('Function Str is not valid');
+      }
+
+      funcStr = fields.func;
+    } else {
+      funcStr = fields.func.toString();
+    }
+
+    super({ func: funcStr });
+
+    this.func = funcStr;
+  }
+
+  private _func(): CallableFunc<CallInput, CallOutput> {
+    const funcBody: string = this.func.slice(
+      this.func.indexOf('{') + 1,
+      this.func.lastIndexOf('}')
+    );
+
+    const params: string[] = this.func
+      .slice(this.func.indexOf('(') + 1, this.func.indexOf(')'))
+      .split(',');
+
+    return new Function(...params, funcBody) as CallableFunc<
+      CallInput,
+      CallOutput
+    >;
+  }
+
+  static from<CallInput, CallOutput>(
+    func: CallableFunc<CallInput, CallOutput>
+  ): CallableLambda<CallInput, CallOutput> {
+    return new CallableLambda({ func });
+  }
+
+  async _invoke(
+    input: CallInput,
+    options?: Partial<CallableConfig>
+  ): Promise<CallOutput> {
+    let output: CallOutput | undefined;
+    try {
+      output = await this._func()(input);
+    } catch {
+      throw new Error('Function is not valid');
+    }
+
+    if (output && Callable.isCallable(output)) {
+      output = (await output.invoke(input, options)) as CallOutput;
+    }
+
+    return output;
+  }
+
+  async invoke(
+    input: CallInput,
+    options?: Partial<CallableConfig> | undefined
+  ): Promise<CallOutput> {
+    return this._callWithConfig(this._invoke, input, options);
+  }
+}
+
+export class CallableMap<CallInput> extends Callable<
+  CallInput,
+  Record<string, unknown>
+> {
+  _isCallable = true;
+
+  _isSerializable = true;
+
+  _namespace: string[] = ['record', 'callable'];
+
+  static _name(): string {
+    return 'CallableMap';
+  }
+
+  protected steps: Record<string, Callable<CallInput>>;
+
+  constructor(fields: { steps: Record<string, CallableLike<CallInput>> }) {
+    super(fields);
+
+    this.steps = {};
+    for (const [k, v] of Object.entries(fields.steps)) {
+      this.steps[k] = convertCallableLikeToCallable(v);
+    }
+  }
+
+  static from<CallInput>(
+    steps: Record<string, CallableLike<CallInput>>
+  ): CallableMap<CallInput> {
+    return new CallableMap<CallInput>({ steps });
+  }
+
+  async invoke(
+    input: CallInput,
+    options?: Partial<CallableConfig> | undefined
+  ): Promise<Record<string, unknown>> {
+    const output: Record<string, unknown> = {};
+
+    try {
+      await Promise.all(
+        Object.entries(this.steps).map(async ([k, callable]) => {
+          output[k] = await callable.invoke(input, options);
+        })
+      );
+    } catch (e) {
+      throw e;
+    }
+
+    return output;
+  }
+}
+
 export class CallableEach<
   CallInputItem,
   CallOutputItem,
@@ -474,6 +653,10 @@ export class CallableEach<
   _isSerializable = true;
 
   _namespace: string[] = ['record', 'callable'];
+
+  static _name(): string {
+    return 'CallableEach';
+  }
 
   bound: Callable<CallInputItem, CallOutputItem, CallOptions>;
 
@@ -786,5 +969,159 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
         _parent: parent,
       },
     };
+  }
+}
+
+export class CallableSequence<
+  CallInput = unknown,
+  CallOutput = unknown,
+> extends Callable<CallInput, CallOutput> {
+  _isCallable = true;
+
+  _isSerializable = true;
+
+  _namespace: string[] = ['record', 'callable'];
+
+  static _name(): string {
+    return 'CallableSequence';
+  }
+
+  protected first: Callable<CallInput>;
+
+  protected middle: Callable[] = [];
+
+  protected last: Callable<unknown, CallOutput>;
+
+  constructor(fields: {
+    first: Callable<CallInput>;
+    middle?: Callable[];
+    last: Callable<unknown, CallOutput>;
+  }) {
+    super(fields);
+    this.first = fields.first;
+    this.middle = fields.middle ?? this.middle;
+    this.last = fields.last;
+  }
+
+  get steps() {
+    return [this.first, ...this.middle, this.last];
+  }
+
+  static isCallableSequence(anything: any): anything is CallableSequence {
+    return Array.isArray(anything.middle) && Callable.isCallable(anything);
+  }
+
+  static from<CallInput, CallOutput>([first, ...callables]: [
+    CallableLike<CallInput>,
+    ...CallableLike[],
+    CallableLike<unknown, CallOutput>,
+  ]): CallableSequence<CallInput, CallOutput> {
+    return new CallableSequence<CallInput, CallOutput>({
+      first: convertCallableLikeToCallable(first),
+      middle: callables.slice(0, -1).map(convertCallableLikeToCallable),
+      last: convertCallableLikeToCallable(
+        callables[callables.length - 1] as CallableLike<unknown, CallOutput>
+      ),
+    });
+  }
+
+  async invoke(
+    input: CallInput,
+    options?: Partial<CallableConfig> | undefined
+  ): Promise<CallOutput> {
+    let nextInput: unknown = input;
+    let finalOutput: CallOutput;
+
+    try {
+      const initialSteps = [this.first, ...this.middle];
+      for (let i = 0; i < initialSteps.length; i += 1) {
+        const step: Callable = initialSteps[i];
+        nextInput = await step.invoke(nextInput, options);
+      }
+
+      finalOutput = await this.last.invoke(nextInput, options);
+    } catch (e) {
+      throw e as Error;
+    }
+
+    return finalOutput;
+  }
+
+  /**
+   * Batch calls invoke N times, where N is the length of inputs.
+   * Subclasses would override this method with different arguments and returns.
+   * @param inputs Array of inputs in each call in a batch.
+   * @param options Either a single call options to apply to each call or an array of options for each call.
+   * @param batchOptions.maxConcurrency Max number of calls to run at once.
+   * @param batchOptions.returnExceptions Whether to return errors rather than throwing on the first error.
+   * @returns An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions is true).
+   */
+  async batch(
+    inputs: CallInput[],
+    options?: Partial<CallableConfig> | Partial<CallableConfig>[],
+    batchOptions?: CallableBatchOptions & { returnExceptions?: false }
+  ): Promise<CallOutput[]>;
+
+  async batch(
+    inputs: CallInput[],
+    options?: Partial<CallableConfig> | Partial<CallableConfig>[],
+    batchOptions?: CallableBatchOptions & { returnExceptions: true }
+  ): Promise<(CallOutput | Error)[]>;
+
+  async batch(
+    inputs: CallInput[],
+    options?: Partial<CallableConfig> | Partial<CallableConfig>[],
+    batchOptions?: CallableBatchOptions
+  ): Promise<(CallOutput | Error)[]>;
+
+  async batch(
+    inputs: CallInput[],
+    options?: Partial<CallableConfig> | Partial<CallableConfig>[],
+    batchOptions?: CallableBatchOptions
+  ): Promise<(CallOutput | Error)[]> {
+    const optionsList: Partial<CallableConfig>[] = this._getOptionsList(
+      options ?? {},
+      inputs.length
+    );
+
+    let nextInputs: unknown[] = inputs;
+    let finalOutputs: (CallOutput | Error)[];
+    try {
+      const initialSteps = [this.first, ...this.middle];
+      for (let i = 0; i < initialSteps.length; i += 1) {
+        const step: Callable = initialSteps[i];
+        nextInputs = await step.batch(nextInputs, options, batchOptions);
+      }
+
+      finalOutputs = await this.last.batch(nextInputs, options, batchOptions);
+    } catch (e) {
+      throw e as Error;
+    }
+
+    return finalOutputs;
+  }
+
+  pipe<NewCallOutput>(
+    callableLike: CallableLike<CallOutput, NewCallOutput>
+  ): CallableSequence<CallInput, NewCallOutput> {
+    if (CallableSequence.isCallableSequence(callableLike)) {
+      return new CallableSequence({
+        first: this.first,
+        middle: this.middle.concat([
+          this.last,
+          (callableLike as CallableSequence<CallOutput, NewCallOutput>).first,
+          ...(callableLike as CallableSequence<CallOutput, NewCallOutput>)
+            .middle,
+        ]),
+        last: (callableLike as CallableSequence<CallOutput, NewCallOutput>)
+          .last,
+      });
+    }
+
+    return new CallableSequence({
+      first: this.first,
+      middle: [...this.middle, this.last],
+      last: convertCallableLikeToCallable(callableLike),
+    });
   }
 }

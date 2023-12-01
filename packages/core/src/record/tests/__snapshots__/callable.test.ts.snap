@@ -399,6 +399,69 @@ exports[`test CallableEach 2`] = `
 }
 `;
 
+exports[`test CallableLambda 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - record
+  - callable
+  - CallableLambda
+_kwargs:
+  func: |-
+    async (input)=>{
+            return new Promise((resovle, reject)=>resovle(String(input.input)));
+        }
+"
+`;
+
+exports[`test CallableLambda 2`] = `
+{
+  "_grp": 2,
+  "_id": [
+    "record",
+    "callable",
+    "CallableLambda",
+  ],
+  "_kwargs": {
+    "func": "async (input)=>{
+        return new Promise((resovle, reject)=>resovle(String(input.input)));
+    }",
+  },
+  "_metadata": {
+    "_inputs": {
+      "_grp": 2,
+      "_id": [
+        "record",
+        "callable",
+        "CallableLambda",
+      ],
+      "_kwargs": {
+        "func": "string",
+      },
+      "_recordId": Any<String>,
+      "_type": "input_record",
+    },
+    "_outputs": {
+      "_grp": 2,
+      "_id": [
+        "record",
+        "callable",
+        "CallableLambda",
+      ],
+      "_kwargs": {
+        "outputs": "string",
+      },
+      "_recordId": Any<String>,
+      "_type": "output_record",
+    },
+    "_recordType": "event",
+    "_secrets": {},
+  },
+  "_recordId": Any<String>,
+  "_type": "event_record",
+}
+`;
+
 exports[`test CallableWithFallbacks 1`] = `
 "_grp: 1
 _type: constructor
