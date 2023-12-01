@@ -7,15 +7,15 @@ import {
   keyToJson,
   mapKeyTypes,
   mapKeys,
-} from '../load/keymap';
+} from "../load/keymap";
 import {
   Serializable,
   Serialized,
   SerializedInputRecord,
-} from '../load/serializable';
-import { AsyncCallError, AsyncCaller } from '../utils/asyncCaller';
-import { ReadableStreamAsyncIterable } from '../utils/stream';
-import { convertCallableLikeToCallable } from './utils';
+} from "../load/serializable";
+import { AsyncCallError, AsyncCaller } from "../utils/asyncCaller";
+import { ReadableStreamAsyncIterable } from "../utils/stream";
+import { convertCallableLikeToCallable } from "./utils";
 
 export type CallableConfigFields = {
   [key: string]: unknown;
@@ -305,10 +305,10 @@ export class CallableBind<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableBind';
+    return "CallableBind";
   }
 
   bound: Callable<CallInput, CallOutput, CallOptions>;
@@ -329,9 +329,9 @@ export class CallableBind<
 
     if (config) {
       for (const key of Object.keys(config)) {
-        if (key === 'metadata') {
+        if (key === "metadata") {
           configCopy[key] = { ...configCopy[key], ...config[key] };
-        } else if (key === 'tags') {
+        } else if (key === "tags") {
           configCopy[key] = (configCopy[key] ?? []).concat(config[key] ?? []);
         } else {
           configCopy[key] = config[key] ?? configCopy[key];
@@ -421,7 +421,7 @@ export class CallableBind<
   ): Promise<Serialized> {
     return {
       _grp: 2,
-      _type: 'input_record',
+      _type: "input_record",
       _id: this._id,
       _recordId: await this._getRecordId(),
       _kwargs: mapKeys(
@@ -442,7 +442,7 @@ export class CallableBind<
     parent?: RecordId | undefined
   ): Promise<Serialized> {
     let serializedOutputs: SerializedFields;
-    if (typeof outputs === 'object') {
+    if (typeof outputs === "object") {
       serializedOutputs = (outputs ?? {}) as SerializedFields;
     } else {
       serializedOutputs = (outputs ? { outputs } : {}) as SerializedFields;
@@ -478,7 +478,7 @@ export class CallableBind<
 
     return {
       _grp: 2,
-      _type: 'event_record',
+      _type: "event_record",
       _id: this._id,
       _recordId: await this._getRecordId(),
       _kwargs: mapKeys(
@@ -516,17 +516,41 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
 > {
   _isCallable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _isSerializable: boolean = true;
+
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableLambda';
+    return "CallableLambda";
   }
 
-  protected func: CallableFunc<CallInput, CallOutput>;
+  protected func: string;
 
-  constructor(fields: { func: CallableFunc<CallInput, CallOutput> }) {
-    super(fields);
-    this.func = fields.func;
+  constructor(fields: { func: CallableFunc<CallInput, CallOutput> | string }) {
+    const funcStr: string =
+      typeof fields.func === "string"
+        ? fields.func
+        : (fields.func as Function).toString();
+
+    super({ func: funcStr });
+
+    this.func = funcStr;
+  }
+
+  private _func(): CallableFunc<CallInput, CallOutput> {
+    const funcBody: string = this.func.slice(
+      this.func.indexOf("{") + 1,
+      this.func.lastIndexOf("}")
+    );
+
+    const params: string[] = this.func
+      .slice(this.func.indexOf("(") + 1, this.func.indexOf(")"))
+      .split(",");
+
+    return new Function(...params, funcBody) as CallableFunc<
+      CallInput,
+      CallOutput
+    >;
   }
 
   static from<CallInput, CallOutput>(
@@ -539,7 +563,7 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
     input: CallInput,
     options?: Partial<CallableConfig>
   ): Promise<CallOutput> {
-    let output: CallOutput = await this.func(input);
+    let output: CallOutput = await this._func()(input);
 
     if (output && Callable.isCallable(output)) {
       output = (await output.invoke(input, options)) as CallOutput;
@@ -564,10 +588,10 @@ export class CallableMap<CallInput> extends Callable<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableMap';
+    return "CallableMap";
   }
 
   protected steps: Record<string, Callable<CallInput>>;
@@ -616,10 +640,10 @@ export class CallableEach<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableEach';
+    return "CallableEach";
   }
 
   bound: Callable<CallInputItem, CallOutputItem, CallOptions>;
@@ -663,7 +687,7 @@ export class CallableEach<
   ): Promise<Serialized> {
     return {
       _grp: 2,
-      _type: 'input_record',
+      _type: "input_record",
       _id: this._id,
       _recordId: await this._getRecordId(),
       _kwargs: mapKeys(
@@ -704,7 +728,7 @@ export class CallableEach<
 
     return {
       _grp: 2,
-      _type: 'event_record',
+      _type: "event_record",
       _id: this._id,
       _recordId: await this._getRecordId(),
       _kwargs: mapKeys(
@@ -738,14 +762,14 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   CallInput,
   CallOutput
 > {
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   _isCallable = true;
 
   _isSerializable = true;
 
   static _name(): string {
-    return 'CallableWithFallbacks';
+    return "CallableWithFallbacks";
   }
 
   protected callable: Callable<CallInput, CallOutput>;
@@ -784,7 +808,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     }
 
     if (firstError === undefined) {
-      throw new Error('Fallbacks end without Error stored.');
+      throw new Error("Fallbacks end without Error stored.");
     }
 
     throw firstError;
@@ -842,7 +866,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     }
 
     if (firstError === undefined) {
-      throw new Error('Fallbacks end without Error stored.');
+      throw new Error("Fallbacks end without Error stored.");
     }
 
     throw firstError;
@@ -855,7 +879,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   ): Promise<Serialized> {
     return {
       _grp: 2,
-      _type: 'input_record',
+      _type: "input_record",
       _id: this._id,
       _recordId: await this._getRecordId(),
       _kwargs: mapKeys(
@@ -876,7 +900,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     parent?: RecordId | undefined
   ): Promise<Serialized> {
     let serializedOutputs: SerializedFields;
-    if (typeof outputs === 'object') {
+    if (typeof outputs === "object") {
       serializedOutputs = (outputs ?? {}) as SerializedFields;
     } else {
       serializedOutputs = (outputs ? { outputs } : {}) as SerializedFields;
@@ -905,7 +929,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
 
     return {
       _grp: 2,
-      _type: 'event_record',
+      _type: "event_record",
       _id: this._id,
       _recordId: await this._getRecordId(),
       _kwargs: mapKeys(
@@ -944,10 +968,10 @@ export class CallableSequence<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableSequence';
+    return "CallableSequence";
   }
 
   protected first: Callable<CallInput>;
