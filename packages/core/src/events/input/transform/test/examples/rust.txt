@@ -1,0 +1,24 @@
+fn main() {
+  let x = multiply_by_two(CONSTANT);
+  println!("CONSTANT multiplied by two is {}", x);
+
+  let y = 20;
+  if y > x {
+    println!("{} is greater than {}", y, x);
+  } else {
+    println!("{} is not greater than {}", y, x);
+  }
+
+  let z = add(x, y);
+  println!("The sum of {} and {} is {}", x, y, z);
+}
+
+const CONSTANT: u32 = 10;
+
+fn multiply_by_two(value: u32) -> u32 {
+  value * 2
+}
+
+fn add(a: u32, b: u32) -> u32 {
+  a + b
+}

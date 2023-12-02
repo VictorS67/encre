@@ -1,5 +1,89 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`test BaseChatLM 1`] = `
+"_grp: 1
+_type: not_implemented
+_id:
+  - inference
+  - chat
+  - llms
+  - test_chatlm
+  - TestChatLM
+"
+`;
+
+exports[`test BaseChatLM 2`] = `
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 3`] = `
+"generations:
+  - output: this is a system message
+    info:
+      index: 0
+  - output: this is a human message
+    info:
+      index: 1
+  - output: this is a bot message
+    info:
+      index: 2
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 4`] = `
+"generations:
+  - output: this is a human message 1
+    info:
+      index: 0
+  - output: this is a human message 2
+    info:
+      index: 1
+  - output: this is a human message 3
+    info:
+      index: 2
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 5`] = `
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 6`] = `
+"generations:
+  - output: this is a system message
+    info:
+      index: 0
+  - output: this is a human message
+    info:
+      index: 1
+llmOutput: {}
+"
+`;
+
+exports[`test BaseChatLM 7`] = `
+"generations:
+  - output: this is a system message
+    info:
+      index: 0
+  - output: this is a human message
+    info:
+      index: 1
+llmOutput: {}
+"
+`;
+
 exports[`test BaseLLM 1`] = `
 "_grp: 1
 _type: not_implemented
@@ -13,109 +97,66 @@ _id:
 `;
 
 exports[`test BaseLLM 2`] = `
-"{
-  "_grp": 1,
-  "_type": "constructor",
-  "_id": [
-    "input",
-    "load",
-    "msgs",
-    "BotMessage"
-  ],
-  "_kwargs": {
-    "content": "System: this is a system message\\nHuman: this is a human message"
-  }
-}"
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+llmOutput: {}
+"
 `;
 
 exports[`test BaseLLM 3`] = `
-"{
-  "generations": [
-    [
-      {
-        "output": "System: this is a system message",
-        "info": {
-          "index": 0
-        }
-      },
-      {
-        "output": "Human: this is a human message",
-        "info": {
-          "index": 1
-        }
-      }
-    ],
-    [
-      {
-        "output": "AI: this is a bot message",
-        "info": {
-          "index": 0
-        }
-      }
-    ],
-    null
-  ],
-  "llmOutput": {}
-}"
+"generations:
+  - output: |-
+      System: this is a system message
+      Human: this is a human message
+      AI: this is a bot message
+    info:
+      index: 0
+llmOutput: {}
+"
 `;
 
 exports[`test BaseLLM 4`] = `
-"{
-  "generations": [
-    [
-      {
-        "output": "this is a prompt.",
-        "info": {
-          "index": 0
-        }
-      }
-    ],
-    [
-      {
-        "output": "System: this is a system message\\nHuman: this is a human message",
-        "info": {
-          "index": 0
-        }
-      }
-    ],
-    [
-      {
-        "output": "this is a prompt.",
-        "info": {
-          "index": 0
-        }
-      }
-    ]
-  ],
-  "llmOutput": {}
-}"
+"generations:
+  - output: |-
+      Human: this is a human message 1
+      Human: this is a human message 2
+      Human: this is a human message 3
+    info:
+      index: 0
+llmOutput: {}
+"
 `;
 
 exports[`test BaseLLM 5`] = `
-"this is a prompt.
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+llmOutput: {}
 "
 `;
 
 exports[`test BaseLLM 6`] = `
-"|-
-System: this is a system message
-Human: this is a human message
-AI: this is a bot message
+"generations:
+  - output: |-
+      System: this is a system message
+      Human: this is a human message
+    info:
+      index: 0
+llmOutput: {}
 "
 `;
 
 exports[`test BaseLLM 7`] = `
-"|-
-Human: this is a human message 1
-Human: this is a human message 2
-Human: this is a human message 3
-"
-`;
-
-exports[`test BaseLLM 8`] = `
-"|-
-System: this is a system message
-Human: this is a human message
+"generations:
+  - output: |-
+      System: this is a system message
+      Human: this is a human message
+    info:
+      index: 0
+llmOutput: {}
 "
 `;
 
@@ -129,115 +170,59 @@ _id:
 `;
 
 exports[`test BaseLM 2`] = `
-"{
-  "_grp": 1,
-  "_type": "constructor",
-  "_id": [
-    "input",
-    "load",
-    "msgs",
-    "BotMessage"
-  ],
-  "_kwargs": {
-    "content": "System: this is a system message\\nHuman: this is a human message"
-  }
-}"
+"generations:
+  - output: this is a prompt.
+    info:
+      index: 0
+"
 `;
 
 exports[`test BaseLM 3`] = `
-"{
-  "generations": [
-    [
-      {
-        "output": "System: this is a system message",
-        "info": {
-          "index": 0
-        }
-      },
-      {
-        "output": "Human: this is a human message",
-        "info": {
-          "index": 1
-        }
-      }
-    ],
-    [
-      {
-        "output": "AI: this is a bot message",
-        "info": {
-          "index": 0
-        }
-      }
-    ]
-  ]
-}"
+"generations:
+  - output: |-
+      System: this is a system message
+      Human: this is a human message
+      AI: this is a bot message
+    info:
+      index: 0
+"
 `;
 
 exports[`test BaseLM 4`] = `
-"{
-  "generations": [
-    [
-      {
-        "output": "this is a prompt.",
-        "info": {
-          "index": 0
-        }
-      },
-      {
-        "output": "System: this is a system message\\nHuman: this is a human message",
-        "info": {
-          "index": 1
-        }
-      }
-    ],
-    [
-      {
-        "output": "this is a prompt.",
-        "info": {
-          "index": 0
-        }
-      }
-    ]
-  ]
-}"
+"generations:
+  - output: |-
+      Human: this is a human message 1
+      Human: this is a human message 2
+      Human: this is a human message 3
+    info:
+      index: 0
+"
 `;
 
 exports[`test BaseLM 5`] = `
 "generations:
-  - - output: this is a prompt.
-      info:
-        index: 0
+  - output: this is a prompt.
+    info:
+      index: 0
 "
 `;
 
 exports[`test BaseLM 6`] = `
 "generations:
-  - - output: |-
-        System: this is a system message
-        Human: this is a human message
-        AI: this is a bot message
-      info:
-        index: 0
+  - output: |-
+      System: this is a system message
+      Human: this is a human message
+    info:
+      index: 0
 "
 `;
 
 exports[`test BaseLM 7`] = `
 "generations:
-  - - output: |-
-        Human: this is a human message 1
-        Human: this is a human message 2
-        Human: this is a human message 3
-      info:
-        index: 0
-"
-`;
-
-exports[`test BaseLM 8`] = `
-"generations:
-  - - output: |-
-        System: this is a system message
-        Human: this is a human message
-      info:
-        index: 0
+  - output: |-
+      System: this is a system message
+      Human: this is a human message
+    info:
+      index: 0
 "
 `;

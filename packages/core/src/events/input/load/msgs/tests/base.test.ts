@@ -2,6 +2,7 @@ import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
 import {
   BaseMessage,
+  BaseMessageFields,
   BotMessage,
   HumanMessage,
   MessageRole,
@@ -11,12 +12,29 @@ import {
 
 test('test custom BaseMessage', async () => {
   class TestMessage extends BaseMessage {
+    _isSerializable = true;
+
     _role(): MessageRole {
       return 'human';
     }
 
     static _name(): string {
       return 'TestHumanMessage';
+    }
+
+    concat(message: TestMessage): TestMessage {
+      return new TestMessage({
+        content: this.content + message.content,
+        additionalKwargs: TestMessage._mergeAdditionalKwargs(
+          this.additionalKwargs as NonNullable<
+            BaseMessageFields['additionalKwargs']
+          >,
+          message.additionalKwargs as NonNullable<
+            BaseMessageFields['additionalKwargs']
+          >
+        ),
+        name: this.name ?? message.name,
+      });
     }
   }
 
@@ -45,6 +63,17 @@ test('test custom BaseMessage', async () => {
     2
   );
   expect(stringify(JSON.parse(serializedMessage2))).toMatchSnapshot();
+
+  const mergedTestMessage = testMessage.concat(testMessageWithName);
+  const serializedStr3: string = JSON.stringify(mergedTestMessage, null, 2);
+  expect(stringify(JSON.parse(serializedStr3))).toMatchSnapshot();
+
+  const serializedMessage3: string = JSON.stringify(
+    mergedTestMessage.toSerialized(),
+    null,
+    2
+  );
+  expect(stringify(JSON.parse(serializedMessage3))).toMatchSnapshot();
 
   const testMessageWithName2 = new TestMessage({
     content: 'this is another message',

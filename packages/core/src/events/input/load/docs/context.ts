@@ -24,3 +24,5 @@ export class Context<Metadata = Record<string, unknown>>
     this.metadata = fields.metadata ?? ({} as Metadata);
   }
 }
+
+export type ContextLike = Context | Context[] | string;

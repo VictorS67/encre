@@ -1,15 +1,13 @@
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
 import { MemoryCache } from '../../../../../cache/index.js';
-import { batch } from '../../../../../utils/batch.js';
 import {
   BaseMessage,
   BaseMessageLike,
-  BotMessage,
+  ChatMessage,
   HumanMessage,
   SystemMessage,
   convertMessageLikeToMessage,
-  getChatString,
 } from '../../../../input/load/msgs/base.js';
 import {
   BasePrompt,
@@ -19,6 +17,7 @@ import { ChatPrompt } from '../../../../input/load/prompts/chat.js';
 import { Generation } from '../../../../output/provide/generation.js';
 import { LLMResult } from '../../../../output/provide/llmresult.js';
 import {
+  BaseChatLM,
   BaseLLM,
   BaseLM,
   BaseLMCallOptions,
@@ -60,85 +59,25 @@ test('test BaseLM', async () => {
     /**
      * In this method, we mock the language model result as pairs of prompts
      * given an array of prompts.
-     * @param prompts The given array of prompts in strings.
+     * @param {string} prompt - A prompt.
      * @param options if given an array of strings, then it means the stopwords.
      * @param callbacks TODO: not yet implemented
      */
     async provide(
-      prompts: string[],
+      prompt: string,
       options?: BaseLMCallOptions | string[],
       callbacks?: any
     ): Promise<LLMResult> {
-      const generations: Generation[][] = batch(prompts, 2).map(
-        (promptPair: string[]) =>
-          promptPair.map((prompt: string, idx: number) => ({
-            output: prompt,
-            info: {
-              index: idx,
-            },
-          }))
-      );
+      const generations: Generation[] = [
+        {
+          output: prompt,
+          info: {
+            index: 0,
+          },
+        },
+      ];
 
       return { generations };
-    }
-
-    /**
-     * In this method, we mock the language model result as pairs of prompts
-     * given an array of prompts.
-     * @param prompts The given array of prompts in {@link BasePrompt}.
-     * @param options if given an array of strings, then it means the stopwords.
-     * @param callbacks TODO: not yet implemented
-     */
-    async provideWithPrompts(
-      prompts: BasePrompt[],
-      options?: BaseLMCallOptions | string[],
-      callbacks?: any
-    ): Promise<LLMResult> {
-      const promptStrs: string[] = prompts.map((prompt: BasePrompt) =>
-        prompt.toString()
-      );
-
-      const generations: Generation[][] = batch(promptStrs, 2).map(
-        (promptPair: string[]) =>
-          promptPair.map((prompt: string, idx: number) => ({
-            output: prompt,
-            info: {
-              index: idx,
-            },
-          }))
-      );
-
-      return { generations };
-    }
-
-    /**
-     * In this method, we mock the predict text as the given text input.
-     * @param text The given input in string.
-     * @param options if given an array of strings, then it means the stopwords.
-     * @param callbacks TODO: not yet implemented
-     * @returns
-     */
-    async predict(
-      text: string,
-      options?: BaseLMCallOptions | string[],
-      callbacks?: any
-    ): Promise<string> {
-      return text;
-    }
-
-    /**
-     * In this method, we mock the predict text as the given text input in {@link BotMessage}.
-     * @param messages The given input in {@link BaseMessage[]}.
-     * @param options if given an array of strings, then it means the stopwords.
-     * @param callbacks TODO: not yet implemented
-     */
-    async predictWithMessages(
-      messages: BaseMessage[],
-      options?: BaseLMCallOptions | string[] | undefined,
-      callbacks?: any
-    ): Promise<BaseMessage> {
-      const text: string = getChatString(messages);
-      return new BotMessage(text);
     }
 
     /**
@@ -161,8 +100,8 @@ test('test BaseLM', async () => {
         prompt = input;
       }
 
-      const result: LLMResult = await this.provideWithPrompts(
-        [prompt],
+      const result: LLMResult = await this.provide(
+        prompt.toString(),
         options,
         options?.callbacks
       );
@@ -177,33 +116,13 @@ test('test BaseLM', async () => {
   const serializedStr: string = JSON.stringify(testLM, null, 2);
   expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
 
-  const result: string = await testLM.predict('this is a prompt.');
-  expect(result).toBe('this is a prompt.');
-
-  const messages: BaseMessage[] = [
-    new SystemMessage('this is a system message'),
-    new HumanMessage('this is a human message'),
-  ];
-  const result2: BaseMessage = await testLM.predictWithMessages(messages);
-  expect(JSON.stringify(result2, null, 2)).toMatchSnapshot();
-
-  const prompts: string[] = [
-    'System: this is a system message',
-    'Human: this is a human message',
-    'AI: this is a bot message',
-  ];
-  const result3: LLMResult = await testLM.provide(prompts);
-  expect(JSON.stringify(result3, null, 2)).toMatchSnapshot();
-
-  const basePrompts: BasePrompt[] = [
-    new StringPrompt('this is a prompt.'),
-    new ChatPrompt(messages),
-    new StringPrompt('this is a prompt.'),
-  ];
-  const result4: LLMResult = await testLM.provideWithPrompts(basePrompts);
-  expect(JSON.stringify(result4, null, 2)).toMatchSnapshot();
+  const result: LLMResult = await testLM.provide('this is a prompt.');
+  expect(result).toStrictEqual({
+    generations: [{ info: { index: 0 }, output: 'this is a prompt.' }],
+  });
 
   expect(stringify(await testLM.invoke('this is a prompt.'))).toMatchSnapshot();
+
   expect(
     stringify(
       await testLM.invoke([
@@ -213,6 +132,7 @@ test('test BaseLM', async () => {
       ])
     )
   ).toMatchSnapshot();
+
   expect(
     stringify(
       await testLM.invoke([
@@ -222,32 +142,59 @@ test('test BaseLM', async () => {
       ])
     )
   ).toMatchSnapshot();
-  expect(stringify(await testLM.invoke(messages))).toMatchSnapshot();
 
+  expect(
+    stringify(await testLM.invoke(new StringPrompt('this is a prompt.')))
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testLM.invoke(
+        new ChatPrompt([
+          new SystemMessage('this is a system message'),
+          new HumanMessage('this is a human message'),
+        ])
+      )
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testLM.invoke([
+        new SystemMessage('this is a system message'),
+        new HumanMessage('this is a human message'),
+      ])
+    )
+  ).toMatchSnapshot();
 });
 
 test('test BaseLLM', async () => {
   class TestLLM extends BaseLLM {
+    getParams(
+      options?: this['SerializedCallOptions']
+    ): Record<string, unknown> {
+      return {};
+    }
+
     /**
      * In this method, we mock the language model result as pairs of prompts
      * given an array of prompts.
-     * @param prompts The given array of prompts in strings.
+     * @param {string} prompt - A prompt.
      * @param options if given an array of strings, then it means the stopwords.
      * @param callbacks TODO: not yet implemented
      */
     async _provide(
-      prompts: string[],
+      prompt: string,
       options: this['SerializedCallOptions']
     ): Promise<LLMResult> {
-      const generations: Generation[][] = batch(prompts, 2).map(
-        (promptPair: string[]) =>
-          promptPair.map((prompt: string, idx: number) => ({
-            output: prompt,
-            info: {
-              index: idx,
-            },
-          }))
-      );
+      const generations: Generation[] = [
+        {
+          output: prompt,
+          info: {
+            index: 0,
+          },
+        },
+      ];
 
       return { generations };
     }
@@ -264,36 +211,17 @@ test('test BaseLLM', async () => {
   const serializedStr: string = JSON.stringify(testLLMWithCustomCache, null, 2);
   expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
 
-  expect(await testLLMWithCustomCache.predict('this is a prompt.')).toBe(
-    'this is a prompt.'
-  );
+  const result: LLMResult =
+    await testLLMWithCustomCache.provide('this is a prompt.');
+  expect(result).toStrictEqual({
+    generations: [{ info: { index: 0 }, output: 'this is a prompt.' }],
+    llmOutput: {},
+  });
 
-  const messages: BaseMessage[] = [
-    new SystemMessage('this is a system message'),
-    new HumanMessage('this is a human message'),
-  ];
-  const result2: BaseMessage =
-    await testLLMWithCustomCache.predictWithMessages(messages);
-  expect(JSON.stringify(result2, null, 2)).toMatchSnapshot();
+  expect(
+    stringify(await testLLMWithCustomCache.invoke('this is a prompt.'))
+  ).toMatchSnapshot();
 
-  const prompts: string[] = [
-    'System: this is a system message',
-    'Human: this is a human message',
-    'AI: this is a bot message',
-  ];
-  const result3: LLMResult = await testLLMWithCustomCache.provide(prompts);
-  expect(JSON.stringify(result3, null, 2)).toMatchSnapshot();
-
-  const basePrompts: BasePrompt[] = [
-    new StringPrompt('this is a prompt.'),
-    new ChatPrompt(messages),
-    new StringPrompt('this is a prompt.'),
-  ];
-  const result4: LLMResult =
-    await testLLMWithCustomCache.provideWithPrompts(basePrompts);
-  expect(JSON.stringify(result4, null, 2)).toMatchSnapshot();
-
-  expect(stringify(await testLLMWithCustomCache.invoke('this is a prompt.'))).toMatchSnapshot();
   expect(
     stringify(
       await testLLMWithCustomCache.invoke([
@@ -303,6 +231,7 @@ test('test BaseLLM', async () => {
       ])
     )
   ).toMatchSnapshot();
+
   expect(
     stringify(
       await testLLMWithCustomCache.invoke([
@@ -312,5 +241,131 @@ test('test BaseLLM', async () => {
       ])
     )
   ).toMatchSnapshot();
-  expect(stringify(await testLLMWithCustomCache.invoke(messages))).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testLLMWithCustomCache.invoke(new StringPrompt('this is a prompt.'))
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testLLMWithCustomCache.invoke(
+        new ChatPrompt([
+          new SystemMessage('this is a system message'),
+          new HumanMessage('this is a human message'),
+        ])
+      )
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testLLMWithCustomCache.invoke([
+        new SystemMessage('this is a system message'),
+        new HumanMessage('this is a human message'),
+      ])
+    )
+  ).toMatchSnapshot();
+});
+
+test('test BaseChatLM', async () => {
+  class TestChatLM extends BaseChatLM {
+    getParams(
+      options?: this['SerializedCallOptions']
+    ): Record<string, unknown> {
+      return {};
+    }
+
+    /**
+     * In this method, we mock the language model result as pairs of prompts
+     * given an array of prompts.
+     * @param {string} prompt - A prompt.
+     * @param options if given an array of strings, then it means the stopwords.
+     * @param callbacks TODO: not yet implemented
+     */
+    async _provide(
+      messages: BaseMessage[],
+      options: this['SerializedCallOptions']
+    ): Promise<LLMResult> {
+      const generations: Generation[] = messages.map(
+        (message: BaseMessage, idx: number) => ({
+          output: message.content ?? '',
+          info: {
+            index: idx,
+          },
+        })
+      );
+
+      return { generations };
+    }
+
+    _llmType(): string {
+      return 'test_chatlm';
+    }
+  }
+
+  const cache: MemoryCache = MemoryCache.global();
+  const testChatLMWithCustomCache = new TestChatLM({ cache });
+
+  // BaseLLM is not serializable
+  const serializedStr: string = JSON.stringify(testChatLMWithCustomCache, null, 2);
+  expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
+
+  const result: LLMResult =
+    await testChatLMWithCustomCache.provide([new ChatMessage('this is a prompt.', 'assistant')]);
+  expect(result).toStrictEqual({
+    generations: [{ info: { index: 0 }, output: 'this is a prompt.' }],
+    llmOutput: {},
+  });
+
+  expect(
+    stringify(await testChatLMWithCustomCache.invoke('this is a prompt.'))
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testChatLMWithCustomCache.invoke([
+        ['system', 'this is a system message'],
+        ['human', 'this is a human message'],
+        ['assistant', 'this is a bot message'],
+      ])
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testChatLMWithCustomCache.invoke([
+        'this is a human message 1',
+        'this is a human message 2',
+        'this is a human message 3',
+      ])
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testChatLMWithCustomCache.invoke(new StringPrompt('this is a prompt.'))
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testChatLMWithCustomCache.invoke(
+        new ChatPrompt([
+          new SystemMessage('this is a system message'),
+          new HumanMessage('this is a human message'),
+        ])
+      )
+    )
+  ).toMatchSnapshot();
+
+  expect(
+    stringify(
+      await testChatLMWithCustomCache.invoke([
+        new SystemMessage('this is a system message'),
+        new HumanMessage('this is a human message'),
+      ])
+    )
+  ).toMatchSnapshot();
 });

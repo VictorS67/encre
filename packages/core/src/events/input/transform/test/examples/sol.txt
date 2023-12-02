@@ -1,0 +1,32 @@
+pragma solidity ^0.8.0;
+
+interface IStorage {
+  function store(uint256 number) external;
+  function retrieve() external view returns (uint256);
+}
+
+library SafeMath {
+  function add(uint256 a, uint256 b) internal pure returns (uint256) {
+    uint256 c = a + b;
+    require(c >= a, "SafeMath: addition overflow");
+    return c;
+  }
+}
+
+contract MyContract is IStorage {
+  using SafeMath for uint256;
+
+  uint256 private _storedNumber;
+
+  function store(uint256 number) public override {
+    _storedNumber = number;
+  }
+
+  function retrieve() public view override returns (uint256) {
+    return _storedNumber;
+  }
+
+  function incrementStoredNumber(uint256 increment) public {
+    _storedNumber = _storedNumber.add(increment);
+  }
+}

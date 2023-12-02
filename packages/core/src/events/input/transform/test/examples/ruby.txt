@@ -1,0 +1,32 @@
+class MyClass
+  def initialize(name, age)
+    @name = name
+    @age = age
+  end
+
+  def display_info
+    "Name: #{@name}, Age: #{@age}"
+  end
+
+  def name=(name)
+    @name = name
+  end
+
+  def name
+    @name
+  end
+
+  def age=(age)
+    @age = age
+  end
+
+  def age
+    @age
+  end
+end
+
+person = MyClass.new("Alice", 30)
+puts person.display_info
+
+person.name = "Bob"
+puts person.name

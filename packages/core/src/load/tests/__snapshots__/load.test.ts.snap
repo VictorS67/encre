@@ -13,6 +13,7 @@ _kwargs:
     _type: secret
     _id:
       - TEST_API_KEY
+  should_override: a new value
   hello: 3
 "
 `;
@@ -37,6 +38,7 @@ _kwargs:
       - NEW_API_KEY
   new_attr: 42
   hello: 3
+  should_override: should override
   inherit_api_key:
     _grp: 1
     _type: secret
