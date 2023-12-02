@@ -1,4 +1,4 @@
-import { expect, test, jest} from '@jest/globals';
+import { expect, test, jest } from '@jest/globals';
 import { stringify } from 'yaml';
 import {
     Embeddings,
@@ -22,14 +22,14 @@ class TestEmbeddings extends Embeddings{
 
 
 test('two methods running ok', async () => {
-   const documents = ["hello", "goodbye", "test", "its has been a pleasure"]
+   const documents = ['hello', 'goodbye', 'test', 'its has been a pleasure'];
    // Empty parameters for initializing TestEmbeddings =
-   const test = new TestEmbeddings({})
+   const test = new TestEmbeddings({});
    const methodSpy = jest.spyOn(test, 'embedQuery');
-   const resultsPromise = test.embedDocuments(documents)
+   const resultsPromise = test.embedDocuments(documents);
    const results = await resultsPromise;
    // test whether there are four [X, y] values
-   expect(results.length  == documents.length)
+   expect(results.length  == documents.length);
    expect(Array.isArray(results)).toBe(true); 
    // test whetehr there are 2 elements in first element
    for (const result of results) {
@@ -38,4 +38,4 @@ test('two methods running ok', async () => {
     }
    // test whether the method has been called
    expect(methodSpy).toHaveBeenCalled();
-})
+});
