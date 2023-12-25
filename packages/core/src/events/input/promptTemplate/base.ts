@@ -1,31 +1,57 @@
-import { Callable } from "../../../record/callable";
+import { Callable, CallableConfig } from "../../../record/callable";
 import { baseValidator } from "../../../utils/pValidators/baseValidator";
-type PromptTemplateArgs = {
+import { BaseEvent, BaseEventParams } from "../../base";
+export interface PromptTemplateParams extends BaseEventParams {
+    /**
+     * Clearly declare the input variables inside the template
+     */
     inputVariables?: string[];
-    template: string;
-};
 
-export abstract class pTemplateBase {
+    /**
+     * the template string
+     */
+    template?: string | "";
+}
 
-    private inputVariables: string[];
-    private template: string;
+export abstract class basePromptTemplate <
+    CallInput = PromptTemplateParams,
+    CallOutput = string[],
+    CallOptions extends CallableConfig = CallableConfig,
+  >
+  extends BaseEvent<CallInput, CallOutput, CallOptions>
+  implements PromptTemplateParams
+  {
+    inputVariables?: string[] | undefined;
+    template?: string | "";
 
-    constructor(args: PromptTemplateArgs) {
-        this.inputVariables= args.inputVariables? args.inputVariables : [];
-        this.template = args.template;
+    constructor(fields?: Partial<PromptTemplateParams>){
+        super(fields ?? {});
+        this.inputVariables = fields?.inputVariables ?? this.inputVariables;
+        this.template = fields?.template ?? this.template;
+
+        if (this.template && this.inputVariables) {
+            this.validateInputVariables(this.template, this.inputVariables);
+        }
     }
+    /**
+     * To validate whether the inputVariables is valid
+     * @param template 
+     * @param inputVariables 
+     */
+    private validateInputVariables(template: string, inputVariables: string[]): void {
+        const variablePattern = /\{([^}]+)\}/g;
+        let match: RegExpExecArray | null;
+        const foundVariables: Set<string> = new Set();
 
-    async format(values: { [key: string]: string }): Promise<string> {
-        let formattedTemplate = this.template;
-        
-        for (const variable of this.inputVariables) {
-            const value = values[variable];
-            if (value) {
-                formattedTemplate = formattedTemplate.replace(`{${variable}}`, value);
-            }
+        while ((match = variablePattern.exec(template)) !== null) {
+            foundVariables.add(match[1]);
         }
 
-        return formattedTemplate;
+        inputVariables.forEach(variable => {
+            if (!foundVariables.has(variable)) {
+                throw new Error(`Variable '${variable}' is declared but not used in the template.`);
+            }
+        });
     }
-}
+  }
 
