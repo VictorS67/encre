@@ -11,6 +11,8 @@ export interface PromptTemplateParams extends BaseEventParams {
      * the template string
      */
     template?: string | "";
+
+    validators?: baseValidator | undefined;
 }
 
 export abstract class basePromptTemplate <
@@ -30,7 +32,7 @@ export abstract class basePromptTemplate <
         this.template = fields?.template ?? this.template;
 
         if (this.template && this.inputVariables) {
-            this.validateInputVariables(this.template, this.inputVariables);
+            this.checkInputVariables(this.template, this.inputVariables);
         }
     }
     /**
@@ -38,7 +40,7 @@ export abstract class basePromptTemplate <
      * @param template 
      * @param inputVariables 
      */
-    private validateInputVariables(template: string, inputVariables: string[]): void {
+    private checkInputVariables(template: string, inputVariables: string[]): void {
         const variablePattern = /\{([^}]+)\}/g;
         let match: RegExpExecArray | null;
         const foundVariables: Set<string> = new Set();
@@ -54,4 +56,5 @@ export abstract class basePromptTemplate <
         });
     }
   }
+
 
