@@ -131,7 +131,7 @@ export class AsyncCaller {
   }
 }
 
-function baseFailedAttemptHandler(e: AsyncCallError) {
+export function baseFailedAttemptHandler(e: AsyncCallError) {
   const isTimeoutError = (err: AsyncCallError): boolean =>
     ['Cancel', 'TimeoutError', 'AbortError'].includes(err.message ?? '');
 

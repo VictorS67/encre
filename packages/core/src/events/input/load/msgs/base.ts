@@ -22,11 +22,13 @@ export type Message = {
 
 export type BaseMessageLike = BaseMessage | [MessageRole, string] | string;
 
+export type ContentLike = string | { [key: string]: unknown };
+
 /**
  * Interface that defines the fields in `BaseMessage`.
  */
 export interface BaseMessageFields {
-  content: string;
+  content: ContentLike | ContentLike[];
   name?: string;
   additionalKwargs?: {
     [key: string]: unknown;
@@ -43,7 +45,7 @@ export abstract class BaseMessage
 {
   _namespace: string[] = ['input', 'load', 'msgs'];
 
-  content: string;
+  content: ContentLike | ContentLike[];
 
   name?: string;
 
@@ -71,6 +73,44 @@ export abstract class BaseMessage
   }
 
   abstract concat(message: BaseMessage): BaseMessage;
+
+  static _mergeContent(
+    left: NonNullable<BaseMessageFields['content']>,
+    right: NonNullable<BaseMessageFields['content']>
+  ): NonNullable<BaseMessageFields['content']> {
+    if (!Array.isArray(left) && !Array.isArray(right)) {
+      if (typeof left === 'string' && typeof right === 'string') {
+        return left + right;
+      }
+
+      if (typeof left === 'object' && typeof right === 'object') {
+        return {
+          ...left,
+          ...right,
+        };
+      }
+
+      throw new Error(
+        'Message cannot be merged. Content should follow the same type.'
+      );
+    }
+
+    if (!Array.isArray(left) && Array.isArray(right)) {
+      return [left, ...right];
+    }
+
+    if (Array.isArray(left) && !Array.isArray(right)) {
+      return [...left, right];
+    }
+
+    if (Array.isArray(left) && Array.isArray(right)) {
+      return [...left, ...right];
+    }
+
+    throw new Error(
+      'Message cannot be merged. Content should follow the same type.'
+    );
+  }
 
   static _mergeAdditionalKwargs(
     left: NonNullable<BaseMessageFields['additionalKwargs']>,
@@ -141,7 +181,7 @@ export class ChatMessage extends BaseMessage {
 
   concat(message: ChatMessage): ChatMessage {
     return new ChatMessage({
-      content: this.content + message.content,
+      content: ChatMessage._mergeContent(this.content, message.content),
       additionalKwargs: ChatMessage._mergeAdditionalKwargs(
         this.additionalKwargs as NonNullable<
           BaseMessageFields['additionalKwargs']
@@ -175,7 +215,7 @@ export class HumanMessage extends BaseMessage {
 
   concat(message: HumanMessage): HumanMessage {
     return new HumanMessage({
-      content: this.content + message.content,
+      content: HumanMessage._mergeContent(this.content, message.content),
       additionalKwargs: HumanMessage._mergeAdditionalKwargs(
         this.additionalKwargs as NonNullable<
           BaseMessageFields['additionalKwargs']
@@ -204,7 +244,7 @@ export class BotMessage extends BaseMessage {
 
   concat(message: BotMessage): BotMessage {
     return new BotMessage({
-      content: this.content + message.content,
+      content: BotMessage._mergeContent(this.content, message.content),
       additionalKwargs: BotMessage._mergeAdditionalKwargs(
         this.additionalKwargs as NonNullable<
           BaseMessageFields['additionalKwargs']
@@ -233,7 +273,7 @@ export class SystemMessage extends BaseMessage {
 
   concat(message: SystemMessage): SystemMessage {
     return new SystemMessage({
-      content: this.content + message.content,
+      content: SystemMessage._mergeContent(this.content, message.content),
       additionalKwargs: SystemMessage._mergeAdditionalKwargs(
         this.additionalKwargs as NonNullable<
           BaseMessageFields['additionalKwargs']
@@ -262,7 +302,7 @@ export class FunctionMessage extends BaseMessage {
 
   concat(message: FunctionMessage): FunctionMessage {
     return new FunctionMessage({
-      content: this.content + message.content,
+      content: FunctionMessage._mergeContent(this.content, message.content),
       additionalKwargs: FunctionMessage._mergeAdditionalKwargs(
         this.additionalKwargs as NonNullable<
           BaseMessageFields['additionalKwargs']
@@ -336,4 +376,20 @@ export function isBaseMessage(
   messageLike: unknown
 ): messageLike is BaseMessage {
   return 'content' in (messageLike as BaseMessage);
+}
+
+function areArraysOfStringsSimilar(arr1: string[], arr2: string[]): boolean {
+  const map = new Map<string, boolean>();
+
+  arr1.forEach((item) => map.set(item, true));
+  arr2.forEach((item) => {
+    if (map.has(item)) {
+      map.set(item, false); // Mark as found in both arrays
+    } else {
+      map.set(item, true); // Mark as only found in arr2
+    }
+  });
+
+  // Check if all values are false, which means all elements were found in both arrays
+  return Array.from(map.values()).every((val) => val === false);
 }

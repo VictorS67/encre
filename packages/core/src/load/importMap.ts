@@ -3,5 +3,5 @@
 export * as load_serializable from '../load/serializable.js';
 export * as events_input_load_docs_context from '../events/input/load/docs/context.js';
 export * as events_output_provide_generation from '../events/output/provide/generation.js';
-export * as events_inference_chat_llms_base from '../events/inference/chat/llms/base.js';
+export * as events_inference_chat_llms_base from '../events/inference/chat/base.js';
 export * as utils_nanoid from '../utils/nanoid.js';

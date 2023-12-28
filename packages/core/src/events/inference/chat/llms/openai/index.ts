@@ -5,13 +5,28 @@ import {
 } from 'openai';
 import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
 
-import { BaseLMCallOptions } from '../base';
+import { BaseLMCallOptions } from '../../base';
+
+export interface OpenAIChatCallOptions
+  extends OpenAICallOptions,
+    OpenAIFunctionCallOptions {
+  /**
+   * TODO: add tools as functions.
+   */
+  tools?: any;
+  promptIdx?: number;
+}
 
 export interface OpenAICallOptions extends BaseLMCallOptions {
   /**
    * Additional options to pass to the underlying axios request.
    */
   options: OpenAIClientRequestOptions;
+}
+
+export interface OpenAIFunctionCallOptions extends BaseLMCallOptions {
+  functionCallOption?: OpenAIClient.Chat.ChatCompletionCreateParams.FunctionCallOption;
+  functions?: OpenAIClient.Chat.ChatCompletionCreateParams.Function[];
 }
 
 export interface OpenAIBaseInput {
@@ -38,7 +53,7 @@ export interface OpenAIBaseInput {
    * existing frequency in the text so far, decreasing the model's likelihood to
    * repeat the same line verbatim.
    *
-   * {@see https://platform.openai.com/docs/guides/gpt/parameter-details}
+   * @see https://platform.openai.com/docs/guides/gpt/parameter-details
    */
   frequencyPenalty: number;
 
@@ -47,7 +62,7 @@ export interface OpenAIBaseInput {
    * whether they appear in the text so far, increasing the model's likelihood to
    * talk about new topics.
    *
-   * {@see https://platform.openai.com/docs/guides/gpt/parameter-details}
+   * @see https://platform.openai.com/docs/guides/gpt/parameter-details
    */
   presencePenalty: number;
 
@@ -63,18 +78,18 @@ export interface OpenAIBaseInput {
   /**
    * Whether to stream back partial progress. If set, tokens will be sent as
    * data-only
-   * {@see https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format}
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format
    * as they become available, with the stream terminated by a `data: [DONE]`
    * message.
-   * {@see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb}.
+   * @see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_stream_completions.ipynb
    */
-  stream: boolean;
+  streaming: boolean;
 
   /**
    * ID of the model to use. You can use the
    * {@link https://platform.openai.com/docs/api-reference/models/list} API to
    * see all of your available models, or see
-   * {@see https://platform.openai.com/docs/models/overview} for
+   * {@link https://platform.openai.com/docs/models/overview} for
    * descriptions of them.
    */
   modelName: string;
@@ -82,7 +97,7 @@ export interface OpenAIBaseInput {
   /**
    * A unique identifier representing your end-user, which can help OpenAI to monitor
    * and detect abuse.
-   * {@see https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids}.
+   * @see https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids
    */
   user?: string;
 
@@ -91,7 +106,7 @@ export interface OpenAIBaseInput {
    *
    * The token count of your prompt plus `max_tokens` cannot exceed the model's
    * context length.
-   * {@see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb}
+   * @see https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb
    * for counting tokens.
    */
   maxTokens?: number;
@@ -112,16 +127,6 @@ export interface OpenAIBaseInput {
    * from being generated.
    */
   logitBias?: Record<string, number>;
-
-  /**
-   * Include the log probabilities on the `logprobs` most likely tokens, as well the
-   * chosen tokens. For example, if `logprobs` is 5, the API will return a list of
-   * the 5 most likely tokens. The API will always return the `logprob` of the
-   * sampled token, so there may be up to `logprobs+1` elements in the response.
-   *
-   * The maximum value for `logprobs` is 5.
-   */
-  logprobs?: number;
 
   /** Holds any additional parameters that are valid to pass to
    * {@link https://platform.openai.com/docs/api-reference/completions/create |
@@ -160,6 +165,16 @@ export interface OpenAIInput extends OpenAIBaseInput {
    * settings for `maxToken` and `stopWords`.
    */
   bestOf?: number;
+
+  /**
+   * Include the log probabilities on the `logprobs` most likely tokens, as well the
+   * chosen tokens. For example, if `logprobs` is 5, the API will return a list of
+   * the 5 most likely tokens. The API will always return the `logprob` of the
+   * sampled token, so there may be up to `logprobs+1` elements in the response.
+   *
+   * The maximum value for `logprobs` is 5.
+   */
+  logprobs?: number;
 }
 
 export interface OpenAIChatInput extends OpenAIBaseInput {

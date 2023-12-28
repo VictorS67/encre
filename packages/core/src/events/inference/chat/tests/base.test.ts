@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
-import { MemoryCache } from '../../../../../cache/index.js';
+import { MemoryCache } from '../../../../cache/index.js';
 import {
   BaseMessage,
   BaseMessageLike,
@@ -8,14 +8,11 @@ import {
   HumanMessage,
   SystemMessage,
   convertMessageLikeToMessage,
-} from '../../../../input/load/msgs/base.js';
-import {
-  BasePrompt,
-  StringPrompt,
-} from '../../../../input/load/prompts/base.js';
-import { ChatPrompt } from '../../../../input/load/prompts/chat.js';
-import { Generation } from '../../../../output/provide/generation.js';
-import { LLMResult } from '../../../../output/provide/llmresult.js';
+} from '../../../input/load/msgs/base.js';
+import { BasePrompt, StringPrompt } from '../../../input/load/prompts/base.js';
+import { ChatPrompt } from '../../../input/load/prompts/chat.js';
+import { Generation } from '../../../output/provide/generation.js';
+import { LLMResult } from '../../../output/provide/llmresult.js';
 import {
   BaseChatLM,
   BaseLLM,
@@ -309,11 +306,16 @@ test('test BaseChatLM', async () => {
   const testChatLMWithCustomCache = new TestChatLM({ cache });
 
   // BaseLLM is not serializable
-  const serializedStr: string = JSON.stringify(testChatLMWithCustomCache, null, 2);
+  const serializedStr: string = JSON.stringify(
+    testChatLMWithCustomCache,
+    null,
+    2
+  );
   expect(stringify(JSON.parse(serializedStr))).toMatchSnapshot();
 
-  const result: LLMResult =
-    await testChatLMWithCustomCache.provide([new ChatMessage('this is a prompt.', 'assistant')]);
+  const result: LLMResult = await testChatLMWithCustomCache.provide([
+    new ChatMessage('this is a prompt.', 'assistant'),
+  ]);
   expect(result).toStrictEqual({
     generations: [{ info: { index: 0 }, output: 'this is a prompt.' }],
     llmOutput: {},
@@ -345,7 +347,9 @@ test('test BaseChatLM', async () => {
 
   expect(
     stringify(
-      await testChatLMWithCustomCache.invoke(new StringPrompt('this is a prompt.'))
+      await testChatLMWithCustomCache.invoke(
+        new StringPrompt('this is a prompt.')
+      )
     )
   ).toMatchSnapshot();
 

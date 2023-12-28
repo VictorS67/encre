@@ -47,4 +47,4 @@ jobs:
     - name: Install dependencies
       run: yarn install --immutable --network-timeout 500000
     - name: Test
-      run: yarn workspace encre-core run test:single
+      run: yarn workspace encre-core run test

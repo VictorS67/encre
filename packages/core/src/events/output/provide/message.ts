@@ -1,6 +1,7 @@
 import {
   BaseMessage,
   BotMessage,
+  ContentLike,
   HumanMessage,
   MessageRole,
   SystemMessage,
@@ -8,7 +9,7 @@ import {
 import { Generation, GenerationChunk } from './generation';
 
 export interface SerializedMessageData {
-  content: string;
+  content: ContentLike;
   role?: MessageRole;
   name?: string;
 }
