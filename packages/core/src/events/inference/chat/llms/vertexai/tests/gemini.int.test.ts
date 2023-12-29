@@ -6,7 +6,7 @@ import { expect, test } from '@jest/globals';
 import { HumanMessage } from '../../../../../input/load/msgs/base';
 import { Gemini } from '../gemini';
 
-const GOOGLE_API_KEY = 'AIzaSyAHtkr1ld2HBuaZlEBG-LnA1PaTbmz9xlo';
+const GOOGLE_API_KEY = 'you_should_get_this_api_from_google_cloud';
 
 test('test Gemini text', async () => {
   const gemini = new Gemini({
