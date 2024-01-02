@@ -461,7 +461,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   getModelContextSize(modelName: 'gemini-pro'): number {
     switch (modelName) {
       case 'gemini-pro':
-        return 30720;
+        return 32768;
     }
   }
 

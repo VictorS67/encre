@@ -531,9 +531,9 @@ export class GeminiChat<
   getModelContextSize(modelName: 'gemini-pro' | 'gemini-pro-vision'): number {
     switch (modelName) {
       case 'gemini-pro':
-        return 30720;
+        return 32768;
       case 'gemini-pro-vision':
-        return 12288;
+        return 16384;
     }
   }
 
