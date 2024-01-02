@@ -74,23 +74,6 @@ export interface GeminiCallOptions extends VertexAICallOptions {
   safetySettings: Array<GeminiSafetySetting>;
 }
 
-export interface VertexAITextCallOptions extends VertexAICallOptions {
-  /**
-   * This is default to `google`.
-   */
-  publisher: string;
-
-  /**
-   * Configure the parent resource.
-   *
-   * Formatting like this:
-   * projects/${projectId}/locations/${location}/publishers/${publisher}/models/${modelName}
-   */
-  endpoint: string;
-}
-
-export interface VertexAIChatCallOptions extends VertexAITextCallOptions {}
-
 export interface VertexAIBaseInput {
   /**
    * The temperature is used for sampling during the response generation,
@@ -122,6 +105,24 @@ export interface VertexAIBaseInput {
    * Range: 0.0 - 1.0
    */
   topP: number;
+
+  /**
+   * Top-K changes how the model selects tokens for output. A top-K of 1 means 
+   * the next selected token is the most probable among all tokens in the model's 
+   * vocabulary (also called greedy decoding), while a top-K of 3 means that 
+   * the next token is selected from among the three most probable tokens by 
+   * using temperature.
+   * 
+   * For each token selection step, the top-K tokens with the highest probabilities 
+   * are sampled. Then tokens are further filtered based on top-P with the final 
+   * token selected using temperature sampling.
+   * 
+   * Specify a lower value for less random responses and a higher value for more 
+   * random responses.
+   * 
+   * Range: 1 - 40
+   */
+  topK: number;
 
   /**
    * The number of response variations to return.
@@ -241,146 +242,6 @@ export interface GeminiContent {
 export interface GeminiInput extends VertexAIBaseInput {
   /** Gemini contents to pass as a prefix to the prompt */
   contents: Array<GeminiContent>;
-}
-
-export interface VertexAITextInput extends VertexAIBaseInput {
-  /**
-   * Grounding lets you reference specific data when using language models.
-   * When you ground a model, the model can reference internal, confidential,
-   * and otherwise specific data from your repository and include the data in
-   * the response. Only data stores from Vertex AI Search are supported.
-   *
-   * Path should follow format:
-   * projects/{projectId}/locations/global/collections/{collection_name}/dataStores/{DATA_STORE_ID}
-   */
-  groundingConfig: string;
-
-  /**
-   * Returns the top logprobs most likely candidate tokens with their log
-   * probabilities at each generation step. The chosen tokens and their log
-   * probabilities at each step are always returned. The chosen token may or may
-   * not be in the top logprobs most likely candidates.
-   *
-   * Range: 0 - 5
-   */
-  logprobs: number;
-
-  /**
-   * Positive values penalize tokens that already appear in the generated text,
-   * increasing the probability of generating more diverse content.
-   *
-   * Acceptable values are -2.0 — 2.0.
-   */
-  presencePenalty: number;
-
-  /**
-   * Positive values penalize tokens that repeatedly appear in the generated text,
-   * decreasing the probability of repeating content.
-   *
-   * Acceptable values are -2.0 — 2.0.
-   */
-  frequencyPenalty: number;
-
-  /**
-   * Mapping of token IDs to their bias values. The bias values are added to the logits
-   * before sampling. Larger positive bias increases the probability of choosing the
-   * token. Smaller negative bias decreases the probability of choosing the token.
-   *
-   * You can specify a maximum of 300 mappings. Each mapping can have a value of -100—100.
-   */
-  logitBias: Record<string, number>;
-
-  /**
-   * If true, the prompt is echoed in the generated text.
-   */
-  echo: boolean;
-}
-
-export interface VertexAIChatInput extends VertexAIBaseInput {
-  /**
-   * Grounding lets you reference specific data when using language models.
-   * When you ground a model, the model can reference internal, confidential,
-   * and otherwise specific data from your repository and include the data in
-   * the response. Only data stores from Vertex AI Search are supported.
-   *
-   * Path should follow format:
-   * projects/{project_id}/locations/global/collections/{collection_name}/dataStores/{DATA_STORE_ID}
-   */
-  groundingConfig: string;
-
-  /**
-   * Returns the top logprobs most likely candidate tokens with their log
-   * probabilities at each generation step. The chosen tokens and their log
-   * probabilities at each step are always returned. The chosen token may or may
-   * not be in the top logprobs most likely candidates.
-   *
-   * Range: 0 - 5
-   */
-  logprobs: number;
-
-  /**
-   * Positive values penalize tokens that already appear in the generated text,
-   * increasing the probability of generating more diverse content.
-   *
-   * Acceptable values are -2.0 — 2.0.
-   */
-  presencePenalty: number;
-
-  /**
-   * Positive values penalize tokens that repeatedly appear in the generated text,
-   * decreasing the probability of repeating content.
-   *
-   * Acceptable values are -2.0 — 2.0.
-   */
-  frequencyPenalty: number;
-
-  /**
-   * Mapping of token IDs to their bias values. The bias values are added to the logits
-   * before sampling. Larger positive bias increases the probability of choosing the
-   * token. Smaller negative bias decreases the probability of choosing the token.
-   *
-   * You can specify a maximum of 300 mappings. Each mapping can have a value of -100—100.
-   */
-  logitBias: Record<string, number>;
-
-  chatContexts: Array<VertexAIChatContext>;
-}
-
-export interface VertexAIChatExampleContext {
-  content: string;
-}
-
-export interface VertexAIChatExample {
-  input: VertexAIChatExampleContext;
-
-  output: VertexAIChatExampleContext;
-}
-
-export interface VertexAIChatMessage {
-  author: string;
-  content: string;
-}
-
-export interface VertexAIChatContext {
-  /**
-   * Context shapes how the model responds throughout the conversation. For example,
-   * you can use context to specify words the model can or cannot use, topics to focus
-   * on or avoid, or the response format or style.
-   */
-  context: string;
-
-  /**
-   * Examples for the model to learn how to respond to the conversation.
-   */
-  examples: Array<VertexAIChatExample>;
-
-  /**
-   * Conversation history provided to the model in a structured alternate-author form.
-   * Messages appear in chronological order: oldest first, newest last. When the
-   * history of messages causes the input to exceed the maximum length, the oldest
-   * messages are removed until the entire prompt is within the allowed limit.
-   */
-  messages: Array<VertexAIChatMessage>;
 }
 
 export function checkModelForGemini(modelName?: string): boolean {

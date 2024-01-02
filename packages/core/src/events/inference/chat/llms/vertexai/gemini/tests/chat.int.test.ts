@@ -3,13 +3,13 @@ import path from 'path';
 import url from 'url';
 import { HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
 import { expect, test } from '@jest/globals';
-import { HumanMessage } from '../../../../../input/load/msgs/base';
-import { Gemini } from '../gemini';
+import { HumanMessage } from '../../../../../../input/load/msgs/base.js';
+import { GeminiChat } from '../chat.js';
 
-const GOOGLE_API_KEY = 'AIzaSyAHtkr1ld2HBuaZlEBG-LnA1PaTbmz9xlo';
+const GOOGLE_API_KEY = 'you_should_get_this_api_from_google_cloud';
 
-test('test Gemini text', async () => {
-  const gemini = new Gemini({
+test('test GeminiChat text', async () => {
+  const gemini = new GeminiChat({
     googleApiKey: GOOGLE_API_KEY,
     modelName: 'gemini-pro',
   });
@@ -21,8 +21,8 @@ test('test Gemini text', async () => {
   expect(llmResult).toMatchSnapshot();
 });
 
-test('test Gemini vision', async () => {
-  const gemini = new Gemini({
+test('test GeminiChat vision', async () => {
+  const gemini = new GeminiChat({
     googleApiKey: GOOGLE_API_KEY,
     modelName: 'gemini-pro-vision',
   });
@@ -51,8 +51,8 @@ test('test Gemini vision', async () => {
   expect(llmResult).toMatchSnapshot();
 });
 
-test('test Gemini sexual violation', async () => {
-  const gemini = new Gemini({
+test('test GeminiChat sexual violation', async () => {
+  const gemini = new GeminiChat({
     googleApiKey: GOOGLE_API_KEY,
     modelName: 'gemini-pro',
   });

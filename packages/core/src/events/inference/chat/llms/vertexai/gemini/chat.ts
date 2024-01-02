@@ -11,53 +11,64 @@ import {
   EnhancedGenerateContentResponse,
   GenerateContentResult,
   CountTokensResponse,
-  InlineDataPart,
+  TextPart,
   Part,
 } from '@google/generative-ai';
 
-import { SecretFields, SerializedFields } from '../../../../../load/keymap.js';
-import { AsyncCallError } from '../../../../../utils/asyncCaller.js';
-import { getEnvironmentVariables } from '../../../../../utils/environment.js';
 import {
-  BaseMessage,
-  BotMessage,
-  ChatMessage,
-  ContentLike,
-  HumanMessage,
-} from '../../../../input/load/msgs/base.js';
-import { LLMResult } from '../../../../output/provide/llmresult.js';
-import { ChatGenerationChunk } from '../../../../output/provide/message.js';
-import { BaseChatLM, BaseLLMParams } from '../../base.js';
-import { TokenUsage } from '../../index.js';
+  SecretFields,
+  SerializedFields,
+} from '../../../../../../load/keymap.js';
+import { AsyncCallError } from '../../../../../../utils/asyncCaller.js';
+import { getEnvironmentVariables } from '../../../../../../utils/environment.js';
+import { BaseMessage } from '../../../../../input/load/msgs/base.js';
+import {
+  Generation,
+  GenerationChunk,
+} from '../../../../../output/provide/generation.js';
+import { LLMResult } from '../../../../../output/provide/llmresult.js';
+import {
+  ChatGeneration,
+  ChatGenerationChunk,
+} from '../../../../../output/provide/message.js';
+import { BaseChatLM, BaseLLMParams } from '../../../base.js';
+import { TokenUsage } from '../../../index.js';
 import {
   GeminiCallOptions,
   GeminiContent,
   GeminiContentRole,
-  GeminiInlineData,
   GeminiInput,
-  GeminiMimeType,
   GeminiSafetySetting,
-  GeminiTool,
   checkModelForGemini,
   checkModelForGeminiVision,
   wrapGoogleGenerativeAIClientError,
-} from './index.js';
+} from '../index.js';
+import {
+  getContentFromMessage,
+  getMessageFromContent,
+  getMessageFromContentWithRole,
+  isModalityRequiredInMessage,
+} from './utils.js';
 
-export interface GeminiParamsBase extends ModelParams {
+export interface GeminiChatParamsBase extends ModelParams {
   contents: Content[];
 }
 
-export interface GeminiParamsNonStreaming extends GeminiParamsBase {
+export interface GeminiChatParamsNonStreaming extends GeminiChatParamsBase {
   stream: false;
 }
 
-export interface GeminiParamsStreaming extends GeminiParamsBase {
+export interface GeminiChatParamsStreaming extends GeminiChatParamsBase {
   stream: true;
 }
 
-export type GeminiParams = GeminiParamsNonStreaming | GeminiParamsStreaming;
+export type GeminiChatParams =
+  | GeminiChatParamsNonStreaming
+  | GeminiChatParamsStreaming;
 
-export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
+export class GeminiChat<
+    CallOptions extends GeminiCallOptions = GeminiCallOptions,
+  >
   extends BaseChatLM<CallOptions>
   implements GeminiInput
 {
@@ -76,7 +87,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   }
 
   static _name(): string {
-    return 'Gemini';
+    return 'GeminiChat';
   }
 
   /**
@@ -110,6 +121,12 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
    * Whether the response comes with stream
    */
   streaming = true;
+
+  /**
+   * Default for gemini-pro: none
+   * Default for gemini-pro-vision: 32
+   */
+  topK: number;
 
   googleApiKey?: string;
 
@@ -150,7 +167,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     if (checkModelForGeminiVision(this.modelName)) {
       this._isMultimodal = true;
       this.temperature = 0.4;
-
+      this.topK = fields?.topK ?? 32;
       this.maxOutputTokens = fields?.maxOutputTokens ?? 4096;
 
       if (this.maxOutputTokens > 4096) {
@@ -160,6 +177,9 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
         this.maxOutputTokens = 4096;
       }
     } else {
+      this.topK = fields?.topK ?? 1;
+      this.maxOutputTokens = fields?.maxOutputTokens ?? 2048;
+
       if (this.maxOutputTokens > 2048) {
         console.warn(
           'gemini-pro does not support output token larger than 2048, now using 2048 as maxOutputTokens.'
@@ -181,7 +201,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     return {
       temperature: this.temperature,
       topP: this.topP,
-      topK: 1,
+      topK: this.topK,
       candidateCount: this.candidateCount,
       maxOutputTokens: this.maxOutputTokens,
       stopSequences: this.stopSequences ? this.stopSequences : [],
@@ -217,7 +237,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
 
   getParams(
     options?: this['SerializedCallOptions']
-  ): Omit<GeminiParams, 'contents'> {
+  ): Omit<GeminiChatParams, 'contents'> {
     return {
       model: this.modelName,
       // tools: this._getTools(options),
@@ -293,12 +313,50 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
         }
       );
 
-      const completionTokens: number | undefined = (response as any)
-        .usageMetadata?.candidates_token_count;
-      const promptTokens: number | undefined = (response as any).usageMetadata
-        ?.prompt_token_count;
-      const totalTokens: number | undefined = (response as any).usageMetadata
-        ?.totalTokenCount;
+      const promptTokens: number = await this.getNumTokensInChat(messages);
+      let completionTokens: number | undefined;
+
+      if (!response.candidates) {
+        throw new Error('No candidates from Gemini response.');
+      }
+
+      const generations: Array<unknown> = [];
+      for (const candidate of response.candidates) {
+        const numTokensResponse: CountTokensResponse = await this._getClient()
+          .getGenerativeModel({
+            model: this.modelName,
+          })
+          .countTokens({
+            contents: [candidate.content],
+          });
+
+        completionTokens =
+          (completionTokens ?? 0) + numTokensResponse.totalTokens;
+
+        const output: string = candidate.content.parts
+          .map((part: Part) => (part as TextPart).text)
+          .join('\n');
+
+        const message: BaseMessage = getMessageFromContent(
+          candidate.content ?? { role: 'assistant' }
+        );
+
+        const info = {
+          finishReason: candidate.finishReason,
+          completion: candidate.index ?? 0,
+          finishMessage: candidate.finishMessage,
+          safetyRatings: candidate.safetyRatings,
+          citationMetadata: candidate.citationMetadata,
+        };
+
+        generations.push({
+          output,
+          message,
+          info,
+        });
+      }
+
+      const totalTokens: number = promptTokens + (completionTokens ?? 0);
 
       if (completionTokens) {
         tokenUsage.completionTokens =
@@ -313,32 +371,15 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
         tokenUsage.totalTokens = (tokenUsage.totalTokens ?? 0) + totalTokens;
       }
 
-      if (!response.candidates) {
-        throw new Error('No candidates from Gemini response.');
-      }
-
-      const generations = response.candidates.map(
-        (candidate: GenerateContentCandidate) => ({
-          output: candidate.content,
-          message: getMessageFromContent(
-            candidate.content ?? { role: 'assistant' }
-          ),
-          info: {
-            finishReason: candidate.finishReason,
-            completion: candidate.index ?? 0,
-            finishMessage: candidate.finishMessage,
-            safetyRatings: candidate.safetyRatings,
-            citationMetadata: candidate.citationMetadata,
-          },
-        })
-      );
-
-      return { generations, llmOutput: { tokenUsage } };
+      return {
+        generations: generations as Generation[],
+        llmOutput: { tokenUsage },
+      };
     }
   }
 
   private async *_completionWithStream(
-    params: Omit<GeminiParams, 'contents'>,
+    params: Omit<GeminiChatParams, 'contents'>,
     contents: Content[],
     options: this['SerializedCallOptions']
   ): AsyncGenerator<ChatGenerationChunk> {
@@ -425,17 +466,17 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   }
 
   async completionWithRetry(
-    request: GeminiParamsStreaming,
+    request: GeminiChatParamsStreaming,
     options?: GeminiCallOptions
   ): Promise<AsyncIterable<GenerateContentResponse>>;
 
   async completionWithRetry(
-    request: GeminiParamsNonStreaming,
+    request: GeminiChatParamsNonStreaming,
     options?: GeminiCallOptions
   ): Promise<GenerateContentResponse>;
 
   async completionWithRetry(
-    request: GeminiParamsNonStreaming | GeminiParamsStreaming,
+    request: GeminiChatParamsNonStreaming | GeminiChatParamsStreaming,
     options?: GeminiCallOptions
   ): Promise<AsyncIterable<GenerateContentResponse> | GenerateContentResponse> {
     const modelParams: ModelParams = this._getModelParams(options);
@@ -455,19 +496,20 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
       return await this.caller.call(async () => {
         const res: GenerateContentResult = await model.generateContent(req);
 
+        const response = res.response;
         if (
-          res &&
-          'promptFeedback' in res &&
-          typeof res['promptFeedback'] === 'object' &&
-          res['promptFeedback'] !== null &&
-          'blockReason' in res['promptFeedback']
+          response &&
+          'promptFeedback' in response &&
+          typeof response['promptFeedback'] === 'object' &&
+          response['promptFeedback'] !== null &&
+          'blockReason' in response['promptFeedback']
         ) {
           this._throwErrorForBlockReason(
-            res['promptFeedback']['blockReason'] as string
+            response['promptFeedback']['blockReason'] as string
           );
         }
 
-        return res.response;
+        return response;
       });
     }
   }
@@ -547,141 +589,4 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
       ...this.additionalKwargs,
     };
   }
-}
-
-function getMessageFromContentWithRole(
-  content: Content,
-  defaultRole?: GeminiContentRole
-): BaseMessage {
-  const role = content.role ?? defaultRole;
-  const text: string = content.parts[0].text ?? '';
-  const additionalKwargs: Record<string, unknown> = {};
-
-  switch (role) {
-    case 'user':
-      return new HumanMessage({ content: text });
-    case 'model':
-      return new BotMessage({ content: text, additionalKwargs });
-    default:
-      return new ChatMessage({
-        content: text,
-        role: role ?? 'unknown',
-        additionalKwargs,
-      });
-  }
-}
-
-function getMessageFromContent(content: Content): BaseMessage {
-  const text: string = content.parts[0].text ?? '';
-  const additionalKwargs: Record<string, unknown> = {};
-
-  switch (content.role) {
-    case 'user':
-      return new HumanMessage({ content: text });
-    case 'model':
-      return new BotMessage({ content: text, additionalKwargs });
-    default:
-      return new ChatMessage({
-        content: text,
-        role: content.role ?? 'unknown',
-        additionalKwargs,
-      });
-  }
-}
-
-function getContentFromMessage(message: BaseMessage): Content {
-  return {
-    role: getGeminiRoleFromMessage(message),
-    parts: getPartsFromMessage(message),
-  };
-}
-
-function getGeminiRoleFromMessage(message: BaseMessage): GeminiContentRole {
-  switch (message._role()) {
-    case 'system':
-    case 'human':
-      return 'user';
-    case 'assistant':
-      return 'model';
-    default:
-      throw new Error(
-        `Message role ${message._role()} does not support Gemini.`
-      );
-  }
-}
-
-function getPartsFromMessage(message: BaseMessage): Part[] {
-  const getPart = (content: ContentLike): Part => {
-    if (typeof content === 'string') {
-      return {
-        text: content,
-      };
-    } else if (isTextData(content)) {
-      return getTextPart(content);
-    } else if (isInlineData(content)) {
-      return getInlinePartFromInlineData(content);
-    }
-
-    throw new Error('Message is not valid for Gemini');
-  };
-
-  if (!Array.isArray(message.content)) {
-    return [getPart(message.content)];
-  }
-
-  return message.content.map((content: ContentLike) => getPart(content));
-}
-
-function isModalityRequiredInMessage(message: BaseMessage): boolean {
-  const isModalityRequired = (content: ContentLike): boolean => {
-    return typeof content !== 'string' && isInlineData(content);
-  };
-
-  if (!Array.isArray(message.content)) {
-    return isModalityRequired(message.content);
-  }
-
-  return message.content.some((content: ContentLike) =>
-    isModalityRequired(content)
-  );
-}
-
-function getTextPart(content: any): any {
-  return {
-    text: content.text,
-  };
-}
-
-function getInlinePartFromInlineData(
-  inlineData: GeminiInlineData
-): InlineDataPart {
-  return {
-    inlineData: {
-      mimeType: inlineData.mimeType,
-      data: inlineData.data,
-    },
-  };
-}
-
-function isTextData(partLike: any): boolean {
-  return (
-    typeof partLike === 'object' &&
-    'text' in partLike &&
-    typeof partLike['text'] === 'string' &&
-    partLike['text'].length > 0
-  );
-}
-
-function isInlineData(partLike: any): partLike is GeminiInlineData {
-  return (
-    typeof partLike === 'object' &&
-    'mimeType' in partLike &&
-    'data' in partLike &&
-    isValidMime(partLike['mimeType']) &&
-    typeof partLike['data'] === 'string'
-  );
-}
-
-function isValidMime(mimeLike: any): mimeLike is GeminiMimeType {
-  return Object.values(GeminiMimeType).includes(mimeLike as GeminiMimeType);
 }
