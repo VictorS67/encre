@@ -1,26 +1,28 @@
 import { TiktokenModel } from 'js-tiktoken/lite';
-import { BaseCache } from '../../../../cache/base.js';
-import { MemoryCache } from '../../../../cache/index.js';
-import { type CallableConfig } from '../../../../record/callable.js';
+import { BaseCache } from '../../../cache/base.js';
+import { MemoryCache } from '../../../cache/index.js';
+import { type CallableConfig } from '../../../record/callable.js';
 import {
+  AsyncCallError,
   AsyncCaller,
+  baseFailedAttemptHandler,
   type AsyncCallerParams,
-} from '../../../../utils/asyncCaller.js';
+} from '../../../utils/asyncCaller.js';
 import {
   encodingForModel,
   getNumTokens,
   getTiktokenModel,
-} from '../../../../utils/tokenizer.js';
-import { BaseEvent, BaseEventParams } from '../../../base.js';
+} from '../../../utils/tokenizer.js';
+import { BaseEvent, BaseEventParams } from '../../base.js';
 import {
   type BaseMessageLike,
   convertMessageLikeToMessage,
   BaseMessage,
-} from '../../../input/load/msgs/base.js';
-import { BasePrompt, StringPrompt } from '../../../input/load/prompts/base.js';
-import { ChatPrompt } from '../../../input/load/prompts/chat.js';
-import { Generation } from '../../../output/provide/generation.js';
-import { LLMResult } from '../../../output/provide/llmresult.js';
+} from '../../input/load/msgs/base.js';
+import { BasePrompt, StringPrompt } from '../../input/load/prompts/base.js';
+import { ChatPrompt } from '../../input/load/prompts/chat.js';
+import { Generation } from '../../output/provide/generation.js';
+import { LLMResult } from '../../output/provide/llmresult.js';
 
 export interface BaseLMCallOptions extends BaseEventParams {
   /**
@@ -92,7 +94,9 @@ export abstract class BaseLM<
       this.cache = undefined;
     }
 
-    this.caller = new AsyncCaller(params ?? {});
+    this.caller = new AsyncCaller(
+      (params ?? {}) && { onFailedAttempt: this._failedAttemptHandler }
+    );
   }
 
   /**
@@ -192,6 +196,10 @@ export abstract class BaseLM<
       .join(',');
 
     return llmStrKey;
+  }
+
+  protected _failedAttemptHandler(e: Error) {
+    baseFailedAttemptHandler(e as AsyncCallError);
   }
 }
 

@@ -16,17 +16,13 @@ import { SecretFields, SerializedFields } from '../../../../../load/keymap.js';
 import { getEnvironmentVariables } from '../../../../../utils/environment.js';
 import { Generation } from '../../../../output/provide/generation.js';
 import { LLMResult } from '../../../../output/provide/llmresult.js';
-import { BaseLLM, BaseLLMParams, calculateMaxToken } from '../base.js';
-import { OpenAICallOptions, OpenAIInput, wrapOpenAIClientError } from './index.js';
-
-/**
- * Interface for tracking token usage in OpenAI API Calls.
- */
-interface TokenUsage {
-  completionTokens?: number;
-  promptTokens?: number;
-  totalTokens?: number;
-}
+import { BaseLLM, BaseLLMParams, calculateMaxToken } from '../../base.js';
+import { TokenUsage } from '../../index.js';
+import {
+  OpenAICallOptions,
+  OpenAIInput,
+  wrapOpenAIClientError,
+} from './index.js';
 
 export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
   extends BaseLLM<CallOptions>
@@ -66,7 +62,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   n = 1;
 
-  stream = false;
+  streaming = false;
 
   bestOf?: number | undefined;
 
@@ -125,13 +121,13 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     this.user = fields?.user;
     this.stopWords = fields?.stopWords;
     this.timeout = fields?.timeout;
-    this.stream = fields?.stream ?? this.stream;
+    this.streaming = fields?.streaming ?? this.streaming;
 
     this.organization =
       fields?.configuration?.organization ??
       getEnvironmentVariables('OPENAI_ORGANIZATION');
 
-    if (this.stream && this.bestOf && this.bestOf > 1) {
+    if (this.streaming && this.bestOf && this.bestOf > 1) {
       throw new Error('Cannot stream results with bestOf > 1');
     }
 
@@ -146,12 +142,17 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     };
   }
 
+  protected _failedAttemptHandler(e: Error): void {
+    const error: Error = wrapOpenAIClientError(e as Error);
+    super._failedAttemptHandler(error);
+  }
+
   /**
-   * Get the current set of parameters for the OpenAIClient's completion API call, 
+   * Get the current set of parameters for the OpenAIClient's completion API call,
    * excluding the 'prompt' parameter.
-   * @param options An optional configuration object that can override certain default 
+   * @param options An optional configuration object that can override certain default
    *                parameters, particularly `stopWords`.
-   * @returns An object containing parameters for the OpenAIClient's completion API 
+   * @returns An object containing parameters for the OpenAIClient's completion API
    *          call without the 'prompt'.
    */
   getParams(
@@ -160,7 +161,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     return {
       model: this.modelName,
       temperature: this.temperature,
-      max_tokens: this.maxTokens,
+      max_tokens: this.maxTokens === -1 ? undefined : this.maxTokens,
       top_p: this.topP,
       frequency_penalty: this.frequencyPenalty,
       presence_penalty: this.presencePenalty,
@@ -170,7 +171,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
       logprobs: this.logprobs,
       stop: options?.stopWords ?? this.stopWords,
       user: this.user,
-      stream: this.stream,
+      stream: this.streaming,
       ...this.additionalKwargs,
     };
   }
@@ -209,8 +210,8 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
             prompt: prompt,
           },
           {
-            signal: options.signal,
-            ...options.options,
+            signal: options?.signal,
+            ...options?.options,
           }
         );
 
@@ -249,8 +250,8 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   /**
    * Attempts to get a completion from the OpenAIClient and retries if an error occurs.
-   * 
-   * @param {CompletionCreateParamsStreaming | CompletionCreateParamsNonStreaming} request 
+   *
+   * @param {CompletionCreateParamsStreaming | CompletionCreateParamsNonStreaming} request
    *        The request parameters which can be either for streaming or non-streaming completions.
    * @param {OpenAIClientRequestOptions} [options] Optional client request configurations.
    */
@@ -273,16 +274,11 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     const requestOptions: OpenAIClientRequestOptions =
       this._getRequestOptions(options);
     return this.caller.call(async () => {
-      try {
-        const res = await this._client.completions.create(
-          request,
-          requestOptions
-        );
-        return res;
-      } catch (e) {
-        const error: Error = wrapOpenAIClientError(e as Error);
-        throw error;
-      }
+      const res = await this._client.completions.create(
+        request,
+        requestOptions
+      );
+      return res;
     });
   }
 
