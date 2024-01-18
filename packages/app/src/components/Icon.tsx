@@ -18,7 +18,7 @@ const styles = css`
 `;
 
 const borderStyles = css`
-  border: 1px solid ${token('color.text')};
+  border: 1px solid var(--text-color);
   border-radius: 5px;
 `;
 

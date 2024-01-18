@@ -1,48 +1,47 @@
 html[data-color-mode="light"] {
-    --primary-color: #005FB8;
+  --primary-color: #005fb8;
+  --success-color: #00a844;
 
-    --scroll-color: #BCBCBC;
-    --drag-color: #777985;
+  --scroll-color: #bcbcbc;
+  --drag-color: #858585;
 
-    --text-color: #212121;
-    --text-color-accent-1: #01B2B2;
-    --text-color-accent-2: #6844FC;
-    --text-color-accent-3: #E42E00;
-    --text-color-accent-4: #D800CC;
-    --text-color-accent-6: #00962A;
+  --text-color: #212121;
+  --text-color-accent-1: #01b2b2;
+  --text-color-accent-2: #6844fc;
+  --text-color-accent-3: #e42e00;
+  --text-color-accent-4: #d800cc;
 
-    --success-color: #00A844;
+  --text-success-color: #009326;
 
-    --canvas-background-color: #F8F8F8;
-    --canvas-foreground-color: #49494A;
-    --canvas-foreground-color-1: #49494A80;
-    --canvas-foreground-color-2: #49494A40;
+  --canvas-background-color: #f8f8f8;
+  --canvas-foreground-color: #49494a;
+  --canvas-foreground-color-1: #49494a80;
+  --canvas-foreground-color-2: #49494a40;
 
-    --node-background-color: #FFFFFF;
-    --node-forground-color: #F0F0F0;
+  --node-background-color: #ffffff;
+  --node-forground-color: #f0f0f0;
 }
 
-
 html[data-color-mode="dark"] {
-    --primary-color: #146BA1;
+  --primary-color: #146ba1;
+  --success-color: #1cc21a;
 
-    --scroll-color: #7C7C7C;
-    --drag-color: #E4E4E7;
+  --scroll-color: #7c7c7c;
+  --drag-color: #e4e4e7;
 
-    --text-color: #C2C2C2;
-    --text-color-accent-1: #00BEB5;
-    --text-color-accent-2: #A85AED;
-    --text-color-accent-3: #E45C10;
-    --text-color-accent-4: #D82DDD;
-    --text-color-accent-6: #00962A;
+  --text-color: #c2c2c2;
+  --text-color-accent-1: #00beb5;
+  --text-color-accent-2: #a85aed;
+  --text-color-accent-3: #e45c10;
+  --text-color-accent-4: #d82ddd;
 
-    --success-color: #00A844;
+  --text-success-color: #00962a;
 
-    --canvas-background-color: #202020;
-    --canvas-foreground-color: #474748;
-    --canvas-foreground-color-1: #47474880;
-    --canvas-foreground-color-2: #47474840;
+  --canvas-background-color: #202020;
+  --canvas-foreground-color: #474748;
+  --canvas-foreground-color-1: #47474880;
+  --canvas-foreground-color-2: #47474840;
 
-    --node-background-color: #3D3D3D;
-    --node-forground-color: #212121;
+  --node-background-color: #3d3d3d;
+  --node-forground-color: #212121;
 }

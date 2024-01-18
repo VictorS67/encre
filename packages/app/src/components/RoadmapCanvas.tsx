@@ -29,7 +29,7 @@ const styles = css`
   overflow: hidden;
   z-index: 0;
 
-  background-blend-mode: difference !important;
+  background-color: var(--canvas-background-color);
   background-image: linear-gradient(
       var(--canvas-foreground-color-1) 1px,
       transparent 1px

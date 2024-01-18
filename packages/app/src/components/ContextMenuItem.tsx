@@ -29,11 +29,11 @@ const subMenuStyles = css`
   left: 95%;
   min-width: 150px;
   max-width: 250px;
-  border: 1px solid ${token('color.text')};
+  border: 1px solid var(--primary-color);
   border-radius: 5px;
   padding: 8px 0;
-  color: ${token('color.text')};
-  background-color: ${token('elevation.surface.overlay')};
+  color: var(--text-color);
+  background-color: var(--canvas-background-color);
   box-shadow: 0 8px 16px ${hexToRgba(DN0, 0.25)};
   z-index: 1000;
 
@@ -57,7 +57,7 @@ const subMenuStyles = css`
 
   .context-submenu-item-list hr {
     border: none;
-    border-bottom: 1px solid ${token('color.text.subtle')};
+    border-bottom: 1px solid var(--text-color);
   }
 
   .context-submenu-item-list .context-submenu-item-label {
@@ -66,7 +66,7 @@ const subMenuStyles = css`
     font-weight: bold;
     padding-left: 10px;
     padding-bottom: 5px;
-    color: ${token('color.text')};
+    color: var(--text-color);
   }
 `;
 
@@ -78,12 +78,12 @@ const hasSubMenuStyles = css`
     height: 0;
     border-style: solid;
     border-width: 5px 0 5px 8px;
-    border-color: transparent transparent transparent ${token('color.text')};
+    border-color: transparent transparent transparent var(--text-color);
     transform: translateY(-50%));
   }
   &:hover::after {
     border-color: transparent transparent transparent
-      ${token('color.text.subtle')};
+    var(--primary-color);
   }
 `;
 
@@ -103,8 +103,8 @@ const MyContextMenuItem = styled.div<{ hasSubMenu?: boolean }>`
 
   &:hover,
   &.active {
-    background-color: ${token('color.skeleton')};
-    color: ${token('color.text.subtle')};
+    background-color: var(--primary-color);
+    color: var(--text-color);
   }
 
   .label-container {

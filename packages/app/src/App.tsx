@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import {
   RecoilRoot,
@@ -6,12 +6,12 @@ import {
   selector,
   useRecoilState,
   useRecoilValue,
-} from "recoil";
+} from 'recoil';
 
-import "@atlaskit/css-reset";
-import { EncreStudio } from "./components/EncreStudio";
-import logo from "./logo.svg";
-import "./App.css";
+import '@atlaskit/css-reset';
+import { EncreStudio } from './components/EncreStudio';
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
   return (
