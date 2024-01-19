@@ -1,11 +1,11 @@
 import { expect, jest, test } from '@jest/globals';
-import { baseValidator } from '../pValidators/baseValidator';
+import { variableValidator } from '../promptTemplateValidator/variableValidator';
 
 const isPositive = (n) => n > 0;
 const isString = (s) => typeof s === 'string';
 
 let validator;
-validator = new baseValidator(['age', 'name']);
+validator = new variableValidator(['age', 'name']);
 
 test('add and remove specific rules', () => {
     expect(() => validator.addSpecificRule('age', isPositive)).not.toThrow();
@@ -28,13 +28,13 @@ test('validate with specific rule', () => {
 });
 
 test('validate with default rule', () => {
-    validator = new baseValidator(['age', 'name'], { default: isString });
+    validator = new variableValidator(['age', 'name'], { default: isString });
     expect(validator.validate({ age: '25', name: 'John' })).toEqual({ isValid: true });
     expect(validator.validate({ age: 25, name: 'John' })).toEqual({ isValid: false, errorMessage: 'Validation failed for age' });
 });
 
 test('add specific rule with default rule conflict and exclusion', () => {
-    const validator = new baseValidator(['age', 'name'], { default: isString });
+    const validator = new variableValidator(['age', 'name'], { default: isString });
 
     // Attempt to add a specific rule that conflicts with the default rule
     expect(() => validator.addSpecificRule('age', isPositive)).toThrow();

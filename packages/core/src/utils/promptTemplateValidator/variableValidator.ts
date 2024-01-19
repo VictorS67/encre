@@ -9,7 +9,7 @@ interface ValidatorRules {
     exclude?: string[];
 }
 
-export class baseValidator {
+export class variableValidator {
     private rules: ValidatorRules;
     private validatableVariables: Set<string>;
     constructor(validatableVariables: string[], rules: ValidatorRules = {}) {
