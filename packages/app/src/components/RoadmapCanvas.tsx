@@ -29,14 +29,22 @@ const styles = css`
   overflow: hidden;
   z-index: 0;
 
-  background-blend-mode: difference !important;
+  background-color: var(--canvas-background-color);
   background-image: linear-gradient(
-      ${hexToRgba(DN100, 0.5)} 1px,
+      var(--canvas-foreground-color-1) 1px,
       transparent 1px
     ),
-    linear-gradient(90deg, ${hexToRgba(DN100, 0.5)} 1px, transparent 1px),
-    linear-gradient(${hexToRgba(DN100, 0.25)} 1px, transparent 1px),
-    linear-gradient(90deg, ${hexToRgba(DN100, 0.25)} 1px, transparent 1px) !important;
+    linear-gradient(
+      90deg,
+      var(--canvas-foreground-color-1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(var(--canvas-foreground-color-2) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      var(--canvas-foreground-color-2) 1px,
+      transparent 1px
+    ) !important;
 
   .canvas-contents {
     transform-origin: top left;
@@ -216,7 +224,7 @@ export const RoadmapCanvas: FC = () => {
       if (isAnyParentScrollable(target)) return;
 
       // compute new zoom
-      const zoomSpeed: number = 0.025;
+      const zoomSpeed = 0.025;
       const zoomFactor: number = wheelDelta < 0 ? 1 + zoomSpeed : 1 - zoomSpeed;
       const newZoom: number = canvasPosition.zoom * zoomFactor;
 
