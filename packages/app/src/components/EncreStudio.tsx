@@ -6,7 +6,7 @@ import { css } from '@emotion/react';
 import clsx from 'clsx';
 import { useRecoilValue } from 'recoil';
 
-import { RoadmapCanvas } from './RoadmapCanvas';
+import { NodeGraphBuilder } from './NodeGraphBuilder';
 import { themeState } from '../state/settings';
 
 const styles = css`
@@ -24,7 +24,7 @@ export const EncreStudio: FC = () => {
 
   return (
     <div css={styles}>
-      <RoadmapCanvas />
+      <NodeGraphBuilder />
     </div>
   );
 };
