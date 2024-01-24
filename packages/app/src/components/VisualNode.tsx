@@ -25,6 +25,10 @@ const visualNodeStyles = css`
   flex-direction: column;
 `;
 
+const nodeContentStyles = css`
+  height: 100%;
+`;
+
 /* eslint-disable react/prop-types */
 export const VisualNode = memo(
   forwardRef<HTMLDivElement, VisualNodeProps>(function MyVisualNode(
@@ -129,7 +133,11 @@ const MinimizedVisualNodeContent: FC<MinimizedVisualNodeContentProps> = memo(
     // TODO: Add Input and Output circles
     return (
       <>
-        <div {...attributeListeners} onClick={onNodeGrabClick}></div>
+        <div
+          {...attributeListeners}
+          onClick={onNodeGrabClick}
+          css={nodeContentStyles}
+        ></div>
       </>
     );
   },
@@ -148,7 +156,11 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     // TODO: Add Input and Output circles
     return (
       <>
-        <div {...attributeListeners} onClick={onNodeGrabClick}></div>
+        <div
+          {...attributeListeners}
+          onClick={onNodeGrabClick}
+          css={nodeContentStyles}
+        ></div>
       </>
     );
   },

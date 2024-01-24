@@ -20,9 +20,9 @@ export const NodeGraphBuilder: FC = () => {
 
   const onNodesChange = useStableCallback((newNodes: Node[]) => {
     setNodes(newNodes);
-    console.log(
-      `onNodesChange: nodes: ${JSON.stringify(nodes.map((n) => n.id))}`,
-    );
+    // console.log(
+    //   `onNodesChange: nodes: ${JSON.stringify(nodes.map((n) => n.id))}`,
+    // );
   });
 
   const onNodesSelect = useStableCallback((newNodes: Node[]) => {
@@ -32,9 +32,9 @@ export const NodeGraphBuilder: FC = () => {
       ),
     );
 
-    console.log(
-      `onNodesSelect: selectingNodeIds: ${JSON.stringify(selectingNodeIds)}`,
-    );
+    // console.log(
+    //   `onNodesSelect: selectingNodeIds: ${JSON.stringify(selectingNodeIds)}`,
+    // );
   });
 
   return (

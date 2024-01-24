@@ -56,12 +56,6 @@ const styles = css`
     z-index: 0;
   }
 
-  .dragging-node-grp {
-    position: absolute;
-    top: 0,
-    left: 0,
-  }
-
   .context-menu-box {
     position: absolute;
     display: none;
@@ -329,7 +323,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       nodeSet.add(hoveringNodeId);
     }
 
-    console.log(`selectingUniqueNodeIds: ${JSON.stringify([...nodeSet])}`);
+    // console.log(`selectingUniqueNodeIds: ${JSON.stringify([...nodeSet])}`);
 
     return [...nodeSet];
   }, [selectingNodeIds, hoveringNodeId]);
@@ -358,21 +352,21 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const onNodeSelect = (node: Node) => {
     onNodesSelect([node]);
 
-    console.log(`onNodeSelect: node: ${node.id}`);
+    // console.log(`onNodeSelect: node: ${node.id}`);
   };
 
   const onNodeMouseOver = useStableCallback(
     (event: React.MouseEvent, nodeId: string) => {
       setHoveringNodeId(nodeId);
 
-      console.log(`onNodeMouseOver: nodeId: ${nodeId}`);
+      // console.log(`onNodeMouseOver: nodeId: ${nodeId}`);
     },
   );
 
   const onNodeMouseOut = useStableCallback((event: React.MouseEvent) => {
     setHoveringNodeId(undefined);
 
-    console.log('onNodeMouseOut');
+    // console.log('onNodeMouseOut');
   });
 
   return (
@@ -432,8 +426,12 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
             })}
           </div>
           <DragOverlay
-            className="dragging-node-grp"
             dropAnimation={null}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+            }}
             modifiers={[
               (args) => {
                 return {
