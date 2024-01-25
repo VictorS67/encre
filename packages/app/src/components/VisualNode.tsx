@@ -29,6 +29,19 @@ const nodeContentStyles = css`
   height: 100%;
 `;
 
+const minimizeNodeContentStyles = css`
+  height: 100%;
+  background: var(--node-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .node-abbreviation {
+    flex: 1;
+    text-align: center;
+  }
+`;
+
 /* eslint-disable react/prop-types */
 export const VisualNode = memo(
   forwardRef<HTMLDivElement, VisualNodeProps>(function MyVisualNode(
@@ -42,6 +55,7 @@ export const VisualNode = memo(
       isDragging,
       isMinimized,
       scale,
+      canvasZoom,
       onNodeSizeChange,
       onNodeSelect,
       onNodeMouseOver,
@@ -58,7 +72,7 @@ export const VisualNode = memo(
         zIndex: node.visualInfo.position.zIndex,
         width: node.visualInfo.size.width,
         height: node.visualInfo.size.height,
-        border: '2px solid var(--primary-color)',
+        border: '3px solid var(--primary-color)',
       };
 
       return styling;
@@ -107,6 +121,7 @@ export const VisualNode = memo(
             node={node}
             connections={connections}
             attributeListeners={attributeListeners}
+            canvasZoom={canvasZoom}
             onNodeGrabClick={onNodeGrabClick}
           />
         ) : (
@@ -128,16 +143,29 @@ const MinimizedVisualNodeContent: FC<MinimizedVisualNodeContentProps> = memo(
     node,
     connections = [],
     attributeListeners,
+    canvasZoom,
     onNodeGrabClick,
   }: MinimizedVisualNodeContentProps) => {
+    const style = useMemo(() => {
+      const styling: CSSProperties = {
+        fontSize: `${30 * canvasZoom * 8}px`,
+      };
+
+      return styling;
+    }, [canvasZoom]);
+
     // TODO: Add Input and Output circles
     return (
       <>
         <div
           {...attributeListeners}
           onClick={onNodeGrabClick}
-          css={nodeContentStyles}
-        ></div>
+          css={minimizeNodeContentStyles}
+        >
+          <div className="node-abbreviation" style={style}>
+            {node.metadata.abbreviation}
+          </div>
+        </div>
       </>
     );
   },

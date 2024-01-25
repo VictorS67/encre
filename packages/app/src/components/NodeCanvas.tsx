@@ -449,6 +449,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                 node={draggingNode}
                 connections={draggingNodeConnections}
                 isMinimized={isMinimized}
+                canvasZoom={canvasPosition.zoom}
               />
             ))}
           </DragOverlay>

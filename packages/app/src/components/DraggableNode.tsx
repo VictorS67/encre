@@ -35,6 +35,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         isDragging={isDragging}
         isMinimized={isMinimized}
         isSelecting={isSelecting}
+        canvasZoom={canvasZoom}
         onNodeSizeChange={(width, height) =>
           onNodeSizeChange?.(node, width, height)
         }

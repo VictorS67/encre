@@ -14,11 +14,22 @@ export type VisualInfo = {
   };
 };
 
+// TODO: modify this based on the workflow file.
+export type NodeMetadata = {
+  name: string;
+  abbreviation: string;
+  tags?: Array<string>;
+  inputs?: Array<string>;
+  outputs?: Array<string>;
+  content?: Record<string, unknown> | Array<unknown> | string;
+};
+
 export type Node = {
   id: string;
   state: 'init' | 'pending' | 'success' | 'failed';
   isDebug: boolean;
   visualInfo: VisualInfo;
+  metadata: NodeMetadata;
 };
 
 export type DraggableNodeProps = {
@@ -50,6 +61,7 @@ export type VisualNodeProps = {
   isMinimized?: boolean;
   isSelecting?: boolean;
   scale?: number;
+  canvasZoom: number;
   onNodeSizeChange?: (width: number, height: number) => void;
   onNodeSelect?: () => void;
   onNodeMouseOver?: (
@@ -66,6 +78,7 @@ export type MinimizedVisualNodeContentProps = {
   node: Node;
   connections?: NodeConnection[];
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
+  canvasZoom: number;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
