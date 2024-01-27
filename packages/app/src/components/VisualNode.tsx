@@ -9,8 +9,10 @@ import React, {
 } from 'react';
 
 import { css } from '@emotion/react';
+import { useRecoilValue } from 'recoil';
 
 import { useStableCallback } from '../hooks/useStableCallback';
+import { themeState } from '../state/settings';
 import {
   MinimizedVisualNodeContentProps,
   VisualNodeContentProps,
@@ -23,10 +25,80 @@ const visualNodeStyles = css`
   border-radius: 7px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const nodeContentStyles = css`
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  .node-content {
+    background: var(--node-forground-color);
+    flex-grow: 1;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: stretch;
+    gap: 2px;
+    padding: 8px 4px 8px 7px;
+  }
+
+  .node-card {
+    background: var(--node-background-color);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+    align-self: stretch;
+    padding: 8px 10px;
+  }
+
+  .node-header {
+    display: flex;
+    align-self: stretch;
+    flex: 1 0 0;
+    align-items: center;
+    gap: 3.5px;
+  }
+
+  .node-tooling {
+    flex-grow: 0;
+  }
+
+  .node-tag-grp {
+    display: flex;
+    align-items: flex-start;
+    gap: 3.5px;
+    flex-grow: 1;
+  }
+
+  .node-tag {
+    display: flex;
+    padding: 3px 8px;
+    align-items: center;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    text-transform: lowercase;
+    background: var(--node-forground-color);
+    color: var(--text-color);
+  }
+
+  .node-title {
+    align-self: strech;
+    color: var(--text-color);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
 `;
 
 const minimizeNodeContentStyles = css`
@@ -181,6 +253,42 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     attributeListeners,
     onNodeGrabClick,
   }: VisualNodeContentProps) => {
+    const theme = useRecoilValue(themeState);
+
+    function getColorMode(): string | null {
+      // Select the element that contains the 'data-color-mode' attribute
+      const element = document.querySelector('[data-color-mode]');
+
+      // Check if the element exists and return the attribute value
+      return element ? element.getAttribute('data-color-mode') : null;
+    }
+
+    const tagBorderStyling: CSSProperties = useMemo(() => {
+      const colorMode = getColorMode();
+
+      const styling: CSSProperties =
+        colorMode === 'light'
+          ? {
+              border: '2px solid var(--primary-color)',
+            }
+          : {};
+
+      return styling;
+    }, [theme]);
+
+    const contentTopBorderStyling: CSSProperties = useMemo(() => {
+      const colorMode = getColorMode();
+
+      const styling: CSSProperties =
+        colorMode === 'light'
+          ? {
+              borderTop: '2px solid var(--primary-color)',
+            }
+          : {};
+
+      return styling;
+    }, [theme]);
+
     // TODO: Add Input and Output circles
     return (
       <>
@@ -188,7 +296,24 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           {...attributeListeners}
           onClick={onNodeGrabClick}
           css={nodeContentStyles}
-        ></div>
+        >
+          <div className="node-card">
+            <div className="node-header">
+              <div className="node-tag-grp">
+                {node.metadata.tags?.map((t) => (
+                  <div className="node-tag" key={t} style={tagBorderStyling}>
+                    {t}
+                  </div>
+                ))}
+              </div>
+              <div className="node-tooling">ICON</div>
+            </div>
+            <div className="node-title">{node.metadata.name}</div>
+          </div>
+          <div className="node-content" style={contentTopBorderStyling}>
+            CONTENT <div style={{ height: '500px' }}></div>
+          </div>
+        </div>
       </>
     );
   },
