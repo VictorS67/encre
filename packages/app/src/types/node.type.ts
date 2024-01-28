@@ -85,6 +85,8 @@ export type MinimizedVisualNodeContentProps = {
 export type VisualNodeContentProps = {
   node: Node;
   connections?: NodeConnection[];
+  isMinimized?: boolean;
+  canvasZoom: number;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;
 };

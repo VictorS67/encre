@@ -122,7 +122,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   const [isContextMenuDisabled, setIsContextMenuDisabled] = useState(true);
 
-  const isMinimized: boolean = canvasPosition.zoom < 0.4;
+  const isMinimized: boolean = canvasPosition.zoom < 0.6;
 
   const lastMouseInfoRef = useRef<MouseInfo>({
     x: -1000,
@@ -371,6 +371,10 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   return (
     <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
+      <div>
+        x: {canvasPosition.x}, y: {canvasPosition.y}, zoom:{' '}
+        {canvasPosition.zoom}
+      </div>
       <div
         css={styles}
         className="my-canvas"
