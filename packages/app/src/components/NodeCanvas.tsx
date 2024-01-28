@@ -15,6 +15,7 @@ import { VisualNode } from './VisualNode';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingNode } from '../hooks/useDraggingNode';
+import { useNodeTypes } from '../hooks/useNodeTypes';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { canvasPositionState, lastMousePositionState } from '../state/canvas';
 import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
@@ -121,8 +122,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   );
 
   const [isContextMenuDisabled, setIsContextMenuDisabled] = useState(true);
-
-  const isMinimized: boolean = canvasPosition.zoom < 0.6;
 
   const lastMouseInfoRef = useRef<MouseInfo>({
     x: -1000,
@@ -369,6 +368,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     // console.log('onNodeMouseOut');
   });
 
+  const nodeTypes = useNodeTypes();
+  const isMinimized: boolean = canvasPosition.zoom < 0.6;
+
   return (
     <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
       <div>
@@ -404,22 +406,25 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         >
           <div className="node-connection-grp">
             {nodeConnectionGroups.map((nodeConnectionGroup) => {
-              if (
-                draggingNodes.some((n) => n.id === nodeConnectionGroup.node.id)
-              ) {
+              const nodeToRender: Node = nodeConnectionGroup.node;
+              const connectionsToRender: NodeConnection[] | undefined =
+                nodeConnectionGroup.connections;
+
+              if (draggingNodes.some((n) => n.id === nodeToRender.id)) {
                 return null;
               }
 
               return (
                 <DraggableNode
-                  key={nodeConnectionGroup.node.id}
-                  node={nodeConnectionGroup.node}
-                  connections={nodeConnectionGroup.connections}
+                  key={nodeToRender.id}
+                  node={nodeToRender}
+                  connections={connectionsToRender}
                   canvasZoom={canvasPosition.zoom}
+                  isKnownType={
+                    nodeToRender.type && nodeToRender.type in nodeTypes
+                  }
                   isMinimized={isMinimized}
-                  isSelecting={selectingUniqueNodeIds.includes(
-                    nodeConnectionGroup.node.id,
-                  )}
+                  isSelecting={selectingUniqueNodeIds.includes(nodeToRender.id)}
                   onNodeSizeChange={onNodeSizeChange}
                   onNodeSelect={onNodeSelect}
                   onNodeMouseOver={onNodeMouseOver}
@@ -452,6 +457,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                 key={draggingNode.id}
                 node={draggingNode}
                 connections={draggingNodeConnections}
+                isKnownType={
+                  draggingNode.type && draggingNode.type in nodeTypes
+                }
                 isMinimized={isMinimized}
                 canvasZoom={canvasPosition.zoom}
               />

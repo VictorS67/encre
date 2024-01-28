@@ -11,8 +11,10 @@ import React, {
 
 import { css } from '@emotion/react';
 import clsx from 'clsx';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
+import { NodeContentBody } from './NodeContentBody';
 import { ResizeBox } from './ResizeBox';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
@@ -66,6 +68,12 @@ const nodeContentStyles = css`
   .node-minimize-content > * {
     visibility: hidden;
     align-self: stretch;
+  }
+
+  .node-content-body {
+    color: var(--text-color);
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   .node-minimize-card,
@@ -146,6 +154,7 @@ export const VisualNode = memo(
       yDelta = 0,
       attributes,
       attributeListeners,
+      isKnownType,
       isDragging,
       isMinimized,
       scale,
@@ -233,6 +242,7 @@ export const VisualNode = memo(
         <VisualNodeContent
           node={node}
           connections={connections}
+          isKnownType={isKnownType}
           isMinimized={isMinimized}
           canvasZoom={canvasZoom}
           attributeListeners={attributeListeners}
@@ -318,6 +328,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
   ({
     node,
     connections = [],
+    isKnownType,
     isMinimized,
     canvasZoom,
     attributeListeners,
@@ -488,8 +499,20 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
             className={isMinimized ? 'node-minimize-content' : 'node-content'}
             style={contentTopBorderStyling}
           >
-            <div>CONTENT</div>
-            <div style={{ height: '500px' }}></div>
+            <ErrorBoundary
+              fallback={
+                <div>Something wrong when rendering node content body...</div>
+              }
+            >
+              {isKnownType ? (
+                <NodeContentBody node={node} />
+              ) : (
+                <div>
+                  Unknown node type: {node.type} - please check the type is
+                  correct or the plugin is not turned on
+                </div>
+              )}
+            </ErrorBoundary>
           </div>
         </div>
 
