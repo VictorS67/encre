@@ -6,12 +6,15 @@ import React, {
   forwardRef,
   memo,
   useMemo,
+  useState,
 } from 'react';
 
 import { css } from '@emotion/react';
+import clsx from 'clsx';
 import { useRecoilValue } from 'recoil';
 
 import { ResizeBox } from './ResizeBox';
+import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { themeState } from '../state/settings';
 import {
@@ -27,6 +30,17 @@ const visualNodeStyles = css`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  .resize-box {
+    width: 10px;
+    height: 10px;
+    bottom: 0;
+    cursor: nw-resize;
+    position: absolute;
+    right: 0;
+    border-top-left-radius: 10px;
+    background-color: var(--canvas-foreground-color);
+  }
 `;
 
 const nodeContentStyles = css`
@@ -120,18 +134,6 @@ const nodeContentStyles = css`
     width: 100%;
     text-align: center;
   }
-
-  .resize-box {
-    width: 10px;
-    height: 100px;
-    bottom: 0;
-    cursor: ew-resize;
-    position: absolute;
-    right: 0;
-    border-top-left-radius: 100px;
-    border-bottom-right-radius: 50px;
-    background-color: rgba(255, 255, 255, 0.25);
-  }
 `;
 
 /* eslint-disable react/prop-types */
@@ -201,6 +203,9 @@ export const VisualNode = memo(
 
     return (
       <div
+        className={clsx('node', {
+          minimized: isMinimized,
+        })}
         ref={nodeRef}
         css={visualNodeStyles}
         style={style}
@@ -232,6 +237,7 @@ export const VisualNode = memo(
           canvasZoom={canvasZoom}
           attributeListeners={attributeListeners}
           onNodeGrabClick={onNodeGrabClick}
+          onNodeSizeChange={onNodeSizeChange}
         />
       </div>
     );
@@ -316,8 +322,15 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     canvasZoom,
     attributeListeners,
     onNodeGrabClick,
+    onNodeSizeChange,
   }: VisualNodeContentProps) => {
     const theme = useRecoilValue(themeState);
+
+    const [startHeight, setStartHeight] = useState<number | undefined>();
+    const [startWidth, setStartWidth] = useState<number | undefined>();
+    const [startMouseX, setStartMouseX] = useState(0);
+    const [startMouseY, setStartMouseY] = useState(0);
+    const { clientToCanvasPosition } = useCanvasPosition();
 
     function getColorMode(): string | null {
       // Select the element that contains the 'data-color-mode' attribute
@@ -384,6 +397,67 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       return styling;
     }, [theme]);
 
+    const getNodeCurrentDimensions = (
+      elementorChild: HTMLElement,
+    ): [number, number] => {
+      const nodeElement: HTMLElement | null = elementorChild.closest('.node');
+
+      if (!nodeElement) {
+        return [100, 100];
+      }
+
+      const cssWidth: string = window.getComputedStyle(nodeElement).width;
+      const cssHeight: string = window.getComputedStyle(nodeElement).height;
+
+      return [parseInt(cssWidth, 10), parseInt(cssHeight, 10)];
+    };
+
+    const onReiszeStart = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
+
+      setStartWidth(width);
+      setStartHeight(height);
+      setStartMouseX(e.clientX);
+      setStartMouseY(e.clientY);
+    });
+
+    const onResizeMove = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const mousePositionInCanvas = clientToCanvasPosition(
+        startMouseX,
+        startMouseY,
+      );
+      const newMousePositionInCanvas = clientToCanvasPosition(
+        e.clientX,
+        e.clientY,
+      );
+
+      const deltaX: number =
+        newMousePositionInCanvas.x - mousePositionInCanvas.x;
+      const deltaY: number =
+        newMousePositionInCanvas.y - mousePositionInCanvas.y;
+
+      const newWidth: number | undefined = startWidth
+        ? startWidth + deltaX
+        : startWidth;
+      const newHeight: number | undefined = startHeight
+        ? startHeight + deltaY
+        : startHeight;
+
+      if (
+        newWidth &&
+        newHeight &&
+        (newWidth !== startWidth || newHeight !== startHeight)
+      ) {
+        onNodeSizeChange?.(newWidth, newHeight);
+      }
+    });
+
     // TODO: Add Input and Output circles
     return (
       <>
@@ -420,7 +494,10 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
         </div>
 
         <div>
-          <ResizeBox />
+          <ResizeBox
+            onResizeStart={onReiszeStart}
+            onResizeMove={onResizeMove}
+          />
         </div>
       </>
     );

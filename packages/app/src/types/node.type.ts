@@ -89,4 +89,5 @@ export type VisualNodeContentProps = {
   canvasZoom: number;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onNodeSizeChange?: (width: number, height: number) => void;
 };
