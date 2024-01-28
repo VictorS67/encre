@@ -11,6 +11,7 @@ import React, {
 import { css } from '@emotion/react';
 import { useRecoilValue } from 'recoil';
 
+import { ResizeBox } from './ResizeBox';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { themeState } from '../state/settings';
 import {
@@ -71,7 +72,6 @@ const nodeContentStyles = css`
   .node-header {
     display: flex;
     align-self: stretch;
-    flex: 1 0 0;
     align-items: center;
     gap: 3.5px;
     height: 20px;
@@ -119,6 +119,18 @@ const nodeContentStyles = css`
   .node-minimize-card > .node-title {
     width: 100%;
     text-align: center;
+  }
+
+  .resize-box {
+    width: 10px;
+    height: 100px;
+    bottom: 0;
+    cursor: ew-resize;
+    position: absolute;
+    right: 0;
+    border-top-left-radius: 100px;
+    border-bottom-right-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.25);
   }
 `;
 
@@ -330,14 +342,18 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
 
     const [cardHeightStyling, minTitleStyling, minVisibilityStyling] =
       useMemo(() => {
+        const numPorts: number =
+          (node.metadata.inputs ? node.metadata.inputs.length : 0) +
+          (node.metadata.outputs ? node.metadata.outputs?.length : 0);
+
         const cardStyling: CSSProperties = {
-          height: 50,
+          minHeight: 50 + 30 * numPorts,
         };
 
         const titleStyling: CSSProperties = isMinimized
           ? {
-              fontSize: `${24 * (canvasZoom + 0.4)}px`,
-              height: 50,
+              fontSize: `${32 * (canvasZoom + 0.4)}px`,
+              height: 50 + 30 * numPorts,
             }
           : {
               fontSize: '18px',
@@ -401,6 +417,10 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
             <div>CONTENT</div>
             <div style={{ height: '500px' }}></div>
           </div>
+        </div>
+
+        <div>
+          <ResizeBox />
         </div>
       </>
     );

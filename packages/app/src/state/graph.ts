@@ -22,7 +22,7 @@ export const graphState = atom<NodeGraph>({
           },
           size: {
             width: 300,
-            height: 175,
+            height: 500,
           },
         },
         metadata: {
