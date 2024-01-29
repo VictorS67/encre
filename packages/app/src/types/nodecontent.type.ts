@@ -44,7 +44,7 @@ export type ChatContent = {
 
 export type ChatNodeContent = {
   type: 'chat';
-  content: ChatContent;
+  content: ChatContent | ChatContent[];
 };
 
 export type ImageContent = {

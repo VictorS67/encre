@@ -1,7 +1,7 @@
-import { chatNodeDescriptor } from '../components/Nodes/ChatNode';
-import { imageNodeDescriptor } from '../components/Nodes/ImageNode';
-import { jsonNodeDescriptor } from '../components/Nodes/JsonNode';
-import { textNodeDescriptor } from '../components/Nodes/TextNode';
+import { chatNodeDescriptor } from '../components/nodes/ChatNode';
+import { imageNodeDescriptor } from '../components/nodes/ImageNode';
+import { jsonNodeDescriptor } from '../components/nodes/JsonNode';
+import { textNodeDescriptor } from '../components/nodes/TextNode';
 import { Node } from '../types/node.type';
 import {
   NodeContent,
