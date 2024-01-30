@@ -24,6 +24,7 @@ import {
   VisualNodeContentProps,
   VisualNodeProps,
 } from '../types/node.type';
+import { getColorMode } from '../utils/colorMode';
 
 const visualNodeStyles = css`
   color: var(--text-color);
@@ -72,7 +73,7 @@ const nodeContentStyles = css`
 
   .node-content-body {
     color: var(--text-color);
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.4;
   }
 
@@ -342,14 +343,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     const [startMouseX, setStartMouseX] = useState(0);
     const [startMouseY, setStartMouseY] = useState(0);
     const { clientToCanvasPosition } = useCanvasPosition();
-
-    function getColorMode(): string | null {
-      // Select the element that contains the 'data-color-mode' attribute
-      const element = document.querySelector('[data-color-mode]');
-
-      // Check if the element exists and return the attribute value
-      return element ? element.getAttribute('data-color-mode') : null;
-    }
 
     const tagBorderStyling: CSSProperties = useMemo(() => {
       const colorMode = getColorMode();

@@ -37,7 +37,7 @@ export type TextNodeContent = {
 export type ChatContext = string | { [key: string]: unknown };
 
 export type ChatContent = {
-  role: string;
+  role: 'human' | 'assistant' | 'system' | 'function' | 'general';
   name?: string;
   context: ChatContext;
 };
@@ -60,9 +60,10 @@ export type ImageNodeContent = {
 };
 
 export type JsonContext = { [key: string]: unknown };
+export type JsonTemplate ={ [key: string]: string };
 
 export type JsonContent = {
-  jsonTemplate: string;
+  jsonTemplate: JsonTemplate;
   context: JsonContext;
 };
 

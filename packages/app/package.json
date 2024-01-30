@@ -56,6 +56,7 @@
     "immer": "^10.0.3",
     "langchain": "^0.0.149",
     "marked": "^9.0.0",
+    "monaco-editor": "^0.45.0",
     "openai": "^4.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
