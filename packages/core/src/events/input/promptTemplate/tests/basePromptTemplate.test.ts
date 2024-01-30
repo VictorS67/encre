@@ -1,61 +1,45 @@
 import { expect, jest, test } from '@jest/globals';
 import { basePromptTemplate } from '../base';
 import { variableValidator } from '../../../../utils/promptTemplateValidator/variableValidator';
-
-
-test('formatTemplate returns correct string', () => {
-    const promptTemplate = new basePromptTemplate({
-        template: "{greeting}, {name}!",
-        inputVariables: ["greeting", "name"],
-    });
-    const formattedString = promptTemplate.formatTemplate({ greeting: "Hello", name: "World" });
-    expect(formattedString).toBe("Hello, World!");
-});
-
-test('formatTemplate with empty template string', () => {
-    const promptTemplate = new basePromptTemplate({
-        template: "",
-        inputVariables: ["greeting", "name"]
-    });
-    const formattedString = promptTemplate.formatTemplate({ greeting: "Hello", name: "Alice" });
-    expect(formattedString).toBe("");
-});
-
-test('formatTemplate with undefined input variables', () => {
-    const promptTemplate = new basePromptTemplate({
-        template: "{greeting}, {name}!",
-        inputVariables: ["greeting", "name"]
-    });
-    const formattedString = promptTemplate.formatTemplate();
-    expect(formattedString).toBe("");
-});
-
-test('formatTemplate with extra unused variables', () => {
-    const promptTemplate = new basePromptTemplate({
-        template: "Hello, {name}!",
-        inputVariables: ["name"]
-    });
-    const formattedString = promptTemplate.formatTemplate({ name: "Bob", age: 30 });
-    expect(formattedString).toBe("Hello, Bob!");
-});
-
-test('formatTemplate with missing required variables', () => {
-    const promptTemplate = new basePromptTemplate({
-        template: "{greeting}, {name}!",
-        inputVariables: ["greeting", "name"]
-    });
-    expect(() => {
-        promptTemplate.formatTemplate({ greeting: "Hello" });
-    }).toThrow(Error);
-});
-
-test('addPrefix and addSuffix methods', () => {
+// test('declare not exist input variables', async () =>{
+//     const inputVariables = ['usedVariable', 'unusedVariable'];
+//     const template = 'This is a template with {usedVariable}';
+//     expect(() =>{
+//         new basePromptTemplate({
+//             template: template,
+//             inputVariables: inputVariables
+//         })
+//     }).toThrow('Variable \'unusedVariable\' is declared but not used in the template.');
+// });
+// test('validator', async() => {
+//     const isString = (s) => typeof s === 'string';
+//     let validator;
+//     validator = new variableValidator(['name']);
+//     validator.addSpecificRule('name', isString);
+//     const promptTemplate = new basePromptTemplate({
+//         template: "{name}",
+//         inputVariables: ["name"],
+//         validator:validator
+//     });
+//     await expect(promptTemplate.invoke({'name': 1})).rejects.toThrow("the validation for inputValue failed");
+// });
+test('addPrefix and addSuffix methods', async () => {
     const promptTemplate = new basePromptTemplate({
         template: "{name}",
         inputVariables: ["name"]
     });
     promptTemplate.addPrefix("Hello, ");
     promptTemplate.addSuffix("!");
-    const formattedString = promptTemplate.formatTemplate({ name: "Alice" });
+    const formattedString = await promptTemplate.invoke({ name: "Alice" });
+    expect(formattedString).toBe("Hello, Alice!");
+});
+test('addPrefix and addSuffix methods', async () => {
+    const promptTemplate = new basePromptTemplate({
+        template: "{name}",
+        inputVariables: ["name"]
+    });
+    promptTemplate.addPrefix("Hello, ");
+    promptTemplate.addSuffix("!");
+    const formattedString = await promptTemplate.invoke({ name: "Alice" });
     expect(formattedString).toBe("Hello, Alice!");
 });

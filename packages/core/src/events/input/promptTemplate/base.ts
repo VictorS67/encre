@@ -1,3 +1,4 @@
+import { log } from "node:console";
 import { Callable, CallableConfig } from "../../../record/callable";
 import { variableValidator } from "../../../utils/promptTemplateValidator/variableValidator";
 import { BaseEvent, BaseEventParams } from "../../base";
@@ -18,11 +19,11 @@ export interface PromptTemplateParams extends BaseEventParams {
 }
 
 export class basePromptTemplate <
-    CallInput = Record<string,any>,
-    CallOutput = string,
+    CallInput extends Record<string, any>,
+    CallOutput extends string,
     CallOptions extends CallableConfig = CallableConfig,
   >
-  extends BaseEvent<CallInput, CallOutput, CallOptions>
+  extends BaseEvent<Record<string,any>, string, CallOptions>
   implements PromptTemplateParams
   {
     _namespace: string[];
@@ -31,6 +32,7 @@ export class basePromptTemplate <
     validator?: variableValidator | undefined;
     partialVariables?: string[] | undefined;
 
+
     constructor(fields?: Partial<PromptTemplateParams>){
         super(fields ?? {});
         this.inputVariables = fields?.inputVariables ?? this.inputVariables;
@@ -38,7 +40,7 @@ export class basePromptTemplate <
         this.validator = fields?.validator ?? this.validator;
         this.partialVariables = fields?.partialVariables ?? this.partialVariables;
         if (this.template && this.inputVariables) {
-            this.checkInputVariables(this.template, this.inputVariables);
+            this.isInputExists(this.template, this.inputVariables);
         }
     }
     /**
@@ -46,7 +48,7 @@ export class basePromptTemplate <
      * @param template
      * @param inputVariables 
      */
-    private checkInputVariables(template: string, inputVariables: string[]): void {
+    private isInputExists(template: string, inputVariables: string[]): void {
         const variablePattern = /\{([^}]+)\}/g;
         let match: RegExpExecArray | null;
         const foundVariables: Set<string> = new Set();
@@ -62,7 +64,7 @@ export class basePromptTemplate <
         });
     }
 
-    private validateInput(input: Record<string, any>): boolean{
+    private validateInput(input: CallInput): boolean{
         if (this.validator) {
             const validationResult = this.validator.validate(input);
             if (!validationResult.isValid) {
@@ -71,6 +73,13 @@ export class basePromptTemplate <
             }
         }
         return true;
+    }
+
+    public getTemplate() : string{
+        if (!this.template){
+            return "";
+        }
+        return this.template;
     }
 
     public addPrefix(prefix: string): void {
@@ -89,46 +98,26 @@ export class basePromptTemplate <
             this.template = suffix;
         }
     }
-//    // Override the invoke method from Callable
-//    async invoke(input: CallInput, options?: Partial<CallOptions>): Promise<CallOutput> {
-//     // Convert CallInput to Record<string, string>
-//     const inputRecord: Record<string, string> = this.convertToRecord(input);
 
-//     // Call formatTemplate with the converted input
-//     return this.formatTemplate(inputRecord);
-// }
-
-// // // Helper method to convert CallInput to Record<string, string>
-// private convertToRecord(input: CallInput): Record<string, string> {
-//     const record: Record<string, string> = {};
-//     for (const key in input) {
-//         if (input.hasOwnProperty(key)) {
-//             // Assuming all values in input are string or can be converted to string
-//             record[key] = String(input[key]);
-//         }
-//     }
-//     return record;
-// }
-    public formatTemplate(inputValues?: Record<string, string>): string {
-        if (inputValues == undefined){
-            return "";
-        }
-        if (!this.validateInput(inputValues)){
+    async invoke(input: CallInput, options?: Partial<CallOptions>): Promise<CallOutput> {
+        // log('invoke called');
+        if (!this.validateInput(input)){
+            // log('not valid');
             throw new Error("the validation for inputValue failed");
-        }
+        } 
+        
         let formattedTemplate = this.template || "";
-       // Iterate through each input variable and replace placeholders with actual values
-        this.inputVariables?.forEach(variable => {
-            if (inputValues.hasOwnProperty(variable)) {
-                const regex = new RegExp(`\\{${variable}\\}`, 'g');
-                formattedTemplate = formattedTemplate.replace(regex, inputValues[variable]);
-            } else {
-                // If a required variable is missing in the input, throw an error
-                throw new Error(`Missing value for variable '${variable}'`);
-            }
-        }); 
-
-        return formattedTemplate;
+        // Iterate through each input variable and replace placeholders with actual values
+         this.inputVariables?.forEach(async variable => {
+             if (variable in input) {
+                 const regex = new RegExp(`\\{${variable}\\}`, 'g');
+                 formattedTemplate = formattedTemplate.replace(regex, input[variable]);
+             } else {
+                 // If a required variable is missing in the input, throw an error
+                 throw new Error(`Missing value for variable '${variable}'`);
+             }
+         }); 
+         return formattedTemplate as CallOutput;
     }
   }
 
