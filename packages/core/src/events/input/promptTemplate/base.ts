@@ -1,4 +1,3 @@
-import { log } from "node:console";
 import { Callable, CallableConfig } from "../../../record/callable";
 import { variableValidator } from "../../../utils/promptTemplateValidator/variableValidator";
 import { BaseEvent, BaseEventParams } from "../../base";
@@ -49,7 +48,7 @@ export class basePromptTemplate <
      * @param inputVariables 
      */
     private isInputExists(template: string, inputVariables: string[]): void {
-        const variablePattern = /\{([^}]+)\}/g;
+        const variablePattern = /\{\{([^}]+)\}\}/g;
         let match: RegExpExecArray | null;
         const foundVariables: Set<string> = new Set();
 
@@ -110,7 +109,7 @@ export class basePromptTemplate <
         // Iterate through each input variable and replace placeholders with actual values
          this.inputVariables?.forEach(async variable => {
              if (variable in input) {
-                 const regex = new RegExp(`\\{${variable}\\}`, 'g');
+                const regex = new RegExp(`\\{\\{${variable}\\}\\}`, 'g');
                  formattedTemplate = formattedTemplate.replace(regex, input[variable]);
              } else {
                  // If a required variable is missing in the input, throw an error

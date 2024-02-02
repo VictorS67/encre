@@ -345,38 +345,38 @@ describe('RecursiveTextSplitter', () => {
     expect(duration).toBeLessThan(1000);
   });
 
-  // test('should maintain performance efficiency with large texts for token counting', async () => {
-  //   // The TextSplitter allows to change the function for computing the context size.
-  //   // Here we are using the gpt2 encoding to split the codes. However, it takes longer time
-  //   // since we are fetching for tokens.
-  //   // Thus, we are using the maximum context size for gpt2 model (which is 2048) to limit the
-  //   // context size of the splitter, which is a better fit for the real-world cases.
+  test('should maintain performance efficiency with large texts for token counting', async () => {
+    // The TextSplitter allows to change the function for computing the context size.
+    // Here we are using the gpt2 encoding to split the codes. However, it takes longer time
+    // since we are fetching for tokens.
+    // Thus, we are using the maximum context size for gpt2 model (which is 2048) to limit the
+    // context size of the splitter, which is a better fit for the real-world cases.
 
-  //   splitter.computeContextSize = async (text: string): Promise<number> => {
-  //     return getNumTokens(text, 'gpt2');
-  //   };
-  //   splitter.maxSize = 2048;
+    splitter.computeContextSize = async (text: string): Promise<number> => {
+      return getNumTokens(text, 'gpt2');
+    };
+    splitter.maxSize = 2048;
 
-  //   const filePath: string = path.resolve(
-  //     path.dirname(url.fileURLToPath(import.meta.url)),
-  //     './examples/long_text.txt'
-  //   );
+    const filePath: string = path.resolve(
+      path.dirname(url.fileURLToPath(import.meta.url)),
+      './examples/long_text.txt'
+    );
 
-  //   const fdr: string = fs.readFileSync(filePath, {
-  //     encoding: 'utf8',
-  //     flag: 'r',
-  //   });
+    const fdr: string = fs.readFileSync(filePath, {
+      encoding: 'utf8',
+      flag: 'r',
+    });
 
-  //   const context = new Context({
-  //     pageContent: fdr,
-  //   });
+    const context = new Context({
+      pageContent: fdr,
+    });
 
-  //   const startTime = Date.now();
-  //   await splitter.invoke(context);
-  //   const endTime = Date.now();
-  //   const duration = endTime - startTime;
-  //   expect(duration).toBeLessThan(5000);
-  // });
+    const startTime = Date.now();
+    await splitter.invoke(context);
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    expect(duration).toBeLessThan(5000);
+  });
 
   test('should maintain performance efficiency with large texts for token counting', async () => {
     // This is the case when the splitted context that has context size exceeded the maxSize.

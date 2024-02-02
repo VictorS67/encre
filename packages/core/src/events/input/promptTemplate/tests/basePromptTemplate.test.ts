@@ -1,16 +1,16 @@
 import { expect, jest, test } from '@jest/globals';
 import { basePromptTemplate } from '../base';
 import { variableValidator } from '../../../../utils/promptTemplateValidator/variableValidator';
-// test('declare not exist input variables', async () =>{
-//     const inputVariables = ['usedVariable', 'unusedVariable'];
-//     const template = 'This is a template with {usedVariable}';
-//     expect(() =>{
-//         new basePromptTemplate({
-//             template: template,
-//             inputVariables: inputVariables
-//         })
-//     }).toThrow('Variable \'unusedVariable\' is declared but not used in the template.');
-// });
+test('declare not exist input variables', async () =>{
+    const inputVariables = ['usedVariable', 'unusedVariable'];
+    const template = 'This is a template with {{usedVariable}}';
+    expect(() =>{
+        new basePromptTemplate({
+            template: template,
+            inputVariables: inputVariables
+        })
+    }).toThrow('Variable \'unusedVariable\' is declared but not used in the template.');
+});
 // test('validator', async() => {
 //     const isString = (s) => typeof s === 'string';
 //     let validator;
@@ -18,14 +18,14 @@ import { variableValidator } from '../../../../utils/promptTemplateValidator/var
 //     validator.addSpecificRule('name', isString);
 //     const promptTemplate = new basePromptTemplate({
 //         template: "{name}",
-//         inputVariables: ["name"],
-//         validator:validator
+//         inputVariables: ["name"]
+//         validator:validatot
 //     });
 //     await expect(promptTemplate.invoke({'name': 1})).rejects.toThrow("the validation for inputValue failed");
 // });
 test('addPrefix and addSuffix methods', async () => {
     const promptTemplate = new basePromptTemplate({
-        template: "{name}",
+        template: "{{name}}",
         inputVariables: ["name"]
     });
     promptTemplate.addPrefix("Hello, ");
@@ -35,7 +35,7 @@ test('addPrefix and addSuffix methods', async () => {
 });
 test('addPrefix and addSuffix methods', async () => {
     const promptTemplate = new basePromptTemplate({
-        template: "{name}",
+        template: "{{name}}",
         inputVariables: ["name"]
     });
     promptTemplate.addPrefix("Hello, ");
