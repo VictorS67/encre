@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals';
 import { BasePromptTemplate } from '../base';
-import { variableValidator } from '../../../../utils/promptTemplateValidator/variableValidator';
+import { VariableValidator } from '../../../../utils/promptTemplateValidator/variableValidator';
 test('declare not exist input variables', async () =>{
     const inputVariables = ['usedVariable', 'unusedVariable'];
     const template = 'This is a template with {{usedVariable}}';
@@ -14,7 +14,7 @@ test('declare not exist input variables', async () =>{
 test('validator', async() => {
     const isString = (s) => typeof s === 'string';
     let validator;
-    validator = new variableValidator(['name']);
+    validator = new VariableValidator(['name']);
     validator.addSpecificRule('name', isString);
     const promptTemplate = new BasePromptTemplate({
         template: "{{name}}",
