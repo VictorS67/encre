@@ -58,3 +58,4 @@ utils/nanoid.d.ts
 index.cjs
 index.js
 index.d.ts
+yarn.lock
