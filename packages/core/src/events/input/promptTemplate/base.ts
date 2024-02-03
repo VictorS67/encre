@@ -17,7 +17,7 @@ export interface PromptTemplateParams extends BaseEventParams {
     partialVariables?: string[] | undefined;
 }
 
-export class basePromptTemplate <
+export class BasePromptTemplate <
     CallInput extends Record<string, any>,
     CallOutput extends string,
     CallOptions extends CallableConfig = CallableConfig,
