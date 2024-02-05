@@ -238,8 +238,79 @@ export abstract class Serializable {
     ) as SerializedFields;
   }
 
+  protected _getAttributes(): {
+    aliases: SerializedKeyAlias;
+    secrets: SecretFields;
+    kwargs: SerializedFields;
+  } {
+    let aliases: SerializedKeyAlias = {};
+    let secrets: SecretFields = {};
+    let kwargs: SerializedFields = this._initKwargs();
+
+    for (
+      let sub = Object.getPrototypeOf(this);
+      sub;
+      sub = Object.getPrototypeOf(sub)
+    ) {
+      aliases = safeAssign<SerializedKeyAlias>(
+        aliases,
+        Reflect.get(sub, '_aliases', this)
+      );
+      secrets = safeAssign<SecretFields>(
+        secrets,
+        Reflect.get(sub, '_secrets', this)
+      );
+      kwargs = safeAssign<SerializedFields>(
+        kwargs,
+        Reflect.get(sub, '_attributes', this)
+      );
+    }
+
+    Object.keys(secrets).forEach((keyPath: string) => {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
+      let read: Serializable = this;
+      let write: SerializedFields = kwargs;
+
+      const [last, ...partsReverse] = keyPath.split('.').reverse();
+      for (const key of partsReverse.reverse()) {
+        if (!(key in read) || read[key] === undefined) return;
+
+        if (!(key in write) || write[key] === undefined) {
+          if (typeof read[key] === 'object' && read[key] != null) {
+            write[key] = {};
+          } else if (Array.isArray(read[key])) {
+            write[key] = [];
+          }
+        }
+
+        read = read[key];
+        write = write[key] as SerializedFields;
+      }
+
+      if (last in read && read[last] !== undefined) {
+        write[last] = write[last] || read[last];
+      }
+    });
+
+    return { aliases, secrets, kwargs };
+  }
+
   getNodeId(): RecordId {
     return this._nodeId;
+  }
+
+  getAttributes(): {
+    aliases: SerializedKeyAlias;
+    secrets: SecretFields;
+    kwargs: SerializedFields;
+  } {
+    const { aliases, secrets, kwargs } = this._getAttributes();
+
+    const filteredKwargs = Object.keys(secrets).length
+      ? this._removeSecret(kwargs, secrets)
+      : kwargs;
+
+    return { aliases, secrets, kwargs: filteredKwargs };
   }
 
   toJSONNotImplemented(): Serialized {
@@ -408,62 +479,9 @@ export abstract class Serializable {
       return this.toJSONErrnoRecord();
     }
 
-    let aliases: SerializedKeyAlias = {};
-    let secrets: SecretFields = {};
-    let kwargs: SerializedFields = this._initKwargs();
+    const { aliases, secrets, kwargs } = this._getAttributes();
 
-    for (
-      let sub = Object.getPrototypeOf(this);
-      sub;
-      sub = Object.getPrototypeOf(sub)
-    ) {
-      aliases = safeAssign<SerializedKeyAlias>(
-        aliases,
-        Reflect.get(sub, '_aliases', this)
-      );
-      secrets = safeAssign<SecretFields>(
-        secrets,
-        Reflect.get(sub, '_secrets', this)
-      );
-      kwargs = safeAssign<SerializedFields>(
-        kwargs,
-        Reflect.get(sub, '_attributes', this)
-      );
-    }
-
-    Object.keys(secrets).forEach((keyPath: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
-      let read: Serializable = this;
-      let write: SerializedFields = kwargs;
-
-      const [last, ...partsReverse] = keyPath.split('.').reverse();
-      for (const key of partsReverse.reverse()) {
-        if (!(key in read) || read[key] === undefined) return;
-
-        if (!(key in write) || write[key] === undefined) {
-          if (typeof read[key] === 'object' && read[key] != null) {
-            write[key] = {};
-          } else if (Array.isArray(read[key])) {
-            write[key] = [];
-          }
-        }
-
-        read = read[key];
-        write = write[key] as SerializedFields;
-      }
-
-      if (last in read && read[last] !== undefined) {
-        write[last] = write[last] || read[last];
-      }
-    });
-
-    return this.toEventRecord(
-      aliases,
-      secrets,
-      kwargs,
-      outputs,
-      parent
-    );
+    return this.toEventRecord(aliases, secrets, kwargs, outputs, parent);
   }
 
   toJSON(): Serialized {
@@ -479,54 +497,7 @@ export abstract class Serializable {
       return this.toJSONNotImplemented();
     }
 
-    let aliases: SerializedKeyAlias = {};
-    let secrets: SecretFields = {};
-    let kwargs: SerializedFields = this._initKwargs();
-
-    for (
-      let sub = Object.getPrototypeOf(this);
-      sub;
-      sub = Object.getPrototypeOf(sub)
-    ) {
-      aliases = safeAssign<SerializedKeyAlias>(
-        aliases,
-        Reflect.get(sub, '_aliases', this)
-      );
-      secrets = safeAssign<SecretFields>(
-        secrets,
-        Reflect.get(sub, '_secrets', this)
-      );
-      kwargs = safeAssign<SerializedFields>(
-        kwargs,
-        Reflect.get(sub, '_attributes', this)
-      );
-    }
-
-    Object.keys(secrets).forEach((keyPath: string) => {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias, @typescript-eslint/no-explicit-any
-      let read: Serializable = this;
-      let write: SerializedFields = kwargs;
-
-      const [last, ...partsReverse] = keyPath.split('.').reverse();
-      for (const key of partsReverse.reverse()) {
-        if (!(key in read) || read[key] === undefined) return;
-
-        if (!(key in write) || write[key] === undefined) {
-          if (typeof read[key] === 'object' && read[key] != null) {
-            write[key] = {};
-          } else if (Array.isArray(read[key])) {
-            write[key] = [];
-          }
-        }
-
-        read = read[key];
-        write = write[key] as SerializedFields;
-      }
-
-      if (last in read && read[last] !== undefined) {
-        write[last] = write[last] || read[last];
-      }
-    });
+    const { aliases, secrets, kwargs } = this._getAttributes();
 
     return this.toJSONConstructor(aliases, secrets, kwargs);
   }

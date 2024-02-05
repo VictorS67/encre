@@ -35,7 +35,7 @@ function combineAliasesAndInvert(constructor: typeof Serializable) {
     current && current.prototype;
     current = Object.getPrototypeOf(current)
   ) {
-    Object.assign(aliases, Reflect.get(current.prototype, 'aliases'));
+    Object.assign(aliases, Reflect.get(current.prototype, '_aliases'));
   }
 
   return Object.entries(aliases).reduce(
