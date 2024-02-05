@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC } from 'react';
 
-import { Node } from "./node.type";
+import { Node } from './node.type';
 
 export type UnknownNodeContentDescriptor = {
   Body?: FC<{ node: Node }>;
@@ -18,7 +18,7 @@ export type NodeContentDescriptors = {
   [K in NodeContentType]: NodeContentDescriptor<K>;
 };
 
-export type NodeContentType = NodeContent["type"];
+export type NodeContentType = NodeContent['type'];
 
 export type KnownNode<T extends NodeContentType> = Extract<
   NodeContent,
@@ -34,18 +34,18 @@ export type NodeContent =
 export type TextContent = string;
 
 export type TextNodeContent = {
-  type: "text";
+  type: 'text';
   content: TextContent;
 };
 
 export type ChatContent = {
-  role: "human" | "assistant" | "system" | "function" | "general";
+  role: 'human' | 'assistant' | 'system' | 'function' | 'general';
   name?: string;
   context: TextContent;
 };
 
 export type ChatNodeContent = {
-  type: "chat";
+  type: 'chat';
   content: ChatContent | ChatContent[];
 };
 
@@ -56,7 +56,7 @@ export type ImageContent = {
 };
 
 export type ImageNodeContent = {
-  type: "image";
+  type: 'image';
   content: ImageContent;
 };
 
@@ -69,7 +69,7 @@ export type JsonContent = {
 };
 
 export type JsonNodeContent = {
-  type: "json";
+  type: 'json';
   content: JsonContent;
 };
 

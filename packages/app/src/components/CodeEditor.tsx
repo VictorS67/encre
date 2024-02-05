@@ -1,10 +1,12 @@
-import React, { FC, useEffect, useRef } from "react";
-import { CodeEditorProps } from "../types/editor.type";
-import { monaco } from "../utils/monacoEditor";
-import { themeState } from "../state/settings";
-import { useRecoilValue } from "recoil";
-import { getColorMode } from "../utils/colorMode";
-import { useLatest } from "ahooks";
+import React, { FC, useEffect, useRef } from 'react';
+
+import { useLatest } from 'ahooks';
+import { useRecoilValue } from 'recoil';
+
+import { themeState } from '../state/settings';
+import { CodeEditorProps } from '../types/editor.type';
+import { getColorMode } from '../utils/colorMode';
+import { monaco } from '../utils/monacoEditor';
 
 export const CodeEditor: FC<CodeEditorProps> = ({
   text,
@@ -31,11 +33,11 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     if (!colorMode) return;
 
     const actualTheme: string =
-      theme === "encre-code" || !theme ? `encre-code-${colorMode}` : theme;
+      theme === 'encre-code' || !theme ? `encre-code-${colorMode}` : theme;
 
     const editor = monaco.editor.create(editorContainer.current, {
       theme: actualTheme,
-      lineNumbers: showLineNumbers ? "on" : "off",
+      lineNumbers: showLineNumbers ? 'on' : 'off',
       glyphMargin: false,
       folding: false,
       lineNumbersMinChars: 2,
@@ -43,7 +45,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
       minimap: {
         enabled: false,
       },
-      wordWrap: "on",
+      wordWrap: 'on',
       readOnly: isReadOnly,
       value: text,
       scrollBeyondLastLine,
@@ -55,7 +57,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
 
     editor.layout();
 
-    window.addEventListener("resize", onResize);
+    window.addEventListener('resize', onResize);
 
     editor.onDidChangeModelContent(() => {
       onChangeLatest.current?.(editor.getValue());
@@ -71,7 +73,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     return () => {
       latestBeforeDispose?.(editor.getValue());
       editor.dispose();
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
@@ -81,7 +83,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
       if (!colorMode) return;
 
       const actualTheme: string =
-        theme === "encre-code" || !theme ? `encre-code-${colorMode}` : theme;
+        theme === 'encre-code' || !theme ? `encre-code-${colorMode}` : theme;
 
       editorInstance.current.updateOptions({
         theme: actualTheme,

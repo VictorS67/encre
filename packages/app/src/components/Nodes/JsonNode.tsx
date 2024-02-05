@@ -1,10 +1,11 @@
-import React, { FC, memo, useMemo } from "react";
+import React, { FC, memo, useMemo } from 'react';
+
 import {
   JsonContext,
   JsonTemplate,
   KnownNode,
   NodeContentDescriptor,
-} from "../../types/nodecontent.type";
+} from '../../types/nodecontent.type';
 
 /* eslint-disable react/prop-types */
 // export const JsonNodeBody: FC<{ node: KnownNode<"json"> }> = memo(
@@ -16,20 +17,20 @@ import {
 //       for (const key in jsonTemplate) {
 //         jsonTemplate[key] = `{{${jsonTemplate[key]}}}`;
 //       }
-  
+
 //       const keyValGrp: [string, unknown][] = Object.entries({
 //         ...jsonTemplate,
 //         ...jsonValue,
 //       });
 
 //       return keyValGrp.map(([k, v]) => {
-//         const valStr: string = (typeof v === "string") ? 
+//         const valStr: string = (typeof v === "string") ?
 //       })
 //     }, [node.content.jsonTemplate, node.content.context])
 //   }
 // );
 
-export const jsonNodeDescriptor: NodeContentDescriptor<"json"> = {
+export const jsonNodeDescriptor: NodeContentDescriptor<'json'> = {
   Body: undefined,
   useMarkdownInDefault: false,
 };

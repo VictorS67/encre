@@ -1,14 +1,14 @@
 export type SyntaxedComponent = EditorComponent | MessageComponent;
 
 export type EditorComponent = {
-  type: "editor";
+  type: 'editor';
   content: string;
   startLineNumber?: number;
   lines?: number;
 };
 
 export type MessageComponent = {
-  type: "message";
+  type: 'message';
   content: HTMLDivElement;
   startLineNumber?: number;
   lines?: number;

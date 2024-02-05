@@ -1,5 +1,5 @@
-import { lazy } from "react";
+import { lazy } from 'react';
 
-export const LazyCodeEditor = lazy(() => import("./CodeEditor.js"));
+export const LazyCodeEditor = lazy(() => import('./CodeEditor'));
 
-export const LazySyntaxedText = lazy(() => import("./SyntaxedText.js"));
+export const LazySyntaxedText = lazy(() => import('./SyntaxedText'));
