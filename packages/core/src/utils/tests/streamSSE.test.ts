@@ -51,9 +51,9 @@ describe('test Stream', () => {
     );
   });
 
-  test("should process SSE messages", async () => {
-    const mockMessages = ["{\n", '"id": 1,\n', '"text": "Hello",\n', "}\n\n"];
-    const expectMessages = [{ id: 1, text: "Hello" }];
+  test('should process SSE messages', async () => {
+    const mockMessages = ['{\n', '"id": 1,\n', '"text": "Hello",\n', '}\n\n'];
+    const expectMessages = [{ id: 1, text: 'Hello' }];
 
     const mockResponse = {
       body: createMockSSEStream(mockMessages),
