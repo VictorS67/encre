@@ -33,11 +33,11 @@ const contextMenuStyles = css`
   max-width: 250px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 13px;
-  border: 1px solid ${token('color.text')};
+  border: 1px solid var(--primary-color);
   border-radius: 5px;
   padding: 8px 0;
-  color: ${token('color.text')};
-  background-color: ${token('elevation.surface.overlay')};
+  color: var(--text-color);
+  background-color: var(--canvas-background-color);
   box-shadow: 0 8px 16px ${hexToRgba(DN0, 0.25)};
   z-index: 1000;
   user-select: none;
@@ -50,7 +50,7 @@ const contextMenuStyles = css`
 
   .context-menu-item-list hr {
     border: none;
-    border-bottom: 1px solid ${token('color.text.subtle')};
+    border-bottom: 1px solid var(--text-color);
     margin: 6px 5px;
   }
 
@@ -60,7 +60,7 @@ const contextMenuStyles = css`
     font-weight: bold;
     padding-left: 10px;
     padding-bottom: 5px;
-    color: ${token('color.text')};
+    color: var(--text-color);
   }
 `;
 

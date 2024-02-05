@@ -9,7 +9,6 @@ import {
 } from 'recoil';
 
 import '@atlaskit/css-reset';
-import { AppGuesser } from './components/AppGuesser';
 import { EncreStudio } from './components/EncreStudio';
 import logo from './logo.svg';
 import './App.css';

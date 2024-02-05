@@ -31,7 +31,7 @@ export type NodeContent =
   | ImageNodeContent
   | JsonNodeContent;
 
-export type TextContent = string | { [key: string]: unknown };
+export type TextContent = string;
 
 export type TextNodeContent = {
   type: "text";

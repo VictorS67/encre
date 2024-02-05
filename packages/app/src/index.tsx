@@ -2,7 +2,9 @@ import React from 'react';
 
 import ReactDOM from 'react-dom/client';
 
+import './colors.css';
 import './index.css';
+import './scrollbar.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

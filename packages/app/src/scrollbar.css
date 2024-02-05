@@ -1,0 +1,23 @@
+/* Style the scrollbar for Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px; /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-color); /* color of the scroll thumb */
+  border-radius: 6px; /* roundness of the scroll thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-color-hover); /* color of the scroll thumb on hover */
+}
+
+/* Style the scrollbar for Firefox */
+* {
+  scrollbar-width: thin; /* "auto", "thin", or "none" */
+  scrollbar-color: var(--scroll-color) transparent; /* thumb and track color */
+}

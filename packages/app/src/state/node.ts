@@ -42,11 +42,6 @@ export const hoveringNodeIdState = atom<string | undefined>({
   default: undefined,
 });
 
-export const editingNodeIdState = atom<string | undefined>({
-  key: 'editingNodeIdState',
-  default: undefined,
-})
-
 export const draggingNodesState = atom<Node[]>({
   key: 'draggingNodesState',
   default: [],
