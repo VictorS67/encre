@@ -203,7 +203,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
 /**
  * Decodes individual lines into structured Server-Sent Event (SSE) objects.
  */
-class SSEDecoder {
+export class SSEDecoder {
   private data: string[];
 
   private event: string | null;

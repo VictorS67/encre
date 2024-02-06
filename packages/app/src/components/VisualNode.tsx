@@ -6,11 +6,17 @@ import React, {
   forwardRef,
   memo,
   useMemo,
+  useState,
 } from 'react';
 
 import { css } from '@emotion/react';
+import clsx from 'clsx';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
+import { NodeContentBody } from './NodeContentBody';
+import { ResizeBox } from './ResizeBox';
+import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { themeState } from '../state/settings';
 import {
@@ -18,6 +24,7 @@ import {
   VisualNodeContentProps,
   VisualNodeProps,
 } from '../types/node.type';
+import { getColorMode } from '../utils/colorMode';
 
 const visualNodeStyles = css`
   color: var(--text-color);
@@ -26,6 +33,17 @@ const visualNodeStyles = css`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  .resize-box {
+    width: 10px;
+    height: 10px;
+    bottom: 0;
+    cursor: nw-resize;
+    position: absolute;
+    right: 0;
+    border-top-left-radius: 10px;
+    background-color: var(--canvas-foreground-color);
+  }
 `;
 
 const nodeContentStyles = css`
@@ -35,6 +53,7 @@ const nodeContentStyles = css`
   justify-content: flex-start;
   align-items: center;
 
+  .node-minimize-content,
   .node-content {
     background: var(--node-forground-color);
     flex-grow: 1;
@@ -47,6 +66,18 @@ const nodeContentStyles = css`
     padding: 8px 4px 8px 7px;
   }
 
+  .node-minimize-content > * {
+    visibility: hidden;
+    align-self: stretch;
+  }
+
+  .node-content-body {
+    color: var(--text-color);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .node-minimize-card,
   .node-card {
     background: var(--node-background-color);
     display: flex;
@@ -57,12 +88,16 @@ const nodeContentStyles = css`
     padding: 8px 10px;
   }
 
+  .node-minimize-card > .node-header {
+    visibility: collapse;
+  }
+
   .node-header {
     display: flex;
     align-self: stretch;
-    flex: 1 0 0;
     align-items: center;
     gap: 3.5px;
+    height: 20px;
   }
 
   .node-tooling {
@@ -82,6 +117,8 @@ const nodeContentStyles = css`
     align-items: center;
     border-radius: 12px;
     text-align: center;
+    display: grid;
+    place-items: center;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -94,22 +131,16 @@ const nodeContentStyles = css`
   .node-title {
     align-self: strech;
     color: var(--text-color);
-    font-size: 18px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    display: grid;
+    place-items: center;
+    height: 30px;
   }
-`;
 
-const minimizeNodeContentStyles = css`
-  height: 100%;
-  background: var(--node-background-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .node-abbreviation {
-    flex: 1;
+  .node-minimize-card > .node-title {
+    width: 100%;
     text-align: center;
   }
 `;
@@ -124,6 +155,7 @@ export const VisualNode = memo(
       yDelta = 0,
       attributes,
       attributeListeners,
+      isKnownType,
       isDragging,
       isMinimized,
       scale,
@@ -181,6 +213,9 @@ export const VisualNode = memo(
 
     return (
       <div
+        className={clsx('node', {
+          minimized: isMinimized,
+        })}
         ref={nodeRef}
         css={visualNodeStyles}
         style={style}
@@ -188,7 +223,7 @@ export const VisualNode = memo(
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
       >
-        {isMinimized ? (
+        {/* {isMinimized ? (
           <MinimizedVisualNodeContent
             node={node}
             connections={connections}
@@ -200,68 +235,114 @@ export const VisualNode = memo(
           <VisualNodeContent
             node={node}
             connections={connections}
+            isMinimized={isMinimized}
             attributeListeners={attributeListeners}
             onNodeGrabClick={onNodeGrabClick}
           />
-        )}
+        )} */}
+        <VisualNodeContent
+          node={node}
+          connections={connections}
+          isKnownType={isKnownType}
+          isMinimized={isMinimized}
+          canvasZoom={canvasZoom}
+          attributeListeners={attributeListeners}
+          onNodeGrabClick={onNodeGrabClick}
+          onNodeSizeChange={onNodeSizeChange}
+        />
       </div>
     );
   }),
 );
 
 /* eslint-disable react/prop-types */
-const MinimizedVisualNodeContent: FC<MinimizedVisualNodeContentProps> = memo(
-  ({
-    node,
-    connections = [],
-    attributeListeners,
-    canvasZoom,
-    onNodeGrabClick,
-  }: MinimizedVisualNodeContentProps) => {
-    const style = useMemo(() => {
-      const styling: CSSProperties = {
-        fontSize: `${30 * canvasZoom * 8}px`,
-      };
+// const MinimizedVisualNodeContent: FC<MinimizedVisualNodeContentProps> = memo(
+//   ({
+//     node,
+//     connections = [],
+//     attributeListeners,
+//     canvasZoom,
+//     onNodeGrabClick,
+//   }: MinimizedVisualNodeContentProps) => {
+//     const style = useMemo(() => {
+//       const styling: CSSProperties = {
+//         fontSize: `${24 * (canvasZoom + 0.4)}px`,
+//       };
 
-      return styling;
-    }, [canvasZoom]);
+//       return styling;
+//     }, [canvasZoom]);
 
-    // TODO: Add Input and Output circles
-    return (
-      <>
-        <div
-          {...attributeListeners}
-          onClick={onNodeGrabClick}
-          css={minimizeNodeContentStyles}
-        >
-          <div className="node-abbreviation" style={style}>
-            {node.metadata.abbreviation}
-          </div>
-        </div>
-      </>
-    );
-  },
-);
+//     const theme = useRecoilValue(themeState);
 
-MinimizedVisualNodeContent.displayName = 'MinimizedVisualNodeContent';
+//     function getColorMode(): string | null {
+//       // Select the element that contains the 'data-color-mode' attribute
+//       const element = document.querySelector('[data-color-mode]');
+
+//       // Check if the element exists and return the attribute value
+//       return element ? element.getAttribute('data-color-mode') : null;
+//     }
+
+//     const contentTopBorderStyling: CSSProperties = useMemo(() => {
+//       const colorMode = getColorMode();
+
+//       const styling: CSSProperties =
+//         colorMode === 'light'
+//           ? {
+//               borderTop: '2px solid var(--primary-color)',
+//             }
+//           : {};
+
+//       return styling;
+//     }, [theme]);
+
+//     // TODO: Add Input and Output circles
+//     return (
+//       <>
+//         <div
+//           {...attributeListeners}
+//           onClick={onNodeGrabClick}
+//           css={nodeContentStyles}
+//         >
+//           {/* <div className="node-abbreviation" style={style}>
+//             {node.metadata.abbreviation}
+//           </div> */}
+//           <div className="node-card">
+//             <div className="node-header"></div>
+//             <div className="node-minimize-title" style={style}>
+//               {node.metadata.name}
+//             </div>
+//           </div>
+//           <div className="node-minimize-content">
+//             <div>CONTENT</div>
+//             <div style={{ height: '500px' }}></div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   },
+// );
+
+// MinimizedVisualNodeContent.displayName = 'MinimizedVisualNodeContent';
 
 /* eslint-disable react/prop-types */
 const VisualNodeContent: FC<VisualNodeContentProps> = memo(
   ({
     node,
     connections = [],
+    isKnownType,
+    isMinimized,
+    canvasZoom,
     attributeListeners,
     onNodeGrabClick,
+    onNodeSizeChange,
   }: VisualNodeContentProps) => {
     const theme = useRecoilValue(themeState);
 
-    function getColorMode(): string | null {
-      // Select the element that contains the 'data-color-mode' attribute
-      const element = document.querySelector('[data-color-mode]');
-
-      // Check if the element exists and return the attribute value
-      return element ? element.getAttribute('data-color-mode') : null;
-    }
+    const [startHeight, setStartHeight] = useState<number | undefined>();
+    const [startWidth, setStartWidth] = useState<number | undefined>();
+    const [startMouseX, setStartMouseX] = useState(0);
+    const [startMouseY, setStartMouseY] = useState(0);
+    const { clientToCanvasPosition } = useCanvasPosition();
 
     const tagBorderStyling: CSSProperties = useMemo(() => {
       const colorMode = getColorMode();
@@ -276,6 +357,37 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       return styling;
     }, [theme]);
 
+    const [cardHeightStyling, minTitleStyling, minVisibilityStyling] =
+      useMemo(() => {
+        const numPorts: number =
+          (node.metadata.inputs ? node.metadata.inputs.length : 0) +
+          (node.metadata.outputs ? node.metadata.outputs?.length : 0);
+
+        const cardStyling: CSSProperties = {
+          minHeight: 50 + 30 * numPorts,
+        };
+
+        const titleStyling: CSSProperties = isMinimized
+          ? {
+              fontSize: `${32 * (canvasZoom + 0.4)}px`,
+              height: 50 + 30 * numPorts,
+            }
+          : {
+              fontSize: '18px',
+            };
+
+        const visibilityStyling: CSSProperties = isMinimized
+          ? { visibility: 'hidden' }
+          : {};
+
+        return [cardStyling, titleStyling, visibilityStyling];
+      }, [
+        node.metadata.inputs,
+        node.metadata.outputs,
+        canvasZoom,
+        isMinimized,
+      ]);
+
     const contentTopBorderStyling: CSSProperties = useMemo(() => {
       const colorMode = getColorMode();
 
@@ -289,6 +401,67 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       return styling;
     }, [theme]);
 
+    const getNodeCurrentDimensions = (
+      elementorChild: HTMLElement,
+    ): [number, number] => {
+      const nodeElement: HTMLElement | null = elementorChild.closest('.node');
+
+      if (!nodeElement) {
+        return [100, 100];
+      }
+
+      const cssWidth: string = window.getComputedStyle(nodeElement).width;
+      const cssHeight: string = window.getComputedStyle(nodeElement).height;
+
+      return [parseInt(cssWidth, 10), parseInt(cssHeight, 10)];
+    };
+
+    const onReiszeStart = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
+
+      setStartWidth(width);
+      setStartHeight(height);
+      setStartMouseX(e.clientX);
+      setStartMouseY(e.clientY);
+    });
+
+    const onResizeMove = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const mousePositionInCanvas = clientToCanvasPosition(
+        startMouseX,
+        startMouseY,
+      );
+      const newMousePositionInCanvas = clientToCanvasPosition(
+        e.clientX,
+        e.clientY,
+      );
+
+      const deltaX: number =
+        newMousePositionInCanvas.x - mousePositionInCanvas.x;
+      const deltaY: number =
+        newMousePositionInCanvas.y - mousePositionInCanvas.y;
+
+      const newWidth: number | undefined = startWidth
+        ? startWidth + deltaX
+        : startWidth;
+      const newHeight: number | undefined = startHeight
+        ? startHeight + deltaY
+        : startHeight;
+
+      if (
+        newWidth &&
+        newHeight &&
+        (newWidth !== startWidth || newHeight !== startHeight)
+      ) {
+        onNodeSizeChange?.(newWidth, newHeight);
+      }
+    });
+
     // TODO: Add Input and Output circles
     return (
       <>
@@ -297,7 +470,10 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           onClick={onNodeGrabClick}
           css={nodeContentStyles}
         >
-          <div className="node-card">
+          <div
+            className={isMinimized ? 'node-minimize-card' : 'node-card'}
+            style={cardHeightStyling}
+          >
             <div className="node-header">
               <div className="node-tag-grp">
                 {node.metadata.tags?.map((t) => (
@@ -308,11 +484,36 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
               </div>
               <div className="node-tooling">ICON</div>
             </div>
-            <div className="node-title">{node.metadata.name}</div>
+            <div className="node-title" style={minTitleStyling}>
+              {node.metadata.name}
+            </div>
           </div>
-          <div className="node-content" style={contentTopBorderStyling}>
-            CONTENT <div style={{ height: '500px' }}></div>
+          <div
+            className={isMinimized ? 'node-minimize-content' : 'node-content'}
+            style={contentTopBorderStyling}
+          >
+            <ErrorBoundary
+              fallback={
+                <div>Something wrong when rendering node content body...</div>
+              }
+            >
+              {isKnownType ? (
+                <NodeContentBody node={node} />
+              ) : (
+                <div>
+                  Unknown node type: {node.type} - please check the type is
+                  correct or the plugin is not turned on
+                </div>
+              )}
+            </ErrorBoundary>
           </div>
+        </div>
+
+        <div>
+          <ResizeBox
+            onResizeStart={onReiszeStart}
+            onResizeMove={onResizeMove}
+          />
         </div>
       </>
     );

@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test GeminiChat text 1`] = `
+{
+  "generations": [
+    ChatGenerationChunk {
+      "info": {
+        "citationMetadata": undefined,
+        "completion": 0,
+        "finishMessage": undefined,
+        "finishReason": "STOP",
+        "safetyRatings": [
+          {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "probability": "NEGLIGIBLE",
+          },
+        ],
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "I am a large language model, trained by Google.",
+        },
+        "_type": "constructor",
+      },
+      "output": "I am a large language model, trained by Google.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 12,
+      "promptTokens": 7,
+      "totalTokens": 19,
+    },
+  },
+}
+`;
+
+exports[`test GeminiChat vision 1`] = `
+{
+  "generations": [
+    ChatGenerationChunk {
+      "info": {
+        "citationMetadata": undefined,
+        "completion": 0,
+        "finishMessage": undefined,
+        "finishReason": "STOP",
+        "safetyRatings": [
+          {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "probability": "NEGLIGIBLE",
+          },
+        ],
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": " An airport departures board.",
+        },
+        "_type": "constructor",
+      },
+      "output": " An airport departures board.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 6,
+      "promptTokens": 266,
+      "totalTokens": 272,
+    },
+  },
+}
+`;

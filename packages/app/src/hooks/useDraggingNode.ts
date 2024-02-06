@@ -14,7 +14,7 @@ import {
 } from '../state/node';
 import { Node } from '../types/node.type';
 
-export const useDraggingNode = (onNodesChange: (ns: Node[]) => void) => {
+export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
   const selectingNodeIds = useRecoilValue(selectingNodeIdsState);
   const nodes = useRecoilValue(nodesState);
   const nodeMap = useRecoilValue(nodeMapState);
@@ -111,4 +111,4 @@ export const useDraggingNode = (onNodesChange: (ns: Node[]) => void) => {
   );
 
   return { draggingNodes, onNodeStartDrag, onNodeEndDrag };
-};
+}

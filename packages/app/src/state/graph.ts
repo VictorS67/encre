@@ -22,7 +22,7 @@ export const graphState = atom<NodeGraph>({
           },
           size: {
             width: 300,
-            height: 175,
+            height: 500,
           },
         },
         metadata: {
@@ -31,9 +31,10 @@ export const graphState = atom<NodeGraph>({
           tags: ['chat'],
           inputs: ['input'],
           outputs: ['output'],
-          content:
-            'Imagine a futuristic city where buildings are made of a shimmering, translucent material, and the streets are bustling with people and various types of vehicles, some of which float above the ground. The sky is dotted with drones and the occasional glimpse of a green park or garden can be seen between the structures. In the foreground, a diverse group of individuals is gathered around a holographic display, engaged in a lively discussion. The scene is set during the evening, with the city lights casting a warm glow over everything.',
         },
+        type: 'text',
+        content:
+          'Imagine a futuristic city where buildings are made of a shimmering, translucent material, and the streets are bustling with people and various types of vehicles, some of which float above the ground. The sky is dotted with drones and the occasional glimpse of a green park or garden can be seen between the structures. In the foreground, a diverse group of individuals is gathered around a holographic display, engaged in a lively discussion. The scene is set during the evening, with the city lights casting a warm glow over everything.',
       },
     ],
     connections: [],

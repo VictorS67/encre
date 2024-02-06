@@ -10,6 +10,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   node,
   connections = [],
   canvasZoom,
+  isKnownType,
   isMinimized,
   isSelecting = false,
   onNodeSizeChange,
@@ -32,6 +33,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         yDelta={transform ? transform.y / canvasZoom : 0}
         attributes={attributes}
         attributeListeners={listeners}
+        isKnownType={isKnownType}
         isDragging={isDragging}
         isMinimized={isMinimized}
         isSelecting={isSelecting}

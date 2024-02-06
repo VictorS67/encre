@@ -1,6 +1,7 @@
 import { HTMLAttributes } from 'react';
 
 import { NodeConnection } from './nodeconnection.type';
+import { NodeContentType } from './nodecontent.type';
 
 export type VisualInfo = {
   position: {
@@ -21,7 +22,6 @@ export type NodeMetadata = {
   tags?: Array<string>;
   inputs?: Array<string>;
   outputs?: Array<string>;
-  content?: Record<string, unknown> | Array<unknown> | string;
 };
 
 export type Node = {
@@ -30,12 +30,15 @@ export type Node = {
   isDebug: boolean;
   visualInfo: VisualInfo;
   metadata: NodeMetadata;
+  type?: NodeContentType;
+  content?: Record<string, unknown> | Array<unknown> | unknown;
 };
 
 export type DraggableNodeProps = {
   node: Node;
   connections?: NodeConnection[];
   canvasZoom: number;
+  isKnownType?: boolean;
   isMinimized?: boolean;
   isSelecting?: boolean;
   onNodeSizeChange?: (node: Node, width: number, height: number) => void;
@@ -57,6 +60,7 @@ export type VisualNodeProps = {
   yDelta?: number;
   attributes?: HTMLAttributes<HTMLDivElement>;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
+  isKnownType?: boolean;
   isDragging?: boolean;
   isMinimized?: boolean;
   isSelecting?: boolean;
@@ -85,6 +89,10 @@ export type MinimizedVisualNodeContentProps = {
 export type VisualNodeContentProps = {
   node: Node;
   connections?: NodeConnection[];
+  isKnownType?: boolean;
+  isMinimized?: boolean;
+  canvasZoom: number;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onNodeSizeChange?: (width: number, height: number) => void;
 };
