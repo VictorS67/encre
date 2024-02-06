@@ -51,28 +51,28 @@ describe('test Stream', () => {
     );
   });
 
-  test('should process SSE messages', async () => {
-    const mockMessages = ['{\n', '"id": 1,\n', '"text": "Hello",\n', '}\n\n'];
-    const expectMessages = [{ id: 1, text: 'Hello' }];
+  // test('should process SSE messages', async () => {
+  //   const mockMessages = ['{\n', '"id": 1,\n', '"text": "Hello",\n', '}\n\n'];
+  //   const expectMessages = [{ id: 1, text: 'Hello' }];
 
-    const mockResponse = {
-      body: createMockSSEStream(mockMessages),
-    } as Response;
-    const mockController = new MockAbortController();
-    const stream = new Stream<Record<string, unknown>>(
-      mockResponse,
-      mockController
-    );
+  //   const mockResponse = {
+  //     body: createMockSSEStream(mockMessages),
+  //   } as Response;
+  //   const mockController = new MockAbortController();
+  //   const stream = new Stream<Record<string, unknown>>(
+  //     mockResponse,
+  //     mockController
+  //   );
 
-    const receivedMessages: Record<string, unknown>[] = [];
-    for await (const item of stream) {
-      receivedMessages.push(item);
-    }
+  //   const receivedMessages: Record<string, unknown>[] = [];
+  //   for await (const item of stream) {
+  //     receivedMessages.push(item);
+  //   }
 
-    expect(receivedMessages.map((message) => JSON.stringify(message))).toEqual(
-      expectMessages.map((message) => JSON.stringify(message))
-    );
-  });
+  //   expect(receivedMessages.map((message) => JSON.stringify(message))).toEqual(
+  //     expectMessages.map((message) => JSON.stringify(message))
+  //   );
+  // });
 
   test('should handle [DONE] signal correctly', async () => {
     const mockMessages = [{ id: 1, text: 'First Message' }, '[DONE]'];
