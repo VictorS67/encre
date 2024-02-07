@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { shallowCopy } from '../utils/copy.js';
 import { IdProvider } from '../utils/nanoid.js';
 // import { nanoid } from 'nanoid';
 import {
@@ -81,9 +82,7 @@ export type Serialized =
   | SerializedNotImplemented
   | SerializedRecord;
 
-function shallowCopy<T extends object>(obj: T): T {
-  return Array.isArray(obj) ? ([...obj] as T) : ({ ...obj } as T);
-}
+
 
 export function safeAssign<T extends object>(target: T, source: T): T {
   for (const key in source) {
