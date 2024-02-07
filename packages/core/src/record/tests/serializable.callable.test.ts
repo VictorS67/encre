@@ -525,7 +525,7 @@ describe('information stored in serializable', () => {
     expect(anotherSimpleCallable.secret1).toBe('other secret 1');
   });
 
-  test('CallableWithFallbacks', async () => {
+  test('callableWithFallbacks', async () => {
     const simpleCallable1 = new SimpleCallable({
       attr1: 1,
       secret1: 'this is a secret 1',
@@ -674,7 +674,7 @@ describe('information stored in serializable', () => {
     expect(thirdSimpleCallable.secret1).toBe('other secret 1');
   });
 
-  test('CallableSequence', async () => {
+  test('callableSequence', async () => {
     const simpleCallable1 = new SimpleCallable({
       attr1: 1,
       secret1: 'this is a secret 1',
