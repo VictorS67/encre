@@ -14,6 +14,7 @@ import {
   SerializedInputRecord,
 } from '../load/serializable.js';
 import { AsyncCallError, AsyncCaller } from '../utils/asyncCaller.js';
+import { shallowCopy } from '../utils/copy.js';
 import { ReadableStreamAsyncIterable } from '../utils/stream.js';
 import { convertCallableLikeToCallable, isValidLambdaFunc } from './utils.js';
 
@@ -105,6 +106,10 @@ export type CallableWithFallbacksArg<CallInput, CallOutput> = {
 export type CallableBatchOptions = {
   maxConcurrency?: number;
   returnExceptions?: boolean;
+};
+
+export type SerializedCallableFields = {
+  [key: string]: Callable | Record<string, Callable> | Array<Callable>;
 };
 
 /**
@@ -388,6 +393,69 @@ export abstract class Callable<
     });
   }
 
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'Callable',
+    };
+  }
+
+  protected _removeCallable(
+    root: SerializedFields,
+    callablesMap: SerializedCallableFields
+  ): SerializedFields {
+    const result: SerializedFields = shallowCopy(root);
+
+    for (const [path, callable] of Object.entries(callablesMap)) {
+      const [last, ...partsReverse] = path.split('.').reverse();
+
+      let current: SerializedFields = result;
+      for (const key of partsReverse.reverse()) {
+        if (current[key] === undefined) {
+          break;
+        }
+
+        current[key] = shallowCopy(current[key] as SerializedFields);
+        current = current[key] as SerializedFields;
+      }
+
+      if (current[last] !== undefined) {
+        if (path.split('.').length > 1) {
+          delete result[path.split('.')[0]];
+        } else {
+          delete current[last];
+        }
+      }
+    }
+
+    return result;
+  }
+
+  getAttributes(): {
+    aliases: SerializedKeyAlias;
+    secrets: SecretFields;
+    kwargs: SerializedFields;
+    metadata: { type: string; callables?: SerializedCallableFields };
+  } {
+    const { aliases, secrets, kwargs } = super.getAttributes();
+
+    const metadata = this._getCallableMetadata();
+
+    const filteredKwargs =
+      metadata.callables && Object.keys(metadata.callables).length
+        ? this._removeCallable(kwargs, metadata.callables)
+        : kwargs;
+
+    return {
+      aliases,
+      secrets,
+      kwargs: filteredKwargs,
+      metadata,
+    };
+  }
+
   async toRecord(
     outputs: CallOutput,
     parent?: RecordId | undefined
@@ -607,6 +675,18 @@ export class CallableBind<
     );
   }
 
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableBind',
+      callables: {
+        bound: this.bound,
+      },
+    };
+  }
+
   async toInputRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -820,6 +900,15 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   ): Promise<CallOutput> {
     return this._callWithConfig(this._invoke, input, options);
   }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableLambda',
+    };
+  }
 }
 
 /**
@@ -897,6 +986,18 @@ export class CallableMap<CallInput> extends Callable<
 
     return output;
   }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableMap',
+      callables: {
+        steps: this.steps,
+      },
+    };
+  }
 }
 
 /**
@@ -973,6 +1074,18 @@ export class CallableEach<
     options?: Partial<CallOptions>
   ): Promise<CallOutputItem[]> {
     return this.bound.batch(inputs, options);
+  }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableEach',
+      callables: {
+        bound: this.bound,
+      },
+    };
   }
 
   async toInputRecord(
@@ -1193,6 +1306,19 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     }
 
     throw firstError;
+  }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableWithFallbacks',
+      callables: {
+        callable: this.callable,
+        fallbacks: this.fallbacks,
+      },
+    };
   }
 
   async toInputRecord(
@@ -1484,5 +1610,19 @@ export class CallableSequence<
       middle: [...this.middle, this.last],
       last: convertCallableLikeToCallable(callableLike),
     });
+  }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableSequence',
+      callables: {
+        first: this.first,
+        middle: this.middle,
+        last: this.last
+      },
+    };
   }
 }
