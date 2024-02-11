@@ -24,7 +24,7 @@ test('test custom BaseMessage', async () => {
 
     concat(message: TestMessage): TestMessage {
       return new TestMessage({
-        content: this.content + message.content,
+        content: (this.content as string) + (message.content as string),
         additionalKwargs: TestMessage._mergeAdditionalKwargs(
           this.additionalKwargs as NonNullable<
             BaseMessageFields['additionalKwargs']

@@ -6,8 +6,6 @@ export interface ChatPromptFields {
 }
 
 export class ChatPrompt extends BasePrompt {
-  _namespace: string[] = ['events', 'input', 'load', 'prompts'];
-
   _isSerializable = true;
 
   static _name(): string {
@@ -23,6 +21,10 @@ export class ChatPrompt extends BasePrompt {
 
     super(fields);
     this.messages = fields.messages;
+  }
+
+  _promptType(): string {
+    return 'chat';
   }
 
   toString(): string {

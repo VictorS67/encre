@@ -4,10 +4,10 @@ exports[`test custom ChatPrompt 1`] = `
 "_grp: 1
 _type: constructor
 _id:
-  - events
   - input
   - load
   - prompts
+  - chat
   - ChatPrompt
 _kwargs:
   messages:
