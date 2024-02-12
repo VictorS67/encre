@@ -109,7 +109,10 @@ export type CallableBatchOptions = {
 };
 
 export type SerializedCallableFields = {
-  [key: string]: Callable | Record<string, Callable> | Array<Callable>;
+  [key: string]:
+    | ReturnType<Callable['getAttributes']>
+    | Record<string, ReturnType<Callable['getAttributes']>>
+    | Array<ReturnType<Callable['getAttributes']>>;
 };
 
 /**
@@ -682,7 +685,7 @@ export class CallableBind<
     return {
       type: 'CallableBind',
       callables: {
-        bound: this.bound,
+        bound: this.bound.getAttributes(),
       },
     };
   }
@@ -994,7 +997,9 @@ export class CallableMap<CallInput> extends Callable<
     return {
       type: 'CallableMap',
       callables: {
-        steps: this.steps,
+        steps: Object.fromEntries(
+          Object.entries(this.steps).map(([k, v]) => [k, v.getAttributes()])
+        ),
       },
     };
   }
@@ -1083,7 +1088,7 @@ export class CallableEach<
     return {
       type: 'CallableEach',
       callables: {
-        bound: this.bound,
+        bound: this.bound.getAttributes(),
       },
     };
   }
@@ -1315,8 +1320,8 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     return {
       type: 'CallableWithFallbacks',
       callables: {
-        callable: this.callable,
-        fallbacks: this.fallbacks,
+        callable: this.callable.getAttributes(),
+        fallbacks: this.fallbacks.map((fallback) => fallback.getAttributes()),
       },
     };
   }
@@ -1619,9 +1624,9 @@ export class CallableSequence<
     return {
       type: 'CallableSequence',
       callables: {
-        first: this.first,
-        middle: this.middle,
-        last: this.last
+        first: this.first.getAttributes(),
+        middle: this.middle.map((mid) => mid.getAttributes()),
+        last: this.last.getAttributes(),
       },
     };
   }

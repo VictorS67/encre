@@ -27,6 +27,10 @@ describe('information stored in serializable', () => {
     output2: boolean;
   }
 
+  interface CallInput {
+    input1?: string;
+  }
+
   interface SimpleCallableOptions extends CallableConfig {
     option1: string;
   }
@@ -171,7 +175,19 @@ describe('information stored in serializable', () => {
       metadata: {
         type: 'CallableBind',
         callables: {
-          bound: simpleCallable,
+          bound: {
+            aliases: {},
+            secrets: {
+              secret1: 'TEST_SECRET_1',
+            },
+            kwargs: {
+              attr1: 1,
+              attr2: '2',
+            },
+            metadata: {
+              type: 'Callable',
+            },
+          },
         },
       },
     });
@@ -230,14 +246,7 @@ describe('information stored in serializable', () => {
 
     expect(
       anotherCallableBind.getAttributes().metadata.callables?.bound
-    ).toBeInstanceOf(SimpleCallable);
-
-    const anotherSimpleCallable = anotherCallableBind.getAttributes().metadata
-      .callables?.bound as SimpleCallable;
-
-    expect(anotherSimpleCallable.attr1).toBe(1);
-    expect(anotherSimpleCallable.attr2).toBe('2');
-    expect(anotherSimpleCallable.secret1).toBe('other secret 1');
+    ).toStrictEqual(simpleCallable.getAttributes());
   });
 
   test('callableLambda', async () => {
@@ -325,9 +334,45 @@ describe('information stored in serializable', () => {
         type: 'CallableMap',
         callables: {
           steps: {
-            first: simpleCallable1,
-            second: simpleCallable2,
-            third: simpleCallable3,
+            first: {
+              aliases: {},
+              secrets: {
+                secret1: 'TEST_SECRET_1',
+              },
+              kwargs: {
+                attr1: 1,
+                attr2: '2',
+              },
+              metadata: {
+                type: 'Callable',
+              },
+            },
+            second: {
+              aliases: {},
+              secrets: {
+                secret1: 'TEST_SECRET_1',
+              },
+              kwargs: {
+                attr1: 2,
+                attr2: '2',
+              },
+              metadata: {
+                type: 'Callable',
+              },
+            },
+            third: {
+              aliases: {},
+              secrets: {
+                secret1: 'TEST_SECRET_1',
+              },
+              kwargs: {
+                attr1: 3,
+                attr2: '2',
+              },
+              metadata: {
+                type: 'Callable',
+              },
+            },
           },
         },
       },
@@ -415,34 +460,15 @@ describe('information stored in serializable', () => {
 
     expect(
       anotherCallableMap.getAttributes().metadata.callables?.steps['first']
-    ).toBeInstanceOf(SimpleCallable);
+    ).toStrictEqual(simpleCallable1.getAttributes());
+
     expect(
       anotherCallableMap.getAttributes().metadata.callables?.steps['second']
-    ).toBeInstanceOf(SimpleCallable);
+    ).toStrictEqual(simpleCallable2.getAttributes());
+
     expect(
       anotherCallableMap.getAttributes().metadata.callables?.steps['third']
-    ).toBeInstanceOf(SimpleCallable);
-
-    const firstSimpleCallable = anotherCallableMap.getAttributes().metadata
-      .callables?.steps['first'] as SimpleCallable;
-
-    expect(firstSimpleCallable.attr1).toBe(1);
-    expect(firstSimpleCallable.attr2).toBe('2');
-    expect(firstSimpleCallable.secret1).toBe('other secret 1');
-
-    const secondSimpleCallable = anotherCallableMap.getAttributes().metadata
-      .callables?.steps['second'] as SimpleCallable;
-
-    expect(secondSimpleCallable.attr1).toBe(2);
-    expect(secondSimpleCallable.attr2).toBe('2');
-    expect(secondSimpleCallable.secret1).toBe('other secret 1');
-
-    const thirdSimpleCallable = anotherCallableMap.getAttributes().metadata
-      .callables?.steps['third'] as SimpleCallable;
-
-    expect(thirdSimpleCallable.attr1).toBe(3);
-    expect(thirdSimpleCallable.attr2).toBe('2');
-    expect(thirdSimpleCallable.secret1).toBe('other secret 1');
+    ).toStrictEqual(simpleCallable3.getAttributes());
   });
 
   test('callableEach', async () => {
@@ -460,7 +486,19 @@ describe('information stored in serializable', () => {
       metadata: {
         type: 'CallableEach',
         callables: {
-          bound: simpleCallable,
+          bound: {
+            aliases: {},
+            secrets: {
+              secret1: 'TEST_SECRET_1',
+            },
+            kwargs: {
+              attr1: 1,
+              attr2: '2',
+            },
+            metadata: {
+              type: 'Callable',
+            },
+          },
         },
       },
     });
@@ -515,14 +553,7 @@ describe('information stored in serializable', () => {
 
     expect(
       anotherCallableEach.getAttributes().metadata.callables?.bound
-    ).toBeInstanceOf(SimpleCallable);
-
-    const anotherSimpleCallable = anotherCallableEach.getAttributes().metadata
-      .callables?.bound as SimpleCallable;
-
-    expect(anotherSimpleCallable.attr1).toBe(1);
-    expect(anotherSimpleCallable.attr2).toBe('2');
-    expect(anotherSimpleCallable.secret1).toBe('other secret 1');
+    ).toStrictEqual(simpleCallable.getAttributes());
   });
 
   test('callableWithFallbacks', async () => {
@@ -552,8 +583,47 @@ describe('information stored in serializable', () => {
       metadata: {
         type: 'CallableWithFallbacks',
         callables: {
-          callable: simpleCallable1,
-          fallbacks: [fallbackCallable2, fallbackCallable3],
+          callable: {
+            aliases: {},
+            secrets: {
+              secret1: 'TEST_SECRET_1',
+            },
+            kwargs: {
+              attr1: 1,
+              attr2: '2',
+            },
+            metadata: {
+              type: 'Callable',
+            },
+          },
+          fallbacks: [
+            {
+              aliases: {},
+              secrets: {
+                secret1: 'TEST_SECRET_1',
+              },
+              kwargs: {
+                attr1: 2,
+                attr2: '2',
+              },
+              metadata: {
+                type: 'Callable',
+              },
+            },
+            {
+              aliases: {},
+              secrets: {
+                secret1: 'TEST_SECRET_1',
+              },
+              kwargs: {
+                attr1: 3,
+                attr2: '2',
+              },
+              metadata: {
+                type: 'Callable',
+              },
+            },
+          ],
         },
       },
     });
@@ -633,45 +703,22 @@ describe('information stored in serializable', () => {
     expect(JSON.stringify(anotherCallableWithFallbacks, null, 2)).toBe(str);
 
     expect(
-      anotherCallableWithFallbacks.getAttributes().metadata.callables?.callable
-    ).toBeInstanceOf(SimpleCallable);
-
-    expect(
       Array.isArray(
-        anotherCallableWithFallbacks.getAttributes().metadata.callables
-          ?.fallbacks
+        anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks
       )
     ).toBeTruthy();
 
     expect(
-      anotherCallableWithFallbacks.getAttributes().metadata.callables
-        ?.fallbacks[0]
-    ).toBeInstanceOf(SimpleCallable);
+      anotherCallableWithFallbacks.getAttributes().metadata.callables?.callable
+    ).toStrictEqual(simpleCallable1.getAttributes());
+
     expect(
-      anotherCallableWithFallbacks.getAttributes().metadata.callables
-        ?.fallbacks[1]
-    ).toBeInstanceOf(SimpleCallable);
+      anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks[0]
+    ).toStrictEqual(fallbackCallable2.getAttributes());
 
-    const firstSimpleCallable = anotherCallableWithFallbacks.getAttributes()
-      .metadata.callables?.callable as SimpleCallable;
-
-    expect(firstSimpleCallable.attr1).toBe(1);
-    expect(firstSimpleCallable.attr2).toBe('2');
-    expect(firstSimpleCallable.secret1).toBe('other secret 1');
-
-    const secondSimpleCallable = anotherCallableWithFallbacks.getAttributes()
-      .metadata.callables?.fallbacks[0] as SimpleCallable;
-
-    expect(secondSimpleCallable.attr1).toBe(2);
-    expect(secondSimpleCallable.attr2).toBe('2');
-    expect(secondSimpleCallable.secret1).toBe('other secret 1');
-
-    const thirdSimpleCallable = anotherCallableWithFallbacks.getAttributes()
-      .metadata.callables?.fallbacks[1] as SimpleCallable;
-
-    expect(thirdSimpleCallable.attr1).toBe(3);
-    expect(thirdSimpleCallable.attr2).toBe('2');
-    expect(thirdSimpleCallable.secret1).toBe('other secret 1');
+    expect(
+      anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks[1]
+    ).toStrictEqual(fallbackCallable3.getAttributes());
   });
 
   test('callableSequence', async () => {
@@ -707,9 +754,39 @@ describe('information stored in serializable', () => {
       metadata: {
         type: 'CallableSequence',
         callables: {
-          first: simpleCallable1,
-          middle: [simpleCallable2],
-          last: simpleCallable3,
+          first: {
+            aliases: {},
+            secrets: {
+              secret1: 'TEST_SECRET_1',
+            },
+            kwargs: {
+              attr1: 1,
+              attr2: '2',
+            },
+            metadata: {
+              type: 'Callable',
+            },
+          },
+          middle: [{
+            aliases: {},
+            secrets: {},
+            kwargs: {
+              func: lambda.toString(),
+            },
+            metadata: {
+              type: 'CallableLambda',
+            },
+          }],
+          last: {
+            aliases: {},
+            secrets: {},
+            kwargs: {
+              func: lambda.toString(),
+            },
+            metadata: {
+              type: 'CallableLambda',
+            },
+          },
         },
       },
     });
@@ -777,28 +854,21 @@ describe('information stored in serializable', () => {
     expect(JSON.stringify(anotherCallableSequence, null, 2)).toBe(str);
 
     expect(
-      anotherCallableSequence.getAttributes().metadata.callables?.first
-    ).toBeInstanceOf(SimpleCallable);
-
-    expect(
       Array.isArray(
         anotherCallableSequence.getAttributes().metadata.callables?.middle
       )
     ).toBeTruthy();
 
     expect(
+      anotherCallableSequence.getAttributes().metadata.callables?.first
+    ).toStrictEqual(simpleCallable1.getAttributes());
+
+    expect(
       anotherCallableSequence.getAttributes().metadata.callables?.middle[0]
-    ).toBeInstanceOf(CallableLambda);
+    ).toStrictEqual(simpleCallable2.getAttributes());
 
     expect(
       anotherCallableSequence.getAttributes().metadata.callables?.last
-    ).toBeInstanceOf(CallableLambda);
-
-    const firstSimpleCallable = anotherCallableSequence.getAttributes().metadata
-      .callables?.first as SimpleCallable;
-
-    expect(firstSimpleCallable.attr1).toBe(1);
-    expect(firstSimpleCallable.attr2).toBe('2');
-    expect(firstSimpleCallable.secret1).toBe('other secret 1');
+    ).toStrictEqual(simpleCallable3.getAttributes());
   });
 });

@@ -191,7 +191,7 @@ describe('information stored in serializable', () => {
     get _aliases(): SerializedKeyAlias {
       return {
         attr1: 'newAttr1',
-        'sub1': 'newSub1',
+        sub1: 'newSub1',
       };
     }
 
@@ -496,25 +496,25 @@ describe('information stored in serializable', () => {
     const attrWithAliases = new AttrWithAliases({
       attr1: 999,
       attr4: {
-          sub1: 998,
-          sub2: '5',
-          sub3: true,
-          sub4: undefined,
-          sub5: null,
-      }
+        sub1: 998,
+        sub2: '5',
+        sub3: true,
+        sub4: undefined,
+        sub5: null,
+      },
     });
 
     expect(attrWithAliases.getAttributes()).toStrictEqual({
       aliases: {
         attr1: 'newAttr1',
-        'sub1': 'newSub1', // This is not used
+        sub1: 'newSub1', // This is not used
       },
       secrets: {},
       kwargs: {
         attr1: 999,
         newAttr2: '2',
         attr3: false,
-        attr4: {
+        attr4: { 
           sub1: 998, // The aliases only change keys in the root level
           sub2: '5',
           sub3: true,
@@ -563,10 +563,10 @@ describe('information stored in serializable', () => {
     expect(anotherAttrWithAliases).toBeInstanceOf(AttrWithAliases);
     expect(JSON.stringify(anotherAttrWithAliases, null, 2)).toBe(str);
 
-    expect(attrWithAliases.getAttributes()).toStrictEqual({
+    expect(anotherAttrWithAliases.getAttributes()).toStrictEqual({
       aliases: {
         attr1: 'newAttr1',
-        'sub1': 'newSub1', // This is not used
+        sub1: 'newSub1', // This is not used
       },
       secrets: {},
       kwargs: {
@@ -577,13 +577,12 @@ describe('information stored in serializable', () => {
           sub1: 998, // The aliases only change keys in the root level
           sub2: '5',
           sub3: true,
-          sub4: undefined,
+          // sub4: undefined, // This is not observed in the invoked Class
           sub5: null,
         },
         attr5: undefined,
         attr6: null,
       },
     });
-
   });
 });
