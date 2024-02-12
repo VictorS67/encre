@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test custom StringPrompt 1`] = `
+"_grp: 1
+_type: constructor
+_id:
+  - input
+  - load
+  - prompts
+  - text
+  - StringPrompt
+_kwargs:
+  value: this is a test prompt.
+"
+`;
+
+exports[`test custom StringPrompt 2`] = `
+"- _grp: 1
+  _type: constructor
+  _id:
+    - input
+    - load
+    - msgs
+    - HumanMessage
+  _kwargs:
+    content: this is a test prompt.
+"
+`;

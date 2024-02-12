@@ -19,8 +19,9 @@ import {
   convertMessageLikeToMessage,
   BaseMessage,
 } from '../../input/load/msgs/base.js';
-import { BasePrompt, StringPrompt } from '../../input/load/prompts/base.js';
+import { BasePrompt } from '../../input/load/prompts/base.js';
 import { ChatPrompt } from '../../input/load/prompts/chat.js';
+import { StringPrompt } from '../../input/load/prompts/text.js';
 import { Generation } from '../../output/provide/generation.js';
 import { LLMResult } from '../../output/provide/llmresult.js';
 
