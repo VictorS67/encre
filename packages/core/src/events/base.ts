@@ -1,5 +1,9 @@
-import { SerializedFields } from '../load/keymap';
-import { Callable, CallableConfigFields, CallableConfig } from '../record/callable';
+import { SerializedFields } from '../load/keymap.js';
+import {
+  Callable,
+  CallableConfigFields,
+  CallableConfig,
+} from '../record/callable.js';
 
 export interface BaseEventParams extends CallableConfig {
   /**
@@ -14,8 +18,8 @@ export abstract class BaseEvent<
     CallOptions extends CallableConfig = CallableConfig,
   >
   extends Callable<CallInput, CallOutput, CallOptions>
-  implements BaseEventParams {
-  
+  implements BaseEventParams
+{
   /**
    * Whether to print out response text.
    */
@@ -32,7 +36,7 @@ export abstract class BaseEvent<
   get _attributes(): SerializedFields | undefined {
     return {
       verbose: undefined,
-      callbacks: undefined
+      callbacks: undefined,
     };
   }
 

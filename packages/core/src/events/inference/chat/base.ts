@@ -18,6 +18,7 @@ import {
   type BaseMessageLike,
   convertMessageLikeToMessage,
   BaseMessage,
+  isMessageLike,
 } from '../../input/load/msgs/base.js';
 import { BasePrompt } from '../../input/load/prompts/base.js';
 import { ChatPrompt } from '../../input/load/prompts/chat.js';
@@ -577,4 +578,12 @@ export function getModelContextSize(modelName: string): number {
     default:
       return 4096;
   }
+}
+
+export function isLMInput(value: unknown): value is BaseLMInput {
+  if (Array.isArray(value)) {
+    return value.every((v) => isMessageLike(v));
+  }
+
+  return typeof value === 'string' || value instanceof BasePrompt;
 }

@@ -21,7 +21,9 @@ export function listExternals(packageJson) {
     "nanoid/non-secure",
     "p-retry",
     "js-tiktoken/lite",
-    "fs"
+    "js-tiktoken",
+    "fs",
+    "ts-pattern"
   ];
 }
 

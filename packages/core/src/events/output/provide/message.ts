@@ -1,17 +1,24 @@
 import {
   BaseMessage,
   BotMessage,
+  ChatMessage,
+  ChatMessageFields,
   ContentLike,
+  FunctionMessage,
   HumanMessage,
   MessageRole,
   SystemMessage,
-} from '../../input/load/msgs/base';
-import { Generation, GenerationChunk } from './generation';
+  checkMessageRole,
+} from '../../input/load/msgs/base.js';
+import { Generation, GenerationChunk } from './generation.js';
 
 export interface SerializedMessageData {
-  content: ContentLike;
+  content: ContentLike | ContentLike[];
   role?: MessageRole;
   name?: string;
+  additionalKwargs?: {
+    [key: string]: unknown;
+  };
 }
 
 export interface SerializedMessage {
@@ -62,6 +69,36 @@ export class ChatGenerationChunk
   }
 }
 
+export function isMessageContentLike(value: unknown): value is ContentLike {
+  return typeof value === 'string' || typeof value === 'object';
+}
+
+export function isSerializedMessage(
+  value: unknown
+): value is SerializedMessageData {
+  if (typeof value === 'object' && value !== null) {
+    let requireContent: boolean =
+      'content' in value && isMessageContentLike(value['content']);
+
+    if ('role' in value) {
+      requireContent = requireContent && checkMessageRole(value['role']);
+    }
+
+    if ('name' in value) {
+      requireContent = requireContent && typeof value['name'] === 'string';
+    }
+
+    if ('additionalKwargs' in value) {
+      requireContent =
+        requireContent && typeof value['additionalKwargs'] === 'object';
+    }
+
+    return requireContent;
+  }
+
+  return false;
+}
+
 export function mapSerializedMessageToChatMessage(
   message: SerializedMessage
 ): BaseMessage {
@@ -71,6 +108,13 @@ export function mapSerializedMessageToChatMessage(
     return new BotMessage(message.json);
   } else if (message.role === 'system') {
     return new SystemMessage(message.json);
+  } else if (message.role === 'function') {
+    return new FunctionMessage(message.json);
+  } else if (message.role === 'general') {
+    if (message.json.role !== undefined) {
+      return new ChatMessage(message.json as ChatMessageFields);
+    }
+    throw new Error('ChatMessage cannot be created because role is undefined');
   } else {
     throw new Error(`Role is invalid: ${message.role}`);
   }

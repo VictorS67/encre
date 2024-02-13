@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { BaseSourceProvider } from './base';
-import { GenerationChunk } from './generation';
+import { BaseSourceProvider } from './base.js';
+import { GenerationChunk } from './generation.js';
 
 export type GenerationFileChunkField = {
   /**

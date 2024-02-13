@@ -1,6 +1,6 @@
 import { type readFile } from 'node:fs/promises';
-import { BaseLoader } from './base';
-import { Context } from './context';
+import { BaseLoader } from './base.js';
+import { Context } from './context.js';
 
 /**
  * Abstract class that extends the `BaseLoader` class. It is a

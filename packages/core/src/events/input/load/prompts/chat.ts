@@ -1,5 +1,5 @@
-import { BaseMessage, getChatString } from '../msgs/base';
-import { BasePrompt } from './base';
+import { BaseMessage, getChatString } from '../msgs/base.js';
+import { BasePrompt } from './base.js';
 
 export interface ChatPromptFields {
   messages: BaseMessage[];

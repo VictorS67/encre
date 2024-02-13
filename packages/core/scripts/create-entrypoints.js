@@ -20,6 +20,8 @@ const entrypoints = {
   // cache
   cache: "cache/index",
   "cache/base": "cache/base",
+  // events
+  "events/base": "events/base",
   // events/input/load/docs
   "events/input/load/docs/base": "events/input/load/docs/base",
   "events/input/load/docs/buffer": "events/input/load/docs/buffer",
@@ -29,15 +31,53 @@ const entrypoints = {
   "events/input/load/msgs/base": "events/input/load/msgs/base",
   // events/input/load/prompts
   "events/input/load/prompts/base": "events/input/load/prompts/base",
+  "events/input/load/prompts/text": "events/input/load/prompts/text",
   "events/input/load/prompts/chat": "events/input/load/prompts/chat",
+  // events/input/transform
+  "events/input/transform/splitter": "events/input/transform/splitter",
   // events/output/provide
   "events/output/provide/base": "events/output/provide/base",
   "events/output/provide/file": "events/output/provide/file",
   "events/output/provide/generation": "events/output/provide/generation",
   "events/output/provide/llmresult": "events/output/provide/llmresult",
   "events/output/provide/message": "events/output/provide/message",
-  // events/inference/chat/llms
-  "events/inference/chat/llms/base": "events/inference/chat/llms/base",
+  // events/inference/chat
+  "events/inference/chat/base": "events/inference/chat/base",
+  "events/inference/chat": "events/inference/chat/index",
+  // events/inference/chat/llms/openai
+  "events/inference/chat/llms/openai":
+    "events/inference/chat/llms/openai/index",
+  "events/inference/chat/llms/openai/text":
+    "events/inference/chat/llms/openai/text",
+  "events/inference/chat/llms/openai/chat":
+    "events/inference/chat/llms/openai/chat",
+  // events/inference/chat/llms/vertexai
+  "events/inference/chat/llms/vertexai":
+    "events/inference/chat/llms/vertexai/index",
+  // events/inference/chat/llms/vertexai/gemini
+  "events/inference/chat/llms/vertexai/gemini/text":
+    "events/inference/chat/llms/vertexai/gemini/text",
+  "events/inference/chat/llms/vertexai/gemini/chat":
+    "events/inference/chat/llms/vertexai/gemini/chat",
+  "events/inference/chat/llms/vertexai/gemini/utils":
+    "events/inference/chat/llms/vertexai/gemini/utils",
+  // studio
+  "studio/data": "studio/data",
+  "studio/processor": "studio/processor",
+  // studio/nodes
+  "studio/nodes": "studio/nodes/index",
+  "studio/nodes/base": "studio/nodes/base",
+  // studio/nodes/inference/chat
+  "studio/nodes/inference/chat/chatlm":
+    "studio/nodes/inference/chat/chatlm.node",
+  "studio/nodes/inference/chat/llm": "studio/nodes/inference/chat/llm.node",
+  // studio/nodes/input
+  "studio/nodes/input/loader": "studio/nodes/input/loader.node",
+  "studio/nodes/input/message": "studio/nodes/input/message.node",
+  "studio/nodes/input/prompt": "studio/nodes/input/prompt.node",
+  "studio/nodes/input/splitter": "studio/nodes/input/splitter.node",
+  // studio/utils
+  "studio/utils/coerce": "studio/utils/coerce",
   // utils
   "utils/nanoid": "utils/nanoid",
 };
@@ -46,25 +86,31 @@ const deprecatedNodeOnly = [];
 
 // Entrypoints in this list require an optional dependency to be installed.
 const reuqiresOptionalDependency = [
-  // record
-  "record/callable",
   // cache
-  "cache",
   "cache/base",
   // events/input/load/docs
   "events/input/load/docs/buffer",
   "events/input/load/docs/pdf",
-  "events/input/load/docs/base",
-  // events/input/load/msgs
-  "events/input/load/msgs/base",
-  // events/input/load/prompts
-  "events/input/load/prompts/base",
-  "events/input/load/prompts/chat",
+  // events/input/transform
+  "events/input/transform/splitter",
   // events/output/provide
-  "events/output/provide/base",
   "events/output/provide/file",
-  "events/output/provide/llmresult",
-  "events/output/provide/message"
+  // events/inference/chat
+  "events/inference/chat/base",
+  // events/inference/chat/llms/openai
+  "events/inference/chat/llms/openai",
+  "events/inference/chat/llms/openai/text",
+  "events/inference/chat/llms/openai/chat",
+  // events/inference/chat/llms/vertexai
+  "events/inference/chat/llms/vertexai",
+  // events/inference/chat/llms/vertexai/gemini
+  "events/inference/chat/llms/vertexai/gemini/text",
+  "events/inference/chat/llms/vertexai/gemini/chat",
+  "events/inference/chat/llms/vertexai/gemini/utils",
+  // studio
+  "studio/processor",
+  // studio/utils
+  "studio/utils/coerce",
 ];
 
 // const testExports = [
