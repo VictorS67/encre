@@ -4,7 +4,7 @@ import { stringify } from 'yaml';
 import { OptionalImportMap, SecretMap } from '../importType.js';
 import { load } from '../index.js';
 import { SecretFields, SerializedFields } from '../keymap.js';
-import { SerializableType, Serializable } from '../serializable';
+import { SerializableType, Serializable } from '../serializable.js';
 
 test('test custom module serializable', async () => {
   class Test extends Serializable {

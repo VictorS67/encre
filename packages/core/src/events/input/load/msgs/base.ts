@@ -2,7 +2,7 @@ import {
   Serializable,
   SerializedConstructor,
 } from '../../../../load/serializable.js';
-import { exhaustiveTuple } from '../../../../studio/data.js';
+import { exhaustiveTuple } from '../../../../utils/exhuastive.js';
 import {
   SerializedMessage,
   SerializedMessageData,

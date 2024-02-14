@@ -8,7 +8,7 @@ import {
   MessageRole,
   convertMessageLikeToMessage,
   getChatString,
-} from '../base';
+} from '../base.js';
 
 test('test custom BaseMessage', async () => {
   class TestMessage extends BaseMessage {
