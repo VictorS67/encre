@@ -1,4 +1,5 @@
 # Contributing to Encre
+
 We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
 
 - Reporting a bug
@@ -8,9 +9,11 @@ We love your input! We want to make contributing to this project as easy and tra
 - Becoming a maintainer
 
 ## We Develop with Github
+
 We use github to host code, to track issues and feature requests, as well as accept pull requests.
 
 ## We Use [Github Flow](https://guides.github.com/introduction/flow/index.html), So All Code Changes Happen Through Pull Requests
+
 Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://guides.github.com/introduction/flow/index.html)). We actively welcome your pull requests:
 
 1. Fork the repo and create your branch from `master`.
@@ -21,12 +24,15 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 6. Issue that pull request!
 
 ## Any contributions you make will be under the MIT Software License
+
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
 
 ## Report bugs using Github's [issues](https://github.com/VictorS67/encre/issues)
+
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/VictorS67/encre/issues/new); it's that easy!
 
 ## Write bug reports with detail, background, and sample code
+
 [This is an example](http://stackoverflow.com/q/12488905/180626) of a bug report I wrote, and I think it's not a bad model. Here's [another example from Craig Hockenberry](http://www.openradar.me/11905408), an app developer whom I greatly respect.
 
 **Great Bug Reports** tend to have:
@@ -34,12 +40,12 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 - A quick summary and/or background
 - Steps to reproduce
   - Be specific!
-  - Give sample code if you can. This [example question](http://stackoverflow.com/q/12488905/180626) includes sample code that *anyone* with a base R setup can run to reproduce what I was seeing
+  - Give sample code if you can. This [example question](http://stackoverflow.com/q/12488905/180626) includes sample code that _anyone_ with a base R setup can run to reproduce what I was seeing
 - What you expected would happen
 - What actually happens
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
 
-People *love* thorough bug reports. I'm not even kidding.
+People _love_ thorough bug reports. I'm not even kidding.
 
 ## Prerequisites
 
@@ -64,18 +70,18 @@ git clone git@github.com:VictorS67/encre.git
 
 To build all packages, run `yarn build` in the root folder. This will compile the TypeScript for all packages, and build everything for a production release.
 
-To build a specific package, run `yarn workspace xxx build` in the root folder. For example, to build the `encre-core` package, run `yarn workspace encre-core build`.
+To build a specific package, run `yarn workspace xxx build` in the root folder. For example, to build the `@encre/core` package, run `yarn workspace @encre/core build`.
 
 The following is the packages information:
 
 ```json
 {
-  "encre-app": {
+  "@encre/app": {
     "location": "packages/app",
     "workspaceDependencies": [],
     "mismatchedWorkspaceDependencies": []
   },
-  "encre-core": {
+  "@encre/core": {
     "location": "packages/core",
     "workspaceDependencies": [],
     "mismatchedWorkspaceDependencies": []
@@ -87,13 +93,13 @@ The following is the packages information:
 
 To run tests, run `yarn test` in the root folder. This will run all tests for all packages.
 
-To run tests for a specific package, run `yarn workspace xxx test` in the root folder. For example, to test the `encre-core` package, run `yarn workspace encre-core test`.
+To run tests for a specific package, run `yarn workspace xxx test` in the root folder. For example, to test the `@encre/core` package, run `yarn workspace @encre/core test`.
 
 The following is the packages that are able to test:
 
 ```json
 {
-  "encre-core": {
+  "@encre/core": {
     "location": "packages/core",
     "workspaceDependencies": [],
     "mismatchedWorkspaceDependencies": []
@@ -108,4 +114,5 @@ We use [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier
 We also recommend enabling the `Format on Save` option in VS Code to automatically format files with Prettier on save. In addition, we use 2 spaces for indentation rather than tabs.
 
 ## License
+
 By contributing, you agree that your contributions will be licensed under its MIT License.
