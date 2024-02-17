@@ -41,20 +41,23 @@ export function validateProcessDataFromPorts(
     const processValue: Data | undefined = processData[keyword];
     const portType: DataType | Readonly<DataType[]> = portFields[keyword];
 
+    // Check if this keyword can support multiple types of data
     if (Array.isArray(portType)) {
       // Return true if the process data value and the type are both empty.
       if (!processValue) {
-        return portType.length === 0;
+        return portType.length === 0 || portType.some((t: DataType) => t === 'unknown');
       }
 
       // Return true if there is some type in the type array that can be valid.
+      // TODO: think about if coerceTypeOptional can apply here
       return portType.some((t: DataType) => processValue['type'] === t);
     }
 
     // Return false if the process data value is empty and the type is non-empty.
-    if (!processValue) return false;
+    if (!processValue) return portType === 'unknown';
 
     // Validate the types
+    // TODO: think about if coerceTypeOptional can apply here
     return processValue['type'] === portType;
   });
 }

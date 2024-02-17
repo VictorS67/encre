@@ -111,8 +111,10 @@ export abstract class NodeImpl<
   }
 
   validateInputs(inputs?: ProcessInputMap): boolean {
+    // check if there is no input requirement
     if (!this.inputs || Object.keys(this.inputs).length === 0) return true;
 
+    // check if there is no given input
     if (!inputs || Object.keys(inputs).length === 0) return false;
 
     return validateProcessDataFromPorts(inputs, this.inputs);
