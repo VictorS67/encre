@@ -1,0 +1,7 @@
+{
+  "npm": {
+    "versionArgs": [
+      "--workspaces-update=false"
+    ]
+  }
+}
