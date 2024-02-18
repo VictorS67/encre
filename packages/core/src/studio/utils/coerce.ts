@@ -24,7 +24,6 @@ import {
   toArrayFromScalar,
 } from '../data.js';
 
-
 export function coerceToData(value: unknown): Data {
   const getScalarData = (value: unknown): ScalarData => {
     if (value === undefined) {
@@ -125,6 +124,7 @@ export async function coerceTypeOptional<T extends DataType>(
     .with('number', () => coerceToNumber(data))
     .with('chat-message', () => coerceToChatMessage(data))
     .with('object', () => coerceToJSONObject(data))
+    .with('blob', () => coerceToBlob(data))
     .otherwise(() => {
       if (!data) {
         return undefined;
@@ -362,4 +362,46 @@ async function coerceToJSONObject(
 
   // Anything can be serialized as JSON
   return data.value;
+}
+
+async function coerceToBlob(data: Data | undefined): Promise<Blob | undefined> {
+  if (!data || data.value === null) {
+    return undefined;
+  }
+
+  if (data.type === 'blob') {
+    return data.value;
+  }
+
+  if (data.type === 'string') {
+    return new Blob([data.value], {
+      type: 'text/plain',
+    });
+  }
+
+  if (data.type === 'number') {
+    return new Blob([data.value.toString()], {
+      type: 'text/plain',
+    });
+  }
+
+  if (data.type === 'boolean') {
+    return new Blob([data.value.toString()], {
+      type: 'text/plain',
+    });
+  }
+
+  if (data.type === 'context') {
+    return new Blob([data.value.pageContent], {
+      type: (data.value.metadata.type as string) || 'text/plain',
+    });
+  }
+
+  if (data.type === 'object') {
+    return new Blob([JSON.stringify(data.value, null, 2)], {
+      type: 'text/plain',
+    });
+  }
+
+  return undefined;
 }
