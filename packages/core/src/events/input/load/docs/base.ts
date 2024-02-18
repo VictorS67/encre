@@ -1,6 +1,5 @@
-import { Callable } from '../../../../record/callable';
-import { BaseEvent, BaseEventParams } from '../../../base';
-import { Context } from './context';
+import { BaseEvent, BaseEventParams } from '../../../base.js';
+import { Context } from './context.js';
 
 /**
  * Interface that defines the loader for loading readable source.

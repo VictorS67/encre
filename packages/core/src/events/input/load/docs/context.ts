@@ -23,6 +23,18 @@ export class Context<Metadata = Record<string, unknown>>
       : this.pageContent;
     this.metadata = fields.metadata ?? ({} as Metadata);
   }
+
+  static isContext(value: unknown): value is Context {
+    return value instanceof Context;
+  }
 }
 
 export type ContextLike = Context | Context[] | string;
+
+export function isContextLike(value: unknown): value is ContextLike {
+  if (Array.isArray(value)) {
+    return value.every((v) => Context.isContext(v));
+  }
+
+  return typeof value === 'string' || Context.isContext(value);
+}

@@ -1,4 +1,4 @@
-import { Generation } from './generation';
+import { Generation } from './generation.js';
 
 /**
  * Contains all relevant information returned by an LLM.

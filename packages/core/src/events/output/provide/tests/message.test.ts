@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals';
-import { HumanMessage } from '../../../input/load/msgs/base';
-import { ChatGenerationChunk } from '../message';
+import { HumanMessage } from '../../../input/load/msgs/base.js';
+import { ChatGenerationChunk } from '../message.js';
 
 test('test ChatGenerationChunk', async () => {
   const testChatGenerationChunk = new ChatGenerationChunk({

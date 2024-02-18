@@ -1,4 +1,4 @@
-import { GenerationChunk } from './generation';
+import { GenerationChunk } from './generation.js';
 
 /**
  * Interface that defines the source provider for providing readable

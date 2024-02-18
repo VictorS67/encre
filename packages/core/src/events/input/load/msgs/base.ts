@@ -2,6 +2,7 @@ import {
   Serializable,
   SerializedConstructor,
 } from '../../../../load/serializable.js';
+import { exhaustiveTuple } from '../../../../utils/exhuastive.js';
 import {
   SerializedMessage,
   SerializedMessageData,
@@ -70,6 +71,25 @@ export abstract class BaseMessage
       json: (this.toJSON() as SerializedConstructor)
         ._kwargs as object as SerializedMessageData,
     };
+  }
+
+  hasEmptyContent(): boolean {
+    const isEmptyContentLike = (contentLike: ContentLike): boolean => {
+      if (typeof contentLike === 'string') {
+        return contentLike.length === 0;
+      }
+
+      return Object.keys(contentLike).length === 0;
+    };
+
+    if (Array.isArray(this.content)) {
+      return (
+        this.content.length > 0 &&
+        this.content.every((c) => isEmptyContentLike(c))
+      );
+    }
+
+    return isEmptyContentLike(this.content);
   }
 
   abstract concat(message: BaseMessage): BaseMessage;
@@ -356,7 +376,7 @@ export function convertMessageLikeToMessage(
 ): BaseMessage {
   if (typeof messageLike === 'string') {
     return new HumanMessage(messageLike);
-  } else if (isBaseMessage(messageLike)) {
+  } else if (messageLike instanceof BaseMessage) {
     return messageLike;
   }
 
@@ -367,29 +387,33 @@ export function convertMessageLikeToMessage(
     return new BotMessage({ content });
   } else if (role === 'system') {
     return new SystemMessage({ content });
-  } else {
-    throw new Error('CANNOT convert MessageLike to Message');
+  } else if (role === 'general') {
+    return new ChatMessage({ role: 'unknown', content });
   }
+
+  // Does not support converting array type of BaseMessageLike to FunctionMessage
+  throw new Error('CANNOT convert MessageLike to Message');
 }
 
-export function isBaseMessage(
-  messageLike: unknown
-): messageLike is BaseMessage {
-  return 'content' in (messageLike as BaseMessage);
+export function isMessageLike(value: unknown): value is BaseMessageLike {
+  if (Array.isArray(value)) {
+    if (value.length !== 2) return false;
+
+    return checkMessageRole(value[0]) && typeof value[1] === 'string';
+  }
+
+  return typeof value === 'string' || value instanceof BaseMessage;
 }
 
-function areArraysOfStringsSimilar(arr1: string[], arr2: string[]): boolean {
-  const map = new Map<string, boolean>();
-
-  arr1.forEach((item) => map.set(item, true));
-  arr2.forEach((item) => {
-    if (map.has(item)) {
-      map.set(item, false); // Mark as found in both arrays
-    } else {
-      map.set(item, true); // Mark as only found in arr2
-    }
-  });
-
-  // Check if all values are false, which means all elements were found in both arrays
-  return Array.from(map.values()).every((val) => val === false);
-}
+export function checkMessageRole(role: unknown): role is MessageRole {
+  return (
+    typeof role === 'string' &&
+    exhaustiveTuple<MessageRole>()(
+      'human',
+      'assistant',
+      'system',
+      'function',
+      'general'
+    ).includes(role as MessageRole)
+  );
+};
