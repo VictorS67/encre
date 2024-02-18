@@ -1,6 +1,6 @@
-import { FC, memo } from 'react';
+import { FC, memo } from "react";
 
-import { KnownNode, NodeContentDescriptor } from '../../types/nodecontent.type';
+import { KnownNode, NodeContentDescriptor } from "../../types/descriptor.type";
 
 // /* eslint-disable react/prop-types */
 // export const ChatNodeBody: FC<{ node: KnownNode<"chat"> }> = memo(
@@ -26,7 +26,7 @@ import { KnownNode, NodeContentDescriptor } from '../../types/nodecontent.type';
 //   return <></>;
 // });
 
-export const chatNodeDescriptor: NodeContentDescriptor<'chat'> = {
+export const chatNodeDescriptor: NodeContentDescriptor<"chat"> = {
   Body: undefined,
   useMarkdownInDefault: true,
 };

@@ -1,17 +1,17 @@
-import { chatNodeDescriptor } from '../components/nodes/ChatNode';
-import { imageNodeDescriptor } from '../components/nodes/ImageNode';
-import { jsonNodeDescriptor } from '../components/nodes/JsonNode';
-import { textNodeDescriptor } from '../components/nodes/TextNode';
-import { Node } from '../types/node.type';
+import { chatNodeDescriptor } from "../components/nodes/ChatNode";
+import { imageNodeDescriptor } from "../components/nodes/ImageNode";
+import { jsonNodeDescriptor } from "../components/nodes/JsonNode";
+import { textNodeDescriptor } from "../components/nodes/TextNode";
+import { Node } from "../types/node.type";
 import {
   NodeContent,
   NodeContentDescriptors,
   NodeContentType,
   UnknownNodeContentDescriptor,
-} from '../types/nodecontent.type';
+} from "../types/descriptor.type";
 
 export function getNodeContentTypes(): Array<NodeContentType> {
-  return ['text', 'chat', 'image', 'json'];
+  return ["text", "chat", "image", "json"];
 }
 
 const descriptors: Partial<NodeContentDescriptors> = {
@@ -29,12 +29,12 @@ export function useNodeTypes(): NodeContentDescriptors {
       const descriptor = descriptors[nodeType] ?? {};
 
       return [nodeType, descriptor];
-    }),
+    })
   ) as NodeContentDescriptors;
 }
 
 export function useUnknownNodeContentDescriptor(
-  node: Node,
+  node: Node
 ): UnknownNodeContentDescriptor {
   const nodeDescriptors: NodeContentDescriptors = useNodeTypes();
 

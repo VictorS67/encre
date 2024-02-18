@@ -1,7 +1,7 @@
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes } from "react";
 
-import { NodeConnection } from './nodeconnection.type';
-import { NodeContentType } from './nodecontent.type';
+import { NodeConnection } from "./nodeconnection.type";
+import { NodeContentType } from "./descriptor.type";
 
 export type VisualInfo = {
   position: {
@@ -16,22 +16,58 @@ export type VisualInfo = {
 };
 
 // TODO: modify this based on the workflow file.
-export type NodeMetadata = {
+// export type NodeMetadata = {
+//   name: string;
+//   abbreviation: string;
+//   tags?: Array<string>;
+//   inputs?: Array<string>;
+//   outputs?: Array<string>;
+// };
+
+export type NodeInputPortDef = {
+  id: string;
   name: string;
-  abbreviation: string;
-  tags?: Array<string>;
-  inputs?: Array<string>;
-  outputs?: Array<string>;
+  type: string | string[];
+  data?: unknown | unknown[];
+  default?: unknown;
+};
+
+export type NodeOutputPortDef = {
+  id: string;
+  name: string;
+  type: string | string[];
+  data?: unknown | unknown[];
+  default?: unknown;
+};
+
+export type NodePortFields = {
+  [key: string]: string | string[];
 };
 
 export type Node = {
   id: string;
-  state: 'init' | 'pending' | 'success' | 'failed';
-  isDebug: boolean;
+  type: string;
+  title: string;
+  name: string;
+  aliases: {
+    [key: string]: string;
+  };
+  secrets: {
+    [key: string]: string;
+  };
+  kwargs: {
+    [key: string]: unknown;
+  };
+  inputs: NodePortFields | undefined;
+  outputs: NodePortFields | undefined;
   visualInfo: VisualInfo;
-  metadata: NodeMetadata;
-  type?: NodeContentType;
-  content?: Record<string, unknown> | Array<unknown> | unknown;
+
+  inputPortDefs?: NodeInputPortDef[];
+  outputPortDefs?: NodeOutputPortDef[];
+
+  tags?: Array<string>;
+  state?: "init" | "pending" | "success" | "failed";
+  isDebug?: boolean;
 };
 
 export type DraggableNodeProps = {
@@ -45,11 +81,11 @@ export type DraggableNodeProps = {
   onNodeSelect?: (node: Node) => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: string
   ) => void;
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: string
   ) => void;
 };
 
@@ -70,11 +106,11 @@ export type VisualNodeProps = {
   onNodeSelect?: () => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: string
   ) => void;
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: string
   ) => void;
 };
 

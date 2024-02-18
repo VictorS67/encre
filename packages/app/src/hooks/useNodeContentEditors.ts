@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { produce } from 'immer';
+import { produce } from "immer";
 
 import {
   CodeEditorContent,
@@ -8,8 +8,8 @@ import {
   MessageEditorContent,
   StringEditorContent,
   SyntaxedEditor,
-} from '../types/editor.type';
-import { Node } from '../types/node.type';
+} from "../types/editor.type";
+import { Node } from "../types/node.type";
 import {
   ChatContent,
   ImageContent,
@@ -17,37 +17,37 @@ import {
   JsonContext,
   JsonTemplate,
   TextContent,
-} from '../types/nodecontent.type';
+} from "../types/descriptor.type";
 
 function getEditorForText(textContent: TextContent) {
-  if (typeof textContent === 'object') {
+  if (typeof textContent === "object") {
     return {
-      type: 'code',
-      language: 'json',
+      type: "code",
+      language: "json",
       text: JSON.stringify(textContent, null, 2),
     } as CodeEditorContent;
   }
 
   return {
-    type: 'string',
+    type: "string",
     text: textContent,
   } as StringEditorContent;
 }
 
 function getEditorForChat(chatContent: ChatContent) {
   return {
-    type: 'message',
+    type: "message",
     role: chatContent.role,
     name: chatContent.name,
     editors: [
-      typeof chatContent.context === 'object'
+      typeof chatContent.context === "object"
         ? ({
-            type: 'code',
-            language: 'json',
+            type: "code",
+            language: "json",
             text: JSON.stringify(chatContent.context, null, 2),
           } as CodeEditorContent)
         : ({
-            type: 'string',
+            type: "string",
             text: chatContent.context,
           } as StringEditorContent),
     ],
@@ -60,7 +60,7 @@ function getEditorForImage(imageContent: ImageContent) {
     : undefined;
 
   return {
-    type: 'image',
+    type: "image",
     dataUri,
     description: imageContent.description,
   } as ImageEditorContent;
@@ -75,47 +75,49 @@ function getEditorForJson(jsonContent: JsonContent) {
   }
 
   return {
-    type: 'code',
-    language: 'json',
+    type: "code",
+    language: "json",
     text: JSON.stringify(
       {
         ...jsonValue,
         ...jsonTemplate,
       },
       null,
-      2,
+      2
     ),
   } as CodeEditorContent;
 }
 
 function getEditorWithType(
-  type: Node['type'],
-  content: unknown,
+  type: Node["type"],
+  content: unknown
 ): SyntaxedEditor {
   switch (type) {
-    case 'text':
+    case "text":
       return getEditorForText(content as TextContent);
-    case 'chat':
+    case "chat":
       return getEditorForChat(content as ChatContent);
-    case 'image':
+    case "image":
       return getEditorForImage(content as ImageContent);
-    case 'json':
+    case "json":
       return getEditorForJson(content as JsonContent);
     default:
       return {
-        type: 'code',
-        language: 'text',
-        text: '',
+        type: "code",
+        language: "text",
+        text: "",
       } as CodeEditorContent;
   }
 }
 
 export function getEditors(node: Node): SyntaxedEditor[] {
-  if (Array.isArray(node.content)) {
-    return node.content.map((c) => getEditorWithType(node.type, c));
-  }
-
-  return [getEditorWithType(node.type, node.content)];
+  return [
+    {
+      type: "code",
+      language: "text",
+      text: "",
+    } as CodeEditorContent,
+  ];
 }
 
 export function useNodeContentEditors(node: Node) {
@@ -129,7 +131,7 @@ export function useNodeContentEditors(node: Node) {
 
       if (!autoFocusedEditor) {
         const firstEditorToFocus = draft.find(
-          (e) => e.type === 'code' || e.type === 'string',
+          (e) => e.type === "code" || e.type === "string"
         );
 
         if (firstEditorToFocus) {

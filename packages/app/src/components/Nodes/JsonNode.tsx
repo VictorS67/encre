@@ -1,11 +1,11 @@
-import React, { FC, memo, useMemo } from 'react';
+import React, { FC, memo, useMemo } from "react";
 
 import {
   JsonContext,
   JsonTemplate,
   KnownNode,
   NodeContentDescriptor,
-} from '../../types/nodecontent.type';
+} from "../../types/descriptor.type";
 
 /* eslint-disable react/prop-types */
 // export const JsonNodeBody: FC<{ node: KnownNode<"json"> }> = memo(
@@ -30,7 +30,7 @@ import {
 //   }
 // );
 
-export const jsonNodeDescriptor: NodeContentDescriptor<'json'> = {
+export const jsonNodeDescriptor: NodeContentDescriptor<"json"> = {
   Body: undefined,
   useMarkdownInDefault: false,
 };

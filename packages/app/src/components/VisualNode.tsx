@@ -360,8 +360,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     const [cardHeightStyling, minTitleStyling, minVisibilityStyling] =
       useMemo(() => {
         const numPorts: number =
-          (node.metadata.inputs ? node.metadata.inputs.length : 0) +
-          (node.metadata.outputs ? node.metadata.outputs?.length : 0);
+          (node.inputs ? Object.keys(node.inputs).length : 0) +
+          (node.outputs ? Object.keys(node.outputs).length : 0);
 
         const cardStyling: CSSProperties = {
           minHeight: 50 + 30 * numPorts,
@@ -382,8 +382,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
 
         return [cardStyling, titleStyling, visibilityStyling];
       }, [
-        node.metadata.inputs,
-        node.metadata.outputs,
+        node.inputs,
+        node.outputs,
         canvasZoom,
         isMinimized,
       ]);
@@ -476,7 +476,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           >
             <div className="node-header">
               <div className="node-tag-grp">
-                {node.metadata.tags?.map((t) => (
+                {node.tags?.map((t) => (
                   <div className="node-tag" key={t} style={tagBorderStyling}>
                     {t}
                   </div>
@@ -485,7 +485,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
               <div className="node-tooling">ICON</div>
             </div>
             <div className="node-title" style={minTitleStyling}>
-              {node.metadata.name}
+              {node.title}
             </div>
           </div>
           <div

@@ -1,6 +1,6 @@
-import { NodeContentDescriptor } from '../../types/nodecontent.type';
+import { NodeContentDescriptor } from "../../types/descriptor.type";
 
-export const imageNodeDescriptor: NodeContentDescriptor<'image'> = {
+export const imageNodeDescriptor: NodeContentDescriptor<"image"> = {
   Body: undefined,
   useMarkdownInDefault: true,
 };

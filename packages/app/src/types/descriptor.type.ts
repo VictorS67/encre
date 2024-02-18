@@ -9,7 +9,7 @@ export type UnknownNodeContentDescriptor = {
 };
 
 export type NodeContentDescriptor<T extends NodeContentType> = {
-  Body?: FC<{ node: KnownNode<T> }>;
+  Body?: FC<{ node: Node }>;
   PopUpWindow?: FC<{ node: Node; onChange?: (node: Node) => void }>;
   useMarkdownInDefault?: boolean;
 };
@@ -20,7 +20,7 @@ export type NodeContentDescriptors = {
 
 export type NodeContentType = NodeContent['type'];
 
-export type KnownNode<T extends NodeContentType> = Extract<
+export type KnownNodeContent<T extends NodeContentType> = Extract<
   NodeContent,
   { type: T }
 >;
