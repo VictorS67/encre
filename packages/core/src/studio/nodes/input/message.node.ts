@@ -40,6 +40,7 @@ export class ChatMessageNodeImpl extends MessageNodeImpl {
 
     const node: MessageNode = {
       type: 'message',
+      subType: 'chat',
       data: chatMessage,
       visualInfo: {
         position: {
@@ -67,6 +68,7 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
 
     const node: MessageNode = {
       type: 'message',
+      subType: 'human',
       data: humanMessage,
       visualInfo: {
         position: {
@@ -94,6 +96,7 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
 
     const node: MessageNode = {
       type: 'message',
+      subType: 'bot',
       data: botMessage,
       visualInfo: {
         position: {
@@ -121,6 +124,7 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
 
     const node: MessageNode = {
       type: 'message',
+      subType: 'prompt',
       data: systemMessage,
       visualInfo: {
         position: {
@@ -151,6 +155,7 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
 
     const node: MessageNode = {
       type: 'message',
+      subType: 'function',
       data: functionMessage,
       visualInfo: {
         position: {

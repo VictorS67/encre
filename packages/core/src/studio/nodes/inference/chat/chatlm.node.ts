@@ -96,6 +96,7 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
 
     const node: ChatLMNode = {
       type: 'chatlm',
+      subType: 'openai',
       data: openaiChat,
       visualInfo: {
         position: {
@@ -152,6 +153,7 @@ export class GeminiChatNodeImpl extends ChatLMNodeImpl {
 
     const node: ChatLMNode = {
       type: 'chatlm',
+      subType: 'gemini',
       data: geminiChat,
       visualInfo: {
         position: {

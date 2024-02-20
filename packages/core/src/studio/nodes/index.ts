@@ -2,6 +2,7 @@ import { RecordId } from '../../load/keymap.js';
 import { Serializable } from '../../load/serializable.js';
 import { Callable } from '../../record/callable.js';
 import { DataType, ValueOf } from '../data.js';
+import { UIContext } from '../ui.js';
 
 export type NodePortFields = {
   [key: string]: DataType | Readonly<DataType[]>;
@@ -30,6 +31,8 @@ export interface SerializableNode<
   NodeData extends Serializable = Serializable,
 > extends BaseNode {
   type: NodeType;
+
+  subType: string;
 
   data: NodeData;
 }
@@ -72,3 +75,9 @@ export type NodeConnection = {
 
   outputId: RecordId;
 };
+
+export type NodeBody =
+  | string
+  | UIContext
+  | UIContext[]
+  | undefined;

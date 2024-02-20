@@ -31,6 +31,7 @@ export class PDFLoaderNodeImpl extends LoaderNodeImpl {
 
     const node: LoaderNode = {
       type: 'loader',
+      subType: 'pdf',
       data: loader,
       visualInfo: {
         position: {
