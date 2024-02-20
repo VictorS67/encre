@@ -1,32 +1,15 @@
-import { chatNodeDescriptor } from "../components/nodes/ChatNode";
-import { imageNodeDescriptor } from "../components/nodes/ImageNode";
-import { jsonNodeDescriptor } from "../components/nodes/JsonNode";
-import { textNodeDescriptor } from "../components/nodes/TextNode";
-import { Node } from "../types/node.type";
+import { BuiltInNodeType, Node, getNodeTypes } from "../types/studio.type";
 import {
-  NodeContent,
   NodeContentDescriptors,
-  NodeContentType,
   UnknownNodeContentDescriptor,
 } from "../types/descriptor.type";
 
-export function getNodeContentTypes(): Array<NodeContentType> {
-  return ["text", "chat", "image", "json"];
-}
-
-const descriptors: Partial<NodeContentDescriptors> = {
-  text: textNodeDescriptor,
-  chat: chatNodeDescriptor,
-  image: imageNodeDescriptor,
-  json: jsonNodeDescriptor,
-};
-
 export function useNodeTypes(): NodeContentDescriptors {
-  const allNodeTypes = getNodeContentTypes();
+  const allNodeTypes = getNodeTypes();
 
   return Object.fromEntries(
     allNodeTypes.map((nodeType) => {
-      const descriptor = descriptors[nodeType] ?? {};
+      const descriptor = {};
 
       return [nodeType, descriptor];
     })
@@ -38,6 +21,6 @@ export function useUnknownNodeContentDescriptor(
 ): UnknownNodeContentDescriptor {
   const nodeDescriptors: NodeContentDescriptors = useNodeTypes();
 
-  return (nodeDescriptors[node.type as NodeContentType] ??
+  return (nodeDescriptors[node.type as BuiltInNodeType] ??
     {}) as UnknownNodeContentDescriptor;
 }

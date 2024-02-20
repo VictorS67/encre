@@ -21,7 +21,7 @@ import { canvasPositionState, lastMousePositionState } from "../state/canvas";
 import { hoveringNodeIdState, selectingNodeIdsState } from "../state/node";
 import { NodeCanvasProps, type CanvasPosition } from "../types/canvas.type";
 import { type ContextMenuConfigContextData } from "../types/contextmenu.type";
-import { Node } from "../types/node.type";
+import { Node } from '../types/studio.type';
 import { NodeConnection } from "../types/nodeconnection.type";
 
 const styles = css`

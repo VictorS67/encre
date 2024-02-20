@@ -12,7 +12,7 @@ import {
   nodesState,
   selectingNodeIdsState,
 } from '../state/node';
-import { Node } from '../types/node.type';
+import { Node } from '../types/studio.type';
 
 export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
   const selectingNodeIds = useRecoilValue(selectingNodeIdsState);

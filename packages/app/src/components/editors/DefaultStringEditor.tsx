@@ -6,7 +6,7 @@ import {
   DefaultNodeEditorProps,
   StringEditorContent,
 } from '../../types/editor.type';
-import { Node } from '../../types/node.type';
+import { Node } from '../../types/studio.type';
 import { type monaco } from '../../utils/monacoEditor';
 import { LazyCodeEditor } from '../LazyComponents';
 

@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { Node } from './node.type';
+import { BuiltInNodeType, Node } from './studio.type';
 
 export type UnknownNodeContentDescriptor = {
   Body?: FC<{ node: Node }>;
@@ -8,69 +8,14 @@ export type UnknownNodeContentDescriptor = {
   useMarkdownInDefault?: boolean;
 };
 
-export type NodeContentDescriptor<T extends NodeContentType> = {
+export type NodeContentDescriptor<T extends BuiltInNodeType> = {
   Body?: FC<{ node: Node }>;
   PopUpWindow?: FC<{ node: Node; onChange?: (node: Node) => void }>;
   useMarkdownInDefault?: boolean;
 };
 
 export type NodeContentDescriptors = {
-  [K in NodeContentType]: NodeContentDescriptor<K>;
-};
-
-export type NodeContentType = NodeContent['type'];
-
-export type KnownNodeContent<T extends NodeContentType> = Extract<
-  NodeContent,
-  { type: T }
->;
-
-export type NodeContent =
-  | TextNodeContent
-  | ChatNodeContent
-  | ImageNodeContent
-  | JsonNodeContent;
-
-export type TextContent = string;
-
-export type TextNodeContent = {
-  type: 'text';
-  content: TextContent;
-};
-
-export type ChatContent = {
-  role: 'human' | 'assistant' | 'system' | 'function' | 'general';
-  name?: string;
-  context: TextContent;
-};
-
-export type ChatNodeContent = {
-  type: 'chat';
-  content: ChatContent | ChatContent[];
-};
-
-export type ImageContent = {
-  mimeType: string;
-  data?: string;
-  description?: string;
-};
-
-export type ImageNodeContent = {
-  type: 'image';
-  content: ImageContent;
-};
-
-export type JsonContext = { [key: string]: unknown };
-export type JsonTemplate = { [key: string]: string };
-
-export type JsonContent = {
-  jsonTemplate: JsonTemplate;
-  context: JsonContext;
-};
-
-export type JsonNodeContent = {
-  type: 'json';
-  content: JsonContent;
+  [K in BuiltInNodeType]: NodeContentDescriptor<K>;
 };
 
 export type NodeContentBodyProps = {

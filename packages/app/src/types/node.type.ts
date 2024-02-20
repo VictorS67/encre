@@ -1,19 +1,7 @@
 import { HTMLAttributes } from "react";
 
+import { Node } from './studio.type';
 import { NodeConnection } from "./nodeconnection.type";
-import { NodeContentType } from "./descriptor.type";
-
-export type VisualInfo = {
-  position: {
-    x: number;
-    y: number;
-    zIndex: number;
-  };
-  size: {
-    width: number;
-    height: number;
-  };
-};
 
 // TODO: modify this based on the workflow file.
 // export type NodeMetadata = {
@@ -24,51 +12,6 @@ export type VisualInfo = {
 //   outputs?: Array<string>;
 // };
 
-export type NodeInputPortDef = {
-  id: string;
-  name: string;
-  type: string | string[];
-  data?: unknown | unknown[];
-  default?: unknown;
-};
-
-export type NodeOutputPortDef = {
-  id: string;
-  name: string;
-  type: string | string[];
-  data?: unknown | unknown[];
-  default?: unknown;
-};
-
-export type NodePortFields = {
-  [key: string]: string | string[];
-};
-
-export type Node = {
-  id: string;
-  type: string;
-  title: string;
-  name: string;
-  aliases: {
-    [key: string]: string;
-  };
-  secrets: {
-    [key: string]: string;
-  };
-  kwargs: {
-    [key: string]: unknown;
-  };
-  inputs: NodePortFields | undefined;
-  outputs: NodePortFields | undefined;
-  visualInfo: VisualInfo;
-
-  inputPortDefs?: NodeInputPortDef[];
-  outputPortDefs?: NodeOutputPortDef[];
-
-  tags?: Array<string>;
-  state?: "init" | "pending" | "success" | "failed";
-  isDebug?: boolean;
-};
 
 export type DraggableNodeProps = {
   node: Node;

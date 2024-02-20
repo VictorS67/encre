@@ -64,6 +64,7 @@
     "react-redux": "^8.1.2",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
+    "ts-dedent": "^2.2.0",
     "ts-pattern": "^5.0.6",
     "tslog": "^4.9.2",
     "tsx": "^3.12.10",

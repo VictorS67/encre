@@ -2,26 +2,43 @@ import * as monaco from 'monaco-editor';
 
 export { monaco };
 
+// export const monacoTokenizer = {
+//   root: [
+//     [
+//       /[a-zA-Z][\w$]*/,
+//       {
+//         cases: {
+//           '@keywords': 'keyword',
+//           '@default': 'variable',
+//         },
+//       },
+//     ],
+//     [/\{\{[^}]+\}\}/, 'replacement'],
+//     [/".*?"/, 'string'],
+//     [/\/\//, 'comment'],
+//   ],
+// }
+
 monaco.languages.register({ id: 'encre-code' });
 
-monaco.languages.setMonarchTokensProvider('encre-code', {
-  tokenizer: {
-    root: [
-      [
-        /[a-zA-Z][\w$]*/,
-        {
-          cases: {
-            '@keywords': 'keyword',
-            '@default': 'variable',
-          },
-        },
-      ],
-      [/\{\{[^}]+\}\}/, 'replacement'],
-      [/".*?"/, 'string'],
-      [/\/\//, 'comment'],
-    ],
-  },
-});
+// monaco.languages.setMonarchTokensProvider('encre-code', {
+//   tokenizer: {
+//     root: [
+//       [
+//         /[a-zA-Z][\w$]*/,
+//         {
+//           cases: {
+//             '@keywords': 'keyword',
+//             '@default': 'variable',
+//           },
+//         },
+//       ],
+//       [/\{\{[^}]+\}\}/, 'replacement'],
+//       [/".*?"/, 'string'],
+//       [/\/\//, 'comment'],
+//     ],
+//   },
+// });
 
 const defineTheme = (
   theme: 'dark' | 'light',

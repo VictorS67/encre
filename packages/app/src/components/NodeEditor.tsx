@@ -15,7 +15,7 @@ import { useStableCallback } from '../hooks/useStableCallback';
 import { editingNodeIdState, nodeMapState, nodesState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { NodeEditorProps } from '../types/editor.type';
-import { Node } from '../types/node.type';
+import { Node } from '../types/studio.type';
 
 export const NodeEditorRenderer: FC = () => {
   const nodeMap = useRecoilValue(nodeMapState);
@@ -57,7 +57,7 @@ export const NodeEditor: FC<NodeEditorProps> = ({
     setNodes((nodes: Node[]) =>
       produce(nodes, (draft) => {
         const index: number = draft.findIndex((n) => n.id === node.id);
-        draft[index] = node;
+        draft[index] = node as any;
       }),
     );
   });
