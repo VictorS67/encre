@@ -1,28 +1,28 @@
 /** @jsxImportSource @emotion/react */
-import React, { FC, useMemo, useRef, useState } from "react";
+import React, { FC, useMemo, useRef, useState } from 'react';
 
-import { DN100 } from "@atlaskit/theme/colors";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import { css } from "@emotion/react";
-import { useThrottleFn } from "ahooks";
-import { produce } from "immer";
-import { CSSTransition } from "react-transition-group";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { DN100 } from '@atlaskit/theme/colors';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
+import { css } from '@emotion/react';
+import { useThrottleFn } from 'ahooks';
+import { produce } from 'immer';
+import { CSSTransition } from 'react-transition-group';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
-import { ContextMenu } from "./ContextMenu";
-import { DraggableNode } from "./DraggableNode";
-import { VisualNode } from "./VisualNode";
-import { useCanvasPosition } from "../hooks/useCanvasPosition";
-import { useContextMenu } from "../hooks/useContextMenu";
-import { useDraggingNode } from "../hooks/useDraggingNode";
-import { useNodeTypes } from "../hooks/useNodeTypes";
-import { useStableCallback } from "../hooks/useStableCallback";
-import { canvasPositionState, lastMousePositionState } from "../state/canvas";
-import { hoveringNodeIdState, selectingNodeIdsState } from "../state/node";
-import { NodeCanvasProps, type CanvasPosition } from "../types/canvas.type";
-import { type ContextMenuConfigContextData } from "../types/contextmenu.type";
+import { ContextMenu } from './ContextMenu';
+import { DraggableNode } from './DraggableNode';
+import { VisualNode } from './VisualNode';
+import { useCanvasPosition } from '../hooks/useCanvasPosition';
+import { useContextMenu } from '../hooks/useContextMenu';
+import { useDraggingNode } from '../hooks/useDraggingNode';
+import { useNodeTypes } from '../hooks/useNodeTypes';
+import { useStableCallback } from '../hooks/useStableCallback';
+import { canvasPositionState, lastMousePositionState } from '../state/canvas';
+import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
+import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
+import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
+import { NodeConnection } from '../types/nodeconnection.type';
 import { Node } from '../types/studio.type';
-import { NodeConnection } from "../types/nodeconnection.type";
 
 const styles = css`
   position: relative;
@@ -102,7 +102,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     useCanvasPosition();
   const setCanvasPosition = useSetRecoilState(canvasPositionState);
   const [lastMousePosition, setLastMousePosition] = useRecoilState(
-    lastMousePositionState
+    lastMousePositionState,
   );
 
   // TODO: Use hot-key `space` to drag canvas
@@ -118,7 +118,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const [hoveringNodeId, setHoveringNodeId] =
     useRecoilState(hoveringNodeIdState);
   const [selectingNodeIds, SetSelectingNodeIds] = useRecoilState(
-    selectingNodeIdsState
+    selectingNodeIdsState,
   );
 
   const [isContextMenuDisabled, setIsContextMenuDisabled] = useState(true);
@@ -141,7 +141,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const defaultCanvasContextMenu: ContextMenuConfigContextData | null =
     useMemo(() => {
       return {
-        type: "blankSpace",
+        type: 'blankSpace',
         data: [],
       };
     }, [contextMenu]);
@@ -158,7 +158,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
     // Check if canvas is mouse-down
     if (
-      (event.target as HTMLElement).classList.contains("my-canvas") === false
+      (event.target as HTMLElement).classList.contains('my-canvas') === false
     ) {
       return;
     }
@@ -204,7 +204,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         setCanvasPosition(position);
       }
     },
-    { wait: 10 }
+    { wait: 10 },
   );
 
   const canvasMouseUp = (event: React.MouseEvent) => {
@@ -215,9 +215,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const isScrollable = (element: HTMLElement): boolean => {
     const style: CSSStyleDeclaration = window.getComputedStyle(element);
     const isVerticalScrollable: boolean =
-      style.overflowY === "auto" && element.scrollHeight > element.clientHeight;
+      style.overflowY === 'auto' && element.scrollHeight > element.clientHeight;
     const isHorizontalScrollable: boolean =
-      style.overflowX === "auto" && element.scrollWidth > element.clientWidth;
+      style.overflowX === 'auto' && element.scrollWidth > element.clientWidth;
 
     return isVerticalScrollable || isHorizontalScrollable;
   };
@@ -239,7 +239,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       target: HTMLElement,
       wheelDelta: number,
       clientX: number,
-      clientY: number
+      clientY: number,
     ) => {
       // Check if mouse is placed on the background
       if (isAnyParentScrollable(target)) return;
@@ -252,7 +252,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       // compute current mouse position in canvas space
       const currentMouseCanvasPosition = clientToCanvasPosition(
         clientX,
-        clientY
+        clientY,
       );
 
       // compute distance between mouse and canvas position
@@ -274,7 +274,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
       setCanvasPosition(position);
     },
-    { wait: 25 }
+    { wait: 25 },
   );
 
   const handleZoom = useStableCallback((event: React.WheelEvent) => {
@@ -284,7 +284,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         event.target as HTMLElement,
         event.deltaY,
         event.clientX,
-        event.clientY
+        event.clientY,
       );
     }
   });
@@ -298,7 +298,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       const filteredConnections = connections.filter(
         (connection) =>
           connection.inputNodeId === node.id ||
-          connection.outputNodeId === node.id
+          connection.outputNodeId === node.id,
       );
 
       return { node, filteredConnections };
@@ -310,8 +310,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       connections.filter(
         (c: NodeConnection) =>
           c.inputNodeId === draggingNode.id ||
-          c.outputNodeId === draggingNode.id
-      )
+          c.outputNodeId === draggingNode.id,
+      ),
     );
   }, [nodes, connections]);
 
@@ -333,18 +333,18 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         const nodeToChange = draft.find((n) => n.id === node.id);
 
         console.log(
-          `onNodeSizeChange - onNodesChange: nodeToChange: ${nodeToChange?.id}`
+          `onNodeSizeChange - onNodesChange: nodeToChange: ${nodeToChange?.id}`,
         );
 
         if (nodeToChange) {
           nodeToChange.visualInfo.size.width = width;
           nodeToChange.visualInfo.size.height = height;
         }
-      })
+      }),
     );
 
     console.log(
-      `onNodeSizeChange: node: ${node.id}, width: ${width}, height: ${height}`
+      `onNodeSizeChange: node: ${node.id}, width: ${width}, height: ${height}`,
     );
   };
 
@@ -359,7 +359,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       setHoveringNodeId(nodeId);
 
       // console.log(`onNodeMouseOver: nodeId: ${nodeId}`);
-    }
+    },
   );
 
   const onNodeMouseOut = useStableCallback((event: React.MouseEvent) => {
@@ -374,7 +374,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   return (
     <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
       <div>
-        x: {canvasPosition.x}, y: {canvasPosition.y}, zoom:{" "}
+        x: {canvasPosition.x}, y: {canvasPosition.y}, zoom:{' '}
         {canvasPosition.zoom}
       </div>
       <div
@@ -435,7 +435,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
           <DragOverlay
             dropAnimation={null}
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
             }}

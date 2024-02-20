@@ -1,20 +1,20 @@
 export type NodeBodyBaseStyle = {
   fontSize?: number;
-  fontFamily?: "monospace" | "sans-serif";
+  fontFamily?: 'monospace' | 'sans-serif';
 };
 
 export type NodeBodyPlainStyle = {
-  type: "plain";
+  type: 'plain';
   text: string;
 };
 
 export type NodeBodyMarkdownStyle = {
-  type: "markdown";
+  type: 'markdown';
   text: string;
 };
 
 export type NodeBodyCodeStyle = {
-  type: "code";
+  type: 'code';
   text: string;
 
   language?: string;

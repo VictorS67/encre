@@ -381,12 +381,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           : {};
 
         return [cardStyling, titleStyling, visibilityStyling];
-      }, [
-        node.inputs,
-        node.outputs,
-        canvasZoom,
-        isMinimized,
-      ]);
+      }, [node.inputs, node.outputs, canvasZoom, isMinimized]);
 
     const contentTopBorderStyling: CSSProperties = useMemo(() => {
       const colorMode = getColorMode();

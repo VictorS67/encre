@@ -1,10 +1,10 @@
 export type BuiltInNodeType =
-  | "loader"
-  | "message"
-  | "prompt"
-  | "splitter"
-  | "llm"
-  | "chatlm";
+  | 'loader'
+  | 'message'
+  | 'prompt'
+  | 'splitter'
+  | 'llm'
+  | 'chatlm';
 
 export type BuiltInNodeTypePairs = {
   loader: string[];
@@ -68,12 +68,12 @@ export type Node = {
   outputPortDefs?: NodeOutputPortDef[];
 
   tags?: Array<string>;
-  state?: "init" | "pending" | "success" | "failed";
+  state?: 'init' | 'pending' | 'success' | 'failed';
   isDebug?: boolean;
 };
 
 export function getNodeTypes() {
-  return ["loader", "message", "prompt", "splitter", "llm", "chatlm"];
+  return ['loader', 'message', 'prompt', 'splitter', 'llm', 'chatlm'];
 }
 
 /**
@@ -110,7 +110,6 @@ export const exhaustiveTuple =
     x;
 
 type AtLeastOne<T> = [T, ...T[]];
-
 
 export type DataDef<T extends string, RuntimeType> = {
   type: T;
@@ -168,7 +167,7 @@ export const scalarTypes = exhaustiveTuple<ScalarDataType>()(
   'boolean',
   'unknown',
   'object',
-  'blob'
+  'blob',
 );
 
 export const dataTypes = exhaustiveTuple<DataType>()(
@@ -183,7 +182,7 @@ export const dataTypes = exhaustiveTuple<DataType>()(
   'object',
   'object[]',
   'blob',
-  'blob[]'
+  'blob[]',
 );
 
 export function isArrayData(data: Data | undefined): data is ArrayData {
@@ -244,7 +243,7 @@ export function arrayizeData(data: Data): ScalarData[] {
 }
 
 export function getDefaultValue<T extends DataType>(
-  type: T
+  type: T,
 ): (Data & { type: T })['value'] {
   if (isArrayDataType(type)) {
     return [] as any;

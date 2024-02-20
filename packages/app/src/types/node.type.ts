@@ -1,7 +1,7 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes } from 'react';
 
+import { NodeConnection } from './nodeconnection.type';
 import { Node } from './studio.type';
-import { NodeConnection } from "./nodeconnection.type";
 
 // TODO: modify this based on the workflow file.
 // export type NodeMetadata = {
@@ -11,7 +11,6 @@ import { NodeConnection } from "./nodeconnection.type";
 //   inputs?: Array<string>;
 //   outputs?: Array<string>;
 // };
-
 
 export type DraggableNodeProps = {
   node: Node;
@@ -24,11 +23,11 @@ export type DraggableNodeProps = {
   onNodeSelect?: (node: Node) => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string
+    nodeId: string,
   ) => void;
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string
+    nodeId: string,
   ) => void;
 };
 
@@ -49,11 +48,11 @@ export type VisualNodeProps = {
   onNodeSelect?: () => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string
+    nodeId: string,
   ) => void;
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string
+    nodeId: string,
   ) => void;
 };
 

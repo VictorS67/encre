@@ -1,8 +1,8 @@
-import { BuiltInNodeType, Node, getNodeTypes } from "../types/studio.type";
 import {
   NodeContentDescriptors,
   UnknownNodeContentDescriptor,
-} from "../types/descriptor.type";
+} from '../types/descriptor.type';
+import { BuiltInNodeType, Node, getNodeTypes } from '../types/studio.type';
 
 export function useNodeTypes(): NodeContentDescriptors {
   const allNodeTypes = getNodeTypes();
@@ -12,12 +12,12 @@ export function useNodeTypes(): NodeContentDescriptors {
       const descriptor = {};
 
       return [nodeType, descriptor];
-    })
+    }),
   ) as NodeContentDescriptors;
 }
 
 export function useUnknownNodeContentDescriptor(
-  node: Node
+  node: Node,
 ): UnknownNodeContentDescriptor {
   const nodeDescriptors: NodeContentDescriptors = useNodeTypes();
 

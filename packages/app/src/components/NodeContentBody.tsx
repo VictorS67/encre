@@ -1,22 +1,23 @@
-import React, { FC, memo, useEffect, useState } from "react";
-import { match } from "ts-pattern";
-import styled from "@emotion/styled";
+import React, { FC, memo, useEffect, useState } from 'react';
 
-import { useUnknownNodeContentDescriptor } from "../hooks/useNodeTypes";
+import styled from '@emotion/styled';
+import { match } from 'ts-pattern';
+
+import { LazyCodeEditor } from './LazyComponents';
+import { useMarkdown } from '../hooks/useMarkdown';
+import { useNodeBody } from '../hooks/useNodeBody';
+import { useUnknownNodeContentDescriptor } from '../hooks/useNodeTypes';
 import {
   NodeContentBodyProps,
   UnknownNodeContentBodyProps,
-} from "../types/descriptor.type";
+} from '../types/descriptor.type';
 import {
   NodeBody,
   NodeBodyCodeStyle,
   NodeBodyMarkdownStyle,
   NodeBodyPlainStyle,
   NodeBodyStyle,
-} from "../types/nodebody.type";
-import { useNodeBody } from "../hooks/useNodeBody";
-import { useMarkdown } from "../hooks/useMarkdown";
-import { LazyCodeEditor } from "./LazyComponents";
+} from '../types/nodebody.type';
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
@@ -29,19 +30,19 @@ export const NodeContentBody: FC<NodeContentBodyProps> = memo(
     );
 
     return <div className="node-content-body">{body}</div>;
-  }
+  },
 );
 
-NodeContentBody.displayName = "NodeContentBody";
+NodeContentBody.displayName = 'NodeContentBody';
 
 const UnknownNodeContentBodyWrapper = styled.div<{
   fontSize: number;
-  fontFamily: "monospace" | "sans-serif";
+  fontFamily: 'monospace' | 'sans-serif';
 }>`
   overflow: hidden;
   font-size: ${(props) => props.fontSize}px;
   font-family: ${(props) =>
-    props.fontFamily === "monospace"
+    props.fontFamily === 'monospace'
       ? "'Roboto Mono', monospace"
       : "'Roboto', sans-serif"};
 `;
@@ -58,7 +59,7 @@ export const UnknownNodeContentBody: FC<UnknownNodeContentBodyProps> = ({
   }, [node]);
 
   const bodyStyle: NodeBodyStyle | NodeBodyStyle[] | undefined =
-    typeof body === "string" ? { type: "plain", text: body } : body;
+    typeof body === 'string' ? { type: 'plain', text: body } : body;
 
   let bodies = bodyStyle
     ? Array.isArray(bodyStyle)
@@ -66,10 +67,10 @@ export const UnknownNodeContentBody: FC<UnknownNodeContentBodyProps> = ({
       : [bodyStyle]
     : [];
   bodies = bodies.map((b) => {
-    if (b.type === "plain" && b.text.startsWith("::markdown")) {
+    if (b.type === 'plain' && b.text.startsWith('::markdown')) {
       return {
-        type: "markdown",
-        text: b.text.replace(/^::markdown/, "").trim(),
+        type: 'markdown',
+        text: b.text.replace(/^::markdown/, '').trim(),
       };
     }
 
@@ -79,11 +80,9 @@ export const UnknownNodeContentBody: FC<UnknownNodeContentBodyProps> = ({
   const renderedBodies = bodies.map((style) => ({
     style,
     rendered: match(style)
-      .with({ type: "plain" }, (style) => <PlainNodeContentBody {...style} />)
-      .with({ type: "markdown" }, (style) => (
-        <MarkdownNodeContentBody {...style} />
-      ))
-      .with({ type: "code" }, (style) => <CodeNodeContentBody {...style} />)
+      .with({ type: 'plain' }, (s) => <PlainNodeContentBody {...s} />)
+      .with({ type: 'markdown' }, (s) => <MarkdownNodeContentBody {...s} />)
+      .with({ type: 'code' }, (s) => <CodeNodeContentBody {...s} />)
       .exhaustive(),
   }));
 
@@ -92,7 +91,7 @@ export const UnknownNodeContentBody: FC<UnknownNodeContentBodyProps> = ({
       {renderedBodies.map(({ style, rendered }, i) => (
         <UnknownNodeContentBodyWrapper
           key={i}
-          fontFamily={style.fontFamily ?? "sans-serif"}
+          fontFamily={style.fontFamily ?? 'sans-serif'}
           fontSize={style.fontSize ?? 12}
         >
           {rendered}
@@ -102,22 +101,25 @@ export const UnknownNodeContentBody: FC<UnknownNodeContentBodyProps> = ({
   );
 };
 
+/* eslint-disable react/prop-types */
 export const PlainNodeContentBody: FC<NodeBodyPlainStyle> = memo(({ text }) => {
   return <pre className="pre-wrap">{text}</pre>;
 });
 
-PlainNodeContentBody.displayName = "PlainNodeContentBody";
+PlainNodeContentBody.displayName = 'PlainNodeContentBody';
 
+/* eslint-disable react/prop-types */
 export const MarkdownNodeContentBody: FC<NodeBodyMarkdownStyle> = memo(
   ({ text }) => {
     const markdownBody = useMarkdown(text);
 
     return <div className="pre-wrap" dangerouslySetInnerHTML={markdownBody} />;
-  }
+  },
 );
 
-MarkdownNodeContentBody.displayName = "MarkdownNodeContentBody";
+MarkdownNodeContentBody.displayName = 'MarkdownNodeContentBody';
 
+/* eslint-disable react/prop-types */
 export const CodeNodeContentBody: FC<NodeBodyCodeStyle> = memo(
   ({ text, language, keywords }) => {
     return (
@@ -129,7 +131,7 @@ export const CodeNodeContentBody: FC<NodeBodyCodeStyle> = memo(
         showLineNumbers={false}
       />
     );
-  }
+  },
 );
 
-CodeNodeContentBody.displayName = "CodeNodeContentBody";
+CodeNodeContentBody.displayName = 'CodeNodeContentBody';

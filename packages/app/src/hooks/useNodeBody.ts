@@ -1,7 +1,7 @@
-import { dedent } from "ts-dedent";
+import { dedent } from 'ts-dedent';
 
-import { Node } from "../types/studio.type";
-import { NodeBody } from "../types/nodebody.type";
+import { NodeBody } from '../types/nodebody.type';
+import { Node } from '../types/studio.type';
 
 export function useNodeBody(node: Node): NodeBody {
   const secrets = node.secrets;
@@ -12,15 +12,15 @@ export function useNodeBody(node: Node): NodeBody {
     .filter(([k, v]) => v !== undefined)
     .map(([k, v]) => {
       // TODO: requires `expectTypeOptional('string')`
-      if (v?.type === "string") {
+      if (v?.type === 'string') {
         return `${k}: ${v.value}`;
       }
-      return `${k}: NOT A STRING`
+      return `${k}: NOT A STRING`;
     });
 
   const lines: string[] = [...secretLines, ...kwargsLines];
 
   const keywords: string[] = [...Object.keys(secrets), ...Object.keys(kwargs)];
 
-  return { type: "code", text: dedent`${lines.join("\n")}`, keywords };
+  return { type: 'code', text: dedent`${lines.join('\n')}`, keywords };
 }
