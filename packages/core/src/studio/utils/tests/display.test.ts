@@ -139,6 +139,7 @@ describe('display UI contexts from key arguments', () => {
         text: 'attr3: "3"',
         language: 'encre-code',
         keywords: ['attr1', 'attr2', 'attr3', 'attr4', 'attr5'],
+        isHoldingValues: false
       } as CodeUIContext,
     ]);
   });
@@ -152,6 +153,7 @@ describe('display UI contexts from key arguments', () => {
         text: 'key:',
         language: 'encre-code',
         keywords: ['key', 'word'],
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'markdown',
@@ -199,6 +201,7 @@ attr4: {
 attr6:`,
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'context',
@@ -210,6 +213,7 @@ attr6:`,
         text: 'attr7:',
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'blob',
@@ -222,6 +226,7 @@ attr6:`,
         text: 'attr8:',
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'message',
@@ -274,6 +279,7 @@ attr5: [
 attr6:`,
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'context',
@@ -290,6 +296,7 @@ attr6:`,
         text: 'attr7:',
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'blob',
@@ -308,6 +315,7 @@ attr6:`,
         text: 'attr8:',
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'message',
@@ -360,6 +368,7 @@ attr4: [
 attr6:`,
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'context',
@@ -376,6 +385,7 @@ attr6:`,
         text: 'attr7:',
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'blob',
@@ -388,6 +398,7 @@ attr6:`,
         text: 'attr8:',
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext,
       {
         type: 'message',

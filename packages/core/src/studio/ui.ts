@@ -23,6 +23,7 @@ export type CodeUIContext = {
 
   language?: string;
   keywords?: string[];
+  isHoldingValues?: boolean;
 };
 
 export type BlobUIContext = {

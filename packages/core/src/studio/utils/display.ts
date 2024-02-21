@@ -91,7 +91,7 @@ export function displayUIFromSecretFields(secrets: SecretFields): UIContext[] {
       text,
       language: 'encre-code',
       keywords,
-      isReadOnly: true
+      isReadOnly: true,
     } as CodeUIContext,
   ];
 }
@@ -147,7 +147,12 @@ function partitionDataGroup(
 }
 
 function concatContexts(prev: UIContext, next: UIContext): UIContext[] {
-  if (prev.type === 'code' && next.type === 'code') {
+  if (
+    prev.type === 'code' &&
+    next.type === 'code' &&
+    !prev.isReadOnly &&
+    !next.isReadOnly
+  ) {
     return [
       {
         type: 'code',
@@ -156,6 +161,7 @@ function concatContexts(prev: UIContext, next: UIContext): UIContext[] {
         keywords: Array.from(
           new Set([...(prev.keywords ?? []), ...(next.keywords ?? [])])
         ),
+        isHoldingValues: next.isHoldingValues ?? false,
       } as CodeUIContext,
     ];
   }
@@ -209,19 +215,21 @@ function displayStrUI(
   )[];
   let textArr = [] as string[];
 
-  const popTextToUIContext = () => {
+  const popTextToUIContext = (isHoldingValues: boolean) => {
     if (textArr.length > 0) {
       uiContexts.push({
         type: 'code',
         text: textArr.join('\n'),
         language,
         keywords,
+        isHoldingValues,
       } as CodeUIContext);
 
       textArr = [];
     }
   };
 
+  let isHoldingValues = false;
   for (const [key, data] of dataGrp) {
     const type = getScalarTypeOf(data.type);
     const dataArr = arrayizeData(data);
@@ -255,18 +263,18 @@ function displayStrUI(
         textArr.push(
           `${hideKeyword ? '' : `${key}:`} ${stringifyStrArr(type, strArr)}`
         );
+        isHoldingValues = false;
       } else {
-        if (strArr.length === 0) {
-          if (!hideKeyword) textArr.push(`${key}: `);
-        } else {
+        if (strArr.length !== 0) {
           const text = strArr[0];
 
           if (text.startsWith('::markdown')) {
             if (!hideKeyword) {
               textArr.push(`${key}:`);
+              isHoldingValues = true;
             }
 
-            popTextToUIContext();
+            popTextToUIContext(isHoldingValues);
 
             uiContexts.push({
               type: 'markdown',
@@ -279,14 +287,16 @@ function displayStrUI(
               }`
             );
           }
+          isHoldingValues = false;
         }
       }
     } else {
       if (!hideKeyword) {
         textArr.push(`${key}:`);
+        isHoldingValues = true;
       }
 
-      popTextToUIContext();
+      popTextToUIContext(isHoldingValues);
 
       for (const text of strArr) {
         if (text.startsWith('::markdown')) {
@@ -306,10 +316,11 @@ function displayStrUI(
           } as PlainUIContext);
         }
       }
+      isHoldingValues = false;
     }
   }
 
-  popTextToUIContext();
+  popTextToUIContext(isHoldingValues);
 
   return uiContexts;
 }
@@ -351,12 +362,13 @@ function displayBlobUI(
         throw new Error(`cannot display UI in blobs because of type: ${type}`);
       });
 
-    if (!hideKeyword) {
+    if (!hideKeyword && blobArr.length !== 0) {
       uiContexts.push({
         type: 'code',
         text: `${key}:`,
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext);
     }
 
@@ -410,12 +422,13 @@ function displayContextUI(
         );
       });
 
-    if (!hideKeyword) {
+    if (!hideKeyword && contextArr.length !== 0) {
       uiContexts.push({
         type: 'code',
         text: `${key}:`,
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext);
     }
 
@@ -490,12 +503,13 @@ function displayMessageUI(
         );
       });
 
-    if (!hideKeyword) {
+    if (!hideKeyword && msgArr.length !== 0) {
       uiContexts.push({
         type: 'code',
         text: `${key}:`,
         language,
         keywords,
+        isHoldingValues: true
       } as CodeUIContext);
     }
 
