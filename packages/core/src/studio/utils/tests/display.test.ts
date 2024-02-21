@@ -440,6 +440,7 @@ describe('display UI contexts from secrets', () => {
 google_api_key: {{GOOGLE_API_KEY}}`,
         language,
         keywords,
+        isReadOnly: true
       } as CodeUIContext,
     ]);
   });
@@ -458,6 +459,7 @@ secret2.sub1: {{SECRET_2_SUB_1}}
 secret2.sub2: {{SECRET_2_SUB_2}}`,
         language,
         keywords,
+        isReadOnly: true
       } as CodeUIContext,
     ]);
   });

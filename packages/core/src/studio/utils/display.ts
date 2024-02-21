@@ -91,6 +91,7 @@ export function displayUIFromSecretFields(secrets: SecretFields): UIContext[] {
       text,
       language: 'encre-code',
       keywords,
+      isReadOnly: true
     } as CodeUIContext,
   ];
 }

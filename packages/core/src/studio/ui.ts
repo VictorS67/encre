@@ -4,6 +4,7 @@ import { DataType } from './data.js';
 export type BaseUIContext = {
   fontSize?: number;
   fontFamily?: 'monospace' | 'sans-serif';
+  isReadOnly?: boolean;
 };
 
 export type PlainUIContext = {
