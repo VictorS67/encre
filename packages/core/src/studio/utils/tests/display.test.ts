@@ -251,21 +251,11 @@ attr6:`,
     expect(uiContexts).toStrictEqual([
       {
         type: 'code',
-        text: 'attr1:',
-        language,
-        keywords,
-      } as CodeUIContext,
-      {
-        type: 'plain',
-        text: '1',
-      } as PlainUIContext,
-      {
-        type: 'plain',
-        text: '2',
-      } as PlainUIContext,
-      {
-        type: 'code',
-        text: `attr2: [2, 3]
+        text: `attr1: [
+  "1",
+  "2"
+]
+attr2: [2, 3]
 attr3: [true, false]
 attr4: [
   {

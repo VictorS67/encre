@@ -178,7 +178,7 @@ function stringifyStrArr(type: ScalarDataType, arr: string[]) {
   }
 
   if (type === 'string') {
-    return `[${arr.map((item) => `"${item}"`).join(', ')}]`;
+    return JSON.stringify(arr, null, 2);
   }
 
   return `[${arr.join(', ')}]`;
@@ -219,7 +219,7 @@ function displayStrUI(
 
       textArr = [];
     }
-  }
+  };
 
   for (const [key, data] of dataGrp) {
     const type = getScalarTypeOf(data.type);
@@ -263,15 +263,14 @@ function displayStrUI(
           if (text.startsWith('::markdown')) {
             if (!hideKeyword) {
               textArr.push(`${key}:`);
-            } 
-            
+            }
+
             popTextToUIContext();
 
             uiContexts.push({
               type: 'markdown',
               text: text.replace(/^::markdown/, '').trim(),
             } as MarkdownUIContext);
-
           } else {
             textArr.push(
               `${hideKeyword ? '' : `${key}:`} ${
@@ -284,7 +283,7 @@ function displayStrUI(
     } else {
       if (!hideKeyword) {
         textArr.push(`${key}:`);
-      } 
+      }
 
       popTextToUIContext();
 
@@ -306,8 +305,6 @@ function displayStrUI(
           } as PlainUIContext);
         }
       }
-
-
     }
   }
 

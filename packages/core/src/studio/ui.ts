@@ -70,7 +70,7 @@ export const UIDataTypesMap: Record<DataType, UIContext['type']> = {
   blob: 'blob',
   context: 'context',
   'chat-message': 'message',
-  'string[]': 'plain',
+  'string[]': 'code',
   'number[]': 'code',
   'boolean[]': 'code',
   'object[]': 'code',
