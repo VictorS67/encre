@@ -41,7 +41,15 @@ describe('display UI contexts from key arguments', () => {
 
   const plainToMarkdown: DataFields = {
     key: { type: 'string', value: '::markdown\n## TITLE...' },
-    word: undefined
+    word: undefined,
+  };
+
+  const longTextInCode: DataFields = {
+    value: {
+      type: 'string',
+      value:
+        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,',
+    },
   };
 
   const hideKeyword: DataFields = {
@@ -139,7 +147,7 @@ describe('display UI contexts from key arguments', () => {
         text: 'attr3: "3"',
         language: 'encre-code',
         keywords: ['attr1', 'attr2', 'attr3', 'attr4', 'attr5'],
-        isHoldingValues: false
+        isHoldingValues: false,
       } as CodeUIContext,
     ]);
   });
@@ -150,15 +158,29 @@ describe('display UI contexts from key arguments', () => {
     expect(uiContexts).toStrictEqual([
       {
         type: 'code',
-        text: 'key:',
+        text: 'key: ',
         language: 'encre-code',
         keywords: ['key', 'word'],
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'markdown',
         text: '## TITLE...',
       } as MarkdownUIContext,
+    ]);
+  });
+
+  test('longTextInCode', async () => {
+    const uiContexts: UIContext[] = displayUIFromDataFields(longTextInCode);
+
+    expect(uiContexts).toStrictEqual([
+      {
+        type: 'code',
+        text: '"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,"',
+        language: 'encre-code',
+        keywords: ['value'],
+        isHoldingValues: false,
+      } as CodeUIContext,
     ]);
   });
 
@@ -198,10 +220,10 @@ attr4: {
   "sub1": 1,
   "sub2": "2"
 }
-attr6:`,
+attr6: `,
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'context',
@@ -210,10 +232,10 @@ attr6:`,
       } as ContextUIContext,
       {
         type: 'code',
-        text: 'attr7:',
+        text: 'attr7: ',
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'blob',
@@ -223,10 +245,10 @@ attr6:`,
       } as BlobUIContext,
       {
         type: 'code',
-        text: 'attr8:',
+        text: 'attr8: ',
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'message',
@@ -276,10 +298,10 @@ attr5: [
   undefined,
   undefined
 ]
-attr6:`,
+attr6: `,
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'context',
@@ -293,10 +315,10 @@ attr6:`,
       } as ContextUIContext,
       {
         type: 'code',
-        text: 'attr7:',
+        text: 'attr7: ',
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'blob',
@@ -312,10 +334,10 @@ attr6:`,
       } as BlobUIContext,
       {
         type: 'code',
-        text: 'attr8:',
+        text: 'attr8: ',
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'message',
@@ -365,10 +387,10 @@ attr4: [
     "sub4": "4"
   }
 ]
-attr6:`,
+attr6: `,
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'context',
@@ -382,10 +404,10 @@ attr6:`,
       } as ContextUIContext,
       {
         type: 'code',
-        text: 'attr7:',
+        text: 'attr7: ',
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'blob',
@@ -395,10 +417,10 @@ attr6:`,
       } as BlobUIContext,
       {
         type: 'code',
-        text: 'attr8:',
+        text: 'attr8: ',
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext,
       {
         type: 'message',
@@ -451,7 +473,7 @@ describe('display UI contexts from secrets', () => {
 google_api_key: {{GOOGLE_API_KEY}}`,
         language,
         keywords,
-        isReadOnly: true
+        isReadOnly: true,
       } as CodeUIContext,
     ]);
   });
@@ -470,7 +492,7 @@ secret2.sub1: {{SECRET_2_SUB_1}}
 secret2.sub2: {{SECRET_2_SUB_2}}`,
         language,
         keywords,
-        isReadOnly: true
+        isReadOnly: true,
       } as CodeUIContext,
     ]);
   });

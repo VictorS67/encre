@@ -261,7 +261,7 @@ function displayStrUI(
     if (UIDataTypesMap[data.type] === 'code') {
       if (isArrayDataType(data.type)) {
         textArr.push(
-          `${hideKeyword ? '' : `${key}:`} ${stringifyStrArr(type, strArr)}`
+          `${hideKeyword ? '' : `${key}: `}${stringifyStrArr(type, strArr)}`
         );
         isHoldingValues = false;
       } else {
@@ -270,7 +270,7 @@ function displayStrUI(
 
           if (text.startsWith('::markdown')) {
             if (!hideKeyword) {
-              textArr.push(`${key}:`);
+              textArr.push(`${key}: `);
               isHoldingValues = true;
             }
 
@@ -282,7 +282,7 @@ function displayStrUI(
             } as MarkdownUIContext);
           } else {
             textArr.push(
-              `${hideKeyword ? '' : `${key}:`} ${
+              `${hideKeyword ? '' : `${key}: `}${
                 type === 'string' ? `"${text}"` : text
               }`
             );
@@ -292,7 +292,7 @@ function displayStrUI(
       }
     } else {
       if (!hideKeyword) {
-        textArr.push(`${key}:`);
+        textArr.push(`${key}: `);
         isHoldingValues = true;
       }
 
@@ -365,7 +365,7 @@ function displayBlobUI(
     if (!hideKeyword && blobArr.length !== 0) {
       uiContexts.push({
         type: 'code',
-        text: `${key}:`,
+        text: `${key}: `,
         language,
         keywords,
         isHoldingValues: true
@@ -425,7 +425,7 @@ function displayContextUI(
     if (!hideKeyword && contextArr.length !== 0) {
       uiContexts.push({
         type: 'code',
-        text: `${key}:`,
+        text: `${key}: `,
         language,
         keywords,
         isHoldingValues: true
@@ -506,7 +506,7 @@ function displayMessageUI(
     if (!hideKeyword && msgArr.length !== 0) {
       uiContexts.push({
         type: 'code',
-        text: `${key}:`,
+        text: `${key}: `,
         language,
         keywords,
         isHoldingValues: true
