@@ -1,3 +1,5 @@
+import type { Opaque } from 'type-fest';
+
 export type BuiltInNodeType =
   | 'loader'
   | 'message'
@@ -47,7 +49,8 @@ export type NodePortFields = {
   [key: string]: DataType | Readonly<DataType[]>;
 };
 
-export type Node = {
+// This is mocking NodeImpl
+export interface Node {
   id: string;
   type: string;
   subType: string;
@@ -64,13 +67,20 @@ export type Node = {
   outputs: NodePortFields | undefined;
   visualInfo: VisualInfo;
 
-  inputPortDefs?: NodeInputPortDef[];
-  outputPortDefs?: NodeOutputPortDef[];
+  setKwarg: (key: string, value: unknown) => void;
+  getInputPortDefs: () => NodeInputPortDef[];
+  getOutputPortDefs: () => NodeOutputPortDef[];
+  validateInputs: (inputs?: ProcessInputMap) => boolean;
+  getBody: () => Promise<NodeBody>;
+  process: (
+    inputs: ProcessInputMap,
+    context: ProcessContext,
+  ) => Promise<ProcessOutputMap>;
 
   tags?: Array<string>;
   state?: 'init' | 'pending' | 'success' | 'failed';
   isDebug?: boolean;
-};
+}
 
 export function getNodeTypes() {
   return ['loader', 'message', 'prompt', 'splitter', 'llm', 'chatlm'];
@@ -250,4 +260,142 @@ export function getDefaultValue<T extends DataType>(
   }
 
   return scalarDefaults[getScalarTypeOf(type)] as any;
+}
+
+export type NodeBody = string | UIContext | UIContext[] | undefined;
+
+export type BaseUIContext = {
+  fontSize?: number;
+  fontFamily?: 'monospace' | 'sans-serif';
+};
+
+export type PlainUIContext = {
+  type: 'plain';
+  text: string;
+};
+
+export type MarkdownUIContext = {
+  type: 'markdown';
+  text: string;
+};
+
+export type CodeUIContext = {
+  type: 'code';
+  text: string;
+
+  language?: string;
+  keywords?: string[];
+};
+
+export type BlobUIContext = {
+  type: 'blob';
+  blob: Blob;
+  size: number;
+  blobType: string;
+};
+
+export type ContextUIContext = {
+  type: 'context';
+  text: string;
+
+  metadata?: {
+    [key: string]: unknown;
+  };
+};
+
+export type MessageUIContext = {
+  type: 'message';
+  text: string;
+  role: string;
+
+  name?: string;
+  additionalKwargs?: {
+    [key: string]: unknown;
+  };
+};
+
+export type UIContext = BaseUIContext &
+  (
+    | PlainUIContext
+    | MarkdownUIContext
+    | CodeUIContext
+    | BlobUIContext
+    | ContextUIContext
+    | MessageUIContext
+  );
+
+export const UIDataTypesMap: Record<DataType, UIContext['type']> = {
+  string: 'code',
+  number: 'code',
+  boolean: 'code',
+  object: 'code',
+  unknown: 'code',
+  blob: 'blob',
+  'string[]': 'plain',
+  'number[]': 'code',
+  'boolean[]': 'code',
+  'object[]': 'code',
+  'unknown[]': 'code',
+  'blob[]': 'blob',
+};
+
+export type ProcessId = Opaque<string, 'ProcessId'>;
+
+export type ProcessInputMap = Record<string, Data | undefined>;
+export type ProcessOutputMap = Record<string, Data | undefined>;
+
+export type ProcessDataMap = ProcessInputMap | ProcessOutputMap;
+
+export type ProcessContext = {
+  processId: ProcessId;
+
+  signal: AbortSignal;
+
+  contextData: Record<string, Data>;
+
+  graphInputs: Record<string, Data>;
+
+  graphOutputs: Record<string, Data>;
+};
+
+/**
+ * Validate whether the ports are full-filled with the process data.
+ */
+export function validateProcessDataFromPorts(
+  processData: ProcessDataMap,
+  portFields: NodePortFields,
+): boolean {
+  const keywords: string[] = Object.keys(portFields);
+
+  return keywords.every((keyword: string): boolean => {
+    // Return false if there is no such a port keyword in the process data.
+    if (!Object.prototype.hasOwnProperty.call(processData, keyword)) {
+      return false;
+    }
+
+    const processValue: Data | undefined = processData[keyword];
+    const portType: DataType | Readonly<DataType[]> = portFields[keyword];
+
+    // Check if this keyword can support multiple types of data
+    if (Array.isArray(portType)) {
+      // Return true if the process data value and the type are both empty.
+      if (!processValue) {
+        return (
+          portType.length === 0 ||
+          portType.some((t: DataType) => t === 'unknown')
+        );
+      }
+
+      // Return true if there is some type in the type array that can be valid.
+      // TODO: think about if coerceTypeOptional can apply here
+      return portType.some((t: DataType) => processValue['type'] === t);
+    }
+
+    // Return false if the process data value is empty and the type is non-empty.
+    if (!processValue) return portType === 'unknown';
+
+    // Validate the types
+    // TODO: think about if coerceTypeOptional can apply here
+    return processValue['type'] === portType;
+  });
 }

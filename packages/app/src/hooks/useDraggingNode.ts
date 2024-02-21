@@ -5,7 +5,10 @@ import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { useStableCallback } from './useStableCallback';
-import { canvasPositionState } from '../state/canvas';
+import {
+  canvasPositionState,
+  isOnlyDraggingCanvasState,
+} from '../state/canvas';
 import {
   draggingNodesState,
   nodeMapState,

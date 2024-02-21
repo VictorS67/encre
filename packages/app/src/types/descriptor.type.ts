@@ -1,27 +1,17 @@
 import { FC } from 'react';
 
-import { BuiltInNodeType, Node } from './studio.type';
+import { Node, UIContext } from './studio.type';
 
-export type UnknownNodeContentDescriptor = {
-  Body?: FC<{ node: Node }>;
-  PopUpWindow?: FC<{ node: Node; onChange?: (node: Node) => void }>;
-  useMarkdownInDefault?: boolean;
+export type UIContextDescriptor<T extends UIContext['type']> = {
+  Body?: FC<{ node: Node } & Extract<UIContext, { type: T }>>;
+  PopUpWindow?: FC<
+    { node: Node; onChange?: (node: Node) => void } & Extract<
+      UIContext,
+      { type: T }
+    >
+  >;
 };
 
-export type NodeContentDescriptor<T extends BuiltInNodeType> = {
-  Body?: FC<{ node: Node }>;
-  PopUpWindow?: FC<{ node: Node; onChange?: (node: Node) => void }>;
-  useMarkdownInDefault?: boolean;
-};
-
-export type NodeContentDescriptors = {
-  [K in BuiltInNodeType]: NodeContentDescriptor<K>;
-};
-
-export type NodeContentBodyProps = {
-  node: Node;
-};
-
-export type UnknownNodeContentBodyProps = {
-  node: Node;
+export type UIContextDescriptors = {
+  [K in UIContext['type']]: UIContextDescriptor<K>;
 };

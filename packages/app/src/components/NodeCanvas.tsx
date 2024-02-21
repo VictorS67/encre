@@ -1,23 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import React, { FC, useMemo, useRef, useState } from 'react';
 
-import { DN100 } from '@atlaskit/theme/colors';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { css } from '@emotion/react';
 import { useThrottleFn } from 'ahooks';
 import { produce } from 'immer';
 import { CSSTransition } from 'react-transition-group';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { ContextMenu } from './ContextMenu';
 import { DraggableNode } from './DraggableNode';
+import { MouseIcon } from './MouseIcon';
 import { VisualNode } from './VisualNode';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingNode } from '../hooks/useDraggingNode';
-import { useNodeTypes } from '../hooks/useNodeTypes';
+import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
 import { useStableCallback } from '../hooks/useStableCallback';
-import { canvasPositionState, lastMousePositionState } from '../state/canvas';
+import {
+  canvasPositionState,
+  isOnlyDraggingCanvasState,
+  lastMousePositionState,
+} from '../state/canvas';
 import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
@@ -84,6 +88,19 @@ const styles = css`
     opacity: 0;
     left: -1000px;
   }
+
+  .mouse-icon {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+
+    .selection-box-indicator {
+      width: 24px;
+      height: 24px;
+      cursor: grab;
+      border: 2px dashed #ffffff;
+    }
+  }
 `;
 
 type MouseInfo = {
@@ -106,6 +123,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   );
 
   // TODO: Use hot-key `space` to drag canvas
+  const [isOnlyDraggingCanvas, setIsOnlyDraggingCanvas] = useRecoilState(
+    isOnlyDraggingCanvasState,
+  );
   const [isDraggingCanvas, setIsDraggingCanvas] = useState(false);
   const [dragStart, setDragStart] = useState({
     x: 0,
@@ -153,15 +173,18 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   });
 
   const canvasMouseDown = useStableCallback((event: React.MouseEvent) => {
+    // Check if only dragging canvas is true
+    if (!isOnlyDraggingCanvas) return;
+
     // Check if main button (ususally the left button) is pressed
     if (event.button !== 0) return;
 
     // Check if canvas is mouse-down
-    if (
-      (event.target as HTMLElement).classList.contains('my-canvas') === false
-    ) {
-      return;
-    }
+    // if (
+    //   (event.target as HTMLElement).classList.contains('my-canvas') === false
+    // ) {
+    //   return;
+    // }
 
     event.preventDefault();
 
@@ -182,6 +205,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   const canvasMouseMove = useThrottleFn(
     (event: React.MouseEvent) => {
+      // Check if only dragging canvas is true
+      if (!isOnlyDraggingCanvas) return;
+
       // Record last mouse position
       setLastMousePosition({ x: event.clientX, y: event.clientY });
       lastMouseInfoRef.current = {
@@ -208,6 +234,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   );
 
   const canvasMouseUp = (event: React.MouseEvent) => {
+    // Check if only dragging canvas is true
+    if (!isOnlyDraggingCanvas) return;
+
     // End dragging
     setIsDraggingCanvas(false);
   };
@@ -368,15 +397,11 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     // console.log('onNodeMouseOut');
   });
 
-  const nodeTypes = useNodeTypes();
   const isMinimized: boolean = canvasPosition.zoom < 0.6;
 
   return (
-    <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
-      <div>
-        x: {canvasPosition.x}, y: {canvasPosition.y}, zoom:{' '}
-        {canvasPosition.zoom}
-      </div>
+    <div>
+      <DebugOverlay enabled={true} />
       <div
         css={styles}
         className="my-canvas"
@@ -396,94 +421,156 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
           ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px,
           ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px
           `,
+          cursor: isOnlyDraggingCanvas
+            ? isDraggingCanvas
+              ? 'grabbing'
+              : 'grab'
+            : 'inherit',
         }}
       >
-        <div
-          className="canvas-contents"
-          style={{
-            transform: `scale(${canvasPosition.zoom}, ${canvasPosition.zoom}) translate(${canvasPosition.x}px, ${canvasPosition.y}px) translateZ(-1px)`,
-          }}
-        >
-          <div className="node-connection-grp">
-            {nodeConnectionGroups.map((nodeConnectionGroup) => {
-              const nodeToRender: Node = nodeConnectionGroup.node;
-              const connectionsToRender: NodeConnection[] | undefined =
-                nodeConnectionGroup.connections;
-
-              if (draggingNodes.some((n) => n.id === nodeToRender.id)) {
-                return null;
-              }
-
-              return (
-                <DraggableNode
-                  key={nodeToRender.id}
-                  node={nodeToRender}
-                  connections={connectionsToRender}
-                  canvasZoom={canvasPosition.zoom}
-                  isKnownType={nodeToRender.type in nodeTypes}
-                  isMinimized={isMinimized}
-                  isSelecting={selectingUniqueNodeIds.includes(nodeToRender.id)}
-                  onNodeSizeChange={onNodeSizeChange}
-                  onNodeSelect={onNodeSelect}
-                  onNodeMouseOver={onNodeMouseOver}
-                  onNodeMouseOut={onNodeMouseOut}
-                />
-                // TODO: render connections, consider duplicate connections
-              );
-            })}
-          </div>
-          <DragOverlay
-            dropAnimation={null}
+        <MouseIcon />
+        <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
+          <div
+            className="canvas-contents"
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
+              transform: `scale(${canvasPosition.zoom}, ${canvasPosition.zoom}) translate(${canvasPosition.x}px, ${canvasPosition.y}px) translateZ(-1px)`,
             }}
-            modifiers={[
-              (args) => {
-                return {
-                  x: args.transform.x / canvasPosition.zoom,
-                  y: args.transform.y / canvasPosition.zoom,
-                  scaleX: 1,
-                  scaleY: 1,
-                };
-              },
-            ]}
           >
-            {draggingNodes.map((draggingNode: Node) => (
-              <VisualNode
-                key={draggingNode.id}
-                node={draggingNode}
-                connections={draggingNodeConnections}
-                isKnownType={draggingNode.type in nodeTypes}
-                isMinimized={isMinimized}
-                canvasZoom={canvasPosition.zoom}
-              />
-            ))}
-          </DragOverlay>
-        </div>
-        <CSSTransition
-          classNames="context-menu-box"
-          nodeRef={contextMenuRef}
-          in={showContextMenu && !!defaultCanvasContextMenu}
-          timeout={200}
-          onEnter={() => {
-            setIsContextMenuDisabled(false);
-          }}
-          onExit={() => {
-            setContextMenu({ x: 0, y: 0, data: null });
-            setIsContextMenuDisabled(true);
-          }}
-        >
-          <ContextMenu
-            ref={contextMenuRef}
-            x={contextMenu.x}
-            y={contextMenu.y}
-            disabled={isContextMenuDisabled}
-            context={defaultCanvasContextMenu!}
-          ></ContextMenu>
-        </CSSTransition>
+            <div className="node-connection-grp">
+              {nodeConnectionGroups.map((nodeConnectionGroup) => {
+                const nodeToRender: Node = nodeConnectionGroup.node;
+                const connectionsToRender: NodeConnection[] | undefined =
+                  nodeConnectionGroup.connections;
+
+                if (draggingNodes.some((n) => n.id === nodeToRender.id)) {
+                  return null;
+                }
+
+                return (
+                  <DraggableNode
+                    key={nodeToRender.id}
+                    node={nodeToRender}
+                    connections={connectionsToRender}
+                    canvasZoom={canvasPosition.zoom}
+                    isMinimized={isMinimized}
+                    isSelecting={selectingUniqueNodeIds.includes(
+                      nodeToRender.id,
+                    )}
+                    onNodeSizeChange={onNodeSizeChange}
+                    onNodeSelect={onNodeSelect}
+                    onNodeMouseOver={onNodeMouseOver}
+                    onNodeMouseOut={onNodeMouseOut}
+                  />
+                  // TODO: render connections, consider duplicate connections
+                );
+              })}
+            </div>
+            <DragOverlay
+              dropAnimation={null}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              }}
+              modifiers={[
+                (args) => {
+                  return {
+                    x: args.transform.x / canvasPosition.zoom,
+                    y: args.transform.y / canvasPosition.zoom,
+                    scaleX: 1,
+                    scaleY: 1,
+                  };
+                },
+              ]}
+            >
+              {draggingNodes.map((draggingNode: Node) => (
+                <VisualNode
+                  key={draggingNode.id}
+                  node={draggingNode}
+                  connections={draggingNodeConnections}
+                  isMinimized={isMinimized}
+                  canvasZoom={canvasPosition.zoom}
+                />
+              ))}
+            </DragOverlay>
+          </div>
+        </DndContext>
       </div>
-    </DndContext>
+      <CSSTransition
+        classNames="context-menu-box"
+        nodeRef={contextMenuRef}
+        in={showContextMenu && !!defaultCanvasContextMenu}
+        timeout={200}
+        onEnter={() => {
+          setIsContextMenuDisabled(false);
+        }}
+        onExit={() => {
+          setContextMenu({ x: 0, y: 0, data: null });
+          setIsContextMenuDisabled(true);
+        }}
+      >
+        <ContextMenu
+          ref={contextMenuRef}
+          x={contextMenu.x}
+          y={contextMenu.y}
+          disabled={isContextMenuDisabled}
+          context={defaultCanvasContextMenu!}
+        ></ContextMenu>
+      </CSSTransition>
+    </div>
+  );
+};
+
+const debugStyles = css`
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 99999;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const DebugOverlay: FC<{ enabled: boolean }> = ({ enabled }) => {
+  const canvasPosition = useRecoilValue(canvasPositionState);
+
+  const lastMousePosition = useRecoilValue(lastMousePositionState);
+
+  const { clientToCanvasPosition } = useCanvasPosition();
+
+  if (!enabled) {
+    return null;
+  }
+
+  return (
+    <div css={debugStyles}>
+      <div>
+        Translation:{' '}
+        {`(${canvasPosition.x.toFixed(2)}, ${canvasPosition.y.toFixed(2)})`}
+      </div>
+      <div>Scale: {canvasPosition.zoom.toFixed(2)}</div>
+      <div>
+        Mouse Position:{' '}
+        {`(${lastMousePosition.x.toFixed(2)}, ${lastMousePosition.y.toFixed(
+          2,
+        )})`}
+      </div>
+      <div>
+        Translated Mouse Position:{' '}
+        {`(${clientToCanvasPosition(
+          lastMousePosition.x,
+          lastMousePosition.y,
+        ).x.toFixed(2)}, ${clientToCanvasPosition(
+          lastMousePosition.x,
+          lastMousePosition.y,
+        ).y.toFixed(2)})`}
+      </div>
+    </div>
   );
 };

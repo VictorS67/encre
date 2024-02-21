@@ -55,6 +55,8 @@ export type CodeEditorProps = {
   text: string;
   language?: string;
   keywords?: string[];
+  fontSize?: number;
+  fontFamily?: string;
   isReadOnly?: boolean;
   autoFocus?: boolean;
   showLineNumbers?: boolean;
@@ -62,11 +64,13 @@ export type CodeEditorProps = {
   theme?: string;
   editorRef?: MutableRefObject<monaco.editor.IStandaloneCodeEditor | undefined>;
   onChange?: (newText: string) => void;
+  onKeyDown?: (e: monaco.IKeyboardEvent) => void;
 };
 
 export type SyntaxedTextProps = {
   text: string;
   language: string;
+  keywords: string[];
   theme?: string;
 };
 

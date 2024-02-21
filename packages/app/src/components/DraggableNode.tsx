@@ -2,15 +2,16 @@ import React, { FC } from 'react';
 
 import { useDraggable } from '@dnd-kit/core';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useRecoilValue } from 'recoil';
 
 import { VisualNode } from './VisualNode';
+import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { DraggableNodeProps } from '../types/node.type';
 
 export const DraggableNode: FC<DraggableNodeProps> = ({
   node,
   connections = [],
   canvasZoom,
-  isKnownType,
   isMinimized,
   isSelecting = false,
   onNodeSizeChange,
@@ -18,8 +19,10 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   onNodeMouseOver,
   onNodeMouseOut,
 }: DraggableNodeProps) => {
+  const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
+
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id: node.id });
+    useDraggable({ id: node.id, disabled: isOnlyDraggingCanvas });
 
   return (
     <ErrorBoundary
@@ -33,7 +36,6 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         yDelta={transform ? transform.y / canvasZoom : 0}
         attributes={attributes}
         attributeListeners={listeners}
-        isKnownType={isKnownType}
         isDragging={isDragging}
         isMinimized={isMinimized}
         isSelecting={isSelecting}

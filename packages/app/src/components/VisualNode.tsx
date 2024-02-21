@@ -18,6 +18,7 @@ import { NodeContentBody } from './NodeContentBody';
 import { ResizeBox } from './ResizeBox';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
+import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { themeState } from '../state/settings';
 import {
   MinimizedVisualNodeContentProps,
@@ -37,12 +38,12 @@ const visualNodeStyles = css`
   .resize-box {
     width: 10px;
     height: 10px;
-    bottom: 0;
     cursor: nw-resize;
     position: absolute;
     right: 0;
+    bottom: 0;
     border-top-left-radius: 10px;
-    background-color: var(--canvas-foreground-color);
+    background-color: var(--canvas-foreground-color-1);
   }
 `;
 
@@ -137,6 +138,10 @@ const nodeContentStyles = css`
     display: grid;
     place-items: center;
     height: 30px;
+    user-select: none;
+    overflow: hidden;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   .node-minimize-card > .node-title {
@@ -155,7 +160,6 @@ export const VisualNode = memo(
       yDelta = 0,
       attributes,
       attributeListeners,
-      isKnownType,
       isDragging,
       isMinimized,
       scale,
@@ -167,6 +171,8 @@ export const VisualNode = memo(
     }: VisualNodeProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) {
+    const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
+
     const style = useMemo(() => {
       const styling: CSSProperties = {
         opacity: isDragging ? '0' : '',
@@ -205,6 +211,8 @@ export const VisualNode = memo(
     };
 
     const onNodeGrabClick = useStableCallback((event: React.MouseEvent) => {
+      if (isOnlyDraggingCanvas) return;
+
       event.stopPropagation();
       onNodeSelect?.();
 
@@ -223,27 +231,9 @@ export const VisualNode = memo(
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
       >
-        {/* {isMinimized ? (
-          <MinimizedVisualNodeContent
-            node={node}
-            connections={connections}
-            attributeListeners={attributeListeners}
-            canvasZoom={canvasZoom}
-            onNodeGrabClick={onNodeGrabClick}
-          />
-        ) : (
-          <VisualNodeContent
-            node={node}
-            connections={connections}
-            isMinimized={isMinimized}
-            attributeListeners={attributeListeners}
-            onNodeGrabClick={onNodeGrabClick}
-          />
-        )} */}
         <VisualNodeContent
           node={node}
           connections={connections}
-          isKnownType={isKnownType}
           isMinimized={isMinimized}
           canvasZoom={canvasZoom}
           attributeListeners={attributeListeners}
@@ -256,80 +246,10 @@ export const VisualNode = memo(
 );
 
 /* eslint-disable react/prop-types */
-// const MinimizedVisualNodeContent: FC<MinimizedVisualNodeContentProps> = memo(
-//   ({
-//     node,
-//     connections = [],
-//     attributeListeners,
-//     canvasZoom,
-//     onNodeGrabClick,
-//   }: MinimizedVisualNodeContentProps) => {
-//     const style = useMemo(() => {
-//       const styling: CSSProperties = {
-//         fontSize: `${24 * (canvasZoom + 0.4)}px`,
-//       };
-
-//       return styling;
-//     }, [canvasZoom]);
-
-//     const theme = useRecoilValue(themeState);
-
-//     function getColorMode(): string | null {
-//       // Select the element that contains the 'data-color-mode' attribute
-//       const element = document.querySelector('[data-color-mode]');
-
-//       // Check if the element exists and return the attribute value
-//       return element ? element.getAttribute('data-color-mode') : null;
-//     }
-
-//     const contentTopBorderStyling: CSSProperties = useMemo(() => {
-//       const colorMode = getColorMode();
-
-//       const styling: CSSProperties =
-//         colorMode === 'light'
-//           ? {
-//               borderTop: '2px solid var(--primary-color)',
-//             }
-//           : {};
-
-//       return styling;
-//     }, [theme]);
-
-//     // TODO: Add Input and Output circles
-//     return (
-//       <>
-//         <div
-//           {...attributeListeners}
-//           onClick={onNodeGrabClick}
-//           css={nodeContentStyles}
-//         >
-//           {/* <div className="node-abbreviation" style={style}>
-//             {node.metadata.abbreviation}
-//           </div> */}
-//           <div className="node-card">
-//             <div className="node-header"></div>
-//             <div className="node-minimize-title" style={style}>
-//               {node.metadata.name}
-//             </div>
-//           </div>
-//           <div className="node-minimize-content">
-//             <div>CONTENT</div>
-//             <div style={{ height: '500px' }}></div>
-//           </div>
-//         </div>
-//       </>
-//     );
-//   },
-// );
-
-// MinimizedVisualNodeContent.displayName = 'MinimizedVisualNodeContent';
-
-/* eslint-disable react/prop-types */
 const VisualNodeContent: FC<VisualNodeContentProps> = memo(
   ({
     node,
     connections = [],
-    isKnownType,
     isMinimized,
     canvasZoom,
     attributeListeners,
@@ -457,6 +377,10 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       }
     });
 
+    const onScrollNodeBody = useStableCallback((e: React.WheelEvent) => {
+      e.stopPropagation();
+    });
+
     // TODO: Add Input and Output circles
     return (
       <>
@@ -486,20 +410,14 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           <div
             className={isMinimized ? 'node-minimize-content' : 'node-content'}
             style={contentTopBorderStyling}
+            onWheel={onScrollNodeBody}
           >
             <ErrorBoundary
               fallback={
                 <div>Something wrong when rendering node content body...</div>
               }
             >
-              {isKnownType ? (
-                <NodeContentBody node={node} />
-              ) : (
-                <div>
-                  Unknown node type: {node.type} - please check the type is
-                  correct or the plugin is not turned on
-                </div>
-              )}
+              <NodeContentBody node={node} />
             </ErrorBoundary>
           </div>
         </div>

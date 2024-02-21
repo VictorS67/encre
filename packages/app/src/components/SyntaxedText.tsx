@@ -1,22 +1,59 @@
-import React, { FC, useLayoutEffect, useRef } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
 import { themeState } from '../state/settings';
 import { SyntaxedTextProps } from '../types/editor.type';
 import { getColorMode } from '../utils/colorMode';
-import { monaco } from '../utils/monacoEditor';
+import { defineSuggestions, defineTokens, monaco } from '../utils/monacoEditor';
 
 export const SyntaxedText: FC<SyntaxedTextProps> = ({
   text,
   language,
+  keywords,
   theme,
 }) => {
   const editorContainer = useRef<HTMLPreElement>(null);
 
   const appTheme = useRecoilValue(themeState);
 
+  const [tokenDisposable, setTokenDisposable] = useState<monaco.IDisposable>();
+  const [completionDisposable, setCompletionDisposable] =
+    useState<monaco.IDisposable>();
+
+  const _keywords = keywords;
+
+  useEffect(() => {
+    return () => {
+      if (
+        tokenDisposable?.dispose &&
+        typeof tokenDisposable.dispose === 'function'
+      ) {
+        tokenDisposable.dispose();
+      }
+    };
+  }, [tokenDisposable]);
+
+  useEffect(() => {
+    return () => {
+      if (
+        completionDisposable?.dispose &&
+        typeof completionDisposable.dispose === 'function'
+      ) {
+        completionDisposable.dispose();
+      }
+    };
+  }, [completionDisposable]);
+
   useLayoutEffect(() => {
+    if (!tokenDisposable) {
+      setTokenDisposable(defineTokens(_keywords));
+    }
+
+    if (!completionDisposable) {
+      setCompletionDisposable(defineSuggestions(_keywords));
+    }
+
     const colorMode = getColorMode();
     if (!colorMode) return;
 
@@ -29,7 +66,12 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
   }, [text, appTheme]);
 
   return (
-    <pre ref={editorContainer} data-lang={language}>
+    <pre
+      ref={editorContainer}
+      data-lang={language}
+      className="pre-wrap"
+      style={{ wordBreak: 'break-word' }}
+    >
       {text}
     </pre>
   );

@@ -3,20 +3,10 @@ import { HTMLAttributes } from 'react';
 import { NodeConnection } from './nodeconnection.type';
 import { Node } from './studio.type';
 
-// TODO: modify this based on the workflow file.
-// export type NodeMetadata = {
-//   name: string;
-//   abbreviation: string;
-//   tags?: Array<string>;
-//   inputs?: Array<string>;
-//   outputs?: Array<string>;
-// };
-
 export type DraggableNodeProps = {
   node: Node;
   connections?: NodeConnection[];
   canvasZoom: number;
-  isKnownType?: boolean;
   isMinimized?: boolean;
   isSelecting?: boolean;
   onNodeSizeChange?: (node: Node, width: number, height: number) => void;
@@ -38,7 +28,6 @@ export type VisualNodeProps = {
   yDelta?: number;
   attributes?: HTMLAttributes<HTMLDivElement>;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
-  isKnownType?: boolean;
   isDragging?: boolean;
   isMinimized?: boolean;
   isSelecting?: boolean;
@@ -67,7 +56,6 @@ export type MinimizedVisualNodeContentProps = {
 export type VisualNodeContentProps = {
   node: Node;
   connections?: NodeConnection[];
-  isKnownType?: boolean;
   isMinimized?: boolean;
   canvasZoom: number;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;

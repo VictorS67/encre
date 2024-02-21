@@ -1,27 +1,9 @@
-export type NodeBodyBaseStyle = {
-  fontSize?: number;
-  fontFamily?: 'monospace' | 'sans-serif';
+import { Node } from '../types/studio.type';
+
+export type NodeContentBodyProps = {
+  node: Node;
 };
 
-export type NodeBodyPlainStyle = {
-  type: 'plain';
-  text: string;
+export type UnknownNodeContentBodyProps = {
+  node: Node;
 };
-
-export type NodeBodyMarkdownStyle = {
-  type: 'markdown';
-  text: string;
-};
-
-export type NodeBodyCodeStyle = {
-  type: 'code';
-  text: string;
-
-  language?: string;
-  keywords?: string[];
-};
-
-export type NodeBodyStyle = NodeBodyBaseStyle &
-  (NodeBodyPlainStyle | NodeBodyMarkdownStyle | NodeBodyCodeStyle);
-
-export type NodeBody = string | NodeBodyStyle | NodeBodyStyle[] | undefined;
