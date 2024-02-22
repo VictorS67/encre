@@ -1,7 +1,6 @@
 import React, { FC } from 'react';
 
 import { DefaultNodeEditorField } from './DefaultNodeEditorField';
-import { useNodeContentEditors } from '../../hooks/useNodeContentEditors';
 import {
   DefaultNodeEditorProps,
   SyntaxedEditor,
@@ -13,22 +12,24 @@ export const DefaultNodeEditor: FC<DefaultNodeEditorProps> = ({
   onChange,
   onClose,
 }: DefaultNodeEditorProps) => {
-  const editors: SyntaxedEditor[] = useNodeContentEditors(node);
+  // const editors: SyntaxedEditor[] = useNodeContentEditors(node);
 
-  return (
-    <div>
-      {editors.map((editor, i) => {
-        return (
-          <DefaultNodeEditorField
-            key={i}
-            node={node}
-            editor={editor}
-            isReadOnly={isReadOnly}
-            onChange={onChange}
-            onClose={onClose}
-          />
-        );
-      })}
-    </div>
-  );
+  // return (
+  //   <div>
+  //     {editors.map((editor, i) => {
+  //       return (
+  //         <DefaultNodeEditorField
+  //           key={i}
+  //           node={node}
+  //           editor={editor}
+  //           isReadOnly={isReadOnly}
+  //           onChange={onChange}
+  //           onClose={onClose}
+  //         />
+  //       );
+  //     })}
+  //   </div>
+  // );
+
+  return <></>;
 };

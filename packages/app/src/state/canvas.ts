@@ -11,3 +11,8 @@ export const lastMousePositionState = atom<MousePosition>({
   key: 'lastMousePosition',
   default: { x: 0, y: 0 },
 });
+
+export const isOnlyDraggingCanvasState = atom<boolean>({
+  key: 'isOnlyDraggingCanvas',
+  default: false,
+});

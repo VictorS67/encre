@@ -1,16 +1,20 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
+import { debounce } from '@mui/material';
 import { useLatest } from 'ahooks';
 import { useRecoilValue } from 'recoil';
 
 import { themeState } from '../state/settings';
 import { CodeEditorProps } from '../types/editor.type';
 import { getColorMode } from '../utils/colorMode';
-import { monaco } from '../utils/monacoEditor';
+import { defineSuggestions, defineTokens, monaco } from '../utils/monacoEditor';
 
 export const CodeEditor: FC<CodeEditorProps> = ({
   text,
   language,
+  keywords,
+  fontSize,
+  fontFamily,
   isReadOnly,
   autoFocus,
   showLineNumbers,
@@ -18,6 +22,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
   theme,
   editorRef,
   onChange,
+  onKeyDown,
 }: CodeEditorProps) => {
   const editorContainer = useRef<HTMLDivElement>(null);
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
@@ -26,8 +31,44 @@ export const CodeEditor: FC<CodeEditorProps> = ({
 
   const appTheme = useRecoilValue(themeState);
 
+  const [tokenDisposable, setTokenDisposable] = useState<monaco.IDisposable>();
+  const [completionDisposable, setCompletionDisposable] =
+    useState<monaco.IDisposable>();
+
+  const _keywords = keywords ?? [];
+
+  useEffect(() => {
+    return () => {
+      if (
+        tokenDisposable?.dispose &&
+        typeof tokenDisposable.dispose === 'function'
+      ) {
+        tokenDisposable.dispose();
+      }
+    };
+  }, [tokenDisposable]);
+
+  useEffect(() => {
+    return () => {
+      if (
+        completionDisposable?.dispose &&
+        typeof completionDisposable.dispose === 'function'
+      ) {
+        completionDisposable.dispose();
+      }
+    };
+  }, [completionDisposable]);
+
   useEffect(() => {
     if (!editorContainer.current) return;
+
+    if (!tokenDisposable) {
+      setTokenDisposable(defineTokens(_keywords));
+    }
+
+    if (!completionDisposable) {
+      setCompletionDisposable(defineSuggestions(_keywords));
+    }
 
     const colorMode: string | null = getColorMode();
     if (!colorMode) return;
@@ -38,10 +79,13 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     const editor = monaco.editor.create(editorContainer.current, {
       theme: actualTheme,
       lineNumbers: showLineNumbers ? 'on' : 'off',
+      automaticLayout: true,
       glyphMargin: false,
       folding: false,
       lineNumbersMinChars: 2,
       language,
+      fontSize,
+      fontFamily,
       minimap: {
         enabled: false,
       },
@@ -49,15 +93,28 @@ export const CodeEditor: FC<CodeEditorProps> = ({
       readOnly: isReadOnly,
       value: text,
       scrollBeyondLastLine,
+      overviewRulerLanes: 0,
+      scrollbar: {
+        vertical: 'hidden',
+        horizontal: 'hidden',
+        handleMouseWheel: false,
+      },
     });
 
     const onResize = () => {
-      editor.layout();
+      editor.layout({ width: 0, height: 0 });
+
+      window.requestAnimationFrame(() => {
+        const rect = editorContainer.current?.getBoundingClientRect();
+
+        editor.layout({ width: rect?.width ?? 0, height: rect?.height ?? 0 });
+      });
     };
 
     editor.layout();
 
-    window.addEventListener('resize', onResize);
+    const onResizeDebounced = debounce(onResize, 300);
+    window.addEventListener('resize', onResizeDebounced);
 
     editor.onDidChangeModelContent(() => {
       onChangeLatest.current?.(editor.getValue());
@@ -73,7 +130,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     return () => {
       latestBeforeDispose?.(editor.getValue());
       editor.dispose();
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', onResizeDebounced);
     };
   }, []);
 
@@ -97,7 +154,23 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     }
   }, [autoFocus]);
 
-  return <div ref={editorContainer} className="editor-container" />;
+  useEffect(() => {
+    if (onKeyDown) {
+      const keyDown = editorInstance.current?.onKeyDown(onKeyDown);
+
+      return () => {
+        keyDown?.dispose();
+      };
+    }
+  }, [onKeyDown]);
+
+  return (
+    <div
+      ref={editorContainer}
+      className="editor-container"
+      style={{ height: '100%' }}
+    />
+  );
 };
 
 export default CodeEditor;

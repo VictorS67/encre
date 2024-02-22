@@ -7,7 +7,7 @@ import { NodeCanvas } from './NodeCanvas';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
-import { Node } from '../types/node.type';
+import { Node } from '../types/studio.type';
 
 export const NodeGraphBuilder: FC = () => {
   const [nodes, setNodes] = useRecoilState(nodesState);

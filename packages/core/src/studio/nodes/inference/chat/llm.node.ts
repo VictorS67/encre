@@ -92,6 +92,7 @@ export class OpenAINodeImpl extends LLMNodeImpl {
 
     const node: LLMNode = {
       type: 'llm',
+      subType: 'openai',
       data: openai,
       visualInfo: {
         position: {
@@ -147,6 +148,7 @@ export class GeminiNodeImpl extends LLMNodeImpl {
 
     const node: LLMNode = {
       type: 'llm',
+      subType: 'gemini',
       data: gemini,
       visualInfo: {
         position: {

@@ -5,14 +5,17 @@ import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { useStableCallback } from './useStableCallback';
-import { canvasPositionState } from '../state/canvas';
+import {
+  canvasPositionState,
+  isOnlyDraggingCanvasState,
+} from '../state/canvas';
 import {
   draggingNodesState,
   nodeMapState,
   nodesState,
   selectingNodeIdsState,
 } from '../state/node';
-import { Node } from '../types/node.type';
+import { Node } from '../types/studio.type';
 
 export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
   const selectingNodeIds = useRecoilValue(selectingNodeIdsState);

@@ -2,7 +2,7 @@ import { DefaultValue, atom, selector } from 'recoil';
 
 import { graphState } from './graph';
 import { NodeGraph } from '../types/graph.type';
-import { Node } from '../types/node.type';
+import { Node } from '../types/studio.type';
 
 export const nodesState = selector({
   key: 'nodes',

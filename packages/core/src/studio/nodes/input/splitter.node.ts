@@ -94,6 +94,7 @@ export class TextSplitterNodeImpl extends SplitterNodeImpl {
 
     const node: SplitterNode = {
       type: 'splitter',
+      subType: 'text',
       data: textSplitter,
       visualInfo: {
         position: {
@@ -123,6 +124,7 @@ export class RecursiveTextSplitterNodeImpl extends SplitterNodeImpl {
 
     const node: SplitterNode = {
       type: 'splitter',
+      subType: 'paragraph',
       data: textSplitter,
       visualInfo: {
         position: {
@@ -147,11 +149,12 @@ export class RecursiveTextSplitterNodeImpl extends SplitterNodeImpl {
 }
 
 export class LanguageTextSplitterNodeImpl extends SplitterNodeImpl {
-  static create(language: SupportedLanguageForSplit): SplitterNode {
-    const textSplitter = RecursiveTextSplitter.fromLanguage(language);
+  static create(fields: { language: SupportedLanguageForSplit }): SplitterNode {
+    const textSplitter = RecursiveTextSplitter.fromLanguage(fields.language);
 
     const node: SplitterNode = {
       type: 'splitter',
+      subType: fields.language,
       data: textSplitter,
       visualInfo: {
         position: {
@@ -181,6 +184,7 @@ export class TokenTextSplitterNodeImpl extends SplitterNodeImpl {
 
     const node: SplitterNode = {
       type: 'splitter',
+      subType: 'token',
       data: tokenSplitter,
       visualInfo: {
         position: {

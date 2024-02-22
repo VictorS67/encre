@@ -139,9 +139,8 @@ export function arrayizeData(data: Data): ScalarData[] {
     return [data];
   }
 
-  const unwrappedType = isArrayDataType(data.type)
-    ? toScalarFromArray(data.type)
-    : data.type;
+  const type = data.type;
+  const unwrappedType = isArrayDataType(type) ? toScalarFromArray(type) : type;
 
   return (data.value as unknown[]).map((v) => ({
     type: unwrappedType,

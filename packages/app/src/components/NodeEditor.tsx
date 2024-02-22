@@ -10,12 +10,11 @@ import {
 } from 'recoil';
 
 import { DefaultNodeEditor } from './editors/DefaultNodeEditor';
-import { useUnknownNodeContentDescriptor } from '../hooks/useNodeTypes';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { editingNodeIdState, nodeMapState, nodesState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { NodeEditorProps } from '../types/editor.type';
-import { Node } from '../types/node.type';
+import { Node } from '../types/studio.type';
 
 export const NodeEditorRenderer: FC = () => {
   const nodeMap = useRecoilValue(nodeMapState);
@@ -48,32 +47,32 @@ export const NodeEditor: FC<NodeEditorProps> = ({
   selectedNode,
   onDeselect,
 }: NodeEditorProps) => {
-  const setNodes = useSetRecoilState(nodesState);
-  const setConnections = useSetRecoilState(connectionsState);
+  // const setNodes = useSetRecoilState(nodesState);
+  // const setConnections = useSetRecoilState(connectionsState);
 
-  const nodeMap = useRecoilValue(nodeMapState);
+  // const nodeMap = useRecoilValue(nodeMapState);
 
-  const updateNode = useStableCallback((node: Node) => {
-    setNodes((nodes: Node[]) =>
-      produce(nodes, (draft) => {
-        const index: number = draft.findIndex((n) => n.id === node.id);
-        draft[index] = node;
-      }),
-    );
-  });
+  // const updateNode = useStableCallback((node: Node) => {
+  //   setNodes((nodes: Node[]) =>
+  //     produce(nodes, (draft) => {
+  //       const index: number = draft.findIndex((n) => n.id === node.id);
+  //       draft[index] = node as any;
+  //     })
+  //   );
+  // });
 
-  const { PopUpWindow } = useUnknownNodeContentDescriptor(selectedNode);
+  // const { PopUpWindow } = useUnknownNodeContentDescriptor(selectedNode);
 
-  const nodeEditor = PopUpWindow ? (
-    <PopUpWindow node={selectedNode} onChange={updateNode} />
-  ) : (
-    <DefaultNodeEditor
-      node={selectedNode}
-      isReadOnly={false}
-      onChange={updateNode}
-      onClose={onDeselect}
-    />
-  );
+  // const nodeEditor = PopUpWindow ? (
+  //   <PopUpWindow node={selectedNode} onChange={updateNode} />
+  // ) : (
+  //   <DefaultNodeEditor
+  //     node={selectedNode}
+  //     isReadOnly={false}
+  //     onChange={updateNode}
+  //     onClose={onDeselect}
+  //   />
+  // );
 
   return <></>;
 };

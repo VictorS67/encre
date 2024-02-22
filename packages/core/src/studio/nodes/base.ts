@@ -12,17 +12,29 @@ import {
   ProcessOutputMap,
   validateProcessDataFromPorts,
 } from '../processor.js';
+import { UIContext } from '../ui.js';
 import { coerceToData } from '../utils/coerce.js';
 import {
+  displayUIFromDataFields,
+  displayUIFromSecretFields,
+} from '../utils/display.js';
+import {
   CallableNode,
+  NodeBody,
   NodeInputPortDef,
   NodeOutputPortDef,
   SerializableNode,
 } from './index.js';
 
+export interface NodeImplConstructor<T extends SerializableNode> {
+  new (node: T): NodeImpl<T>;
+  create(args?: Record<string, unknown>): T;
+}
+
 export abstract class NodeImpl<
   T extends SerializableNode,
   Type extends T['type'] = T['type'],
+  SubType extends T['subType'] = T['subType'],
 > {
   readonly node: T;
 
@@ -51,6 +63,10 @@ export abstract class NodeImpl<
 
   get type(): Type {
     return this.node.type as Type;
+  }
+
+  get subType(): SubType {
+    return this.node.subType as SubType;
   }
 
   get name(): string {
@@ -124,12 +140,22 @@ export abstract class NodeImpl<
     inputs: ProcessInputMap,
     context: ProcessContext
   ): Promise<ProcessOutputMap>;
+
+  async getBody(): Promise<NodeBody> {
+    const secretUIContexts: UIContext[] = displayUIFromSecretFields(
+      this.secrets
+    );
+    const kwargsUIContexts: UIContext[] = displayUIFromDataFields(this.kwargs);
+
+    return [...secretUIContexts, ...kwargsUIContexts];
+  }
 }
 
 export abstract class CallableNodeImpl<
   T extends CallableNode,
   Type extends T['type'] = T['type'],
-> extends NodeImpl<T, Type> {
+  SubType extends T['subType'] = T['subType'],
+> extends NodeImpl<T, Type, SubType> {
   private _metadata: {
     type: string;
     callables?: SerializedCallableFields | undefined;

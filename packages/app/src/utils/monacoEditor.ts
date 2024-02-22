@@ -1,27 +1,200 @@
 import * as monaco from 'monaco-editor';
 
+import { dataTypes } from '../types/studio.type';
+
 export { monaco };
 
 monaco.languages.register({ id: 'encre-code' });
 
-monaco.languages.setMonarchTokensProvider('encre-code', {
-  tokenizer: {
-    root: [
-      [
-        /[a-zA-Z][\w$]*/,
-        {
-          cases: {
-            '@keywords': 'keyword',
-            '@default': 'variable',
-          },
-        },
-      ],
-      [/\{\{[^}]+\}\}/, 'replacement'],
-      [/".*?"/, 'string'],
-      [/\/\//, 'comment'],
+export const defineTokens = (keywords: string[]) => {
+  return monaco.languages.setMonarchTokensProvider('encre-code', {
+    keywords: keywords,
+    typeKeywords: dataTypes,
+    operators: [
+      '<=',
+      '>=',
+      '==',
+      '!=',
+      '===',
+      '!==',
+      '=>',
+      '+',
+      '-',
+      '**',
+      '*',
+      '/',
+      '%',
+      '++',
+      '--',
+      '<<',
+      '</',
+      '>>',
+      '>>>',
+      '&',
+      '|',
+      '^',
+      '!',
+      '~',
+      '&&',
+      '||',
+      '?',
+      ':',
+      '=',
+      '+=',
+      '-=',
+      '*=',
+      '**=',
+      '/=',
+      '%=',
+      '<<=',
+      '>>=',
+      '>>>=',
+      '&=',
+      '|=',
+      '^=',
+      '@',
     ],
-  },
-});
+
+    // we include these common regular expressions
+    symbols: /[=><!~?:&|+\-*\/\^%]+/, // eslint-disable-line no-useless-escape
+    escapes:
+      /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+    digits: /\d+(_+\d+)*/,
+    octaldigits: /[0-7]+(_+[0-7]+)*/,
+    binarydigits: /[0-1]+(_+[0-1]+)*/,
+    hexdigits: /[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*/,
+
+    regexpctl: /[(){}\[\]\$\^|\-*+?\.]/, // eslint-disable-line no-useless-escape
+    regexpesc:
+      /\\(?:[bBdDfnrstvwWn0\\\/]|@regexpctl|c[A-Z]|x[0-9a-fA-F]{2}|u[0-9a-fA-F]{4})/, // eslint-disable-line no-useless-escape
+    tokenizer: {
+      root: [{ include: 'common' }],
+      common: [
+        [
+          /[a-z_$][\w$]*/,
+          {
+            cases: {
+              '@typeKeywords': 'keyword',
+              '@keywords': 'keyword',
+              '@default': 'variable',
+            },
+          },
+        ],
+        [/\{\{[^}]+\}\}/, 'replacement'],
+
+        // numbers
+        [/(@digits)[eE]([\-+]?(@digits))?/, 'number.float'], // eslint-disable-line no-useless-escape
+        [/(@digits)\.(@digits)([eE][\-+]?(@digits))?/, 'number.float'], // eslint-disable-line no-useless-escape
+        [/0[xX](@hexdigits)/, 'number.hex'],
+        [/0[oO]?(@octaldigits)/, 'number.octal'],
+        [/0[bB](@binarydigits)/, 'number.binary'],
+        [/(@digits)/, 'number'],
+
+        // strings
+        [/"([^"\\]|\\.)*$/, 'string.invalid'], // non-teminated string
+        [/'([^'\\]|\\.)*$/, 'string.invalid'], // non-teminated string
+        [/"/, 'string', '@string_double'],
+        [/'/, 'string', '@string_single'],
+        [/`/, 'string', '@string_backtick'],
+      ],
+      comment: [[/\/\//, 'comment']],
+      // We match regular expression quite precisely
+      regexp: [
+        [
+          /(\{)(\d+(?:,\d*)?)(\})/,
+          [
+            'regexp.escape.control',
+            'regexp.escape.control',
+            'regexp.escape.control',
+          ],
+        ],
+        [
+          /(\[)(\^?)(?=(?:[^\]\\\/]|\\.)+)/, // eslint-disable-line no-useless-escape
+          [
+            'regexp.escape.control',
+            { token: 'regexp.escape.control', next: '@regexrange' },
+          ],
+        ],
+        [
+          /(\()(\?:|\?=|\?!)/,
+          ['regexp.escape.control', 'regexp.escape.control'],
+        ],
+        [/[()]/, 'regexp.escape.control'],
+        [/@regexpctl/, 'regexp.escape.control'],
+        [/[^\\\/]/, 'regexp'], // eslint-disable-line no-useless-escape
+        [/@regexpesc/, 'regexp.escape'],
+        [/\\\./, 'regexp.invalid'],
+        [
+          /(\/)([gimsuy]*)/,
+          [
+            { token: 'regexp', bracket: '@close', next: '@pop' },
+            'keyword.other',
+          ],
+        ],
+      ],
+
+      regexrange: [
+        [/-/, 'regexp.escape.control'],
+        [/\^/, 'regexp.invalid'],
+        [/@regexpesc/, 'regexp.escape'],
+        [/[^\]]/, 'regexp'],
+        [
+          /\]/,
+          { token: 'regexp.escape.control', next: '@pop', bracket: '@close' },
+        ],
+      ],
+
+      string_double: [
+        [/[^\\"]+/, 'string'],
+        [/@escapes/, 'string.escape'],
+        [/\\./, 'string.escape.invalid'],
+        [/"/, 'string', '@pop'],
+      ],
+
+      string_single: [
+        [/[^\\']+/, 'string'],
+        [/@escapes/, 'string.escape'],
+        [/\\./, 'string.escape.invalid'],
+        [/'/, 'string', '@pop'],
+      ],
+
+      string_backtick: [
+        [/[^\\`$]+/, 'string'],
+        [/@escapes/, 'string.escape'],
+        [/\\./, 'string.escape.invalid'],
+        [/`/, 'string', '@pop'],
+      ],
+
+      bracketCounting: [{ include: 'common' }],
+    },
+  });
+};
+
+export const defineSuggestions = (keywords: string[]) => {
+  return monaco.languages.registerCompletionItemProvider('encre-code', {
+    provideCompletionItems: (model, position) => {
+      const suggestions = [
+        ...keywords.map((k) => {
+          const word = model.getWordUntilPosition(position);
+
+          return {
+            label: k,
+            kind: monaco.languages.CompletionItemKind.Keyword,
+            insertText: k,
+            range: {
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+              startColumn: word.startColumn,
+              endColumn: word.endColumn,
+            },
+          };
+        }),
+      ];
+
+      return { suggestions };
+    },
+  });
+};
 
 const defineTheme = (
   theme: 'dark' | 'light',
@@ -49,6 +222,7 @@ const defineTheme = (
       {
         token: 'variable',
         foreground: colors.variable,
+        fontStyle: 'bold',
       },
       {
         token: 'replacement',
@@ -72,11 +246,11 @@ const defineTheme = (
 
 defineTheme('light', {
   editor: {
-    foreground: '#ffffff',
+    foreground: '#212121',
     background: '#f0f0f0',
   },
-  keyword: '#005fb8',
-  variable: '#e42e00',
+  keyword: '#e42e00',
+  variable: '#005fb8',
   replacement: '#005fb8',
   string: '#212121',
   comment: '#49494a',
@@ -84,11 +258,11 @@ defineTheme('light', {
 
 defineTheme('dark', {
   editor: {
-    foreground: '#3d3d3d',
+    foreground: '#c2c2c2',
     background: '#212121',
   },
-  keyword: '#146ba1',
-  variable: '#e45c10',
+  keyword: '#e45c10',
+  variable: '#146ba1',
   replacement: '#146ba1',
   string: '#c2c2c2',
   comment: '#474748',

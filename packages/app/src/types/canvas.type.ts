@@ -1,5 +1,5 @@
-import { Node } from './node.type';
 import { NodeConnection } from './nodeconnection.type';
+import { Node } from './studio.type';
 
 export type CanvasPosition = {
   x: number;

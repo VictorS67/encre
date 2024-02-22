@@ -34,6 +34,7 @@ export class StringPromptNodeImpl extends PromptNodeImpl {
 
     const node: PromptNode = {
       type: 'prompt',
+      subType: 'string',
       data: stringPrompt,
       visualInfo: {
         position: {
@@ -61,6 +62,7 @@ export class ChatPromptNodeImpl extends PromptNodeImpl {
 
     const node: PromptNode = {
       type: 'prompt',
+      subType: 'chat',
       data: chatPrompt,
       visualInfo: {
         position: {

@@ -6,7 +6,7 @@ import {
   CodeEditorContent,
   DefaultNodeEditorProps,
 } from '../../types/editor.type';
-import { Node } from '../../types/node.type';
+import { Node } from '../../types/studio.type';
 
 export const DefaultCodeEditor: FC<
   DefaultNodeEditorProps & {

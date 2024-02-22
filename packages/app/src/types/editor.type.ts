@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react';
 
-import { Node } from './node.type';
+import { Node } from './studio.type';
 import { type monaco } from '../utils/monacoEditor';
 
 export type SyntaxedEditor =
@@ -54,6 +54,9 @@ export type NodeChangeFn = (nodeToChange: Node) => void;
 export type CodeEditorProps = {
   text: string;
   language?: string;
+  keywords?: string[];
+  fontSize?: number;
+  fontFamily?: string;
   isReadOnly?: boolean;
   autoFocus?: boolean;
   showLineNumbers?: boolean;
@@ -61,11 +64,13 @@ export type CodeEditorProps = {
   theme?: string;
   editorRef?: MutableRefObject<monaco.editor.IStandaloneCodeEditor | undefined>;
   onChange?: (newText: string) => void;
+  onKeyDown?: (e: monaco.IKeyboardEvent) => void;
 };
 
 export type SyntaxedTextProps = {
   text: string;
   language: string;
+  keywords: string[];
   theme?: string;
 };
 
