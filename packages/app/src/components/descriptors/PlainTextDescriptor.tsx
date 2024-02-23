@@ -7,7 +7,11 @@ import { UIContextDescriptor } from '../../types/uicontext.type';
 export const PlainTextNodeContentBody: FC<
   { node: Node } & Extract<UIContext, { type: 'plain' }>
 > = memo(({ node, text }) => {
-  return <pre className="pre-wrap">{text}</pre>;
+  return (
+    <pre className="pre-wrap" style={{ userSelect: 'text' }}>
+      {text}
+    </pre>
+  );
 });
 
 PlainTextNodeContentBody.displayName = 'PlainTextNodeContentBody';

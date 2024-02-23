@@ -9,21 +9,17 @@ import { UIContextContainer } from '../UIContextContainer';
 export const MessageNodeContentBody: FC<
   { node: Node } & Extract<UIContext, { type: 'message' }>
 > = memo(({ node, content, kwargs, role, name }) => {
-  const [editableLabels, setEditableLabels] = useState<Record<string, string>>(
-    {},
-  );
-  const [editableContents, setEditableContents] = useState<
-    Record<string, UIContext[]>
-  >({});
-  const [readonlyLabels, setReadonlyLabels] = useState<string[]>([]);
+  const editableLabels: Record<string, string> | null = useMemo(() => {
+    return { name: name ?? '' };
+  }, [name]);
 
-  useMemo(() => {
-    setEditableLabels({ name: name ?? '' });
+  const editableContents: Record<string, UIContext[]> | null = useMemo(() => {
+    return { content, kwargs };
+  }, [content, kwargs]);
 
-    setEditableContents({ content, kwargs });
-
-    setReadonlyLabels([role]);
-  }, [content, kwargs, role, name]);
+  const readonlyLabels: string[] | null = useMemo(() => {
+    return [role];
+  }, [role]);
 
   return (
     <Suspense fallback={<div />}>
@@ -31,9 +27,9 @@ export const MessageNodeContentBody: FC<
         <UIContextContainer
           node={node}
           uiType="message"
-          editableLabels={editableLabels}
-          editableContents={editableContents}
-          readonlyLabels={readonlyLabels}
+          editableLabels={editableLabels === null ? {} : editableLabels}
+          editableContents={editableContents === null ? {} : editableContents}
+          readonlyLabels={readonlyLabels === null ? [] : readonlyLabels}
         />
       </div>
     </Suspense>

@@ -138,20 +138,6 @@ const UIContainer = styled.div`
 
     background: var(--node-forground-color);
   }
-
-  .ui-context-editor-box {
-    align-self: stretch;
-    padding-left: 4px;
-    padding-right: 4px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-
-    color: var(--text-color);
-    font-size: 8.24px;
-    word-wrap: break-word;
-  }
 `;
 
 export const UIContextContainer: FC<UIContextContainerProps> = ({

@@ -1,4 +1,4 @@
-import React, { FC, Suspense, memo, useEffect, useMemo, useState } from 'react';
+import React, { FC, Suspense, memo, useMemo, useState } from 'react';
 
 import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
@@ -9,33 +9,28 @@ export const BlobNodeContentBody: FC<
   { node: Node } & Extract<UIContext, { type: 'blob' }>
 > = memo(({ node, blob, size, blobType }) => {
   const [blobUrl, setBlobUrl] = useState<string | undefined>();
-  const [editableLabels, setEditableLabels] = useState<Record<string, string>>(
-    {},
-  );
-  const [editableContents, setEditableContents] = useState<
-    Record<string, UIContext[]>
-  >({});
-  const [readonlyLabels, setReadonlyLabels] = useState<string[]>([]);
-
-  useEffect(() => {
+  const editableContents: Record<string, UIContext[]> | null = useMemo(() => {
     if (blobUrl) {
       URL.revokeObjectURL(blobUrl);
     }
 
-    setBlobUrl(URL.createObjectURL(blob));
+    // TODO: use `file-type` to identify file type from blob
+    const _blobUrl = URL.createObjectURL(blob);
 
-    setEditableContents({
+    setBlobUrl(_blobUrl);
+
+    return {
       blob: [
         {
           type: 'plain',
-          text: blobUrl ?? '',
+          text: _blobUrl ?? '',
         },
       ],
-    });
+    };
+  }, [blob]);
 
-    setReadonlyLabels([
-      `${blobType === '' ? 'unknown' : blobType}, ${size} Bytes`,
-    ]);
+  const readonlyLabels: string[] | null = useMemo(() => {
+    return [`${blobType === '' ? 'unknown' : blobType}, ${size} Bytes`];
   }, [blob]);
 
   return (
@@ -44,9 +39,9 @@ export const BlobNodeContentBody: FC<
         <UIContextContainer
           node={node}
           uiType="blob"
-          editableLabels={editableLabels}
-          editableContents={editableContents}
-          readonlyLabels={readonlyLabels}
+          editableLabels={{}}
+          editableContents={editableContents === null ? {} : editableContents}
+          readonlyLabels={readonlyLabels === null ? [] : readonlyLabels}
         />
       </div>
     </Suspense>

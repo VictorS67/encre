@@ -11,7 +11,13 @@ export const MarkdownNodeContentBody: FC<
 > = memo(({ node, text }) => {
   const markdownBody = useMarkdown(text);
 
-  return <div className="pre-wrap" dangerouslySetInnerHTML={markdownBody} />;
+  return (
+    <div
+      className="pre-wrap"
+      style={{ userSelect: 'text' }}
+      dangerouslySetInnerHTML={markdownBody}
+    />
+  );
 });
 
 MarkdownNodeContentBody.displayName = 'MarkdownNodeContentBody';

@@ -9,19 +9,8 @@ import { UIContextContainer } from '../UIContextContainer';
 export const ContextNodeContentBody: FC<
   { node: Node } & Extract<UIContext, { type: 'context' }>
 > = memo(({ node, text, metadata }) => {
-  const [editableLabels, setEditableLabels] = useState<Record<string, string>>(
-    {},
-  );
-  const [editableContents, setEditableContents] = useState<
-    Record<string, UIContext[]>
-  >({});
-  const [readonlyLabels, setReadonlyLabels] = useState<string[]>([]);
-
-  useMemo(() => {
-    setEditableContents({
-      text,
-      metadata,
-    });
+  const editableContents: Record<string, UIContext[]> | null = useMemo(() => {
+    return { text, metadata };
   }, [text, metadata]);
 
   return (
@@ -30,9 +19,9 @@ export const ContextNodeContentBody: FC<
         <UIContextContainer
           node={node}
           uiType="context"
-          editableLabels={editableLabels}
-          editableContents={editableContents}
-          readonlyLabels={readonlyLabels}
+          editableLabels={{}}
+          editableContents={editableContents === null ? {} : editableContents}
+          readonlyLabels={[]}
         />
       </div>
     </Suspense>
