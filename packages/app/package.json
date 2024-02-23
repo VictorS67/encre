@@ -53,6 +53,7 @@
     "@mui/material": "^5.14.9",
     "ahooks": "^3.7.8",
     "clsx": "^2.0.0",
+    "file-type": "^19.0.0",
     "immer": "^10.0.3",
     "langchain": "^0.0.149",
     "marked": "^9.0.0",

@@ -67,31 +67,9 @@ export const graphState = atom<NodeGraph>({
           return [
             {
               type: 'code',
-              text: 'attr1:',
-              language: 'encre-code',
-              keywords: [
-                'attr1',
-                'attr2',
-                'attr3',
-                'attr4',
-                'attr5',
-                'attr6',
-                'attr7',
-                'attr8',
-              ],
-            },
-            {
-              type: 'plain',
-              text: '1',
-            },
-            {
-              type: 'plain',
-              text: '2',
-            },
-            {
-              type: 'code',
-              text: `attr2: [2, 3]
-attr3: [true, false]
+              text: `attr1: "1"
+attr2: [2, 3]
+attr3: true
 attr4: [
   {
     "sub1": 1,
@@ -102,11 +80,7 @@ attr4: [
     "sub4": "4"
   }
 ]
-attr5: [
-  undefined,
-  undefined
-]
-attr6:`,
+attr6: `,
               language: 'encre-code',
               keywords: [
                 'attr1',
@@ -118,6 +92,121 @@ attr6:`,
                 'attr7',
                 'attr8',
               ],
+              isHoldingValues: true,
+            },
+            {
+              type: 'context',
+              text: [
+                {
+                  type: 'plain',
+                  text: '6',
+                },
+              ],
+              metadata: [
+                {
+                  type: 'code',
+                  text: 'sub1: 1',
+                  language: 'encre-code',
+                  keywords: ['sub1'],
+                  isHoldingValues: false,
+                },
+              ],
+            },
+            {
+              type: 'context',
+              text: [
+                {
+                  type: 'plain',
+                  text: '7',
+                },
+              ],
+              metadata: [
+                {
+                  type: 'code',
+                  text: 'sub1: 2',
+                  language: 'encre-code',
+                  keywords: ['sub1'],
+                  isHoldingValues: false,
+                },
+              ],
+            },
+            {
+              type: 'code',
+              text: 'attr7: ',
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+            {
+              type: 'blob',
+              blob: new Blob(['1']),
+              size: 1,
+              blobType: '',
+            },
+            {
+              type: 'code',
+              text: 'attr8: ',
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+            {
+              type: 'message',
+              content: [
+                {
+                  type: 'plain',
+                  text: '8',
+                },
+              ],
+              kwargs: [
+                {
+                  type: 'code',
+                  text: '',
+                  language: 'encre-code',
+                  keywords: [],
+                  isHoldingValues: false,
+                },
+              ],
+              role: 'human',
+              name: undefined,
+            },
+            {
+              type: 'message',
+              content: [
+                {
+                  type: 'plain',
+                  text: '9',
+                },
+              ],
+              kwargs: [
+                {
+                  type: 'code',
+                  text: '',
+                  language: 'encre-code',
+                  keywords: [],
+                  isHoldingValues: false,
+                },
+              ],
+              role: 'assistant',
+              name: undefined,
             },
           ];
         },

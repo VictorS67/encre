@@ -227,8 +227,21 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'context',
-        text: '6',
-        metadata: { sub1: 1 },
+        text: [
+          {
+            type: 'plain',
+            text: '6',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 1',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'code',
@@ -252,10 +265,23 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'message',
-        text: '8',
+        content: [
+          {
+            type: 'plain',
+            text: '8',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'human',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
     ]);
   });
@@ -305,13 +331,39 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'context',
-        text: '6',
-        metadata: { sub1: 1 },
+        text: [
+          {
+            type: 'plain',
+            text: '6',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 1',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'context',
-        text: '7',
-        metadata: { sub1: 2 },
+        text: [
+          {
+            type: 'plain',
+            text: '7',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 2',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'code',
@@ -341,17 +393,43 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'message',
-        text: '8',
+        content: [
+          {
+            type: 'plain',
+            text: '8',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'human',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
       {
         type: 'message',
-        text: '9',
+        content: [
+          {
+            type: 'plain',
+            text: '9',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'assistant',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
     ]);
   });
@@ -394,13 +472,39 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'context',
-        text: '6',
-        metadata: { sub1: 1 },
+        text: [
+          {
+            type: 'plain',
+            text: '6',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 1',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'context',
-        text: '7',
-        metadata: { sub1: 2 },
+        text: [
+          {
+            type: 'plain',
+            text: '7',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 2',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'code',
@@ -424,17 +528,43 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'message',
-        text: '8',
+        content: [
+          {
+            type: 'plain',
+            text: '8',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'human',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
       {
         type: 'message',
-        text: '9',
+        content: [
+          {
+            type: 'plain',
+            text: '9',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'assistant',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
     ]);
   });

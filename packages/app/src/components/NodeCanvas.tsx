@@ -122,7 +122,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     lastMousePositionState,
   );
 
-  // TODO: Use hot-key `space` to drag canvas
   const [isOnlyDraggingCanvas, setIsOnlyDraggingCanvas] = useRecoilState(
     isOnlyDraggingCanvasState,
   );
@@ -263,6 +262,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     return false;
   };
 
+  // TODO: only zoom if ctrl hot key is pressed.
   const zoomDebounced = useThrottleFn(
     (
       target: HTMLElement,

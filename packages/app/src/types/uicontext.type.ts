@@ -15,3 +15,11 @@ export type UIContextDescriptor<T extends UIContext['type']> = {
 export type UIContextDescriptors = {
   [K in UIContext['type']]: UIContextDescriptor<K>;
 };
+
+export type UIContextContainerProps = {
+  node: Node;
+  uiType: UIContext['type'];
+  editableLabels: Record<string, string>;
+  editableContents: Record<string, UIContext[]>;
+  readonlyLabels: string[];
+};

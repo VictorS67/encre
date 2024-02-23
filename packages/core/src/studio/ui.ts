@@ -35,22 +35,17 @@ export type BlobUIContext = {
 
 export type ContextUIContext = {
   type: 'context';
-  text: string;
-
-  metadata?: {
-    [key: string]: unknown;
-  };
+  text: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
+  metadata: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
 };
 
 export type MessageUIContext = {
   type: 'message';
-  text: string;
+  content: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
+  kwargs: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
   role: string | MessageRole;
 
   name?: string;
-  additionalKwargs?: {
-    [key: string]: unknown;
-  };
 };
 
 export type UIContext = BaseUIContext &

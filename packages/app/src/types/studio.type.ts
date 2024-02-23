@@ -267,6 +267,7 @@ export type NodeBody = string | UIContext | UIContext[] | undefined;
 export type BaseUIContext = {
   fontSize?: number;
   fontFamily?: 'monospace' | 'sans-serif';
+  isReadOnly?: boolean;
 };
 
 export type PlainUIContext = {
@@ -285,6 +286,7 @@ export type CodeUIContext = {
 
   language?: string;
   keywords?: string[];
+  isHoldingValues?: boolean;
 };
 
 export type BlobUIContext = {
@@ -296,22 +298,17 @@ export type BlobUIContext = {
 
 export type ContextUIContext = {
   type: 'context';
-  text: string;
-
-  metadata?: {
-    [key: string]: unknown;
-  };
+  text: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
+  metadata: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
 };
 
 export type MessageUIContext = {
   type: 'message';
-  text: string;
+  content: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
+  kwargs: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
   role: string;
 
   name?: string;
-  additionalKwargs?: {
-    [key: string]: unknown;
-  };
 };
 
 export type UIContext = BaseUIContext &
@@ -331,7 +328,7 @@ export const UIDataTypesMap: Record<DataType, UIContext['type']> = {
   object: 'code',
   unknown: 'code',
   blob: 'blob',
-  'string[]': 'plain',
+  'string[]': 'code',
   'number[]': 'code',
   'boolean[]': 'code',
   'object[]': 'code',

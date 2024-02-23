@@ -10,10 +10,12 @@ import React, {
 } from 'react';
 
 import { css } from '@emotion/react';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
+import { Icon } from './Icon';
 import { NodeContentBody } from './NodeContentBody';
 import { ResizeBox } from './ResizeBox';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
@@ -384,14 +386,11 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     // TODO: Add Input and Output circles
     return (
       <>
-        <div
-          {...attributeListeners}
-          onClick={onNodeGrabClick}
-          css={nodeContentStyles}
-        >
+        <div onClick={onNodeGrabClick} css={nodeContentStyles}>
           <div
             className={isMinimized ? 'node-minimize-card' : 'node-card'}
             style={cardHeightStyling}
+            {...attributeListeners}
           >
             <div className="node-header">
               <div className="node-tag-grp">
@@ -401,7 +400,17 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
                   </div>
                 ))}
               </div>
-              <div className="node-tooling">ICON</div>
+              <div className="node-tooling">
+                <Icon
+                  icon={PlayArrowRoundedIcon}
+                  width={'20px'}
+                  height={'20px'}
+                  fontSize={'30px'}
+                  additionalStyles={css`
+                    color: var(--success-color);
+                  `}
+                />
+              </div>
             </div>
             <div className="node-title" style={minTitleStyling}>
               {node.title}

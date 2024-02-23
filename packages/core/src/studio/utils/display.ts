@@ -1,5 +1,5 @@
 import { match } from 'ts-pattern';
-import { MessageRole } from '../../events/input/load/msgs/base.js';
+import { ContentLike, MessageRole } from '../../events/input/load/msgs/base.js';
 import { SecretFields } from '../../load/keymap.js';
 import {
   BlobData,
@@ -169,7 +169,7 @@ function concatContexts(prev: UIContext, next: UIContext): UIContext[] {
   return [prev, next];
 }
 
-function stringifyStrArr(type: ScalarDataType, arr: string[]) {
+function stringifyStrArr(type: ScalarDataType, arr: string[]): string {
   if (type === 'object' || type === 'unknown') {
     return JSON.stringify(
       arr.map((str) => {
@@ -189,6 +189,43 @@ function stringifyStrArr(type: ScalarDataType, arr: string[]) {
   }
 
   return `[${arr.join(', ')}]`;
+}
+
+function getPlainOrMarkdownFromStr(
+  text: string
+): PlainUIContext | MarkdownUIContext {
+  if (text.startsWith('::markdown')) {
+    return {
+      type: 'markdown',
+      text: text.replace(/^::markdown/, '').trim(),
+    } as MarkdownUIContext;
+  } else {
+    return {
+      type: 'plain',
+      text: text,
+    } as PlainUIContext;
+  }
+}
+
+function getCodeOrMarkdownFromStr(
+  text: string,
+  language?: string,
+  keywords?: string[]
+): CodeUIContext | MarkdownUIContext {
+  if (text.startsWith('::markdown')) {
+    return {
+      type: 'markdown',
+      text: text.replace(/^::markdown/, '').trim(),
+    } as MarkdownUIContext;
+  } else {
+    return {
+      type: 'code',
+      text: `"${text}"`,
+      language,
+      keywords,
+      isHoldingValues: false,
+    } as CodeUIContext;
+  }
 }
 
 function displayStrUI(
@@ -299,21 +336,13 @@ function displayStrUI(
       popTextToUIContext(isHoldingValues);
 
       for (const text of strArr) {
-        if (text.startsWith('::markdown')) {
-          uiContexts.push({
-            type: 'markdown',
-            text: text.replace(/^::markdown/, '').trim(),
-          } as MarkdownUIContext);
-        } else if (UIDataTypesMap[data.type] === 'markdown') {
+        if (UIDataTypesMap[data.type] === 'markdown') {
           uiContexts.push({
             type: 'markdown',
             text: text,
           } as MarkdownUIContext);
         } else {
-          uiContexts.push({
-            type: 'plain',
-            text: text,
-          } as PlainUIContext);
+          uiContexts.push(getPlainOrMarkdownFromStr(text));
         }
       }
       isHoldingValues = false;
@@ -368,7 +397,7 @@ function displayBlobUI(
         text: `${key}: `,
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext);
     }
 
@@ -403,16 +432,28 @@ function displayContextUI(
     const dataArr = arrayizeData(data);
 
     const contextArr: {
-      text: string;
-      metadata?: {
-        [key: string]: unknown;
-      };
+      text: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
+      metadata: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
     }[] = match(type)
       .with('context', () =>
         (dataArr as ContextData[]).map((d) => {
+          const _metadata = d.value.metadata ?? {};
+          const _metadataKeywords = Object.keys(_metadata);
+          const _metadataEntries = Object.entries(_metadata);
+
           return {
-            text: d.value.pageContent,
-            metadata: d.value.metadata,
+            text: [getPlainOrMarkdownFromStr(d.value.pageContent)],
+            metadata: [
+              {
+                type: 'code',
+                text: _metadataEntries
+                  .map(([k, v]) => `${k}: ${JSON.stringify(v, null, 2)}`)
+                  .join('\n'),
+                language: 'encre-code',
+                keywords: _metadataKeywords,
+                isHoldingValues: false,
+              } as CodeUIContext,
+            ],
           };
         })
       )
@@ -428,7 +469,7 @@ function displayContextUI(
         text: `${key}: `,
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext);
     }
 
@@ -463,37 +504,61 @@ function displayMessageUI(
     const dataArr = arrayizeData(data);
 
     const msgArr: {
-      text: string;
+      content: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
+      kwargs: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
       role: string | MessageRole;
       name?: string;
-      additionalKwargs?: {
-        [key: string]: unknown;
-      };
     }[] = match(type)
       .with('chat-message', () =>
         (dataArr as ChatMessageData[]).map((d) => {
           if (Array.isArray(d.value)) {
             return {
-              text: d.value[1],
+              content: [getPlainOrMarkdownFromStr(d.value[1])],
+              kwargs: [],
               role: d.value[0],
             };
           }
 
           if (typeof d.value === 'string') {
             return {
-              text: d.value,
+              content: [getPlainOrMarkdownFromStr(d.value)],
+              kwargs: [],
               role: 'human',
             };
           }
 
+          const _kwargs = d.value.additionalKwargs ?? {};
+          const _kwargsKeywords = Object.keys(_kwargs);
+          const _kwargsEntries = Object.entries(_kwargs);
+
+          const getContentUI = (
+            content: ContentLike
+          ): PlainUIContext | MarkdownUIContext | CodeUIContext => {
+            if (typeof content === 'string') {
+              return getPlainOrMarkdownFromStr(content);
+            }
+
+            // TODO: Display Image UI Content
+            return getPlainOrMarkdownFromStr(JSON.stringify(content, null, 2));
+          };
+
           return {
-            text:
-              typeof d.value.content === 'string'
-                ? d.value.content
-                : JSON.stringify(d.value.content, null, 2),
+            content: Array.isArray(d.value.content)
+              ? d.value.content.map((c) => getContentUI(c))
+              : [getContentUI(d.value.content)],
+            kwargs: [
+              {
+                type: 'code',
+                text: _kwargsEntries
+                  .map(([k, v]) => `${k}: ${JSON.stringify(v, null, 2)}`)
+                  .join('\n'),
+                language: 'encre-code',
+                keywords: _kwargsKeywords,
+                isHoldingValues: false,
+              } as CodeUIContext,
+            ],
             role: d.value._role(),
             name: d.value.name,
-            additionalKwargs: d.value.additionalKwargs,
           };
         })
       )
@@ -509,7 +574,7 @@ function displayMessageUI(
         text: `${key}: `,
         language,
         keywords,
-        isHoldingValues: true
+        isHoldingValues: true,
       } as CodeUIContext);
     }
 

@@ -2,7 +2,8 @@
 import React, { FC } from 'react';
 
 import { token } from '@atlaskit/tokens';
-import { css } from '@emotion/react';
+import { SerializedStyles, css } from '@emotion/react';
+import styled from '@emotion/styled';
 
 import { IconProps } from '../types/icon.type';
 
@@ -17,38 +18,29 @@ const styles = css`
   justify-content: center;
 `;
 
-const borderStyles = css`
-  border: 1px solid var(--text-color);
-  border-radius: 5px;
+const IconDiv = styled.div<{
+  fontSize?: string;
+  width?: string;
+  height?: string;
+  additionalStyles?: SerializedStyles;
+}>`
+  font-size: ${(props) => props.fontSize ?? 'inherit'} !important;
+  width: ${(props) => props.width ?? '42px'} !important;
+  height: ${(props) => props.height ?? '42px'} !important;
+  ${(props) => props.additionalStyles ?? ''}
+  ${styles}
 `;
 
 export const Icon: FC<IconProps> = (props: IconProps) => {
-  const iconStyles = css`
-    ${props.fontSize && `font-size: ${props.fontSize} !important;`}
-    ${props.width && `width: ${props.width} !important;`}
-    ${props.height && `height: ${props.height} !important;`}
-    ${styles}
-  `;
-
   return (
-    <div css={iconStyles}>
+    <IconDiv
+      fontSize={props.fontSize}
+      height={props.height}
+      width={props.width}
+      additionalStyles={props.additionalStyles}
+      onClick={props.onClick}
+    >
       <props.icon fontSize="inherit" />
-    </div>
-  );
-};
-
-export const IconBtn: FC<IconProps> = (props: IconProps) => {
-  const iconStyles = css`
-    ${props.fontSize && `font-size: ${props.fontSize} !important;`}
-    ${props.width && `width: ${props.width} !important;`}
-    ${props.height && `height: ${props.height} !important;`}
-    ${styles}
-    ${borderStyles}
-  `;
-
-  return (
-    <div css={iconStyles}>
-      <props.icon fontSize="inherit" />
-    </div>
+    </IconDiv>
   );
 };

@@ -1,59 +1,72 @@
-import React, { FC, useState } from 'react';
+import React, { FC, memo, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useAsyncEffect } from 'ahooks';
 
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
-import { UIContextDescriptor } from '../types/descriptor.type';
 import {
+  KnownNodeContentBodyProps,
   NodeContentBodyProps,
   UnknownNodeContentBodyProps,
 } from '../types/nodebody.type';
 import { NodeBody, UIContext } from '../types/studio.type';
+import { UIContextDescriptor } from '../types/uicontext.type';
 
 const NodeContentBodyWrapper = styled.div<{
   fontSize: number;
   fontFamily: 'monospace' | 'sans-serif';
 }>`
-  user-select: none;
   overflow: hidden;
   font-size: ${(props) => props.fontSize}px;
   font-family: ${(props) =>
     props.fontFamily === 'monospace'
       ? "'Roboto Mono', monospace"
       : "'Roboto', sans-serif"};
+
+  &:hover {
+    background: var(--node-forground-color-1);
+  }
 `;
 
-export const NodeContentBody: FC<NodeContentBodyProps> = ({
+export const NodeContentBody: FC<NodeContentBodyProps> = memo(
+  ({ node }: NodeContentBodyProps) => {
+    const [body, setBody] = useState<NodeBody | undefined>();
+
+    useAsyncEffect(async () => {
+      const renderedBody = await node.getBody();
+
+      setBody(renderedBody);
+    }, [node]);
+
+    const bodyStyle: UIContext | UIContext[] | undefined =
+      typeof body === 'string' ? { type: 'plain', text: body } : body;
+
+    let uiContexts: UIContext[] = bodyStyle
+      ? Array.isArray(bodyStyle)
+        ? bodyStyle
+        : [bodyStyle]
+      : [];
+    uiContexts = uiContexts.map((ui) => {
+      if (ui.type === 'plain' && ui.text.startsWith('::markdown')) {
+        return {
+          type: 'markdown',
+          text: ui.text.replace(/^::markdown/, '').trim(),
+        };
+      }
+
+      return ui;
+    });
+
+    return <KnownNodeContentBody node={node} uiContexts={uiContexts} />;
+  },
+);
+
+NodeContentBody.displayName = 'NodeContentBody';
+
+export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
   node,
-}: NodeContentBodyProps) => {
-  const [body, setBody] = useState<NodeBody | undefined>();
-
-  useAsyncEffect(async () => {
-    const renderedBody = await node.getBody();
-
-    setBody(renderedBody);
-  }, [node]);
-
-  const bodyStyle: UIContext | UIContext[] | undefined =
-    typeof body === 'string' ? { type: 'plain', text: body } : body;
-
-  let uiContexts: UIContext[] = bodyStyle
-    ? Array.isArray(bodyStyle)
-      ? bodyStyle
-      : [bodyStyle]
-    : [];
-  uiContexts = uiContexts.map((ui) => {
-    if (ui.type === 'plain' && ui.text.startsWith('::markdown')) {
-      return {
-        type: 'markdown',
-        text: ui.text.replace(/^::markdown/, '').trim(),
-      };
-    }
-
-    return ui;
-  });
-
+  uiContexts,
+}: KnownNodeContentBodyProps) => {
   const descriptors = useUIContextDescriptors(uiContexts);
 
   const renderedBodies = [] as {
@@ -95,8 +108,6 @@ export const NodeContentBody: FC<NodeContentBodyProps> = ({
     </div>
   );
 };
-
-NodeContentBody.displayName = 'NodeContentBody';
 
 export const UnknownNodeContentBody: FC<UnknownNodeContentBodyProps> = ({
   node,

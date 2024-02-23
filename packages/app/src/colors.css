@@ -24,7 +24,10 @@ html[data-color-mode="light"] {
   --canvas-foreground-color-2: #49494a40;
 
   --node-background-color: #ffffff;
+  --node-background-color-1: #f0f0f040;
+  --node-background-color-2: #f0f0f080;
   --node-forground-color: #f0f0f0;
+  --node-forground-color-1: #ffffff40;
 }
 
 html[data-color-mode="dark"] {
@@ -53,5 +56,8 @@ html[data-color-mode="dark"] {
   --canvas-foreground-color-2: #47474840;
 
   --node-background-color: #3d3d3d;
+  --node-background-color-1: #21212140;
+  --node-background-color-2: #21212180;
   --node-forground-color: #212121;
+  --node-forground-color-1: #3d3d3d40;
 }
