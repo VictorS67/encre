@@ -18,17 +18,25 @@ import {
   isArrayDataType,
 } from '../data.js';
 import {
+  AudioUIContext,
   BlobUIContext,
   CodeUIContext,
   ContextUIContext,
+  FileUIContext,
+  ImageUIContext,
   MarkdownUIContext,
   MessageUIContext,
   PlainUIContext,
   UIContext,
   UIDataTypesMap,
+  audioTypes,
+  fileTypes,
+  imageTypes,
 } from '../ui.js';
 
-export function displayUIFromDataFields(dataFields: DataFields): UIContext[] {
+export async function displayUIFromDataFields(
+  dataFields: DataFields
+): Promise<UIContext[]> {
   const dataGrp: [string, Data | undefined][] = Object.entries(dataFields);
 
   const keywords: string[] = Object.keys(dataFields);
@@ -43,7 +51,7 @@ export function displayUIFromDataFields(dataFields: DataFields): UIContext[] {
   for (let i = 0; i < partitionedGrp.length; i++) {
     const { uiType: currUIType, dataGrp: currGrp } = partitionedGrp[i];
 
-    const currUIContexts: UIContext[] = match(currUIType)
+    const currUIContexts: UIContext[] = await match(currUIType)
       .with('blob', () =>
         displayBlobUI(currGrp, hideKeyword, 'encre-code', keywords)
       )
@@ -74,7 +82,9 @@ export function displayUIFromDataFields(dataFields: DataFields): UIContext[] {
   return uiContexts;
 }
 
-export function displayUIFromSecretFields(secrets: SecretFields): UIContext[] {
+export async function displayUIFromSecretFields(
+  secrets: SecretFields
+): Promise<UIContext[]> {
   if (Object.keys(secrets).length === 0) {
     return [];
   }
@@ -228,12 +238,12 @@ function getCodeOrMarkdownFromStr(
   }
 }
 
-function displayStrUI(
+async function displayStrUI(
   dataGrp: [string, Data][],
   hideKeyword?: boolean,
   language?: string,
   keywords?: string[]
-): (PlainUIContext | MarkdownUIContext | CodeUIContext)[] {
+): Promise<(PlainUIContext | MarkdownUIContext | CodeUIContext)[]> {
   const isValidated: boolean = dataGrp.every(
     ([k, v]) =>
       UIDataTypesMap[v.type] === 'plain' ||
@@ -354,12 +364,24 @@ function displayStrUI(
   return uiContexts;
 }
 
-function displayBlobUI(
+function getMatchingKnownBlobType(
+  blobType: string,
+  knownTypes: string[]
+): string | undefined {
+  for (const type of knownTypes) {
+    if (blobType.startsWith(type)) {
+      return type;
+    }
+  }
+  return undefined;
+}
+
+async function displayBlobUI(
   dataGrp: [string, Data][],
   hideKeyword?: boolean,
   language?: string,
   keywords?: string[]
-): (BlobUIContext | CodeUIContext)[] {
+): Promise<(BlobUIContext | CodeUIContext)[]> {
   const isValidated: boolean = dataGrp.every(
     ([k, v]) => UIDataTypesMap[v.type] === 'blob'
   );
@@ -374,20 +396,76 @@ function displayBlobUI(
     const dataArr = arrayizeData(data);
 
     const blobArr: {
-      blob: Blob;
+      blob: Array<ImageUIContext | AudioUIContext | FileUIContext>;
       size: number;
       blobType: string;
-    }[] = match(type)
-      .with('blob', () =>
-        (dataArr as BlobData[]).map((d) => {
-          return {
-            blob: d.value,
-            size: d.value.size,
-            blobType: d.value.type,
-          };
-        })
+    }[] = await match(type)
+      .with('blob', async () =>
+        Promise.all(
+          (dataArr as BlobData[]).map(async (d) => {
+            const size: number = d.value.size;
+            const blobType: string = d.value.type;
+
+            const data: Uint8Array = new Uint8Array(
+              await d.value.arrayBuffer()
+            );
+
+            if (blobType.startsWith('image/')) {
+              const imgType: string | undefined = getMatchingKnownBlobType(
+                blobType,
+                imageTypes
+              );
+
+              return {
+                blob: [
+                  {
+                    type: 'image',
+                    mimeType: imgType ?? 'image/png',
+                    data,
+                  } as ImageUIContext,
+                ],
+                size,
+                blobType,
+              };
+            } else if (blobType.startsWith('audio/')) {
+              const audType: string | undefined = getMatchingKnownBlobType(
+                blobType,
+                audioTypes
+              );
+
+              return {
+                blob: [
+                  {
+                    type: 'audio',
+                    mimeType: audType ?? 'audio/mp3',
+                    data,
+                  } as AudioUIContext,
+                ],
+                size,
+                blobType,
+              };
+            }
+
+            const fileType: string | undefined = getMatchingKnownBlobType(
+              blobType,
+              fileTypes
+            );
+
+            return {
+              blob: [
+                {
+                  type: 'file',
+                  mimeType: fileType ?? 'text/plain',
+                  data,
+                } as FileUIContext,
+              ],
+              size,
+              blobType,
+            };
+          })
+        )
       )
-      .otherwise(() => {
+      .otherwise(async () => {
         throw new Error(`cannot display UI in blobs because of type: ${type}`);
       });
 
@@ -412,12 +490,12 @@ function displayBlobUI(
   return uiContexts;
 }
 
-function displayContextUI(
+async function displayContextUI(
   dataGrp: [string, Data][],
   hideKeyword?: boolean,
   language?: string,
   keywords?: string[]
-): (ContextUIContext | CodeUIContext)[] {
+): Promise<(ContextUIContext | CodeUIContext)[]> {
   const isValidated: boolean = dataGrp.every(
     ([k, v]) => UIDataTypesMap[v.type] === 'context'
   );
@@ -484,12 +562,12 @@ function displayContextUI(
   return uiContexts;
 }
 
-function displayMessageUI(
+async function displayMessageUI(
   dataGrp: [string, Data][],
   hideKeyword?: boolean,
   language?: string,
   keywords?: string[]
-): (MessageUIContext | CodeUIContext)[] {
+): Promise<(MessageUIContext | CodeUIContext)[]> {
   const isValidated: boolean = dataGrp.every(
     ([k, v]) => UIDataTypesMap[v.type] === 'message'
   );

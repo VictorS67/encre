@@ -528,7 +528,7 @@ const debugStyles = css`
   padding: 10px 20px;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.03);
-  color: #f0f0f0;
+  color: var(--text-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 99999;
   font-size: 12px;

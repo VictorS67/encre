@@ -291,7 +291,7 @@ export type CodeUIContext = {
 
 export type BlobUIContext = {
   type: 'blob';
-  blob: Blob;
+  blob: Array<ImageUIContext | AudioUIContext | FileUIContext>;
   size: number;
   blobType: string;
 };
@@ -311,6 +311,31 @@ export type MessageUIContext = {
   name?: string;
 };
 
+export type ImageUIContext = {
+  type: 'image';
+  mimeType: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/svg+xml';
+  data: Uint8Array;
+};
+
+export type AudioUIContext = {
+  type: 'audio';
+  mimeType: 'audio/mp3' | 'audio/wav' | 'audio/ogg';
+  data: Uint8Array;
+};
+
+export type FileUIContext = {
+  type: 'file';
+  mimeType:
+    | 'text/plain'
+    | 'text/html'
+    | 'text/javascript'
+    | 'text/css'
+    | 'application/json'
+    | 'application/pdf'
+    | 'application/xml';
+  data: Uint8Array;
+};
+
 export type UIContext = BaseUIContext &
   (
     | PlainUIContext
@@ -319,6 +344,9 @@ export type UIContext = BaseUIContext &
     | BlobUIContext
     | ContextUIContext
     | MessageUIContext
+    | ImageUIContext
+    | AudioUIContext
+    | FileUIContext
   );
 
 export const UIDataTypesMap: Record<DataType, UIContext['type']> = {
@@ -334,6 +362,28 @@ export const UIDataTypesMap: Record<DataType, UIContext['type']> = {
   'object[]': 'code',
   'unknown[]': 'code',
   'blob[]': 'blob',
+};
+
+export const extMap: Record<
+  | ImageUIContext['mimeType']
+  | AudioUIContext['mimeType']
+  | FileUIContext['mimeType'],
+  string
+> = {
+  'text/plain': 'bin',
+  'text/html': 'html',
+  'text/javascript': 'js',
+  'text/css': 'css',
+  'application/json': 'json',
+  'application/pdf': 'pdf',
+  'application/xml': 'xml',
+  'image/png': 'png',
+  'image/jpeg': 'jpeg',
+  'image/gif': 'gif',
+  'image/svg+xml': 'svg',
+  'audio/mp3': 'mp3',
+  'audio/ogg': 'ogg',
+  'audio/wav': 'wav',
 };
 
 export type ProcessId = Opaque<string, 'ProcessId'>;

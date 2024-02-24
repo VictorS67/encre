@@ -1,6 +1,9 @@
+import { audioDescriptor } from '../components/descriptors/AudioDescriptor';
 import { blobDescriptor } from '../components/descriptors/BlobDescriptor';
 import { codeDescriptor } from '../components/descriptors/CodeDescriptor';
 import { contextDescriptor } from '../components/descriptors/ContextDescriptor';
+import { fileDescriptor } from '../components/descriptors/FileDescriptor';
+import { imageDescriptor } from '../components/descriptors/ImageDescriptor';
 import { markdownDescriptor } from '../components/descriptors/MarkdownDescriptor';
 import { messageDescriptor } from '../components/descriptors/MessageDescriptor';
 import { plainTextDescriptor } from '../components/descriptors/PlainTextDescriptor';
@@ -17,6 +20,9 @@ const allUIContextDescriptors: UIContextDescriptors = {
   blob: blobDescriptor,
   context: contextDescriptor,
   message: messageDescriptor,
+  image: imageDescriptor,
+  audio: audioDescriptor,
+  file: fileDescriptor,
 };
 
 export function useUIContextDescriptors(

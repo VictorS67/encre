@@ -1,5 +1,6 @@
 import React, { FC, memo, useState } from 'react';
 
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import clsx from 'clsx';
@@ -102,7 +103,7 @@ const UIContainer = styled.div`
   }
 
   .ui-context-placeholder {
-    color: var(--canvas-foreground-color);
+    color: var(--text-disabled-color);
 
     white-space: pre-wrap;
   }
@@ -140,95 +141,104 @@ const UIContainer = styled.div`
   }
 `;
 
-export const UIContextContainer: FC<UIContextContainerProps> = ({
-  node,
-  uiType,
-  editableLabels,
-  editableContents,
-  readonlyLabels,
-}: UIContextContainerProps) => {
-  const [selectedEditableContentName, setSelectedEditableContentName] =
-    useState<string | undefined>();
+export const UIContextContainer: FC<UIContextContainerProps> = memo(
+  ({
+    node,
+    uiType,
+    editableLabels,
+    editableContents,
+    readonlyLabels,
+  }: UIContextContainerProps) => {
+    const [selectedEditableContentName, setSelectedEditableContentName] =
+      useState<string | undefined>();
 
-  const onEditableContentNameClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+    const onEditableContentNameClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    const name = e.currentTarget.getAttribute('data-label');
+      const name = e.currentTarget.getAttribute('data-label');
 
-    if (name !== null) {
-      if (selectedEditableContentName === name) {
-        setSelectedEditableContentName(undefined);
-      } else {
-        setSelectedEditableContentName(name);
+      if (name !== null) {
+        if (selectedEditableContentName === name) {
+          setSelectedEditableContentName(undefined);
+        } else {
+          setSelectedEditableContentName(name);
+        }
       }
-    }
-  };
+    };
 
-  return (
-    <UIContainer>
-      <div className="ui-context-key">
-        <Icon icon={DragIndicatorIcon} width={'18px'} fontSize={'24px'} />
-      </div>
-      <div className="ui-context-container">
-        <div className="ui-context-container-header">
-          <div className="ui-context-container-header-part">
-            <div className="ui-context-type">
-              <pre className="pre-wrap">{uiType}</pre>
-            </div>
-            {Object.entries(editableLabels).map(([name, value], i) => (
-              <div className="ui-context-editable-label" key={i}>
-                {value === '' ? (
-                  <pre className="ui-context-placeholder">{name}</pre>
-                ) : (
-                  <pre className="pre-wrap">{value}</pre>
-                )}
-              </div>
-            ))}
-
-            {Object.keys(editableContents).map((name, i) => (
-              <div
-                className={clsx({
-                  'ui-context-editable-label': true,
-                  active:
-                    selectedEditableContentName &&
-                    name === selectedEditableContentName,
-                })}
-                key={i}
-                data-label={name}
-                onClick={onEditableContentNameClick}
-              >
-                <pre className="ui-context-text">{name}</pre>
-              </div>
-            ))}
-          </div>
-
-          <div className="spacer"></div>
-
-          <div
-            className="ui-context-container-header-part"
-            style={{ marginLeft: 'auto' }}
-          >
-            {readonlyLabels.map((label, i) => (
-              <div className="ui-context-readonly-label" key={i}>
-                <pre className="pre-wrap">{label}</pre>
-              </div>
-            ))}
-          </div>
+    return (
+      <UIContainer>
+        <div className="ui-context-key">
+          <Icon
+            icon={DragIndicatorIcon}
+            width={'18px'}
+            fontSize={'24px'}
+            additionalStyles={css`
+              color: var(--node-background-color) !important;
+            `}
+          />
         </div>
+        <div className="ui-context-container">
+          <div className="ui-context-container-header">
+            <div className="ui-context-container-header-part">
+              <div className="ui-context-type">
+                <pre className="pre-wrap">{uiType}</pre>
+              </div>
+              {Object.entries(editableLabels).map(([name, value], i) => (
+                <div className="ui-context-editable-label" key={i}>
+                  {value === '' ? (
+                    <pre className="ui-context-placeholder">{name}</pre>
+                  ) : (
+                    <pre className="pre-wrap">{value}</pre>
+                  )}
+                </div>
+              ))}
 
-        {selectedEditableContentName &&
-        editableContents[selectedEditableContentName] ? (
-          <div className="ui-context-editor">
-            <KnownNodeContentBody
-              node={node}
-              uiContexts={editableContents[selectedEditableContentName]}
-            />
+              {Object.keys(editableContents).map((name, i) => (
+                <div
+                  className={clsx({
+                    'ui-context-editable-label': true,
+                    active:
+                      selectedEditableContentName &&
+                      name === selectedEditableContentName,
+                  })}
+                  key={i}
+                  data-label={name}
+                  onClick={onEditableContentNameClick}
+                >
+                  <pre className="ui-context-text">{name}</pre>
+                </div>
+              ))}
+            </div>
+
+            <div className="spacer"></div>
+
+            <div
+              className="ui-context-container-header-part"
+              style={{ marginLeft: 'auto' }}
+            >
+              {readonlyLabels.map((label, i) => (
+                <div className="ui-context-readonly-label" key={i}>
+                  <pre className="pre-wrap">{label}</pre>
+                </div>
+              ))}
+            </div>
           </div>
-        ) : null}
-      </div>
-    </UIContainer>
-  );
-};
+
+          {selectedEditableContentName &&
+          editableContents[selectedEditableContentName] ? (
+            <div className="ui-context-editor">
+              <KnownNodeContentBody
+                node={node}
+                uiContexts={editableContents[selectedEditableContentName]}
+              />
+            </div>
+          ) : null}
+        </div>
+      </UIContainer>
+    );
+  },
+);
 
 UIContextContainer.displayName = 'UIContextContainer';
