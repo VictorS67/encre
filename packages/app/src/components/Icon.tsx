@@ -34,6 +34,7 @@ const IconDiv = styled.div<{
 export const Icon: FC<IconProps> = (props: IconProps) => {
   return (
     <IconDiv
+      className={props.className}
       fontSize={props.fontSize}
       height={props.height}
       width={props.width}

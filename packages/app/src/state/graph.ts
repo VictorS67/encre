@@ -153,67 +153,72 @@ attr6: `,
             {
               type: 'blob',
               blob: [
+                // {
+                //   type: 'image',
+                //   mimeType: 'image/png',
+                //   data: new Uint8Array(
+                //     await (await (await fetch(myPng)).blob()).arrayBuffer(),
+                //   ),
+                // },
+                // {
+                //   type: 'image',
+                //   mimeType: 'image/jpeg',
+                //   data: new Uint8Array(
+                //     await (await (await fetch(myJpeg)).blob()).arrayBuffer(),
+                //   ),
+                // },
+                // {
+                //   type: 'image',
+                //   mimeType: 'image/gif',
+                //   data: new Uint8Array(
+                //     await (await (await fetch(myGif)).blob()).arrayBuffer(),
+                //   ),
+                // },
+                // {
+                //   type: 'image',
+                //   mimeType: 'image/svg+xml',
+                //   data: new Uint8Array(
+                //     await (await (await fetch(mySvg)).blob()).arrayBuffer(),
+                //   ),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'text/plain',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'text/html',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'text/javascript',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'text/css',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'application/json',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'application/pdf',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
+                // {
+                //   type: 'file',
+                //   mimeType: 'application/xml',
+                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                // },
                 {
-                  type: 'image',
-                  mimeType: 'image/png',
-                  data: new Uint8Array(
-                    await (await (await fetch(myPng)).blob()).arrayBuffer(),
-                  ),
-                },
-                {
-                  type: 'image',
-                  mimeType: 'image/jpeg',
-                  data: new Uint8Array(
-                    await (await (await fetch(myJpeg)).blob()).arrayBuffer(),
-                  ),
-                },
-                {
-                  type: 'image',
-                  mimeType: 'image/gif',
-                  data: new Uint8Array(
-                    await (await (await fetch(myGif)).blob()).arrayBuffer(),
-                  ),
-                },
-                {
-                  type: 'image',
-                  mimeType: 'image/svg+xml',
-                  data: new Uint8Array(
-                    await (await (await fetch(mySvg)).blob()).arrayBuffer(),
-                  ),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'text/plain',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'text/html',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'text/javascript',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'text/css',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'application/json',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'application/pdf',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                },
-                {
-                  type: 'file',
-                  mimeType: 'application/xml',
+                  type: 'audio',
+                  mimeType: 'audio/mp3',
                   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
                 },
               ],

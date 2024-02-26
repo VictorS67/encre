@@ -5,6 +5,7 @@ export type SVGIcon = typeof SvgIcon;
 
 export type IconProps = {
   icon: SVGIcon;
+  className?: string;
   fontSize?: string;
   width?: string;
   height?: string;

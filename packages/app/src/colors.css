@@ -19,6 +19,8 @@ html[data-color-mode="light"] {
   --text-warn-color: #f19606;
   --text-disabled-color: #9B9B9B;
 
+  --audio-track-color: #88e461;
+
   --canvas-background-color: #f8f8f8;
   --canvas-foreground-color: #49494a;
   --canvas-foreground-color-1: #49494a80;
@@ -52,6 +54,8 @@ html[data-color-mode="dark"] {
   --text-error-color: #a81000;
   --text-warn-color: #f8b800;
   --text-disabled-color: #7f7f7f;
+
+  --audio-track-color: #89bb29;
 
   --canvas-background-color: #202020;
   --canvas-foreground-color: #474748;
