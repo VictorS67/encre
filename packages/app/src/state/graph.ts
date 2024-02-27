@@ -1,6 +1,13 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
+import mySvg from '../assets/compass.svg';
+import myJpeg from '../assets/flower.jpg';
+import myWav from '../assets/gettysburg.wav';
+import myGif from '../assets/giphy.gif';
+import myOgg from '../assets/radio.ogg';
+import myMp3 from '../assets/sunflower.mp3';
+import myPng from '../assets/timetable.png';
 import { NodeGraph } from '../types/graph.type';
 import {
   NodeInputPortDef,
@@ -67,31 +74,9 @@ export const graphState = atom<NodeGraph>({
           return [
             {
               type: 'code',
-              text: 'attr1:',
-              language: 'encre-code',
-              keywords: [
-                'attr1',
-                'attr2',
-                'attr3',
-                'attr4',
-                'attr5',
-                'attr6',
-                'attr7',
-                'attr8',
-              ],
-            },
-            {
-              type: 'plain',
-              text: '1',
-            },
-            {
-              type: 'plain',
-              text: '2',
-            },
-            {
-              type: 'code',
-              text: `attr2: [2, 3]
-attr3: [true, false]
+              text: `attr1: "1"
+attr2: [2, 3]
+attr3: true
 attr4: [
   {
     "sub1": 1,
@@ -102,11 +87,7 @@ attr4: [
     "sub4": "4"
   }
 ]
-attr5: [
-  undefined,
-  undefined
-]
-attr6:`,
+attr6: `,
               language: 'encre-code',
               keywords: [
                 'attr1',
@@ -118,6 +99,206 @@ attr6:`,
                 'attr7',
                 'attr8',
               ],
+              isHoldingValues: true,
+            },
+            {
+              type: 'context',
+              text: [
+                {
+                  type: 'plain',
+                  text: '6',
+                },
+              ],
+              metadata: [
+                {
+                  type: 'code',
+                  text: 'sub1: 1',
+                  language: 'encre-code',
+                  keywords: ['sub1'],
+                  isHoldingValues: false,
+                },
+              ],
+            },
+            {
+              type: 'context',
+              text: [
+                {
+                  type: 'plain',
+                  text: '7',
+                },
+              ],
+              metadata: [
+                {
+                  type: 'code',
+                  text: 'sub1: 2',
+                  language: 'encre-code',
+                  keywords: ['sub1'],
+                  isHoldingValues: false,
+                },
+              ],
+            },
+            {
+              type: 'code',
+              text: 'attr7: ',
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+            {
+              type: 'blob',
+              blob: [
+                {
+                  type: 'image',
+                  mimeType: 'image/png',
+                  data: new Uint8Array(
+                    await (await (await fetch(myPng)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'image',
+                  mimeType: 'image/jpeg',
+                  data: new Uint8Array(
+                    await (await (await fetch(myJpeg)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'image',
+                  mimeType: 'image/gif',
+                  data: new Uint8Array(
+                    await (await (await fetch(myGif)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'image',
+                  mimeType: 'image/svg+xml',
+                  data: new Uint8Array(
+                    await (await (await fetch(mySvg)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/plain',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/html',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/javascript',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/css',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'application/json',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'application/pdf',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'application/xml',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'audio',
+                  mimeType: 'audio/mp3',
+                  data: new Uint8Array(
+                    await (await (await fetch(myMp3)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'audio',
+                  mimeType: 'audio/ogg',
+                  data: new Uint8Array(
+                    await (await (await fetch(myOgg)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'audio',
+                  mimeType: 'audio/wav',
+                  data: new Uint8Array(
+                    await (await (await fetch(myWav)).blob()).arrayBuffer(),
+                  ),
+                },
+              ],
+              size: 1,
+              blobType: '',
+            },
+            {
+              type: 'code',
+              text: 'attr8: ',
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+            {
+              type: 'message',
+              content: [
+                {
+                  type: 'plain',
+                  text: '8',
+                },
+              ],
+              kwargs: [
+                {
+                  type: 'code',
+                  text: '',
+                  language: 'encre-code',
+                  keywords: [],
+                  isHoldingValues: false,
+                },
+              ],
+              role: 'human',
+              name: undefined,
+            },
+            {
+              type: 'message',
+              content: [
+                {
+                  type: 'plain',
+                  text: '9',
+                },
+              ],
+              kwargs: [
+                {
+                  type: 'code',
+                  text: '',
+                  language: 'encre-code',
+                  keywords: [],
+                  isHoldingValues: false,
+                },
+              ],
+              role: 'assistant',
+              name: undefined,
             },
           ];
         },

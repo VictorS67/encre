@@ -46,6 +46,8 @@
     "@dnd-kit/core": "^6.0.8",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "@floating-ui/react": "^0.26.0",
     "@floating-ui/react-dom": "^2.0.2",
     "@mui/icons-material": "^5.14.12",

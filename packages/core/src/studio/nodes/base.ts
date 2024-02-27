@@ -142,10 +142,10 @@ export abstract class NodeImpl<
   ): Promise<ProcessOutputMap>;
 
   async getBody(): Promise<NodeBody> {
-    const secretUIContexts: UIContext[] = displayUIFromSecretFields(
+    const secretUIContexts: UIContext[] = await displayUIFromSecretFields(
       this.secrets
     );
-    const kwargsUIContexts: UIContext[] = displayUIFromDataFields(this.kwargs);
+    const kwargsUIContexts: UIContext[] = await displayUIFromDataFields(this.kwargs);
 
     return [...secretUIContexts, ...kwargsUIContexts];
   }

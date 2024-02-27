@@ -2,8 +2,8 @@ import React, { FC, memo } from 'react';
 
 import { useMarkdown } from '../../hooks/useMarkdown';
 import { useStableCallback } from '../../hooks/useStableCallback';
-import { UIContextDescriptor } from '../../types/descriptor.type';
 import { Node, UIContext } from '../../types/studio.type';
+import { UIContextDescriptor } from '../../types/uicontext.type';
 
 /* eslint-disable react/prop-types */
 export const MarkdownNodeContentBody: FC<
@@ -11,7 +11,13 @@ export const MarkdownNodeContentBody: FC<
 > = memo(({ node, text }) => {
   const markdownBody = useMarkdown(text);
 
-  return <div className="pre-wrap" dangerouslySetInnerHTML={markdownBody} />;
+  return (
+    <div
+      className="pre-wrap"
+      style={{ userSelect: 'text' }}
+      dangerouslySetInnerHTML={markdownBody}
+    />
+  );
 });
 
 MarkdownNodeContentBody.displayName = 'MarkdownNodeContentBody';

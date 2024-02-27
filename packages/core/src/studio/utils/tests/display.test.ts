@@ -10,11 +10,13 @@ import {
   BlobUIContext,
   CodeUIContext,
   ContextUIContext,
+  FileUIContext,
   MarkdownUIContext,
   MessageUIContext,
   PlainUIContext,
   UIContext,
 } from '../../ui.js';
+import { coerceToData } from '../coerce.js';
 import {
   displayUIFromDataFields,
   displayUIFromSecretFields,
@@ -127,19 +129,20 @@ describe('display UI contexts from key arguments', () => {
   };
 
   test('noData', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(noData);
+    const uiContexts: UIContext[] = await displayUIFromDataFields(noData);
 
     expect(uiContexts).toStrictEqual([]);
   });
 
   test('onlyKeywords', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(onlyKeywords);
+    const uiContexts: UIContext[] = await displayUIFromDataFields(onlyKeywords);
 
     expect(uiContexts).toStrictEqual([]);
   });
 
   test('oneValidKeyword', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(oneValidKeyword);
+    const uiContexts: UIContext[] =
+      await displayUIFromDataFields(oneValidKeyword);
 
     expect(uiContexts).toStrictEqual([
       {
@@ -153,7 +156,8 @@ describe('display UI contexts from key arguments', () => {
   });
 
   test('plainToMarkdown', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(plainToMarkdown);
+    const uiContexts: UIContext[] =
+      await displayUIFromDataFields(plainToMarkdown);
 
     expect(uiContexts).toStrictEqual([
       {
@@ -171,7 +175,8 @@ describe('display UI contexts from key arguments', () => {
   });
 
   test('longTextInCode', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(longTextInCode);
+    const uiContexts: UIContext[] =
+      await displayUIFromDataFields(longTextInCode);
 
     expect(uiContexts).toStrictEqual([
       {
@@ -185,7 +190,7 @@ describe('display UI contexts from key arguments', () => {
   });
 
   test('hideKeyword', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(hideKeyword);
+    const uiContexts: UIContext[] = await displayUIFromDataFields(hideKeyword);
 
     expect(uiContexts).toStrictEqual([
       {
@@ -196,7 +201,7 @@ describe('display UI contexts from key arguments', () => {
   });
 
   test('onlyScalars', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(onlyScalars);
+    const uiContexts: UIContext[] = await displayUIFromDataFields(onlyScalars);
 
     const language = 'encre-code';
     const keywords = [
@@ -227,8 +232,21 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'context',
-        text: '6',
-        metadata: { sub1: 1 },
+        text: [
+          {
+            type: 'plain',
+            text: '6',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 1',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'code',
@@ -239,7 +257,13 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'blob',
-        blob: blob,
+        blob: [
+          {
+            type: 'file',
+            mimeType: 'text/plain',
+            data: new Uint8Array(await blob.arrayBuffer()),
+          } as FileUIContext,
+        ],
         size: 1,
         blobType: '',
       } as BlobUIContext,
@@ -252,16 +276,29 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'message',
-        text: '8',
+        content: [
+          {
+            type: 'plain',
+            text: '8',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'human',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
     ]);
   });
 
   test('onlyArrays', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(onlyArrays);
+    const uiContexts: UIContext[] = await displayUIFromDataFields(onlyArrays);
 
     const language = 'encre-code';
     const keywords = [
@@ -305,13 +342,39 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'context',
-        text: '6',
-        metadata: { sub1: 1 },
+        text: [
+          {
+            type: 'plain',
+            text: '6',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 1',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'context',
-        text: '7',
-        metadata: { sub1: 2 },
+        text: [
+          {
+            type: 'plain',
+            text: '7',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 2',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'code',
@@ -322,13 +385,25 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'blob',
-        blob: blob,
+        blob: [
+          {
+            type: 'file',
+            mimeType: 'text/plain',
+            data: new Uint8Array(await blob.arrayBuffer()),
+          } as FileUIContext,
+        ],
         size: 1,
         blobType: '',
       } as BlobUIContext,
       {
         type: 'blob',
-        blob: blob2,
+        blob: [
+          {
+            type: 'file',
+            mimeType: 'text/plain',
+            data: new Uint8Array(await blob2.arrayBuffer()),
+          } as FileUIContext,
+        ],
         size: 1,
         blobType: '',
       } as BlobUIContext,
@@ -341,23 +416,49 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'message',
-        text: '8',
+        content: [
+          {
+            type: 'plain',
+            text: '8',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'human',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
       {
         type: 'message',
-        text: '9',
+        content: [
+          {
+            type: 'plain',
+            text: '9',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'assistant',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
     ]);
   });
 
   test('mixedData', async () => {
-    const uiContexts: UIContext[] = displayUIFromDataFields(mixedData);
+    const uiContexts: UIContext[] = await displayUIFromDataFields(mixedData);
 
     const language = 'encre-code';
     const keywords = [
@@ -394,13 +495,39 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'context',
-        text: '6',
-        metadata: { sub1: 1 },
+        text: [
+          {
+            type: 'plain',
+            text: '6',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 1',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'context',
-        text: '7',
-        metadata: { sub1: 2 },
+        text: [
+          {
+            type: 'plain',
+            text: '7',
+          } as PlainUIContext,
+        ],
+        metadata: [
+          {
+            type: 'code',
+            text: 'sub1: 2',
+            language,
+            keywords: ['sub1'],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
       } as ContextUIContext,
       {
         type: 'code',
@@ -411,7 +538,13 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'blob',
-        blob: blob,
+        blob: [
+          {
+            type: 'file',
+            mimeType: 'text/plain',
+            data: new Uint8Array(await blob.arrayBuffer()),
+          } as FileUIContext,
+        ],
         size: 1,
         blobType: '',
       } as BlobUIContext,
@@ -424,17 +557,43 @@ attr6: `,
       } as CodeUIContext,
       {
         type: 'message',
-        text: '8',
+        content: [
+          {
+            type: 'plain',
+            text: '8',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'human',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
       {
         type: 'message',
-        text: '9',
+        content: [
+          {
+            type: 'plain',
+            text: '9',
+          } as PlainUIContext,
+        ],
+        kwargs: [
+          {
+            type: 'code',
+            text: '',
+            language,
+            keywords: [],
+            isHoldingValues: false,
+          } as CodeUIContext,
+        ],
         role: 'assistant',
         name: undefined,
-        additionalKwargs: undefined,
       } as MessageUIContext,
     ]);
   });
@@ -455,13 +614,14 @@ describe('display UI contexts from secrets', () => {
   };
 
   test('noSecret', async () => {
-    const uiContexts: UIContext[] = displayUIFromSecretFields(noSecret);
+    const uiContexts: UIContext[] = await displayUIFromSecretFields(noSecret);
 
     expect(uiContexts).toStrictEqual([]);
   });
 
   test('simpleSecrets', async () => {
-    const uiContexts: UIContext[] = displayUIFromSecretFields(simpleSecrets);
+    const uiContexts: UIContext[] =
+      await displayUIFromSecretFields(simpleSecrets);
 
     const language = 'encre-code';
     const keywords = ['openai_api_key', 'google_api_key'];
@@ -479,10 +639,13 @@ google_api_key: {{GOOGLE_API_KEY}}`,
   });
 
   test('complexSecrets', async () => {
-    const uiContexts: UIContext[] = displayUIFromSecretFields(complexSecrets);
+    const uiContexts: UIContext[] =
+      await displayUIFromSecretFields(complexSecrets);
 
     const language = 'encre-code';
     const keywords = ['secret1', 'secret2.sub1', 'secret2.sub2'];
+
+    const binary = new Uint8Array(await new Blob(['1']).arrayBuffer());
 
     expect(uiContexts).toStrictEqual([
       {

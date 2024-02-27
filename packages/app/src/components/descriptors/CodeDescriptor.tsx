@@ -1,7 +1,7 @@
 import React, { FC, Suspense, memo } from 'react';
 
-import { UIContextDescriptor } from '../../types/descriptor.type';
 import { Node, UIContext } from '../../types/studio.type';
+import { UIContextDescriptor } from '../../types/uicontext.type';
 import { LazySyntaxedText } from '../LazyComponents';
 
 /* eslint-disable react/prop-types */

@@ -70,7 +70,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
       ref={editorContainer}
       data-lang={language}
       className="pre-wrap"
-      style={{ wordBreak: 'break-word' }}
+      style={{ wordBreak: 'break-word', userSelect: 'text' }}
     >
       {text}
     </pre>
