@@ -4,6 +4,7 @@ import { recoilPersist } from 'recoil-persist';
 import mySvg from '../assets/compass.svg';
 import myJpeg from '../assets/flower.jpg';
 import myGif from '../assets/giphy.gif';
+import myMp3 from '../assets/sunflower.mp3';
 import myPng from '../assets/timetable.png';
 import { NodeGraph } from '../types/graph.type';
 import {
@@ -219,7 +220,9 @@ attr6: `,
                 {
                   type: 'audio',
                   mimeType: 'audio/mp3',
-                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                  data: new Uint8Array(
+                    await (await (await fetch(myMp3)).blob()).arrayBuffer(),
+                  ),
                 },
               ],
               size: 1,

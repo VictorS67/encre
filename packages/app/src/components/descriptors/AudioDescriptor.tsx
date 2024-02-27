@@ -1,36 +1,83 @@
 import React, {
   FC,
   memo,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
 
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { useThrottleFn } from 'ahooks';
-import { useRecoilValue } from 'recoil';
 
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { useStableCallback } from '../../hooks/useStableCallback';
-import { themeState } from '../../state/settings';
-import { Node, UIContext } from '../../types/studio.type';
+import { Node, UIContext, extMap } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
+import { formatBytes } from '../../utils/format';
 import { AudioRecorder } from '../AudioRecorder';
+import { Icon } from '../Icon';
 import {
   LazyAudioVisualizer,
   LazyLiveAudioVisualizer,
 } from '../LazyComponents';
 
+const Audio = styled.div`
+  width: 100%;
+  overflow: hidden;
+  display: inline-flex;
+
+  .audio-container {
+    width: 100%;
+  }
+
+  .audio-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px;
+    border-bottom-left-radius: 5px;
+    background-color: var(--node-forground-color-1);
+    color: var(--text-disabled-color);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    pointer-events: none;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .file-info {
+    align-self: flex-end;
+    font-weight: 700;
+    overflow: hidden;
+    diaplay: inline-block;
+    font-size: 12px;
+    color: var(--text-disabled-color);
+  }
+
+  .audio-container:hover .audio-info {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
+
 /* eslint-disable react/prop-types */
 export const AudioNodeContentBody: FC<
   { node: Node } & Extract<UIContext, { type: 'audio' }>
 > = memo(({ node, mimeType, data }) => {
-  const [blob, setBlob] = useState<Blob | undefined>();
-  const recorder = useAudioRecorder();
+  const [blob, setBlob] = useState<Blob | undefined>(
+    new Blob([data], { type: mimeType }),
+  );
+  // const recorder = useAudioRecorder();
 
   const audioCanvasContainerRef = useRef<HTMLDivElement>(null);
   const [audioCanvasWidth, setAudioCanvasWidth] = useState<number>(0);
-  const appTheme = useRecoilValue(themeState);
 
   const setAudioCanvasWidthDebounced = useThrottleFn(
     (width: number) => {
@@ -52,7 +99,6 @@ export const AudioNodeContentBody: FC<
     const resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         updateAudioCanvasWidth(entry.target.clientWidth);
-        // setAudioCanvasWidth(entry.contentRect.width);
       });
     });
 
@@ -67,15 +113,9 @@ export const AudioNodeContentBody: FC<
     };
   }, [audioCanvasContainerRef]);
 
-  const barColor = useMemo(() => {
-    return getComputedStyle(document.documentElement)
-      .getPropertyValue('--text-color')
-      .trim();
-  }, [appTheme]);
-
   return (
-    <div ref={audioCanvasContainerRef}>
-      <AudioRecorder
+    <div className="audio-container" ref={audioCanvasContainerRef}>
+      {/* <AudioRecorder
         onRecordingComplete={setBlob}
         recorderControls={recorder}
       />
@@ -85,35 +125,31 @@ export const AudioNodeContentBody: FC<
           mediaRecorder={recorder.mediaRecorder}
           width={audioCanvasWidth}
           height={75}
-        />
-      )}
-
-      {blob && (
-        <LazyAudioVisualizer
-          blob={blob}
-          width={500}
-          height={75}
-          barWidth={1}
-          gap={0}
-          barColor={'#f76565'}
-        />
-      )}
-
-      {blob && (
-        <LazyAudioVisualizer
-          blob={blob}
-          width={audioCanvasWidth}
-          height={75}
           barWidth={3}
           gap={2}
-          currentTime={audioCanvasWidth / 100}
           barColor={getComputedStyle(document.documentElement)
+            .getPropertyValue('--text-disabled-color')
+            .trim()}
+        />
+      )} */}
+
+      {blob && (
+        <LazyAudioVisualizer
+          blob={blob}
+          mimeType={mimeType}
+          width={audioCanvasWidth}
+          height={75}
+          displayInfo={true}
+          barWidth={3}
+          gap={2}
+          barColor={getComputedStyle(document.documentElement)
+            .getPropertyValue('--text-disabled-color')
+            .trim()}
+          barPlayedColor={getComputedStyle(document.documentElement)
             .getPropertyValue('--audio-track-color')
             .trim()}
-          barPlayedColor={'red'}
         />
       )}
-      <p>The width of the div is: {audioCanvasWidth}px</p>
     </div>
   );
 });

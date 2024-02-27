@@ -3,23 +3,13 @@ export type AudioDataPoint = {
   min: number;
 };
 
-export type AudioCanvasFields = {
-  data: AudioDataPoint[];
-  canvas: HTMLCanvasElement;
-  barWidth: number;
-  gap: number;
-  backgroundColor: string;
-  barColor: string;
-  barPlayedColor?: string;
-  currentTime?: number;
-  duration?: number;
-};
-
 export interface AudioVisualizerProps {
   /**
    * Audio blob to visualize
    */
   blob: Blob;
+
+  mimeType: 'audio/mp3' | 'audio/wav' | 'audio/ogg';
   /**
    * Width of the visualizer
    */
@@ -28,6 +18,8 @@ export interface AudioVisualizerProps {
    * Height of the visualizer
    */
   height: number;
+
+  displayInfo?: boolean;
   /**
    * Width of each individual bar in the visualization. Default: `2`
    */
@@ -48,11 +40,6 @@ export interface AudioVisualizerProps {
    * Color for the bars that have been played: Default: `"rgb(160, 198, 255)""`
    */
   barPlayedColor?: string;
-  /**
-   * Current time stamp till which the audio blob has been played.
-   * Visualized bars that fall before the current time will have `barPlayerColor`, while that ones that fall after will have `barColor`
-   */
-  currentTime?: number;
   /**
    * Custome styles that can be passed to the visualization canvas
    */

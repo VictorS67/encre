@@ -1,4 +1,5 @@
 import React, {
+  CSSProperties,
   FC,
   ForwardedRef,
   forwardRef,
@@ -6,25 +7,89 @@ import React, {
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
 
-import { useAsyncEffect, useThrottleFn } from 'ahooks';
+import styled from '@emotion/styled';
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import { css } from '@mui/material';
 
-import { useStableCallback } from '../hooks/useStableCallback';
+import { Icon } from './Icon';
 import {
   AudioVisualizerProps,
   LiveAudioVisualizerProps,
   AudioDataPoint,
-  AudioCanvasFields,
 } from '../types/audiovisualizer.type';
+import { extMap } from '../types/studio.type';
 import {
   calculateBarData,
   calculateLiveBarData,
   draw,
   drawLive,
 } from '../utils/audioVisualizer';
+import { formatBytes } from '../utils/format';
+
+const AudioTrack = styled.div<{ width: number; height: number }>`
+  position: relative;
+  width: 100%;
+  height: ${(props) => props.height}px;
+
+  .audio-container {
+    position: relative;
+    width: 100%;
+    height: ${(props) => props.height}px;
+  }
+
+  .track {
+    width: ${(props) => props.width}px;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--text-color-accent-3);
+    pointer-events: none;
+  }
+
+  .audio-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 3px;
+    border-bottom-left-radius: 5px;
+    background-color: var(--node-forground-color-1);
+    color: var(--text-disabled-color);
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    pointer-events: none;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .file-info {
+    align-self: flex-end;
+    font-weight: 700;
+    overflow: hidden;
+    diaplay: inline-block;
+    font-size: 12px;
+    color: var(--text-disabled-color);
+  }
+
+  &:hover .audio-info {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
 
 export const AudioVisualizer = forwardRef<
   HTMLCanvasElement,
@@ -32,11 +97,12 @@ export const AudioVisualizer = forwardRef<
 >(function myAudioVisualizer(
   {
     blob,
+    mimeType,
     width,
     height,
+    displayInfo = false,
     barWidth = 2,
     gap = 1,
-    currentTime,
     style,
     backgroundColor = 'transparent',
     barColor = 'rgb(184, 184, 184)',
@@ -45,30 +111,79 @@ export const AudioVisualizer = forwardRef<
   ref?: ForwardedRef<HTMLCanvasElement>,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const audioBufferRef = useRef<AudioBuffer | null>(null);
+  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const animationFrameRef = useRef(0);
+  const startTimeRef = useRef(0);
+  const startOffsetRef = useRef(0);
 
   const [data, setData] = useState<AudioDataPoint[]>([]);
-  const [duration, setDuration] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(1);
+  const [currTime, setCurrTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [displayPlayhead, setDisplayPlayhead] = useState(false);
 
-  // const drawCanvasDebounced = useThrottleFn(
-  //   (fields: AudioCanvasFields) => {
-  //     draw(
-  //       fields.data,
-  //       fields.canvas,
-  //       fields.barWidth,
-  //       fields.gap,
-  //       fields.backgroundColor,
-  //       fields.barColor,
-  //       fields.barPlayedColor,
-  //       fields.currentTime,
-  //       fields.duration
-  //     );
-  //   },
-  //   { wait: 10 }
-  // );
+  const fileSize = formatBytes(blob.size);
 
-  // const drawCanvas = useStableCallback((fields: AudioCanvasFields) => {
-  //   drawCanvasDebounced.run(fields);
-  // });
+  const togglePlayback = (e: React.MouseEvent) => {
+    const audioContext = audioContextRef.current;
+    const audioBuffer = audioBufferRef.current;
+
+    if (!audioContext || !audioBuffer) return;
+
+    if (isPlaying) {
+      // Stop the audio
+      if (sourceRef.current) {
+        sourceRef.current.stop();
+        sourceRef.current = null;
+      }
+      setIsPlaying(false);
+      startOffsetRef.current += audioContext.currentTime - startTimeRef.current;
+    } else {
+      // Play the audio
+      const source = audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioContext.destination);
+      source.start(0, startOffsetRef.current);
+      source.addEventListener(
+        'ended',
+        () => {
+          setIsPlaying(false);
+          setDisplayPlayhead(true);
+          startOffsetRef.current = 0;
+        },
+        { once: true },
+      );
+
+      if (sourceRef.current) {
+        sourceRef.current.disconnect();
+      }
+      sourceRef.current = source;
+      setIsPlaying(true);
+      setDisplayPlayhead(true);
+      startTimeRef.current = audioContext.currentTime;
+    }
+  };
+
+  const updateCurrentTime = useCallback(() => {
+    if (!audioContextRef.current || !isPlaying) return;
+
+    const newTime =
+      startOffsetRef.current +
+      audioContextRef.current.currentTime -
+      startTimeRef.current;
+    setCurrTime(newTime);
+    animationFrameRef.current = requestAnimationFrame(updateCurrentTime);
+  }, [isPlaying, width, duration]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      animationFrameRef.current = requestAnimationFrame(updateCurrentTime);
+    }
+
+    return () => cancelAnimationFrame(animationFrameRef.current);
+  }, [isPlaying, updateCurrentTime, width, duration]);
 
   useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(
     ref,
@@ -76,7 +191,7 @@ export const AudioVisualizer = forwardRef<
     [],
   );
 
-  useAsyncEffect(async () => {
+  useEffect(() => {
     if (!canvasRef.current) return;
 
     if (!blob) {
@@ -92,33 +207,72 @@ export const AudioVisualizer = forwardRef<
         backgroundColor,
         barColor,
         barPlayedColor,
-        currentTime,
       );
       return;
     }
 
-    const audioBuffer = await blob.arrayBuffer();
     const audioContext = new AudioContext();
-    await audioContext.decodeAudioData(audioBuffer, (buffer) => {
-      if (!canvasRef.current) return;
-      setDuration(buffer.duration);
-      const barsData = calculateBarData(buffer, height, width, barWidth, gap);
-      setData(barsData);
-      draw(
-        barsData,
-        canvasRef.current,
-        barWidth,
-        gap,
-        backgroundColor,
-        barColor,
-        barPlayedColor,
-        currentTime,
-      );
+    audioContextRef.current = audioContext;
+
+    blob.arrayBuffer().then((audioBuffer) => {
+      audioContext.decodeAudioData(audioBuffer, (buffer) => {
+        if (!canvasRef.current) return;
+        audioBufferRef.current = buffer;
+        setDuration(buffer.duration);
+
+        const barsData = calculateBarData(buffer, height, width, barWidth, gap);
+        setData(barsData);
+
+        draw(
+          barsData,
+          canvasRef.current,
+          barWidth,
+          gap,
+          backgroundColor,
+          barColor,
+          barPlayedColor,
+        );
+      });
     });
-  }, [blob, currentTime, width, barColor, canvasRef.current]);
+
+    return () => {
+      audioContext.close();
+    };
+  }, [blob, backgroundColor, barColor, barPlayedColor, canvasRef.current]);
 
   useLayoutEffect(() => {
-    if (!canvasRef.current) return;
+    if (!audioBufferRef.current || !canvasRef.current) return;
+
+    const audioBuffer = audioBufferRef.current;
+
+    const barsData = calculateBarData(
+      audioBuffer,
+      height,
+      width,
+      barWidth,
+      gap,
+    );
+    setData(barsData);
+    draw(
+      barsData,
+      canvasRef.current,
+      barWidth,
+      gap,
+      backgroundColor,
+      barColor,
+      barPlayedColor,
+    );
+  }, [
+    width,
+    backgroundColor,
+    barColor,
+    barPlayedColor,
+    audioBufferRef.current,
+    canvasRef.current,
+  ]);
+
+  useLayoutEffect(() => {
+    if (!canvasRef.current || !audioContextRef.current) return;
 
     draw(
       data,
@@ -128,21 +282,82 @@ export const AudioVisualizer = forwardRef<
       backgroundColor,
       barColor,
       barPlayedColor,
-      currentTime,
+      currTime,
       duration,
     );
-  }, [currentTime, data, barColor, duration]);
+  }, [
+    isPlaying,
+    currTime,
+    duration,
+    width,
+    backgroundColor,
+    barColor,
+    barPlayedColor,
+  ]);
+
+  const playHeadStyling = useMemo(() => {
+    const styling: CSSProperties = {
+      opacity: displayPlayhead ? '1' : '0',
+      left: `${(currTime / duration) * 100}%`,
+    };
+
+    return styling;
+  }, [displayPlayhead, currTime, duration]);
+
+  const onClickDownload = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const filename = 'download.mp3';
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={width}
-      height={height}
-      style={{
-        ...style,
-        width: '100%',
-      }}
-    />
+    <AudioTrack width={width} height={height}>
+      <div className="audio-container">
+        <canvas
+          ref={canvasRef}
+          className="track"
+          width={width}
+          height={height}
+          style={{
+            ...style,
+          }}
+          onClick={togglePlayback}
+        />
+        <div className="playhead" style={playHeadStyling}></div>
+      </div>
+      {displayInfo ? (
+        <div className="audio-info">
+          <div className="file-info" style={{ textTransform: 'uppercase' }}>
+            {extMap[mimeType]}
+          </div>
+          <div className="file-info">{fileSize}</div>
+          <Icon
+            icon={DownloadRoundedIcon}
+            width={'18px'}
+            height={'18px'}
+            fontSize={'20px'}
+            additionalStyles={css`
+              cursor: pointer;
+              &:hover {
+                color: var(--text-color) !important;
+              }
+            `}
+            onClick={onClickDownload}
+          />
+        </div>
+      ) : null}
+    </AudioTrack>
   );
 });
 
@@ -201,7 +416,7 @@ export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
     ) {
       context.close();
     }
-  }, [analyser, context.state, barColor]);
+  }, [analyser, context.state, backgroundColor, barColor]);
 
   const processFrequencyData = (data: Uint8Array): void => {
     if (!canvasRef.current) return;
