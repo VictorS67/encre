@@ -33,6 +33,7 @@ const File = styled.div`
     overflow: hidden;
     diaplay: inline-flex;
     font-size: 14px;
+    white-space: nowrap;
   }
 
   .file-size {
@@ -42,6 +43,7 @@ const File = styled.div`
     diaplay: inline-block;
     font-size: 12px;
     color: var(--text-disabled-color);
+    white-space: nowrap;
   }
 
   .spacer {

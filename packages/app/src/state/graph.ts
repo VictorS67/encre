@@ -3,7 +3,9 @@ import { recoilPersist } from 'recoil-persist';
 
 import mySvg from '../assets/compass.svg';
 import myJpeg from '../assets/flower.jpg';
+import myWav from '../assets/gettysburg.wav';
 import myGif from '../assets/giphy.gif';
+import myOgg from '../assets/radio.ogg';
 import myMp3 from '../assets/sunflower.mp3';
 import myPng from '../assets/timetable.png';
 import { NodeGraph } from '../types/graph.type';
@@ -154,74 +156,88 @@ attr6: `,
             {
               type: 'blob',
               blob: [
-                // {
-                //   type: 'image',
-                //   mimeType: 'image/png',
-                //   data: new Uint8Array(
-                //     await (await (await fetch(myPng)).blob()).arrayBuffer(),
-                //   ),
-                // },
-                // {
-                //   type: 'image',
-                //   mimeType: 'image/jpeg',
-                //   data: new Uint8Array(
-                //     await (await (await fetch(myJpeg)).blob()).arrayBuffer(),
-                //   ),
-                // },
-                // {
-                //   type: 'image',
-                //   mimeType: 'image/gif',
-                //   data: new Uint8Array(
-                //     await (await (await fetch(myGif)).blob()).arrayBuffer(),
-                //   ),
-                // },
-                // {
-                //   type: 'image',
-                //   mimeType: 'image/svg+xml',
-                //   data: new Uint8Array(
-                //     await (await (await fetch(mySvg)).blob()).arrayBuffer(),
-                //   ),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'text/plain',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'text/html',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'text/javascript',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'text/css',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'application/json',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'application/pdf',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
-                // {
-                //   type: 'file',
-                //   mimeType: 'application/xml',
-                //   data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
-                // },
+                {
+                  type: 'image',
+                  mimeType: 'image/png',
+                  data: new Uint8Array(
+                    await (await (await fetch(myPng)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'image',
+                  mimeType: 'image/jpeg',
+                  data: new Uint8Array(
+                    await (await (await fetch(myJpeg)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'image',
+                  mimeType: 'image/gif',
+                  data: new Uint8Array(
+                    await (await (await fetch(myGif)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'image',
+                  mimeType: 'image/svg+xml',
+                  data: new Uint8Array(
+                    await (await (await fetch(mySvg)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/plain',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/html',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/javascript',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'text/css',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'application/json',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'application/pdf',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
+                {
+                  type: 'file',
+                  mimeType: 'application/xml',
+                  data: new Uint8Array(await new Blob(['1']).arrayBuffer()),
+                },
                 {
                   type: 'audio',
                   mimeType: 'audio/mp3',
                   data: new Uint8Array(
                     await (await (await fetch(myMp3)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'audio',
+                  mimeType: 'audio/ogg',
+                  data: new Uint8Array(
+                    await (await (await fetch(myOgg)).blob()).arrayBuffer(),
+                  ),
+                },
+                {
+                  type: 'audio',
+                  mimeType: 'audio/wav',
+                  data: new Uint8Array(
+                    await (await (await fetch(myWav)).blob()).arrayBuffer(),
                   ),
                 },
               ],

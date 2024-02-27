@@ -307,7 +307,7 @@ export const AudioVisualizer = forwardRef<
   const onClickDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const filename = 'download.mp3';
+    const filename = `download.${extMap[mimeType]}`;
 
     const url = URL.createObjectURL(blob);
 
