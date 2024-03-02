@@ -10,12 +10,14 @@ import myMp3 from '../assets/sunflower.mp3';
 import myPng from '../assets/timetable.png';
 import { NodeGraph } from '../types/graph.type';
 import {
+  Node,
   NodeInputPortDef,
   NodeOutputPortDef,
   ProcessInputMap,
   ProcessContext,
   ProcessOutputMap,
   NodeBody,
+  NodeConnection,
 } from '../types/studio.type';
 
 const { persistAtom } = recoilPersist({ key: 'graph' });
@@ -51,21 +53,59 @@ export const graphState = atom<NodeGraph>({
             height: 500,
           },
         },
-        inputs: {},
+        inputs: {
+          prompt: ['string'],
+          prompt1: ['string'],
+          prompt2: ['string'],
+        },
         outputs: {
           prompt: ['string'],
+          prompt1: ['string'],
+          prompt2: ['string'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
         },
-        getInputPortDefs: function (): NodeInputPortDef[] {
-          return [];
-        },
-        getOutputPortDefs: (): NodeOutputPortDef[] => {
+        getInputPortDefs: function (
+          connections: NodeConnection[],
+          nodes: Record<string, Node>,
+        ): NodeInputPortDef[] {
           return [
             {
-              id: '1',
+              nodeId: '1',
               name: 'prompt',
+              type: ['string'],
+            },
+            {
+              nodeId: '1',
+              name: 'prompt1',
+              type: ['string'],
+            },
+            {
+              nodeId: '1',
+              name: 'prompt2',
+              type: ['string'],
+            },
+          ];
+        },
+        getOutputPortDefs: (
+          connections: NodeConnection[],
+          nodes: Record<string, Node>,
+        ): NodeOutputPortDef[] => {
+          return [
+            {
+              nodeId: '1',
+              name: 'prompt',
+              type: ['string'],
+            },
+            {
+              nodeId: '1',
+              name: 'prompt1',
+              type: ['string'],
+            },
+            {
+              nodeId: '1',
+              name: 'prompt2',
               type: ['string'],
             },
           ];

@@ -30,18 +30,18 @@ export type VisualInfo = {
 };
 
 export type NodeInputPortDef = {
-  id: string;
+  nodeId: string;
   name: string;
-  type: string | string[];
-  data?: unknown | unknown[];
+  type: DataType | Readonly<DataType[]>;
+  data?: ValueOf<DataType> | Readonly<ValueOf<DataType>[]>;
   default?: unknown;
 };
 
 export type NodeOutputPortDef = {
-  id: string;
+  nodeId: string;
   name: string;
-  type: string | string[];
-  data?: unknown | unknown[];
+  type: DataType | Readonly<DataType[]>;
+  data?: ValueOf<DataType> | Readonly<ValueOf<DataType>[]>;
   default?: unknown;
 };
 
@@ -68,8 +68,14 @@ export interface Node {
   visualInfo: VisualInfo;
 
   setKwarg: (key: string, value: unknown) => void;
-  getInputPortDefs: () => NodeInputPortDef[];
-  getOutputPortDefs: () => NodeOutputPortDef[];
+  getInputPortDefs: (
+    connections: NodeConnection[],
+    nodes: Record<string, Node>,
+  ) => NodeInputPortDef[];
+  getOutputPortDefs: (
+    connections: NodeConnection[],
+    nodes: Record<string, Node>,
+  ) => NodeOutputPortDef[];
   validateInputs: (inputs?: ProcessInputMap) => boolean;
   getBody: () => Promise<NodeBody>;
   process: (
@@ -81,6 +87,16 @@ export interface Node {
   state?: 'init' | 'pending' | 'success' | 'failed';
   isDebug?: boolean;
 }
+
+export type NodeConnection = {
+  inputNodeId: string;
+
+  inputName: string;
+
+  outputNodeId: string;
+
+  outputName: string;
+};
 
 export function getNodeTypes() {
   return ['loader', 'message', 'prompt', 'splitter', 'llm', 'chatlm'];

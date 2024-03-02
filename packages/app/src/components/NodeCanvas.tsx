@@ -25,8 +25,7 @@ import {
 import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
-import { NodeConnection } from '../types/nodeconnection.type';
-import { Node } from '../types/studio.type';
+import { Node, NodeConnection } from '../types/studio.type';
 
 const styles = css`
   position: relative;

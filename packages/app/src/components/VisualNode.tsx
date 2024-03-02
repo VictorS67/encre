@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -17,6 +18,7 @@ import { useRecoilValue } from 'recoil';
 
 import { Icon } from './Icon';
 import { NodeContentBody } from './NodeContentBody';
+import { NodePortGroup } from './NodePortGroup';
 import { ResizeBox } from './ResizeBox';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
@@ -29,13 +31,12 @@ import {
 } from '../types/node.type';
 import { getColorMode } from '../utils/colorMode';
 
-const visualNodeStyles = css`
+const VisualNodeContainer = styled.div`
   color: var(--text-color);
   background: var(--node-background-color);
   border-radius: 7px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 
   .resize-box {
     width: 10px;
@@ -49,36 +50,12 @@ const visualNodeStyles = css`
   }
 `;
 
-const nodeContentStyles = css`
+const NodeContentContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-
-  .node-minimize-content,
-  .node-content {
-    background: var(--node-forground-color);
-    flex-grow: 1;
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-self: stretch;
-    gap: 2px;
-    padding: 8px 4px 8px 7px;
-  }
-
-  .node-minimize-content > * {
-    visibility: hidden;
-    align-self: stretch;
-  }
-
-  .node-content-body {
-    color: var(--text-color);
-    font-size: 14px;
-    line-height: 1.4;
-  }
 
   .node-minimize-card,
   .node-card {
@@ -89,10 +66,8 @@ const nodeContentStyles = css`
     align-items: flex-start;
     align-self: stretch;
     padding: 8px 10px;
-  }
-
-  .node-minimize-card > .node-header {
-    visibility: collapse;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
   }
 
   .node-header {
@@ -146,9 +121,39 @@ const nodeContentStyles = css`
     hyphens: auto;
   }
 
+  .node-minimize-card > .node-header {
+    visibility: collapse;
+  }
+
   .node-minimize-card > .node-title {
     width: 100%;
     text-align: center;
+  }
+
+  .node-minimize-content,
+  .node-content {
+    background: var(--node-forground-color);
+    flex-grow: 1;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: stretch;
+    gap: 2px;
+    padding: 8px 4px 8px 7px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+  }
+
+  .node-minimize-content > * {
+    visibility: hidden;
+    align-self: stretch;
+  }
+
+  .node-content-body {
+    color: var(--text-color);
+    font-size: 14px;
+    line-height: 1.4;
   }
 `;
 
@@ -222,12 +227,11 @@ export const VisualNode = memo(
     });
 
     return (
-      <div
+      <VisualNodeContainer
         className={clsx('node', {
           minimized: isMinimized,
         })}
         ref={nodeRef}
-        css={visualNodeStyles}
         style={style}
         {...attributes}
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
@@ -242,7 +246,7 @@ export const VisualNode = memo(
           onNodeGrabClick={onNodeGrabClick}
           onNodeSizeChange={onNodeSizeChange}
         />
-      </div>
+      </VisualNodeContainer>
     );
   }),
 );
@@ -260,6 +264,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
   }: VisualNodeContentProps) => {
     const theme = useRecoilValue(themeState);
 
+    const [nodeWidth, setNodeWidth] = useState<number>(300);
+    const [nodeHeight, setNodeHeight] = useState<number>(500);
     const [startHeight, setStartHeight] = useState<number | undefined>();
     const [startWidth, setStartWidth] = useState<number | undefined>();
     const [startMouseX, setStartMouseX] = useState(0);
@@ -286,13 +292,13 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           (node.outputs ? Object.keys(node.outputs).length : 0);
 
         const cardStyling: CSSProperties = {
-          minHeight: 50 + 30 * numPorts,
+          minHeight: 50,
         };
 
         const titleStyling: CSSProperties = isMinimized
           ? {
               fontSize: `${32 * (canvasZoom + 0.4)}px`,
-              height: 50 + 30 * numPorts,
+              height: 50,
             }
           : {
               fontSize: '18px',
@@ -324,7 +330,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       const nodeElement: HTMLElement | null = elementorChild.closest('.node');
 
       if (!nodeElement) {
-        return [100, 100];
+        return [nodeWidth, nodeHeight];
       }
 
       const cssWidth: string = window.getComputedStyle(nodeElement).width;
@@ -376,6 +382,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
         (newWidth !== startWidth || newHeight !== startHeight)
       ) {
         onNodeSizeChange?.(newWidth, newHeight);
+        setNodeWidth(newWidth);
+        setNodeHeight(newHeight);
       }
     });
 
@@ -385,12 +393,11 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
 
     // TODO: Add Input and Output circles
     return (
-      <>
-        <div onClick={onNodeGrabClick} css={nodeContentStyles}>
+      <NodeContentContainer onClick={onNodeGrabClick}>
+        <div {...attributeListeners} style={{ width: '100%' }}>
           <div
             className={isMinimized ? 'node-minimize-card' : 'node-card'}
             style={cardHeightStyling}
-            {...attributeListeners}
           >
             <div className="node-header">
               <div className="node-tag-grp">
@@ -416,28 +423,34 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
               {node.title}
             </div>
           </div>
-          <div
-            className={isMinimized ? 'node-minimize-content' : 'node-content'}
-            style={contentTopBorderStyling}
-            onWheel={onScrollNodeBody}
-          >
-            <ErrorBoundary
-              fallback={
-                <div>Something wrong when rendering node content body...</div>
-              }
-            >
-              <NodeContentBody node={node} />
+
+          <div style={{ width: '100%' }}>
+            <ErrorBoundary fallback={<div />}>
+              <NodePortGroup
+                node={node}
+                connections={connections}
+                nodeWidth={nodeWidth}
+              />
             </ErrorBoundary>
           </div>
         </div>
 
-        <div>
-          <ResizeBox
-            onResizeStart={onReiszeStart}
-            onResizeMove={onResizeMove}
-          />
+        <div
+          className={isMinimized ? 'node-minimize-content' : 'node-content'}
+          style={contentTopBorderStyling}
+          onWheel={onScrollNodeBody}
+        >
+          <ErrorBoundary
+            fallback={
+              <div>Something wrong when rendering node content body...</div>
+            }
+          >
+            <NodeContentBody node={node} />
+          </ErrorBoundary>
         </div>
-      </>
+
+        <ResizeBox onResizeStart={onReiszeStart} onResizeMove={onResizeMove} />
+      </NodeContentContainer>
     );
   },
 );

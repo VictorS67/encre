@@ -1,7 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-import { NodeConnection } from './nodeconnection.type';
-import { Node } from './studio.type';
+import { Node, NodeConnection } from './studio.type';
 
 export type DraggableNodeProps = {
   node: Node;

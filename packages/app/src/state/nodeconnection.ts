@@ -2,6 +2,7 @@ import { DefaultValue, selector } from 'recoil';
 
 import { graphState } from './graph';
 import { NodeGraph } from '../types/graph.type';
+import { NodeConnection } from '../types/studio.type';
 
 export const connectionsState = selector({
   key: 'connections',
@@ -15,5 +16,23 @@ export const connectionsState = selector({
         connections: newVal instanceof DefaultValue ? [] : newVal,
       };
     });
+  },
+});
+
+export const connectionMapState = selector({
+  key: 'connectionMapState',
+  get: ({ get }) => {
+    return get(connectionsState).reduce(
+      (acc, connection) => {
+        acc[connection.inputNodeId] ??= [];
+        acc[connection.inputNodeId]!.push(connection);
+
+        acc[connection.outputNodeId] ??= [];
+        acc[connection.outputNodeId]!.push(connection);
+
+        return acc;
+      },
+      {} as Record<string, NodeConnection[]>,
+    );
   },
 });
