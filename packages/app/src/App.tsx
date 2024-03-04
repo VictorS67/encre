@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   RecoilRoot,
   atom,
@@ -13,10 +14,14 @@ import { EncreStudio } from './components/EncreStudio';
 import logo from './logo.svg';
 import './App.css';
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <RecoilRoot>
-      <EncreStudio />
+      <QueryClientProvider client={queryClient}>
+        <EncreStudio />
+      </QueryClientProvider>
     </RecoilRoot>
   );
 }
