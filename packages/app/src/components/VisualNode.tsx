@@ -24,6 +24,7 @@ import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { themeState } from '../state/settings';
+import { draggingWireClosestPortState, draggingWireState } from '../state/wire';
 import {
   MinimizedVisualNodeContentProps,
   VisualNodeContentProps,
@@ -168,6 +169,7 @@ export const VisualNode = memo(
       attributes,
       attributeListeners,
       isDragging,
+      isOverlay,
       isMinimized,
       scale,
       canvasZoom,
@@ -175,6 +177,8 @@ export const VisualNode = memo(
       onNodeSelect,
       onNodeMouseOver,
       onNodeMouseOut,
+      onWireStartDrag,
+      onWireEndDrag,
     }: VisualNodeProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) {
@@ -229,11 +233,13 @@ export const VisualNode = memo(
     return (
       <VisualNodeContainer
         className={clsx('node', {
+          overlayed: isOverlay,
           minimized: isMinimized,
         })}
         ref={nodeRef}
         style={style}
         {...attributes}
+        data-nodeid={node.id}
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
       >
@@ -245,6 +251,8 @@ export const VisualNode = memo(
           attributeListeners={attributeListeners}
           onNodeGrabClick={onNodeGrabClick}
           onNodeSizeChange={onNodeSizeChange}
+          onWireStartDrag={onWireStartDrag}
+          onWireEndDrag={onWireStartDrag}
         />
       </VisualNodeContainer>
     );
@@ -261,8 +269,14 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     attributeListeners,
     onNodeGrabClick,
     onNodeSizeChange,
+    onWireStartDrag,
+    onWireEndDrag,
   }: VisualNodeContentProps) => {
     const theme = useRecoilValue(themeState);
+    const draggingWire = useRecoilValue(draggingWireState);
+    const draggingWireClosestPort = useRecoilValue(
+      draggingWireClosestPortState,
+    );
 
     const [nodeWidth, setNodeWidth] = useState<number>(300);
     const [nodeHeight, setNodeHeight] = useState<number>(500);
@@ -394,10 +408,11 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     // TODO: Add Input and Output circles
     return (
       <NodeContentContainer onClick={onNodeGrabClick}>
-        <div {...attributeListeners} style={{ width: '100%' }}>
+        <div style={{ width: '100%' }}>
           <div
             className={isMinimized ? 'node-minimize-card' : 'node-card'}
             style={cardHeightStyling}
+            {...attributeListeners}
           >
             <div className="node-header">
               <div className="node-tag-grp">
@@ -430,6 +445,10 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
                 node={node}
                 connections={connections}
                 nodeWidth={nodeWidth}
+                draggingWire={draggingWire}
+                draggingWireClosestPort={draggingWireClosestPort}
+                onWireStartDrag={onWireStartDrag}
+                onWireEndDrag={onWireEndDrag}
               />
             </ErrorBoundary>
           </div>

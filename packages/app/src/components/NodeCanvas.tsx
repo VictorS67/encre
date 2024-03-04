@@ -1,9 +1,16 @@
 /** @jsxImportSource @emotion/react */
-import React, { FC, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 
-import { DndContext, DragOverlay } from '@dnd-kit/core';
+import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
 import { css } from '@emotion/react';
-import { useThrottleFn } from 'ahooks';
+import {
+  autoUpdate,
+  offset,
+  shift,
+  useFloating,
+  useMergeRefs,
+} from '@floating-ui/react';
+import { useBoolean, useThrottleFn } from 'ahooks';
 import { produce } from 'immer';
 import { CSSTransition } from 'react-transition-group';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -12,10 +19,13 @@ import { ContextMenu } from './ContextMenu';
 import { DraggableNode } from './DraggableNode';
 import { MouseIcon } from './MouseIcon';
 import { VisualNode } from './VisualNode';
+import { WireLayer } from './WireLayer';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingNode } from '../hooks/useDraggingNode';
+import { useDraggingWire } from '../hooks/useDraggingWire';
 import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
+import { useNodePortPositons } from '../hooks/usePortPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   canvasPositionState,
@@ -23,8 +33,10 @@ import {
   lastMousePositionState,
 } from '../state/canvas';
 import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
+import { draggingWireClosestPortState } from '../state/wire';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
+import { HighlightedPort } from '../types/port.type';
 import { Node, NodeConnection } from '../types/studio.type';
 
 const styles = css`
@@ -32,6 +44,7 @@ const styles = css`
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background-position: -1px -1px;
   z-index: 0;
 
   background-color: var(--canvas-background-color);
@@ -112,10 +125,20 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   nodes,
   connections,
   onNodesChange,
+  onConnectionsChange,
   onNodesSelect,
 }) => {
   const { canvasPosition, canvasToClientPosition, clientToCanvasPosition } =
     useCanvasPosition();
+  const {
+    portPositions,
+    canvasRef,
+    recalculate: recalculatePortPositions,
+  } = useNodePortPositons();
+
+  const { setNodeRef } = useDroppable({ id: 'NodeCanvas' });
+  const setCanvasRef = useMergeRefs([setNodeRef, canvasRef]);
+
   const setCanvasPosition = useSetRecoilState(canvasPositionState);
   const [lastMousePosition, setLastMousePosition] = useRecoilState(
     lastMousePositionState,
@@ -139,6 +162,19 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     selectingNodeIdsState,
   );
 
+  const { draggingWire, onWireStartDrag, onWireEndDrag } =
+    useDraggingWire(onConnectionsChange);
+
+  const [hoveringPort, setHoveringPort] = useState<
+    HighlightedPort | undefined
+  >();
+  const hoveringPortTimeout = useRef<number | undefined>();
+  const [
+    hoveringShowPortInfo,
+    { setTrue: showPortInfo, setFalse: hidePortInfo },
+  ] = useBoolean(false);
+  const closestPort = useRecoilValue(draggingWireClosestPortState);
+
   const [isContextMenuDisabled, setIsContextMenuDisabled] = useState(true);
 
   const lastMouseInfoRef = useRef<MouseInfo>({
@@ -146,6 +182,14 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     y: 0,
     target: undefined,
   });
+
+  const { refs, floatingStyles } = useFloating({
+    placement: 'bottom-end',
+    whileElementsMounted: autoUpdate,
+    middleware: [offset(5), shift({ crossAxis: true })],
+  });
+
+  const { setReference } = refs;
 
   const {
     contextMenuRef,
@@ -155,6 +199,38 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     setContextMenu,
     handleContextMenu,
   } = useContextMenu();
+
+  useEffect(() => {
+    recalculatePortPositions();
+  }, [recalculatePortPositions]);
+
+  useEffect(() => {
+    if (closestPort?.portName) {
+      setHoveringPort({
+        nodeId: closestPort.nodeId,
+        portName: closestPort.portName,
+        definition: closestPort.input,
+        isInput: true,
+      });
+      setReference(closestPort.portEl);
+
+      hoveringPortTimeout.current = window.setTimeout(() => {
+        showPortInfo();
+      }, 400);
+    } else {
+      setHoveringPort(undefined);
+      hidePortInfo();
+      if (hoveringPortTimeout.current) {
+        window.clearTimeout(hoveringPortTimeout.current);
+      }
+    }
+  }, [
+    closestPort?.nodeId,
+    closestPort?.portName,
+    closestPort?.portEl,
+    closestPort?.input,
+    setReference,
+  ]);
 
   const defaultCanvasContextMenu: ContextMenuConfigContextData | null =
     useMemo(() => {
@@ -213,6 +289,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         y: event.clientY,
         target: event.target,
       };
+
+      recalculatePortPositions();
 
       if (isDraggingCanvas) {
         // Compute dragging distance
@@ -346,14 +424,14 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const selectingUniqueNodeIds = useMemo(() => {
     const nodeSet = new Set(selectingNodeIds);
 
-    if (hoveringNodeId) {
+    if (hoveringNodeId && !hoveringPort) {
       nodeSet.add(hoveringNodeId);
     }
 
     // console.log(`selectingUniqueNodeIds: ${JSON.stringify([...nodeSet])}`);
 
     return [...nodeSet];
-  }, [selectingNodeIds, hoveringNodeId]);
+  }, [selectingNodeIds, hoveringNodeId, hoveringPort]);
 
   const onNodeSizeChange = (node: Node, width: number, height: number) => {
     onNodesChange(
@@ -401,34 +479,35 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   return (
     <div>
       <DebugOverlay enabled={true} />
-      <div
-        css={styles}
-        className="my-canvas"
-        onContextMenu={canvasContextMenu}
-        onMouseDown={canvasMouseDown}
-        onMouseMove={canvasMouseMove.run}
-        onMouseUp={canvasMouseUp}
-        onMouseLeave={canvasMouseUp}
-        onWheel={handleZoom}
-        style={{
-          backgroundPosition: `
-          ${canvasPosition.x - 1}px ${canvasPosition.y - 1}px
-          `,
-          backgroundSize: `
-          ${100 * canvasPosition.zoom}px ${100 * canvasPosition.zoom}px,
-          ${100 * canvasPosition.zoom}px ${100 * canvasPosition.zoom}px,
-          ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px,
-          ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px
-          `,
-          cursor: isOnlyDraggingCanvas
-            ? isDraggingCanvas
-              ? 'grabbing'
-              : 'grab'
-            : 'inherit',
-        }}
-      >
-        <MouseIcon />
-        <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
+      <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
+        <div
+          ref={setCanvasRef}
+          css={styles}
+          className="my-canvas"
+          onContextMenu={canvasContextMenu}
+          onMouseDown={canvasMouseDown}
+          onMouseMove={canvasMouseMove.run}
+          onMouseUp={canvasMouseUp}
+          onMouseLeave={canvasMouseUp}
+          onWheel={handleZoom}
+          style={{
+            backgroundPosition: `
+            ${canvasPosition.x - 1}px ${canvasPosition.y - 1}px
+            `,
+            backgroundSize: `
+            ${100 * canvasPosition.zoom}px ${100 * canvasPosition.zoom}px,
+            ${100 * canvasPosition.zoom}px ${100 * canvasPosition.zoom}px,
+            ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px,
+            ${20 * canvasPosition.zoom}px ${20 * canvasPosition.zoom}px
+            `,
+            cursor: isOnlyDraggingCanvas
+              ? isDraggingCanvas
+                ? 'grabbing'
+                : 'grab'
+              : 'inherit',
+          }}
+        >
+          <MouseIcon />
           <div
             className="canvas-contents"
             style={{
@@ -459,6 +538,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                     onNodeSelect={onNodeSelect}
                     onNodeMouseOver={onNodeMouseOver}
                     onNodeMouseOut={onNodeMouseOut}
+                    onWireStartDrag={onWireStartDrag}
+                    onWireEndDrag={onWireEndDrag}
                   />
                   // TODO: render connections, consider duplicate connections
                 );
@@ -487,35 +568,44 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                   key={draggingNode.id}
                   node={draggingNode}
                   connections={draggingNodeConnections}
+                  isOverlay
                   isMinimized={isMinimized}
                   canvasZoom={canvasPosition.zoom}
                 />
               ))}
             </DragOverlay>
           </div>
-        </DndContext>
-      </div>
-      <CSSTransition
-        classNames="context-menu-box"
-        nodeRef={contextMenuRef}
-        in={showContextMenu && !!defaultCanvasContextMenu}
-        timeout={200}
-        onEnter={() => {
-          setIsContextMenuDisabled(false);
-        }}
-        onExit={() => {
-          setContextMenu({ x: 0, y: 0, data: null });
-          setIsContextMenuDisabled(true);
-        }}
-      >
-        <ContextMenu
-          ref={contextMenuRef}
-          x={contextMenu.x}
-          y={contextMenu.y}
-          disabled={isContextMenuDisabled}
-          context={defaultCanvasContextMenu!}
-        ></ContextMenu>
-      </CSSTransition>
+          <WireLayer
+            connections={connections}
+            portPositions={portPositions}
+            draggingWire={draggingWire}
+            isDraggingFromNode={draggingNodes.length > 0}
+            highlightedNodeIds={selectingUniqueNodeIds}
+            highlightedPort={hoveringPort}
+          />
+          <CSSTransition
+            classNames="context-menu-box"
+            nodeRef={contextMenuRef}
+            in={showContextMenu && !!defaultCanvasContextMenu}
+            timeout={200}
+            onEnter={() => {
+              setIsContextMenuDisabled(false);
+            }}
+            onExit={() => {
+              setContextMenu({ x: 0, y: 0, data: null });
+              setIsContextMenuDisabled(true);
+            }}
+          >
+            <ContextMenu
+              ref={contextMenuRef}
+              x={contextMenu.x}
+              y={contextMenu.y}
+              disabled={isContextMenuDisabled}
+              context={defaultCanvasContextMenu!}
+            ></ContextMenu>
+          </CSSTransition>
+        </div>
+      </DndContext>
     </div>
   );
 };

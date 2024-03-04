@@ -102,6 +102,18 @@ export const nodeIODefState = selector<
   },
 });
 
+export const nodeFromNodeIdState = selectorFamily<
+  Node | undefined,
+  string | undefined
+>({
+  key: 'nodeFromNodeIdState',
+  get:
+    (nodeId: string | undefined) =>
+    ({ get }) => {
+      return nodeId ? get(nodeMapState)[nodeId] : undefined;
+    },
+});
+
 export const ioDefFromNodeIdState = selectorFamily<
   {
     inputDefs: NodeInputPortDef[];

@@ -5,22 +5,42 @@ import clsx from 'clsx';
 import { PortProps } from '../types/port.type';
 
 export const Port: FC<PortProps> = memo(
-  ({ key, nodeId, title, definition, isInput, isConnected }: PortProps) => {
+  ({
+    nodeId,
+    title,
+    definition,
+    draggingDataType,
+    isClosestPortToWire,
+    isInput,
+    isConnected,
+    onMouseDown,
+    onMouseUp,
+  }: PortProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
     return (
       <div
-        key={key}
+        key={title}
         className={clsx(
           'port',
-          { connected: isConnected },
+          { connected: isConnected, closest: isClosestPortToWire },
           {
             'input-port': isInput,
             'output-port': !isInput,
           },
         )}
       >
-        <div ref={ref} className={clsx('port-circle')}></div>
+        <div
+          ref={ref}
+          className={clsx('port-circle')}
+          onMouseDown={(e) => onMouseDown?.(e, title, isInput)}
+          onMouseUp={(e) => onMouseUp?.(e, title)}
+          data-nodeid={nodeId}
+          data-portname={title}
+          data-porttype={isInput ? 'input' : 'output'}
+        >
+          <div className={clsx('port-hover-area')} />
+        </div>
         <div className={clsx('port-label')}>{title}</div>
       </div>
     );

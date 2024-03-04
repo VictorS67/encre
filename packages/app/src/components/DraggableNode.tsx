@@ -18,6 +18,8 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   onNodeSelect,
   onNodeMouseOver,
   onNodeMouseOut,
+  onWireStartDrag,
+  onWireEndDrag,
 }: DraggableNodeProps) => {
   const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
 
@@ -46,6 +48,8 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         onNodeSelect={() => onNodeSelect?.(node)}
         onNodeMouseOver={onNodeMouseOver}
         onNodeMouseOut={onNodeMouseOut}
+        onWireStartDrag={onWireStartDrag}
+        onWireEndDrag={onWireEndDrag}
       />
     </ErrorBoundary>
   );

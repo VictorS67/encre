@@ -45,6 +45,7 @@ export const NodeGraphBuilder: FC = () => {
         nodes={nodes}
         connections={connections}
         onNodesChange={onNodesChange}
+        onConnectionsChange={setConnections}
         onNodesSelect={onNodesSelect}
       />
     </ErrorBoundary>

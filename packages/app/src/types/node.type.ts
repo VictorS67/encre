@@ -1,6 +1,7 @@
 import { HTMLAttributes } from 'react';
 
 import { Node, NodeConnection } from './studio.type';
+import { DraggingWire } from './wire.type';
 
 export type DraggableNodeProps = {
   node: Node;
@@ -18,6 +19,17 @@ export type DraggableNodeProps = {
     event: React.MouseEvent<HTMLElement>,
     nodeId: string,
   ) => void;
+  onWireStartDrag?: (
+    event: React.MouseEvent<HTMLElement>,
+    fromNodeId: string,
+    fromPortName: string,
+    isInput?: boolean,
+  ) => void;
+  onWireEndDrag?: (
+    event: React.MouseEvent<HTMLElement>,
+    toNodeId: string,
+    toPortName: string,
+  ) => void;
 };
 
 export type VisualNodeProps = {
@@ -28,6 +40,7 @@ export type VisualNodeProps = {
   attributes?: HTMLAttributes<HTMLDivElement>;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   isDragging?: boolean;
+  isOverlay?: boolean;
   isMinimized?: boolean;
   isSelecting?: boolean;
   scale?: number;
@@ -41,6 +54,17 @@ export type VisualNodeProps = {
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
     nodeId: string,
+  ) => void;
+  onWireStartDrag?: (
+    event: React.MouseEvent<HTMLElement>,
+    fromNodeId: string,
+    fromPortName: string,
+    isInput?: boolean,
+  ) => void;
+  onWireEndDrag?: (
+    event: React.MouseEvent<HTMLElement>,
+    toNodeId: string,
+    toPortName: string,
   ) => void;
 };
 
@@ -60,4 +84,15 @@ export type VisualNodeContentProps = {
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;
   onNodeSizeChange?: (width: number, height: number) => void;
+  onWireStartDrag?: (
+    event: React.MouseEvent<HTMLElement>,
+    fromNodeId: string,
+    fromPortName: string,
+    isInput?: boolean,
+  ) => void;
+  onWireEndDrag?: (
+    event: React.MouseEvent<HTMLElement>,
+    toNodeId: string,
+    toPortName: string,
+  ) => void;
 };
