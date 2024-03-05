@@ -80,14 +80,14 @@ export const WireLayer: FC<WireLayerProps> = ({
 
       console.log(`onMouseMoveWire: x ${clientX}, y ${clientY}`);
       console.log(`isDraggingFromNode: ${isDraggingFromNode}`);
-      console.log(`draggingWire: ${draggingWire}`);
+      console.log(`draggingWire: ${JSON.stringify(draggingWire)}`);
 
       if (draggingWire) {
         const hoverElements: Element[] = document
           .elementsFromPoint(clientX, clientY)
           .filter((el) => el.classList.contains('port-hover-area'));
 
-        console.log(`hoverElements: ${hoverElements}`);
+        console.log(`updating closest port: ${hoverElements.length > 0}`);
 
         if (hoverElements.length === 0) {
           setClosestPort(undefined);
@@ -118,6 +118,12 @@ export const WireLayer: FC<WireLayerProps> = ({
             const input: NodeInputPortDef = nodeIO!.inputDefs.find(
               (def) => def.nodeId === nodeId && def.name === portName,
             )!;
+
+            console.log(
+              `find closest port: nodeId: ${nodeId}, portName: ${portName}, portEl: ${JSON.stringify(
+                closestHoverEl.parentElement?.classList,
+              )}`,
+            );
 
             setClosestPort({
               nodeId,
@@ -153,12 +159,12 @@ export const WireLayer: FC<WireLayerProps> = ({
     };
   }, [onMouseDownWire, onMouseMoveWire]);
 
-  useLayoutEffect(() => {}, [
-    draggingWire,
-    mousePosition.x,
-    mousePosition.y,
-    setClosestPort,
-  ]);
+  // useLayoutEffect(() => {}, [
+  //   draggingWire,
+  //   mousePosition.x,
+  //   mousePosition.y,
+  //   setClosestPort,
+  // ]);
 
   return (
     <WireLayerContainer>

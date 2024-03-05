@@ -25,6 +25,8 @@ export const useDraggingWire = (
 
   useEffect(() => {
     if (draggingWireClosestPort && isDragging) {
+      console.log('updating dragging wire');
+
       setDraggingWire((w) => ({
         ...w!,
         toNodeId: draggingWireClosestPort.nodeId,

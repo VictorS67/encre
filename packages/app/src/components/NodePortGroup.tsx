@@ -108,6 +108,12 @@ const NodePortGrp = styled.div<{
     margin: 0 -1px;
   }
 
+  .port.connected .port-circle,
+  .port.closest .port-circle {
+    background-color: red;
+    border: 2px solid green;
+  }
+
   .input-ports .port.connected {
     flex-direction: row;
     justify-content: flex-start;

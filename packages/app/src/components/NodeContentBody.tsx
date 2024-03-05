@@ -31,14 +31,6 @@ const NodeContentBodyWrapper = styled.div<{
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
-    // const [body, setBody] = useState<NodeBody | undefined>();
-
-    // useAsyncEffect(async () => {
-    //   const renderedBody = await node.getBody();
-
-    //   setBody(renderedBody);
-    // }, [node]);
-
     const {
       isPending,
       error,

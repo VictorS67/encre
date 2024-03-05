@@ -12,7 +12,7 @@ export function useNodePortPositons() {
   const canvasRef = useRef<HTMLDivElement>(null);
 
   const calculatePosition = useCallback(
-    (el: HTMLDivElement, isOverlayNode: boolean) => {
+    (el: HTMLDivElement, isOverlayNode: boolean, seen: Set<string>) => {
       const nodeId = el.dataset.nodeid as string | undefined;
       const portName = el.dataset.portname as string | undefined;
       const portType = el.dataset.porttype as 'input' | 'output' | undefined;
@@ -20,6 +20,8 @@ export function useNodePortPositons() {
       if (!nodeId || !portName || !portType) return null;
 
       const key = `${nodeId}-${portType}-${portName}`;
+      if (seen.has(key)) return null;
+
       const node = nodeMap[nodeId];
       if (!node) return null;
 
@@ -51,17 +53,19 @@ export function useNodePortPositons() {
             y += parseFloat(deltaY || '0');
           }
         }
+      } else {
+        seen.add(key);
       }
 
       const precision = 10;
       const pos = {
         x:
           Math.round(
-            (x + positionFromNode.left + el.offsetWidth / 2) * precision,
+            (x + positionFromNode.left + el.offsetWidth / 1.5) * precision,
           ) / precision,
         y:
           Math.round(
-            (y + positionFromNode.top + el.offsetHeight / 2) * precision,
+            (y + positionFromNode.top + el.offsetHeight / 1.5) * precision,
           ) / precision,
       };
 
@@ -77,10 +81,15 @@ export function useNodePortPositons() {
 
     let changed = false;
     const newPortPositions = { ...portPositions };
+    const seen = new Set<string>();
 
     portEls.forEach((el) => {
       const isOverlayNode: boolean = el.closest('.overlayed') !== null;
-      const result = calculatePosition(el as HTMLDivElement, isOverlayNode);
+      const result = calculatePosition(
+        el as HTMLDivElement,
+        isOverlayNode,
+        seen,
+      );
 
       if (
         result &&
@@ -116,7 +125,9 @@ export function getPortPositon(
 
   if (portName) {
     const key = `${node.id}-${isInput ? 'input' : 'output'}-${portName}`;
+    console.log(`getPortPositon: ${key}`);
     const portPosition = portPositions[key];
+    console.log(`getPortPositon: ${JSON.stringify(portPosition)}`);
 
     if (portPosition) {
       return { x: portPosition.x, y: portPosition.y };

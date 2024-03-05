@@ -38,6 +38,9 @@ export const RenderedWire: FC<RenderedWireProps> = ({
     true,
   );
 
+  console.log(`wire start position: ${JSON.stringify(startPosition)}`);
+  console.log(`wire end position: ${JSON.stringify(endPosition)}`);
+
   return (
     <ErrorBoundary fallback={<></>}>
       <Wire
