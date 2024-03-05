@@ -28,6 +28,7 @@ export type PortProps = {
   title: string;
   definition: NodeInputPortDef | NodeOutputPortDef;
   draggingDataType?: DataType | Readonly<DataType[]>;
+  isDragToEnabled?: boolean;
   isClosestPortToWire?: boolean;
   isInput?: boolean;
   isConnected?: boolean;
@@ -51,9 +52,5 @@ export type NodePortGroupProps = {
     fromPortName: string,
     isInput?: boolean,
   ) => void;
-  onWireEndDrag?: (
-    event: React.MouseEvent<HTMLElement>,
-    toNodeId: string,
-    toPortName: string,
-  ) => void;
+  onWireEndDrag?: (event: React.MouseEvent<HTMLElement>) => void;
 };

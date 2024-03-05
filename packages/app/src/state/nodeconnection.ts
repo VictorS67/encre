@@ -24,11 +24,11 @@ export const connectionMapState = selector({
   get: ({ get }) => {
     return get(connectionsState).reduce(
       (acc, connection) => {
-        acc[connection.inputNodeId] ??= [];
-        acc[connection.inputNodeId]!.push(connection);
+        acc[connection.fromNodeId] ??= [];
+        acc[connection.fromNodeId]!.push(connection);
 
-        acc[connection.outputNodeId] ??= [];
-        acc[connection.outputNodeId]!.push(connection);
+        acc[connection.toNodeId] ??= [];
+        acc[connection.toNodeId]!.push(connection);
 
         return acc;
       },

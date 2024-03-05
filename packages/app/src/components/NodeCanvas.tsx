@@ -403,8 +403,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     return nodes.map((node) => {
       const filteredConnections = connections.filter(
         (connection) =>
-          connection.inputNodeId === node.id ||
-          connection.outputNodeId === node.id,
+          connection.toNodeId === node.id || connection.fromNodeId === node.id,
       );
 
       return { node, filteredConnections };
@@ -415,8 +414,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     return draggingNodes.flatMap((draggingNode: Node) =>
       connections.filter(
         (c: NodeConnection) =>
-          c.inputNodeId === draggingNode.id ||
-          c.outputNodeId === draggingNode.id,
+          c.toNodeId === draggingNode.id || c.fromNodeId === draggingNode.id,
       ),
     );
   }, [nodes, connections]);

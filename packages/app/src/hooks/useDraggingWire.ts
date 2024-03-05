@@ -6,7 +6,12 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { nodeIODefState, nodeMapState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { draggingWireClosestPortState, draggingWireState } from '../state/wire';
-import { Node, NodeConnection } from '../types/studio.type';
+import {
+  Node,
+  NodeConnection,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '../types/studio.type';
 
 export const useDraggingWire = (
   onConnectionsChange: (cs: NodeConnection[]) => void,
@@ -50,10 +55,18 @@ export const useDraggingWire = (
     ) => {
       e.stopPropagation();
 
+      console.log(
+        `onWireStartDrag: fromNodeId: ${fromNodeId}, fromPortName: ${fromPortName}, isInput: ${isInput}`,
+      );
+
       if (isInput) {
         // remove the existing connection if the input port is already connected
         const existingConnectionIdx: number = connections.findIndex(
-          (c) => c.inputNodeId === fromNodeId && c.inputName === fromPortName,
+          (c) => c.fromNodeId === fromNodeId && c.fromPortName === fromPortName,
+        );
+
+        console.log(
+          `start drag finding connections: ${JSON.stringify(connections)}`,
         );
 
         if (existingConnectionIdx !== -1) {
@@ -61,16 +74,17 @@ export const useDraggingWire = (
           newConnections.splice(existingConnectionIdx, 1);
           onConnectionsChange(newConnections);
 
-          const { outputName, outputNodeId } =
+          const { fromNodeId: cFromNodeId, fromPortName: cFromPortName } =
             connections[existingConnectionIdx];
 
-          const definition = nodeIODefs[outputNodeId]!.outputDefs.find(
-            (o) => o.name === outputName,
+          const definition = nodeIODefs[cFromNodeId]!.outputDefs.find(
+            (o) => o.name === cFromPortName,
           )!;
 
           setDraggingWire({
-            fromNodeId: outputNodeId,
-            fromPortName: outputName,
+            fromNodeId: cFromNodeId,
+            fromPortName: cFromPortName,
+            fromPortIsInput: false,
             dataType: definition.type,
           });
         }
@@ -82,6 +96,7 @@ export const useDraggingWire = (
         setDraggingWire({
           fromNodeId,
           fromPortName,
+          fromPortIsInput: !!isInput,
           dataType: definition.type,
         });
       }
@@ -91,48 +106,56 @@ export const useDraggingWire = (
 
   const onWireEndDrag = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
+      console.log(
+        `onWireEndDrag: draggingWire: ${JSON.stringify(draggingWire)}`,
+      );
+
       if (!draggingWire) return;
 
       const { nodeId: toNodeId, portName: toPortName } =
         draggingWireClosestPort ?? {};
 
+      console.log(
+        `onWireEndDrag: toNodeId: ${toNodeId}, toPortName: ${toPortName}`,
+      );
+
       if (!toNodeId || !toPortName) return;
 
       e.stopPropagation();
 
-      let inputNode: Node | undefined = nodeMap[toNodeId];
-      let outputNode: Node | undefined = nodeMap[draggingWire.fromNodeId];
+      let fromNode: Node | undefined = nodeMap[draggingWire.fromNodeId];
+      let toNode: Node | undefined = nodeMap[toNodeId];
 
-      let inputNodeIODef = inputNode ? nodeIODefs[inputNode.id]! : undefined;
-      let outputNodeIODef = outputNode ? nodeIODefs[outputNode.id]! : undefined;
+      let fromNodeIODef = fromNode ? nodeIODefs[fromNode.id]! : undefined;
+      let toNodeIODef = toNode ? nodeIODefs[toNode.id]! : undefined;
 
-      let input = inputNode
-        ? inputNodeIODef?.inputDefs.find((i) => i.name === toPortName)
+      let inputDef: NodeInputPortDef | undefined = toNode
+        ? toNodeIODef?.inputDefs.find((i) => i.name === toPortName)
         : undefined;
-      let output = outputNode
-        ? outputNodeIODef?.outputDefs.find(
-            (i) => i.name === draggingWire.fromPortName,
+      let outputDef: NodeOutputPortDef | undefined = fromNode
+        ? fromNodeIODef?.outputDefs.find(
+            (o) => o.name === draggingWire.fromPortName,
           )
         : undefined;
 
-      if (!inputNode || !outputNode || !input || !output) {
-        const swap = inputNode;
-        inputNode = outputNode;
-        outputNode = swap;
+      if (!fromNode || !toNode || !inputDef || !outputDef) {
+        const swap = fromNode;
+        fromNode = toNode;
+        toNode = swap;
 
-        inputNodeIODef = inputNode ? nodeIODefs[inputNode.id]! : undefined;
-        outputNodeIODef = outputNode ? nodeIODefs[outputNode.id] : undefined;
+        fromNodeIODef = fromNode ? nodeIODefs[fromNode.id]! : undefined;
+        toNodeIODef = toNode ? nodeIODefs[toNode.id]! : undefined;
 
-        input = inputNode
-          ? inputNodeIODef?.inputDefs.find((i) => i.name === toPortName)
+        inputDef = toNode
+          ? toNodeIODef?.inputDefs.find((i) => i.name === toPortName)
           : undefined;
-        output = outputNode
-          ? outputNodeIODef?.outputDefs.find(
-              (i) => i.name === draggingWire.fromPortName,
+        outputDef = fromNode
+          ? fromNodeIODef?.outputDefs.find(
+              (o) => o.name === draggingWire.fromPortName,
             )
           : undefined;
 
-        if (!inputNode || !outputNode || !input || !output) {
+        if (!fromNode || !toNode || !inputDef || !outputDef) {
           setDraggingWire(undefined);
           setDraggingWireClosestPort(undefined);
           return;
@@ -142,10 +165,7 @@ export const useDraggingWire = (
       // remove the existing connection if the input port is already connected
       const existingConnectionIdx: number = connections.findIndex(
         (c) =>
-          inputNode &&
-          input &&
-          c.inputNodeId === inputNode.id &&
-          c.inputName === input.name,
+          c.fromNodeId === fromNode!.id && c.fromPortName === outputDef!.name,
       );
 
       const newConnections = [...connections];
@@ -156,10 +176,10 @@ export const useDraggingWire = (
 
       // add the new connection
       const connection: NodeConnection = {
-        inputNodeId: inputNode.id,
-        inputName: input.name,
-        outputNodeId: outputNode.id,
-        outputName: output.name,
+        fromNodeId: fromNode.id,
+        fromPortName: outputDef.name,
+        toNodeId: toNode.id,
+        toPortName: inputDef.name,
       };
 
       onConnectionsChange?.([...newConnections, connection]);

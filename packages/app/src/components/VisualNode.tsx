@@ -252,7 +252,7 @@ export const VisualNode = memo(
           onNodeGrabClick={onNodeGrabClick}
           onNodeSizeChange={onNodeSizeChange}
           onWireStartDrag={onWireStartDrag}
-          onWireEndDrag={onWireStartDrag}
+          onWireEndDrag={onWireEndDrag}
         />
       </VisualNodeContainer>
     );

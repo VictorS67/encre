@@ -89,13 +89,13 @@ export interface Node {
 }
 
 export type NodeConnection = {
-  inputNodeId: string;
+  fromNodeId: string;
 
-  inputName: string;
+  fromPortName: string;
 
-  outputNodeId: string;
+  toNodeId: string;
 
-  outputName: string;
+  toPortName: string;
 };
 
 export function getNodeTypes() {

@@ -10,6 +10,7 @@ export const Port: FC<PortProps> = memo(
     title,
     definition,
     draggingDataType,
+    isDragToEnabled,
     isClosestPortToWire,
     isInput,
     isConnected,
@@ -39,7 +40,7 @@ export const Port: FC<PortProps> = memo(
           data-portname={title}
           data-porttype={isInput ? 'input' : 'output'}
         >
-          <div className={clsx('port-hover-area')} />
+          {isDragToEnabled && <div className={clsx('port-hover-area')} />}
         </div>
         <div className={clsx('port-label')}>{title}</div>
       </div>

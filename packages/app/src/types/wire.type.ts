@@ -5,6 +5,7 @@ import { DataType, Node, NodeConnection, ValueOf } from './studio.type';
 export type Wire = {
   fromNodeId: string;
   fromPortName: string;
+  fromPortIsInput: boolean;
 
   toNodeId?: string;
   toPortName?: string;

@@ -125,9 +125,9 @@ export function getPortPositon(
 
   if (portName) {
     const key = `${node.id}-${isInput ? 'input' : 'output'}-${portName}`;
-    console.log(`getPortPositon: ${key}`);
+    // console.log(`getPortPositon: ${key}`);
     const portPosition = portPositions[key];
-    console.log(`getPortPositon: ${JSON.stringify(portPosition)}`);
+    // console.log(`getPortPositon: ${JSON.stringify(portPosition)}`);
 
     if (portPosition) {
       return { x: portPosition.x, y: portPosition.y };

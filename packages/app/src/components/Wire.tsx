@@ -19,27 +19,27 @@ export const RenderedWire: FC<RenderedWireProps> = ({
   isSelected,
   isHighlighted,
 }: RenderedWireProps) => {
-  const inputNode = nodeMap[connection.inputNodeId]!;
-  const outputNode = nodeMap[connection.outputNodeId]!;
+  const fromNode = nodeMap[connection.fromNodeId]!;
+  const toNode = nodeMap[connection.toNodeId]!;
 
-  if (!inputNode || !outputNode) {
+  if (!fromNode || !toNode) {
     return null;
   }
 
   const startPosition = getPortPositon(
-    outputNode,
-    connection.outputName,
+    fromNode,
+    connection.fromPortName,
     portPositions,
   );
   const endPosition = getPortPositon(
-    inputNode,
-    connection.outputName,
+    toNode,
+    connection.toPortName,
     portPositions,
     true,
   );
 
-  console.log(`wire start position: ${JSON.stringify(startPosition)}`);
-  console.log(`wire end position: ${JSON.stringify(endPosition)}`);
+  // console.log(`wire start position: ${JSON.stringify(startPosition)}`);
+  // console.log(`wire end position: ${JSON.stringify(endPosition)}`);
 
   return (
     <ErrorBoundary fallback={<></>}>

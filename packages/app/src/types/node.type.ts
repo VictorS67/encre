@@ -25,11 +25,7 @@ export type DraggableNodeProps = {
     fromPortName: string,
     isInput?: boolean,
   ) => void;
-  onWireEndDrag?: (
-    event: React.MouseEvent<HTMLElement>,
-    toNodeId: string,
-    toPortName: string,
-  ) => void;
+  onWireEndDrag?: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
 export type VisualNodeProps = {
@@ -61,11 +57,7 @@ export type VisualNodeProps = {
     fromPortName: string,
     isInput?: boolean,
   ) => void;
-  onWireEndDrag?: (
-    event: React.MouseEvent<HTMLElement>,
-    toNodeId: string,
-    toPortName: string,
-  ) => void;
+  onWireEndDrag?: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
 export type MinimizedVisualNodeContentProps = {
@@ -90,9 +82,5 @@ export type VisualNodeContentProps = {
     fromPortName: string,
     isInput?: boolean,
   ) => void;
-  onWireEndDrag?: (
-    event: React.MouseEvent<HTMLElement>,
-    toNodeId: string,
-    toPortName: string,
-  ) => void;
+  onWireEndDrag?: (event: React.MouseEvent<HTMLElement>) => void;
 };

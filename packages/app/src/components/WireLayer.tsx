@@ -121,7 +121,7 @@ export const WireLayer: FC<WireLayerProps> = ({
 
             console.log(
               `find closest port: nodeId: ${nodeId}, portName: ${portName}, portEl: ${JSON.stringify(
-                closestHoverEl.parentElement?.classList,
+                closestHoverEl.parentElement?.dataset,
               )}`,
             );
 
@@ -131,6 +131,7 @@ export const WireLayer: FC<WireLayerProps> = ({
               input,
               portEl: closestHoverEl.parentElement!,
             });
+            // setClosestPort(undefined);
           } else {
             setClosestPort(undefined);
           }
@@ -176,17 +177,15 @@ export const WireLayer: FC<WireLayerProps> = ({
             {draggingWire.toNodeId && draggingWire.toPortName ? (
               <RenderedWire
                 connection={{
-                  inputNodeId: draggingWire.fromNodeId,
-                  inputName: draggingWire.fromPortName,
-                  outputNodeId: draggingWire.toNodeId,
-                  outputName: draggingWire.toPortName,
+                  fromNodeId: draggingWire.fromNodeId,
+                  fromPortName: draggingWire.fromPortName,
+                  toNodeId: draggingWire.toNodeId,
+                  toPortName: draggingWire.toPortName,
                 }}
                 nodeMap={nodeMap}
                 portPositions={portPositions}
                 isSelected={false}
-                isHighlighted={
-                  !!(draggingWire.toNodeId && draggingWire.toPortName)
-                }
+                isHighlighted={false}
               />
             ) : (
               <PartialWire
@@ -203,14 +202,14 @@ export const WireLayer: FC<WireLayerProps> = ({
         )}
         {connections.map((c) => {
           const isHighlightedNode: boolean | undefined =
-            highlightedNodeIds?.includes(c.inputNodeId) ||
-            highlightedNodeIds?.includes(c.outputNodeId);
+            highlightedNodeIds?.includes(c.fromNodeId) ||
+            highlightedNodeIds?.includes(c.toNodeId);
 
           const isHighlightedPort: boolean | undefined =
             highlightedPort &&
-            (highlightedPort.isInput ? c.inputNodeId : c.outputNodeId) ===
+            (highlightedPort.isInput ? c.toNodeId : c.fromNodeId) ===
               highlightedPort.nodeId &&
-            (highlightedPort.isInput ? c.inputName : c.outputName) ===
+            (highlightedPort.isInput ? c.toPortName : c.fromPortName) ===
               highlightedPort.portName;
 
           const isHighlighted: boolean =
@@ -219,7 +218,7 @@ export const WireLayer: FC<WireLayerProps> = ({
           return (
             <ErrorBoundary
               fallback={<></>}
-              key={`wire-${c.inputNodeId}-${c.inputName}`}
+              key={`wire-${c.toNodeId}-${c.toPortName}`}
             >
               <RenderedWire
                 connection={c}

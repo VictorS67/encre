@@ -108,10 +108,14 @@ const NodePortGrp = styled.div<{
     margin: 0 -1px;
   }
 
-  .port.connected .port-circle,
-  .port.closest .port-circle {
+  .port.connected .port-circle{
     background-color: red;
     border: 2px solid green;
+  }
+
+  .port.closest .port-circle {
+    background-color: green;
+    border: 2px solid red;
   }
 
   .input-ports .port.connected {
@@ -162,32 +166,37 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
 
     const onMouseUpPort = useStableCallback(
       (e: React.MouseEvent<HTMLDivElement>, portName: string) => {
+        e.stopPropagation();
+        e.preventDefault();
         console.log(`Port ${portName} is moused up`);
-        onWireEndDrag?.(e, node.id, portName);
+        onWireEndDrag?.(e);
       },
     );
 
     return (
       <NodePortGrp nodeWidth={nodeWidth}>
         <div className="input-ports">
-          {inputDefs.map((input: NodeInputPortDef) => {
-            const isConnected: boolean = connections.some(
-              (c) =>
-                (c.inputNodeId === node.id && c.inputName === input.name) ||
-                (draggingWire?.toNodeId === node.id &&
-                  draggingWire?.toPortName === input.name),
-            );
+          {inputDefs.map((inputDef: NodeInputPortDef) => {
+            const isConnected: boolean =
+              connections.some(
+                (c) =>
+                  c.toNodeId === inputDef.nodeId &&
+                  c.toPortName === inputDef.name,
+              ) ||
+              (draggingWire?.toNodeId === inputDef.nodeId &&
+                draggingWire?.toPortName === inputDef.name);
 
             return (
               <Port
-                key={`${node.id}-input-${input.name}`}
-                nodeId={input.nodeId}
-                title={input.name}
-                definition={input}
+                key={`${inputDef.nodeId}-input-${inputDef.name}`}
+                nodeId={inputDef.nodeId}
+                title={inputDef.name}
+                definition={inputDef}
                 draggingDataType={draggingWire?.dataType}
+                isDragToEnabled={true}
                 isClosestPortToWire={
-                  draggingWireClosestPort?.nodeId === node.id &&
-                  draggingWireClosestPort.portName === input.name
+                  draggingWireClosestPort?.nodeId === inputDef.nodeId &&
+                  draggingWireClosestPort?.portName === inputDef.name
                 }
                 isInput
                 isConnected={isConnected}
@@ -198,25 +207,23 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
           })}
         </div>
         <div className="output-ports">
-          {outputDefs.map((output: NodeOutputPortDef) => {
-            const isConnected: boolean = connections.some(
-              (c) =>
-                (c.outputNodeId === node.id && c.outputName === output.name) ||
-                (draggingWire?.fromNodeId === node.id &&
-                  draggingWire?.fromPortName === output.name),
-            );
+          {outputDefs.map((outputDef: NodeOutputPortDef) => {
+            const isConnected: boolean =
+              connections.some(
+                (c) =>
+                  c.fromNodeId === outputDef.nodeId &&
+                  c.fromPortName === outputDef.name,
+              ) ||
+              (draggingWire?.fromNodeId === outputDef.nodeId &&
+                draggingWire?.fromPortName === outputDef.name);
 
             return (
               <Port
-                key={`${node.id}-output-${output.name}`}
-                nodeId={output.nodeId}
-                title={output.name}
-                definition={output}
+                key={`${outputDef.nodeId}-output-${outputDef.name}`}
+                nodeId={outputDef.nodeId}
+                title={outputDef.name}
+                definition={outputDef}
                 draggingDataType={draggingWire?.dataType}
-                isClosestPortToWire={
-                  draggingWireClosestPort?.nodeId === node.id &&
-                  draggingWireClosestPort.portName === output.name
-                }
                 isConnected={isConnected}
                 onMouseDown={onMouseDownPort}
                 onMouseUp={onMouseUpPort}
