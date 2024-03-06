@@ -25,17 +25,25 @@ export const NodeGraphBuilder: FC = () => {
     // );
   });
 
-  const onNodesSelect = useStableCallback((newNodes: Node[]) => {
-    SetSelectingNodeIds((nodeIds: string[]) =>
-      [...new Set(...nodeIds, ...newNodes.map((n) => n.id))].filter(
-        (nodeId) => nodeMap[nodeId] !== null,
-      ),
-    );
+  const onNodesSelect = useStableCallback(
+    (newNodes: Node[], isMulti?: boolean) => {
+      if (!isMulti && newNodes.length > 1) return;
 
-    // console.log(
-    //   `onNodesSelect: selectingNodeIds: ${JSON.stringify(selectingNodeIds)}`,
-    // );
-  });
+      if (isMulti) {
+        SetSelectingNodeIds((nodeIds: string[]) =>
+          [...new Set(...nodeIds, ...newNodes.map((n) => n.id))].filter(
+            (nodeId) => nodeMap[nodeId] !== null,
+          ),
+        );
+      } else {
+        SetSelectingNodeIds(newNodes.map((n) => n.id));
+      }
+
+      // console.log(
+      //   `onNodesSelect: selectingNodeIds: ${JSON.stringify(selectingNodeIds)}`,
+      // );
+    },
+  );
 
   return (
     <ErrorBoundary

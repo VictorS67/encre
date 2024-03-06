@@ -5,6 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
 import { VisualNode } from './VisualNode';
+import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { DraggableNodeProps } from '../types/node.type';
 
@@ -42,10 +43,10 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         isMinimized={isMinimized}
         isSelecting={isSelecting}
         canvasZoom={canvasZoom}
-        onNodeSizeChange={(width, height) =>
-          onNodeSizeChange?.(node, width, height)
-        }
-        onNodeSelect={() => onNodeSelect?.(node)}
+        onNodeSizeChange={useStableCallback(
+          (width, height) => onNodeSizeChange?.(node, width, height),
+        )}
+        onNodeSelect={useStableCallback(() => onNodeSelect?.(node))}
         onNodeMouseOver={onNodeMouseOver}
         onNodeMouseOut={onNodeMouseOut}
         onWireStartDrag={onWireStartDrag}

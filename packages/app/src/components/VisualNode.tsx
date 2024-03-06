@@ -38,6 +38,7 @@ const VisualNodeContainer = styled.div`
   border-radius: 7px;
   display: flex;
   flex-direction: column;
+  position: absolute;
 
   .resize-box {
     width: 10px;
@@ -190,7 +191,7 @@ export const VisualNode = memo(
         transform: `translate(${node.visualInfo.position.x + xDelta}px, ${
           node.visualInfo.position.y + yDelta
         }px) scale(${scale ?? 1})`,
-        zIndex: node.visualInfo.position.zIndex,
+        zIndex: node.visualInfo.position.zIndex ?? 0,
         width: node.visualInfo.size.width,
         height: node.visualInfo.size.height,
         border: '3px solid var(--primary-color)',
@@ -405,7 +406,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       e.stopPropagation();
     });
 
-    // TODO: Add Input and Output circles
     return (
       <NodeContentContainer onClick={onNodeGrabClick}>
         <div style={{ width: '100%' }}>

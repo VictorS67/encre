@@ -1,3 +1,5 @@
+import { HTMLAttributes } from 'react';
+
 import {
   DataType,
   Node,
@@ -27,6 +29,7 @@ export type PortProps = {
   nodeId: string;
   title: string;
   definition: NodeInputPortDef | NodeOutputPortDef;
+  attributeListeners?: HTMLAttributes<HTMLDivElement>;
   draggingDataType?: DataType | Readonly<DataType[]>;
   isDragToEnabled?: boolean;
   isClosestPortToWire?: boolean;
@@ -44,6 +47,7 @@ export type NodePortGroupProps = {
   node: Node;
   connections: NodeConnection[];
   nodeWidth: number;
+  attributeListeners?: HTMLAttributes<HTMLDivElement>;
   draggingWire?: DraggingWire;
   draggingWireClosestPort?: DraggingWireClosestPort;
   onWireStartDrag?: (

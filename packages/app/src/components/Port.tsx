@@ -9,6 +9,7 @@ export const Port: FC<PortProps> = memo(
     nodeId,
     title,
     definition,
+    attributeListeners,
     draggingDataType,
     isDragToEnabled,
     isClosestPortToWire,

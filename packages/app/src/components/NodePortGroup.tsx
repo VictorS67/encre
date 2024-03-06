@@ -144,6 +144,7 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
     node,
     connections,
     nodeWidth,
+    attributeListeners,
     draggingWire,
     draggingWireClosestPort,
     onWireStartDrag,
@@ -174,7 +175,7 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
     );
 
     return (
-      <NodePortGrp nodeWidth={nodeWidth}>
+      <NodePortGrp nodeWidth={nodeWidth} {...attributeListeners}>
         <div className="input-ports">
           {inputDefs.map((inputDef: NodeInputPortDef) => {
             const isConnected: boolean =
@@ -192,6 +193,7 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
                 nodeId={inputDef.nodeId}
                 title={inputDef.name}
                 definition={inputDef}
+                attributeListeners={attributeListeners}
                 draggingDataType={draggingWire?.dataType}
                 isDragToEnabled={true}
                 isClosestPortToWire={
@@ -223,6 +225,7 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
                 nodeId={outputDef.nodeId}
                 title={outputDef.name}
                 definition={outputDef}
+                attributeListeners={attributeListeners}
                 draggingDataType={draggingWire?.dataType}
                 isConnected={isConnected}
                 onMouseDown={onMouseDownPort}

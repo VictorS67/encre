@@ -438,7 +438,37 @@ export const graphState = atom<NodeGraph>({
           ];
         },
         getBody: async (): Promise<NodeBody> => {
-          return [];
+          return [
+            {
+              type: 'code',
+              text: `attr1: "1"
+attr2: [2, 3]
+attr3: true
+attr4: [
+  {
+    "sub1": 1,
+    "sub2": "2"
+  },
+  {
+    "sub3": 3,
+    "sub4": "4"
+  }
+]
+attr6: `,
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+          ];
         },
         validateInputs: function (
           inputs?: ProcessInputMap | undefined,
@@ -536,7 +566,37 @@ export const graphState = atom<NodeGraph>({
           ];
         },
         getBody: async (): Promise<NodeBody> => {
-          return [];
+          return [
+            {
+              type: 'code',
+              text: `attr1: "1"
+attr2: [2, 3]
+attr3: true
+attr4: [
+  {
+    "sub1": 1,
+    "sub2": "2"
+  },
+  {
+    "sub3": 3,
+    "sub4": "4"
+  }
+]
+attr6: `,
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+          ];
         },
         validateInputs: function (
           inputs?: ProcessInputMap | undefined,
