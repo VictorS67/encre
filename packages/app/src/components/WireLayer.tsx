@@ -160,12 +160,12 @@ export const WireLayer: FC<WireLayerProps> = ({
     };
   }, [onMouseDownWire, onMouseMoveWire]);
 
-  // useLayoutEffect(() => {}, [
-  //   draggingWire,
-  //   mousePosition.x,
-  //   mousePosition.y,
-  //   setClosestPort,
-  // ]);
+  useLayoutEffect(() => {}, [
+    draggingWire,
+    mousePosition.x,
+    mousePosition.y,
+    setClosestPort,
+  ]);
 
   return (
     <WireLayerContainer>

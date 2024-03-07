@@ -243,6 +243,7 @@ export const VisualNode = memo(
         data-nodeid={node.id}
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
+        onMouseDown={onNodeGrabClick}
       >
         <VisualNodeContent
           node={node}
@@ -407,7 +408,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     return (
-      <NodeContentContainer onClick={onNodeGrabClick}>
+      <NodeContentContainer>
         <div style={{ width: '100%' }}>
           <div
             className={isMinimized ? 'node-minimize-card' : 'node-card'}

@@ -1,10 +1,11 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { NodeCanvas } from './NodeCanvas';
 import { useStableCallback } from '../hooks/useStableCallback';
+import { isDraggingMultipleNodesState } from '../state/canvas';
 import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { Node } from '../types/studio.type';
@@ -12,7 +13,7 @@ import { Node } from '../types/studio.type';
 export const NodeGraphBuilder: FC = () => {
   const [nodes, setNodes] = useRecoilState(nodesState);
   const [connections, setConnections] = useRecoilState(connectionsState);
-  const [selectingNodeIds, SetSelectingNodeIds] = useRecoilState(
+  const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
     selectingNodeIdsState,
   );
 
@@ -25,24 +26,35 @@ export const NodeGraphBuilder: FC = () => {
     // );
   });
 
-  const onNodesSelect = useStableCallback(
+  const onNodesSelect = useCallback(
     (newNodes: Node[], isMulti?: boolean) => {
-      if (!isMulti && newNodes.length > 1) return;
+      // console.log(
+      //   `onNodeStartDrag: selectingNodeIds: --- ${newNodes.map(
+      //     (n) => n.id,
+      //   )}, isDraggingMultipleNodes: ${isMulti}`,
+      // );
 
       if (isMulti) {
-        SetSelectingNodeIds((nodeIds: string[]) =>
-          [...new Set(...nodeIds, ...newNodes.map((n) => n.id))].filter(
+        setSelectingNodeIds((nodeIds: string[]) =>
+          [...new Set([...nodeIds, ...newNodes.map((n) => n.id)])].filter(
             (nodeId) => nodeMap[nodeId] !== null,
           ),
         );
       } else {
-        SetSelectingNodeIds(newNodes.map((n) => n.id));
+        if (newNodes.length > 1) return;
+
+        setSelectingNodeIds(
+          newNodes
+            .map((n) => n.id)
+            .filter((nodeId) => nodeMap[nodeId] !== null),
+        );
       }
 
       // console.log(
       //   `onNodesSelect: selectingNodeIds: ${JSON.stringify(selectingNodeIds)}`,
       // );
     },
+    [nodeMap],
   );
 
   return (

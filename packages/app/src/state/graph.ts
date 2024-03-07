@@ -358,7 +358,7 @@ export const graphState = atom<NodeGraph>({
         id: '2',
         type: 'prompt',
         subType: 'string',
-        title: '456',
+        title: '2',
         name: 'StringPrompt',
         aliases: {},
         secrets: {},
@@ -486,7 +486,7 @@ attr6: `,
         id: '3',
         type: 'prompt',
         subType: 'string',
-        title: '123',
+        title: '3',
         name: 'StringPrompt',
         aliases: {},
         secrets: {},
@@ -560,6 +560,134 @@ attr6: `,
             },
             {
               nodeId: '3',
+              name: 'prompt2',
+              type: ['string'],
+            },
+          ];
+        },
+        getBody: async (): Promise<NodeBody> => {
+          return [
+            {
+              type: 'code',
+              text: `attr1: "1"
+attr2: [2, 3]
+attr3: true
+attr4: [
+  {
+    "sub1": 1,
+    "sub2": "2"
+  },
+  {
+    "sub3": 3,
+    "sub4": "4"
+  }
+]
+attr6: `,
+              language: 'encre-code',
+              keywords: [
+                'attr1',
+                'attr2',
+                'attr3',
+                'attr4',
+                'attr5',
+                'attr6',
+                'attr7',
+                'attr8',
+              ],
+              isHoldingValues: true,
+            },
+          ];
+        },
+        validateInputs: function (
+          inputs?: ProcessInputMap | undefined,
+        ): boolean {
+          throw new Error('Function not implemented.');
+        },
+        process: function (
+          inputs: ProcessInputMap,
+          context: ProcessContext,
+        ): Promise<ProcessOutputMap> {
+          throw new Error('Function not implemented.');
+        },
+      },
+      {
+        id: '4',
+        type: 'prompt',
+        subType: 'string',
+        title: '4',
+        name: 'StringPrompt',
+        aliases: {},
+        secrets: {},
+        kwargs: {
+          value: {
+            type: 'string',
+            value:
+              'Imagine a futuristic city where buildings are made of a shimmering, translucent material, and the streets are bustling with people and various types of vehicles, some of which float above the ground. The sky is dotted with drones and the occasional glimpse of a green park or garden can be seen between the structures. In the foreground, a diverse group of individuals is gathered around a holographic display, engaged in a lively discussion. The scene is set during the evening, with the city lights casting a warm glow over everything.',
+          },
+        },
+        visualInfo: {
+          position: {
+            x: 300,
+            y: 300,
+            zIndex: 3,
+          },
+          size: {
+            width: 300,
+            height: 500,
+          },
+        },
+        inputs: {
+          prompt: ['string'],
+          prompt1: ['string'],
+          prompt2: ['string'],
+        },
+        outputs: {
+          prompt: ['string'],
+          prompt1: ['string'],
+          prompt2: ['string'],
+        },
+        setKwarg: function (key: string, value: unknown): void {
+          throw new Error('Function not implemented.');
+        },
+        getInputPortDefs: function (
+          connections: NodeConnection[],
+          nodes: Record<string, Node>,
+        ): NodeInputPortDef[] {
+          return [
+            {
+              nodeId: '4',
+              name: 'prompt',
+              type: ['string'],
+            },
+            {
+              nodeId: '4',
+              name: 'prompt1',
+              type: ['string'],
+            },
+            {
+              nodeId: '4',
+              name: 'prompt2',
+              type: ['string'],
+            },
+          ];
+        },
+        getOutputPortDefs: (
+          connections: NodeConnection[],
+          nodes: Record<string, Node>,
+        ): NodeOutputPortDef[] => {
+          return [
+            {
+              nodeId: '4',
+              name: 'prompt',
+              type: ['string'],
+            },
+            {
+              nodeId: '4',
+              name: 'prompt1',
+              type: ['string'],
+            },
+            {
+              nodeId: '4',
               name: 'prompt2',
               type: ['string'],
             },

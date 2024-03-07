@@ -1,5 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
 import { css } from '@emotion/react';
@@ -29,6 +36,7 @@ import { useNodePortPositons } from '../hooks/usePortPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   canvasPositionState,
+  isDraggingMultipleNodesState,
   isOnlyDraggingCanvasState,
   lastMousePositionState,
 } from '../state/canvas';
@@ -144,6 +152,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     lastMousePositionState,
   );
 
+  const isDraggingMultipleNodes = useRecoilValue(isDraggingMultipleNodesState);
   const [isOnlyDraggingCanvas, setIsOnlyDraggingCanvas] = useRecoilState(
     isOnlyDraggingCanvasState,
   );
@@ -452,11 +461,14 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     );
   };
 
-  const onNodeSelect = (node: Node) => {
-    onNodesSelect([node]);
+  const onNodeSelect = useCallback(
+    (node: Node) => {
+      onNodesSelect([node], isDraggingMultipleNodes);
 
-    // console.log(`onNodeSelect: node: ${node.id}`);
-  };
+      // console.log(`onNodeSelect: node: ${node.id}`);
+    },
+    [isDraggingMultipleNodes],
+  );
 
   const onNodeMouseOver = useStableCallback(
     (event: React.MouseEvent, nodeId: string) => {

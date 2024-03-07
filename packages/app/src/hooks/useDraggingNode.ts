@@ -7,6 +7,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { useStableCallback } from './useStableCallback';
 import {
   canvasPositionState,
+  isDraggingMultipleNodesState,
   isOnlyDraggingCanvasState,
 } from '../state/canvas';
 import {
@@ -18,7 +19,10 @@ import {
 import { Node } from '../types/studio.type';
 
 export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
-  const selectingNodeIds = useRecoilValue(selectingNodeIdsState);
+  const isDraggingMultipleNodes = useRecoilValue(isDraggingMultipleNodesState);
+  const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
+    selectingNodeIdsState,
+  );
   const nodes = useRecoilValue(nodesState);
   const nodeMap = useRecoilValue(nodeMapState);
   const canvasPosition = useRecoilValue(canvasPositionState);
@@ -30,13 +34,26 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
       const draggingNodeId: string = e.active.id as string;
 
       const nodesToDrag: Node[] =
-        selectingNodeIds.length > 0
+        isDraggingMultipleNodes && selectingNodeIds.length > 0
           ? [...new Set([...selectingNodeIds, draggingNodeId])]
               .map((id) => nodeMap[id])
               .filter((val) => val != null)
           : [nodeMap[draggingNodeId]].filter((val) => val != null);
 
       setDraggingNodes(nodesToDrag);
+      setSelectingNodeIds(
+        isDraggingMultipleNodes
+          ? [...new Set([...selectingNodeIds, draggingNodeId])].filter(
+              (id) => nodeMap[id] != null,
+            )
+          : [draggingNodeId],
+      );
+
+      // console.log(
+      //   `onNodeStartDrag: selectingNodeIds: ${JSON.stringify(
+      //     selectingNodeIds,
+      //   )} draggingNodeId: ${draggingNodeId}, isDraggingMultipleNodes: ${isDraggingMultipleNodes}`,
+      // );
 
       const maxZIndex: number = nodes.reduce((maxVal, node) => {
         const zIndex: number =
@@ -71,7 +88,15 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
         }),
       );
     },
-    [selectingNodeIds, nodes, nodeMap, setDraggingNodes, onNodesChange],
+    [
+      isDraggingMultipleNodes,
+      selectingNodeIds,
+      nodes,
+      nodeMap,
+      setSelectingNodeIds,
+      setDraggingNodes,
+      onNodesChange,
+    ],
   );
 
   const onNodeEndDrag = useCallback(

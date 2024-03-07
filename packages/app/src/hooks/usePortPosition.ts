@@ -2,6 +2,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
+import { useStableCallback } from './useStableCallback';
 import { nodeMapState } from '../state/node';
 import { PortPositons } from '../types/port.type';
 import { Node } from '../types/studio.type';
@@ -11,8 +12,13 @@ export function useNodePortPositons() {
   const nodeMap = useRecoilValue(nodeMapState);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const calculatePosition = useCallback(
-    (el: HTMLDivElement, isOverlayNode: boolean, seen: Set<string>) => {
+  const calculatePosition = useStableCallback(
+    (
+      currNodeMap: Record<string, Node>,
+      el: HTMLDivElement,
+      isOverlayNode: boolean,
+      seen: Set<string>,
+    ) => {
       const nodeId = el.dataset.nodeid as string | undefined;
       const portName = el.dataset.portname as string | undefined;
       const portType = el.dataset.porttype as 'input' | 'output' | undefined;
@@ -22,7 +28,7 @@ export function useNodePortPositons() {
       const key = `${nodeId}-${portType}-${portName}`;
       if (seen.has(key)) return null;
 
-      const node = nodeMap[nodeId];
+      const node = currNodeMap[nodeId];
       if (!node) return null;
 
       let { x, y } = node.visualInfo.position;
@@ -71,7 +77,6 @@ export function useNodePortPositons() {
 
       return { key, pos };
     },
-    [nodeMap],
   );
 
   const recalculate = useCallback(() => {
@@ -86,6 +91,7 @@ export function useNodePortPositons() {
     portEls.forEach((el) => {
       const isOverlayNode: boolean = el.closest('.overlayed') !== null;
       const result = calculatePosition(
+        nodeMap,
         el as HTMLDivElement,
         isOverlayNode,
         seen,
@@ -102,9 +108,10 @@ export function useNodePortPositons() {
     });
 
     if (changed) {
+      console.log(`position is changed to ${JSON.stringify(newPortPositions)}`);
       setPortPositions(newPortPositions);
     }
-  }, [portPositions, calculatePosition]);
+  }, [portPositions, nodeMap, setPortPositions, canvasRef]);
 
   useLayoutEffect(() => {
     recalculate();

@@ -23,5 +23,5 @@ export type NodeCanvasProps = {
   connections: NodeConnection[];
   onNodesChange: (newNodes: Node[]) => void;
   onConnectionsChange: (newConnections: NodeConnection[]) => void;
-  onNodesSelect: (newNodes: Node[]) => void;
+  onNodesSelect: (newNodes: Node[], isMulti?: boolean) => void;
 };

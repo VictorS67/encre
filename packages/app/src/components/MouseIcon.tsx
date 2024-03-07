@@ -3,11 +3,18 @@ import React, { FC } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
-import { isOnlyDraggingCanvasState } from '../state/canvas';
+import {
+  isDraggingMultipleNodesState,
+  isOnlyDraggingCanvasState,
+} from '../state/canvas';
 
 export const MouseIcon: FC = () => {
   const [isOnlyDraggingCanvas, setIsOnlyDraggingCanvas] = useRecoilState(
     isOnlyDraggingCanvasState,
+  );
+
+  const [isDraggingMultipleNodes, setIsDraggingMultipleNodes] = useRecoilState(
+    isDraggingMultipleNodesState,
   );
 
   useGlobalHotkey(
@@ -19,6 +26,18 @@ export const MouseIcon: FC = () => {
     (e: KeyboardEvent) => {
       e.preventDefault();
       setIsOnlyDraggingCanvas(false);
+    },
+  );
+
+  useGlobalHotkey(
+    ['ShiftLeft', 'ShiftRight'],
+    (e: KeyboardEvent) => {
+      e.preventDefault();
+      setIsDraggingMultipleNodes(true);
+    },
+    (e: KeyboardEvent) => {
+      e.preventDefault();
+      setIsDraggingMultipleNodes(false);
     },
   );
 
