@@ -11,6 +11,7 @@ import React, {
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useMergeRefs } from '@floating-ui/react';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -20,6 +21,7 @@ import { Icon } from './Icon';
 import { NodeContentBody } from './NodeContentBody';
 import { NodePortGroup } from './NodePortGroup';
 import { ResizeBox } from './ResizeBox';
+import { useRipple } from '../hooks/useAnimation';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
@@ -36,9 +38,26 @@ const VisualNodeContainer = styled.div`
   color: var(--text-color);
   background: var(--node-background-color);
   border-radius: 7px;
+  border: 3px solid var(--primary-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   position: absolute;
+  // overflow: hidden;
+  transition-timing-function: ease-out;
+  transition-property: box-shadow, border-color;
+  transform-origin: top left;
+
+  &.selected::before {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 2px solid var(--text-disabled-color);
+    border-radius: calc(7px + 8px - 3px - 2px);
+    box-sizing: border-box;
+  }
 
   .resize-box {
     width: 10px;
@@ -48,6 +67,7 @@ const VisualNodeContainer = styled.div`
     right: 0;
     bottom: 0;
     border-top-left-radius: 10px;
+    border-bottom-right-radius: calc(7px - 3px);
     background-color: var(--canvas-foreground-color-1);
   }
 `;
@@ -61,15 +81,33 @@ const NodeContentContainer = styled.div`
 
   .node-minimize-card,
   .node-card {
-    background: var(--node-background-color);
+    // background: var(--node-background-color);
     display: flex;
     flex-direction: column;
     gap: 5px;
     align-items: flex-start;
     align-self: stretch;
     padding: 8px 10px;
-    border-top-right-radius: 7px;
-    border-top-left-radius: 7px;
+  }
+
+  .node-card-info {
+    background: var(--node-background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 5px;
+    border-top-left-radius: calc(7px - 3px);
+    border-top-right-radius: calc(7px - 3px);
+    position: relative;
+  }
+
+  .node-card-dragging-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
   .node-header {
@@ -132,19 +170,27 @@ const NodeContentContainer = styled.div`
     text-align: center;
   }
 
-  .node-minimize-content,
-  .node-content {
+  .node-card-body {
     background: var(--node-forground-color);
     flex-grow: 1;
-    overflow-y: scroll;
+    display: flex;
+    align-self: stretch;
+    border-bottom-right-radius: calc(7px - 3px);
+    border-bottom-left-radius: calc(7px - 3px);
+    overflow: hidden;
+  }
+
+  .node-minimize-content,
+  .node-content {
+    width: 100%;
+    height: inherit;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-self: stretch;
     gap: 2px;
     padding: 8px 4px 8px 7px;
-    border-bottom-right-radius: 7px;
-    border-bottom-left-radius: 7px;
   }
 
   .node-minimize-content > * {
@@ -170,6 +216,7 @@ export const VisualNode = memo(
       attributes,
       attributeListeners,
       isDragging,
+      isSelecting,
       isOverlay,
       isMinimized,
       scale,
@@ -194,7 +241,6 @@ export const VisualNode = memo(
         zIndex: node.visualInfo.position.zIndex ?? 0,
         width: node.visualInfo.size.width,
         height: node.visualInfo.size.height,
-        border: '3px solid var(--primary-color)',
       };
 
       return styling;
@@ -234,6 +280,8 @@ export const VisualNode = memo(
     return (
       <VisualNodeContainer
         className={clsx('node', {
+          dragged: isDragging,
+          selected: isSelecting,
           overlayed: isOverlay,
           minimized: isMinimized,
         })}
@@ -243,7 +291,7 @@ export const VisualNode = memo(
         data-nodeid={node.id}
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
-        onMouseDown={onNodeGrabClick}
+        onClick={onNodeGrabClick}
       >
         <VisualNodeContent
           node={node}
@@ -409,11 +457,11 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
 
     return (
       <NodeContentContainer>
-        <div style={{ width: '100%' }}>
+        <div className="node-card-info">
+          <div className="node-card-dragging-area" {...attributeListeners} />
           <div
             className={isMinimized ? 'node-minimize-card' : 'node-card'}
             style={cardHeightStyling}
-            {...attributeListeners}
           >
             <div className="node-header">
               <div className="node-tag-grp">
@@ -455,18 +503,19 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           </div>
         </div>
 
-        <div
-          className={isMinimized ? 'node-minimize-content' : 'node-content'}
-          style={contentTopBorderStyling}
-          onWheel={onScrollNodeBody}
-        >
-          <ErrorBoundary
-            fallback={
-              <div>Something wrong when rendering node content body...</div>
-            }
+        <div className={clsx('node-card-body')} onWheel={onScrollNodeBody}>
+          <div
+            className={isMinimized ? 'node-minimize-content' : 'node-content'}
+            style={contentTopBorderStyling}
           >
-            <NodeContentBody node={node} />
-          </ErrorBoundary>
+            <ErrorBoundary
+              fallback={
+                <div>Something wrong when rendering node content body...</div>
+              }
+            >
+              <NodeContentBody node={node} />
+            </ErrorBoundary>
+          </div>
         </div>
 
         <ResizeBox onResizeStart={onReiszeStart} onResizeMove={onResizeMove} />

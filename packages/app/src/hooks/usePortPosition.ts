@@ -107,8 +107,12 @@ export function useNodePortPositons() {
       }
     });
 
+    console.log(
+      `position is changed to ${JSON.stringify(
+        newPortPositions,
+      )}, changed: ${changed}`,
+    );
     if (changed) {
-      console.log(`position is changed to ${JSON.stringify(newPortPositions)}`);
       setPortPositions(newPortPositions);
     }
   }, [portPositions, nodeMap, setPortPositions, canvasRef]);

@@ -256,11 +256,20 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   });
 
   const canvasMouseDown = useStableCallback((event: React.MouseEvent) => {
-    // Check if only dragging canvas is true
-    if (!isOnlyDraggingCanvas) return;
-
     // Check if main button (ususally the left button) is pressed
     if (event.button !== 0) return;
+
+    event.preventDefault();
+
+    const isClickingOnCanvas: boolean =
+      (event.target as Element).className === event.currentTarget.className;
+
+    if (isClickingOnCanvas) {
+      onNodesSelect([]);
+    }
+
+    // Check if only dragging canvas is true
+    if (!isOnlyDraggingCanvas) return;
 
     // Check if canvas is mouse-down
     // if (
@@ -268,8 +277,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     // ) {
     //   return;
     // }
-
-    event.preventDefault();
 
     // Cancel Context Menu
     setIsContextMenuDisabled(true);
@@ -288,6 +295,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   const canvasMouseMove = useThrottleFn(
     (event: React.MouseEvent) => {
+      recalculatePortPositions();
+
       // Check if only dragging canvas is true
       if (!isOnlyDraggingCanvas) return;
 
@@ -298,8 +307,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         y: event.clientY,
         target: event.target,
       };
-
-      recalculatePortPositions();
 
       if (isDraggingCanvas) {
         // Compute dragging distance
@@ -356,6 +363,12 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       clientX: number,
       clientY: number,
     ) => {
+      console.log(
+        `zoomDebounced: isAnyParentScrollable: ${isAnyParentScrollable(
+          target,
+        )}`,
+      );
+
       // Check if mouse is placed on the background
       if (isAnyParentScrollable(target)) return;
 
@@ -431,14 +444,14 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const selectingUniqueNodeIds = useMemo(() => {
     const nodeSet = new Set(selectingNodeIds);
 
-    if (hoveringNodeId && !hoveringPort) {
-      nodeSet.add(hoveringNodeId);
-    }
+    // if (hoveringNodeId && !hoveringPort) {
+    //   nodeSet.add(hoveringNodeId);
+    // }
 
     // console.log(`selectingUniqueNodeIds: ${JSON.stringify([...nodeSet])}`);
 
     return [...nodeSet];
-  }, [selectingNodeIds, hoveringNodeId, hoveringPort]);
+  }, [selectingNodeIds]);
 
   const onNodeSizeChange = (node: Node, width: number, height: number) => {
     onNodesChange(
@@ -578,6 +591,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                   key={draggingNode.id}
                   node={draggingNode}
                   connections={draggingNodeConnections}
+                  isSelecting={selectingUniqueNodeIds.includes(draggingNode.id)}
                   isOverlay
                   isMinimized={isMinimized}
                   canvasZoom={canvasPosition.zoom}
