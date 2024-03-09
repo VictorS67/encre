@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import { DragEndEvent, DragMoveEvent, DragStartEvent } from '@dnd-kit/core';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 

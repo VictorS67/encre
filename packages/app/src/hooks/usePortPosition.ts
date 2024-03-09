@@ -7,12 +7,12 @@ import { nodeMapState } from '../state/node';
 import { PortPositons } from '../types/port.type';
 import { Node } from '../types/studio.type';
 
-export function useNodePortPositons() {
+export function useNodePortPositions() {
   const [portPositions, setPortPositions] = useState<PortPositons>({});
   const nodeMap = useRecoilValue(nodeMapState);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const calculatePosition = useStableCallback(
+  const calculatePortPosition = useStableCallback(
     (
       currNodeMap: Record<string, Node>,
       el: HTMLDivElement,
@@ -20,9 +20,8 @@ export function useNodePortPositons() {
       seen: Set<string>,
     ) => {
       const nodeId = el.dataset.nodeid as string | undefined;
-      const portName = el.dataset.portname as string | undefined;
       const portType = el.dataset.porttype as 'input' | 'output' | undefined;
-
+      const portName = el.dataset.portname as string | undefined;
       if (!nodeId || !portName || !portType) return null;
 
       const key = `${nodeId}-${portType}-${portName}`;
@@ -31,25 +30,24 @@ export function useNodePortPositons() {
       const node = currNodeMap[nodeId];
       if (!node) return null;
 
+      const nodePosition = { left: 0, top: 0 };
+
       let { x, y } = node.visualInfo.position;
-
-      const positionFromNode = { left: 0, top: 0 };
-      let currentElement: HTMLElement | null = el;
-
-      while (currentElement && !currentElement.classList.contains('node')) {
-        positionFromNode.left += currentElement.offsetLeft;
-        positionFromNode.top += currentElement.offsetTop;
-        currentElement = currentElement.offsetParent as HTMLElement | null;
+      let currEl: HTMLElement | null = el;
+      while (currEl && !currEl.classList.contains('node')) {
+        nodePosition.left += currEl.offsetLeft;
+        nodePosition.top += currEl.offsetTop;
+        currEl = currEl.offsetParent as HTMLElement | null;
       }
 
       if (isOverlayNode) {
         const overlayTransform: string | undefined = (
-          el.closest('.node') as HTMLElement | null
+          el.closest('.dragging-node-area') as HTMLElement | null
         )?.style.transform;
 
         if (overlayTransform) {
           const match =
-            /translate3d\((?:([\d.-]+)(?:px?)), *(?:([\d.-]+)(?:px?)), *(?:([\d.-]+)(?:px?))?\)/.exec(
+            /translate3d\(([\d.-]+)px, ([\d.-]+)px, ([\d.-]*)px\)/.exec(
               overlayTransform,
             );
           const [, deltaX, deltaY] = match ?? [];
@@ -59,21 +57,21 @@ export function useNodePortPositons() {
             y += parseFloat(deltaY || '0');
           }
         }
-      } else {
-        seen.add(key);
       }
 
       const precision = 10;
       const pos = {
         x:
           Math.round(
-            (x + positionFromNode.left + el.offsetWidth / 1.5) * precision,
+            (x + nodePosition.left + el.offsetWidth / 1.5) * precision,
           ) / precision,
         y:
           Math.round(
-            (y + positionFromNode.top + el.offsetHeight / 1.5) * precision,
+            (y + nodePosition.top + el.offsetHeight / 1.5) * precision,
           ) / precision,
       };
+
+      seen.add(key);
 
       return { key, pos };
     },
@@ -85,12 +83,12 @@ export function useNodePortPositons() {
     const portEls = canvasRef.current.querySelectorAll('.port-circle');
 
     let changed = false;
-    const newPortPositions = { ...portPositions };
+    const newPortPositions: PortPositons = { ...portPositions };
     const seen = new Set<string>();
 
     portEls.forEach((el) => {
       const isOverlayNode: boolean = el.closest('.overlayed') !== null;
-      const result = calculatePosition(
+      const result = calculatePortPosition(
         nodeMap,
         el as HTMLDivElement,
         isOverlayNode,
@@ -107,15 +105,10 @@ export function useNodePortPositons() {
       }
     });
 
-    console.log(
-      `position is changed to ${JSON.stringify(
-        newPortPositions,
-      )}, changed: ${changed}`,
-    );
     if (changed) {
       setPortPositions(newPortPositions);
     }
-  }, [portPositions, nodeMap, setPortPositions, canvasRef]);
+  }, [nodeMap, portPositions, canvasRef, setPortPositions]);
 
   useLayoutEffect(() => {
     recalculate();
@@ -124,7 +117,7 @@ export function useNodePortPositons() {
   return { portPositions, canvasRef, recalculate };
 }
 
-export function getPortPositon(
+export function getPortPosition(
   node: Node,
   portName: string,
   portPositions: PortPositons,
@@ -136,9 +129,7 @@ export function getPortPositon(
 
   if (portName) {
     const key = `${node.id}-${isInput ? 'input' : 'output'}-${portName}`;
-    // console.log(`getPortPositon: ${key}`);
     const portPosition = portPositions[key];
-    // console.log(`getPortPositon: ${JSON.stringify(portPosition)}`);
 
     if (portPosition) {
       return { x: portPosition.x, y: portPosition.y };

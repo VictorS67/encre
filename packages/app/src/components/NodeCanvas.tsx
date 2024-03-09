@@ -8,7 +8,12 @@ import React, {
   useState,
 } from 'react';
 
-import { DndContext, DragOverlay, useDroppable } from '@dnd-kit/core';
+import {
+  DndContext,
+  DragMoveEvent,
+  DragOverlay,
+  useDroppable,
+} from '@dnd-kit/core';
 import { css } from '@emotion/react';
 import {
   autoUpdate,
@@ -32,7 +37,7 @@ import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingNode } from '../hooks/useDraggingNode';
 import { useDraggingWire } from '../hooks/useDraggingWire';
 import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
-import { useNodePortPositons } from '../hooks/usePortPosition';
+import { useNodePortPositions } from '../hooks/usePortPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   canvasPositionState,
@@ -142,7 +147,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     portPositions,
     canvasRef,
     recalculate: recalculatePortPositions,
-  } = useNodePortPositons();
+  } = useNodePortPositions();
 
   const { setNodeRef } = useDroppable({ id: 'NodeCanvas' });
   const setCanvasRef = useMergeRefs([setNodeRef, canvasRef]);
@@ -295,8 +300,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   const canvasMouseMove = useThrottleFn(
     (event: React.MouseEvent) => {
-      recalculatePortPositions();
-
       // Check if only dragging canvas is true
       if (!isOnlyDraggingCanvas) return;
 
@@ -499,10 +502,23 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   const isMinimized: boolean = canvasPosition.zoom < 0.6;
 
+  const onNodeMoveDrag = useCallback(
+    (e: DragMoveEvent) => {
+      console.log('I am dragging!');
+
+      recalculatePortPositions();
+    },
+    [recalculatePortPositions],
+  );
+
   return (
     <div>
       <DebugOverlay enabled={true} />
-      <DndContext onDragStart={onNodeStartDrag} onDragEnd={onNodeEndDrag}>
+      <DndContext
+        onDragStart={onNodeStartDrag}
+        onDragEnd={onNodeEndDrag}
+        onDragMove={onNodeMoveDrag}
+      >
         <div
           ref={setCanvasRef}
           css={styles}
@@ -569,6 +585,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
               })}
             </div>
             <DragOverlay
+              className="dragging-node-area"
               dropAnimation={null}
               style={{
                 position: 'absolute',

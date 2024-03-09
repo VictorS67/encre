@@ -49,6 +49,7 @@ const VisualNodeContainer = styled.div`
   transform-origin: top left;
 
   &.selected::before {
+    content: '';
     position: absolute;
     top: -8px;
     left: -8px;
@@ -57,6 +58,7 @@ const VisualNodeContainer = styled.div`
     border: 2px solid var(--text-disabled-color);
     border-radius: calc(7px + 8px - 3px - 2px);
     box-sizing: border-box;
+    z-index: -1;
   }
 
   .resize-box {

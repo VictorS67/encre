@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
-import { getPortPositon } from '../hooks/usePortPosition';
+import { getPortPosition } from '../hooks/usePortPosition';
 import { nodeFromNodeIdState } from '../state/node';
 import {
   PartialWireProps,
@@ -26,12 +26,12 @@ export const RenderedWire: FC<RenderedWireProps> = ({
     return null;
   }
 
-  const startPosition = getPortPositon(
+  const startPosition = getPortPosition(
     fromNode,
     connection.fromPortName,
     portPositions,
   );
-  const endPosition = getPortPositon(
+  const endPosition = getPortPosition(
     toNode,
     connection.toPortName,
     portPositions,
@@ -65,7 +65,7 @@ export const PartialWire: FC<PartialWireProps> = ({
     return null;
   }
 
-  const startPosition = getPortPositon(
+  const startPosition = getPortPosition(
     node,
     connection.portName,
     portPositions,
