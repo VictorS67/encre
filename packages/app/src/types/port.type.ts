@@ -58,3 +58,13 @@ export type NodePortGroupProps = {
   ) => void;
   onWireEndDrag?: (event: React.MouseEvent<HTMLElement>) => void;
 };
+
+export type WirePortProps = {
+  centerX: number;
+  centerY: number;
+  isSelected?: boolean;
+  isHighlighted?: boolean;
+  radius?: number;
+  strokeWidth?: number;
+  onMouseDown?: (e: React.MouseEvent) => void;
+};

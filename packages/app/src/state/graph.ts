@@ -381,14 +381,14 @@ export const graphState = atom<NodeGraph>({
           },
         },
         inputs: {
-          prompt: ['string'],
-          prompt1: ['string'],
-          prompt2: ['string'],
+          a: ['string'],
+          b: ['string'],
+          c: ['string'],
         },
         outputs: {
-          prompt: ['string'],
-          prompt1: ['string'],
-          prompt2: ['string'],
+          a: ['string'],
+          b: ['string'],
+          c: ['string'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
@@ -400,17 +400,17 @@ export const graphState = atom<NodeGraph>({
           return [
             {
               nodeId: '2',
-              name: 'prompt',
+              name: 'a',
               type: ['string'],
             },
             {
               nodeId: '2',
-              name: 'prompt1',
+              name: 'b',
               type: ['string'],
             },
             {
               nodeId: '2',
-              name: 'prompt2',
+              name: 'c',
               type: ['string'],
             },
           ];
@@ -422,17 +422,17 @@ export const graphState = atom<NodeGraph>({
           return [
             {
               nodeId: '2',
-              name: 'prompt',
+              name: 'd',
               type: ['string'],
             },
             {
               nodeId: '2',
-              name: 'prompt1',
+              name: 'e',
               type: ['string'],
             },
             {
               nodeId: '2',
-              name: 'prompt2',
+              name: 'f',
               type: ['string'],
             },
           ];
@@ -509,14 +509,14 @@ attr6: `,
           },
         },
         inputs: {
-          prompt: ['string'],
-          prompt1: ['string'],
-          prompt2: ['string'],
+          a: ['string'],
+          b: ['string'],
+          c: ['string'],
         },
         outputs: {
-          prompt: ['string'],
-          prompt1: ['string'],
-          prompt2: ['string'],
+          a: ['string'],
+          b: ['string'],
+          c: ['string'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
@@ -528,17 +528,17 @@ attr6: `,
           return [
             {
               nodeId: '3',
-              name: 'prompt',
+              name: 'a',
               type: ['string'],
             },
             {
               nodeId: '3',
-              name: 'prompt1',
+              name: 'b',
               type: ['string'],
             },
             {
               nodeId: '3',
-              name: 'prompt2',
+              name: 'c',
               type: ['string'],
             },
           ];
@@ -550,17 +550,17 @@ attr6: `,
           return [
             {
               nodeId: '3',
-              name: 'prompt',
+              name: 'd',
               type: ['string'],
             },
             {
               nodeId: '3',
-              name: 'prompt1',
+              name: 'e',
               type: ['string'],
             },
             {
               nodeId: '3',
-              name: 'prompt2',
+              name: 'f',
               type: ['string'],
             },
           ];
@@ -637,14 +637,14 @@ attr6: `,
           },
         },
         inputs: {
-          prompt: ['string'],
-          prompt1: ['string'],
-          prompt2: ['string'],
+          a: ['string'],
+          b: ['string'],
+          c: ['string'],
         },
         outputs: {
-          prompt: ['string'],
-          prompt1: ['string'],
-          prompt2: ['string'],
+          a: ['string'],
+          b: ['string'],
+          c: ['string'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
@@ -656,17 +656,17 @@ attr6: `,
           return [
             {
               nodeId: '4',
-              name: 'prompt',
+              name: 'a',
               type: ['string'],
             },
             {
               nodeId: '4',
-              name: 'prompt1',
+              name: 'b',
               type: ['string'],
             },
             {
               nodeId: '4',
-              name: 'prompt2',
+              name: 'c',
               type: ['string'],
             },
           ];
@@ -678,17 +678,17 @@ attr6: `,
           return [
             {
               nodeId: '4',
-              name: 'prompt',
+              name: 'd',
               type: ['string'],
             },
             {
               nodeId: '4',
-              name: 'prompt1',
+              name: 'e',
               type: ['string'],
             },
             {
               nodeId: '4',
-              name: 'prompt2',
+              name: 'f',
               type: ['string'],
             },
           ];

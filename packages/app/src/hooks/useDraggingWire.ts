@@ -1,17 +1,42 @@
 import React, { useCallback, useEffect } from 'react';
 
 import { useLatest } from 'ahooks';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { nodeIODefState, nodeMapState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
-import { draggingWireClosestPortState, draggingWireState } from '../state/wire';
+import {
+  draggingWireClosestPortState,
+  draggingWireState,
+  removeWireDataState,
+  updateWireDataState,
+  wireDataMapState,
+} from '../state/wire';
 import {
   Node,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
 } from '../types/studio.type';
+import { DefaultWireOptions, WireData } from '../types/wire.type';
+
+export const defaultWireOptions: DefaultWireOptions = {
+  straight: {
+    type: 'straight',
+  },
+  bezier: {
+    type: 'bezier',
+    curvature: 0.25,
+  },
+  'adaptive-bezier': {
+    type: 'adaptive-bezier',
+  },
+  'smooth-step': {
+    type: 'smooth-step',
+    borderRadius: 5,
+    offset: 25,
+  },
+};
 
 export const useDraggingWire = (
   onConnectionsChange: (cs: NodeConnection[]) => void,
@@ -23,6 +48,9 @@ export const useDraggingWire = (
   const [draggingWireClosestPort, setDraggingWireClosestPort] = useRecoilState(
     draggingWireClosestPortState,
   );
+  const wireDataMap = useRecoilValue(wireDataMapState);
+  const updateWireData = useSetRecoilState(updateWireDataState);
+  const removeWireData = useSetRecoilState(removeWireDataState);
 
   const isDragging = !!draggingWire;
 
@@ -30,8 +58,6 @@ export const useDraggingWire = (
 
   useEffect(() => {
     if (draggingWireClosestPort && isDragging) {
-      console.log('updating dragging wire');
-
       setDraggingWire((w) => ({
         ...w!,
         toNodeId: draggingWireClosestPort.nodeId,
@@ -55,18 +81,13 @@ export const useDraggingWire = (
     ) => {
       e.stopPropagation();
 
-      console.log(
-        `onWireStartDrag: fromNodeId: ${fromNodeId}, fromPortName: ${fromPortName}, isInput: ${isInput}`,
-      );
-
       if (isInput) {
-        // remove the existing connection if the input port is already connected
-        const existingConnectionIdx: number = connections.findIndex(
-          (c) => c.fromNodeId === fromNodeId && c.fromPortName === fromPortName,
-        );
+        const toNodeId = fromNodeId;
+        const toPortName = fromPortName;
 
-        console.log(
-          `start drag finding connections: ${JSON.stringify(connections)}`,
+        // remove the existing connection if the from port is already connected
+        const existingConnectionIdx: number = connections.findIndex(
+          (c) => c.toNodeId === toNodeId && c.toPortName === toPortName,
         );
 
         if (existingConnectionIdx !== -1) {
@@ -74,8 +95,12 @@ export const useDraggingWire = (
           newConnections.splice(existingConnectionIdx, 1);
           onConnectionsChange(newConnections);
 
-          const { fromNodeId: cFromNodeId, fromPortName: cFromPortName } =
-            connections[existingConnectionIdx];
+          const {
+            fromNodeId: cFromNodeId,
+            fromPortName: cFromPortName,
+            toNodeId: cToNodeId,
+            toPortName: cToPortName,
+          } = connections[existingConnectionIdx];
 
           const definition = nodeIODefs[cFromNodeId]!.outputDefs.find(
             (o) => o.name === cFromPortName,
@@ -87,6 +112,27 @@ export const useDraggingWire = (
             fromPortIsInput: false,
             dataType: definition.type,
           });
+
+          const wireId = `wire-${cFromNodeId}-${cFromPortName}-partial`;
+          const connectionWireId = `wire-${cFromNodeId}-${cFromPortName}-${cToNodeId}-${cToPortName}`;
+          const oldWireData: WireData | undefined =
+            wireDataMap[connectionWireId];
+
+          if (oldWireData) {
+            updateWireData({
+              id: wireId,
+              wireData: oldWireData,
+            });
+            removeWireData(connectionWireId);
+          } else {
+            updateWireData({
+              id: wireId,
+              wireData: {
+                wireType: 'adaptive-bezier',
+                wireOptions: defaultWireOptions['adaptive-bezier'],
+              },
+            });
+          }
         }
       } else {
         const definition = nodeIODefs[fromNodeId]!.outputDefs.find(
@@ -99,25 +145,34 @@ export const useDraggingWire = (
           fromPortIsInput: !!isInput,
           dataType: definition.type,
         });
+
+        const wireId = `wire-${fromNodeId}-${fromPortName}-partial`;
+        updateWireData({
+          id: wireId,
+          wireData: {
+            wireType: 'adaptive-bezier',
+            wireOptions: defaultWireOptions['adaptive-bezier'],
+          },
+        });
       }
     },
-    [connections, nodeIODefs, onConnectionsChange, setDraggingWire],
+    [
+      connections,
+      nodeIODefs,
+      wireDataMap,
+      onConnectionsChange,
+      setDraggingWire,
+      updateWireData,
+      removeWireData,
+    ],
   );
 
   const onWireEndDrag = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      console.log(
-        `onWireEndDrag: draggingWire: ${JSON.stringify(draggingWire)}`,
-      );
-
       if (!draggingWire) return;
 
       const { nodeId: toNodeId, portName: toPortName } =
         draggingWireClosestPort ?? {};
-
-      console.log(
-        `onWireEndDrag: toNodeId: ${toNodeId}, toPortName: ${toPortName}`,
-      );
 
       if (!toNodeId || !toPortName) return;
 
@@ -162,10 +217,9 @@ export const useDraggingWire = (
         }
       }
 
-      // remove the existing connection if the input port is already connected
+      // remove the existing connection if the output port is already connected
       const existingConnectionIdx: number = connections.findIndex(
-        (c) =>
-          c.fromNodeId === fromNode!.id && c.fromPortName === outputDef!.name,
+        (c) => c.toNodeId === toNode!.id && c.toPortName === inputDef!.name,
       );
 
       const newConnections = [...connections];
@@ -184,6 +238,27 @@ export const useDraggingWire = (
 
       onConnectionsChange?.([...newConnections, connection]);
 
+      const draggingWireId = `wire-${connection.fromNodeId}-${connection.fromPortName}-partial`;
+      const wireId = `wire-${connection.fromNodeId}-${connection.fromPortName}-${connection.toNodeId}-${connection.toPortName}`;
+
+      const oldWireData: WireData | undefined = wireDataMap[draggingWireId];
+
+      if (oldWireData) {
+        updateWireData({
+          id: wireId,
+          wireData: oldWireData,
+        });
+        removeWireData(draggingWireId);
+      } else {
+        updateWireData({
+          id: wireId,
+          wireData: {
+            wireType: 'adaptive-bezier',
+            wireOptions: defaultWireOptions['adaptive-bezier'],
+          },
+        });
+      }
+
       setDraggingWire(undefined);
       setDraggingWireClosestPort(undefined);
     },
@@ -193,9 +268,12 @@ export const useDraggingWire = (
       nodeMap,
       nodeIODefs,
       draggingWireClosestPort,
+      wireDataMap,
       onConnectionsChange,
       setDraggingWire,
       setDraggingWireClosestPort,
+      updateWireData,
+      removeWireData,
     ],
   );
 

@@ -63,7 +63,10 @@ export function useNodePortPositions() {
       const pos = {
         x:
           Math.round(
-            (x + nodePosition.left + el.offsetWidth / 1.5) * precision,
+            (x +
+              nodePosition.left +
+              (portType === 'output' ? el.offsetWidth / 0.8 : 0)) *
+              precision,
           ) / precision,
         y:
           Math.round(

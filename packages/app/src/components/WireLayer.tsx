@@ -9,13 +9,17 @@ import React, {
 import styled from '@emotion/styled';
 import { orderBy } from 'lodash-es';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { PartialWire, RenderedWire } from './Wire';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { nodeIODefState, nodeMapState } from '../state/node';
-import { draggingWireClosestPortState } from '../state/wire';
+import {
+  draggingWireClosestPortState,
+  hoveringWireIdState,
+  selectingWireIdsState,
+} from '../state/wire';
 import { NodeInputPortDef } from '../types/studio.type';
 import { WireLayerProps } from '../types/wire.type';
 
@@ -26,16 +30,31 @@ const WireLayerContainer = styled.svg`
   pointer-events: none;
   top: 0;
   left: 0;
+  z-index: 0;
+  pointer-events: none;
 
   path {
     stroke-linecap: butt;
     fill: none;
     stroke: red;
+    pointer-events: auto;
   }
 
   .wire.highlighted {
     stroke: var(--primary-color);
-    transition: stroke 0.2s ease-out;
+
+    stroke-dasharray: 5;
+    animation: dashdraw 0.5s linear infinite;
+  }
+
+  .wire-port {
+    stroke: var(--primary-color);
+  }
+
+  @keyframes dashdraw {
+    from {
+      stroke-dashoffset: 10;
+    }
   }
 `;
 
@@ -56,38 +75,60 @@ export const WireLayer: FC<WireLayerProps> = ({
   );
   const nodeMap = useRecoilValue(nodeMapState);
   const nodeIODefMap = useRecoilValue(nodeIODefState);
+  const [selectingWireIds, setSelectingWireIds] = useRecoilState(
+    selectingWireIdsState,
+  );
+  const [hoveringWireId, setHoveringWireId] =
+    useRecoilState(hoveringWireIdState);
   const { canvasPosition, clientToCanvasPosition } = useCanvasPosition();
   const mousePositionCanvas = clientToCanvasPosition(
     mousePosition.x,
     mousePosition.y,
   );
 
-  const onMouseDownWire = useStableCallback((e: MouseEvent) => {
-    console.log('onMouseDownWire');
-
-    const { clientX, clientY } = e;
-    setMousePosition({ x: clientX, y: clientY });
-  });
-
-  const onMouseMoveWire = useCallback(
+  const onMouseDownWireLayer = useCallback(
     (e: MouseEvent) => {
+      const clickingWire = (e.target as HTMLElement).closest(
+        '.wire-interaction',
+      );
+      if (!clickingWire) {
+        const { clientX, clientY } = e;
+        setMousePosition({ x: clientX, y: clientY });
+        setSelectingWireIds([]);
+      } else {
+        const wireId = clickingWire.id;
+        setSelectingWireIds([...new Set([...selectingWireIds, wireId])]);
+      }
+    },
+    [selectingWireIds, setSelectingWireIds],
+  );
+
+  const onMouseMoveWireLayer = useCallback(
+    (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+
       if (!isDraggingFromNode && !draggingWire) {
+        const clickingWire = (e.target as HTMLElement).closest(
+          '.wire-interaction',
+        );
+
+        if (clickingWire) {
+          const wireId = clickingWire.id;
+          setHoveringWireId(wireId);
+        } else {
+          setHoveringWireId(undefined);
+        }
+
         return;
       }
 
-      const { clientX, clientY } = e;
+      setHoveringWireId(undefined);
       setMousePosition({ x: clientX, y: clientY });
-
-      console.log(`onMouseMoveWire: x ${clientX}, y ${clientY}`);
-      console.log(`isDraggingFromNode: ${isDraggingFromNode}`);
-      console.log(`draggingWire: ${JSON.stringify(draggingWire)}`);
 
       if (draggingWire) {
         const hoverElements: Element[] = document
           .elementsFromPoint(clientX, clientY)
           .filter((el) => el.classList.contains('port-hover-area'));
-
-        console.log(`updating closest port: ${hoverElements.length > 0}`);
 
         if (hoverElements.length === 0) {
           setClosestPort(undefined);
@@ -119,12 +160,6 @@ export const WireLayer: FC<WireLayerProps> = ({
               (def) => def.nodeId === nodeId && def.name === portName,
             )!;
 
-            console.log(
-              `find closest port: nodeId: ${nodeId}, portName: ${portName}, portEl: ${JSON.stringify(
-                closestHoverEl.parentElement?.dataset,
-              )}`,
-            );
-
             setClosestPort({
               nodeId,
               portName,
@@ -145,27 +180,24 @@ export const WireLayer: FC<WireLayerProps> = ({
       isDraggingFromNode,
       nodeIODefMap,
       closestPort,
+      hoveringWireId,
       setClosestPort,
+      setHoveringWireId,
     ],
   );
 
   useEffect(() => {
-    window.addEventListener('mousedown', onMouseDownWire, { capture: true });
-    window.addEventListener('mousemove', onMouseMoveWire);
+    window.addEventListener('mousedown', onMouseDownWireLayer, {
+      capture: true,
+    });
+    window.addEventListener('mousemove', onMouseMoveWireLayer);
     return () => {
-      window.removeEventListener('mousedown', onMouseDownWire, {
+      window.removeEventListener('mousedown', onMouseDownWireLayer, {
         capture: true,
       });
-      window.removeEventListener('mousemove', onMouseMoveWire);
+      window.removeEventListener('mousemove', onMouseMoveWireLayer);
     };
-  }, [onMouseDownWire, onMouseMoveWire]);
-
-  useLayoutEffect(() => {}, [
-    draggingWire,
-    mousePosition.x,
-    mousePosition.y,
-    setClosestPort,
-  ]);
+  }, [onMouseDownWireLayer, onMouseMoveWireLayer]);
 
   return (
     <WireLayerContainer>
@@ -184,8 +216,6 @@ export const WireLayer: FC<WireLayerProps> = ({
                 }}
                 nodeMap={nodeMap}
                 portPositions={portPositions}
-                isSelected={false}
-                isHighlighted={false}
               />
             ) : (
               <PartialWire
@@ -201,6 +231,8 @@ export const WireLayer: FC<WireLayerProps> = ({
           </ErrorBoundary>
         )}
         {connections.map((c) => {
+          const wireId = `wire-${c.fromNodeId}-${c.fromPortName}-${c.toNodeId}-${c.toPortName}`;
+
           const isHighlightedNode: boolean | undefined =
             highlightedNodeIds?.includes(c.fromNodeId) ||
             highlightedNodeIds?.includes(c.toNodeId);
@@ -212,8 +244,11 @@ export const WireLayer: FC<WireLayerProps> = ({
             (highlightedPort.isInput ? c.toPortName : c.fromPortName) ===
               highlightedPort.portName;
 
+          const isHoveringWire: boolean =
+            hoveringWireId !== undefined && hoveringWireId === wireId;
+
           const isHighlighted: boolean =
-            isHighlightedNode || isHighlightedPort || false;
+            isHighlightedNode || isHighlightedPort || isHoveringWire;
 
           return (
             <ErrorBoundary
@@ -224,7 +259,7 @@ export const WireLayer: FC<WireLayerProps> = ({
                 connection={c}
                 nodeMap={nodeMap}
                 portPositions={portPositions}
-                isSelected={false}
+                isSelected={selectingWireIds.includes(wireId)}
                 isHighlighted={!!isHighlighted}
               />
             </ErrorBoundary>

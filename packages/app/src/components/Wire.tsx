@@ -1,15 +1,26 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useLayoutEffect } from 'react';
 
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
+import { AdaptiveBezierWire } from './wires/AdaptiveBezierWire';
+import { BezierWire } from './wires/BezierWire';
+import { SmoothStepWire } from './wires/SmoothStepWire';
+import { StraightWire } from './wires/StraightWire';
+import { defaultWireOptions } from '../hooks/useDraggingWire';
 import { getPortPosition } from '../hooks/usePortPosition';
 import { nodeFromNodeIdState } from '../state/node';
+import { selectingWireIdsState, wireDataFromWireIdState } from '../state/wire';
 import {
+  AdaptiveBezierWireOptions,
+  BezierWireOptions,
   PartialWireProps,
   RenderedWireProps,
-  WireProps,
+  SmoothStepWireOptions,
+  StraightWireOptions,
+  WireControlProps,
+  WireData,
 } from '../types/wire.type';
 
 export const RenderedWire: FC<RenderedWireProps> = ({
@@ -38,12 +49,10 @@ export const RenderedWire: FC<RenderedWireProps> = ({
     true,
   );
 
-  // console.log(`wire start position: ${JSON.stringify(startPosition)}`);
-  // console.log(`wire end position: ${JSON.stringify(endPosition)}`);
-
   return (
     <ErrorBoundary fallback={<></>}>
-      <Wire
+      <WireControl
+        id={`wire-${fromNode.id}-${connection.fromPortName}-${toNode.id}-${connection.toPortName}`}
         startX={startPosition.x}
         startY={startPosition.y}
         endX={endPosition.x}
@@ -74,7 +83,8 @@ export const PartialWire: FC<PartialWireProps> = ({
 
   return (
     <ErrorBoundary fallback={<></>}>
-      <Wire
+      <WireControl
+        id={`wire-${node.id}-${connection.portName}-partial`}
         startX={startPosition.x}
         startY={startPosition.y}
         endX={endPosition.x}
@@ -84,38 +94,98 @@ export const PartialWire: FC<PartialWireProps> = ({
   );
 };
 
-export const Wire: FC<WireProps> = memo(
-  ({ startX, startY, endX, endY, isSelected, isHighlighted }: WireProps) => {
-    const deltaX = Math.abs(endX - startX);
-    const offsetDistance =
-      startX <= endX ? deltaX * 0.5 : Math.abs(endY - startY) * 0.6;
+export const WireControl: FC<WireControlProps> = ({
+  id,
+  startX,
+  startY,
+  endX,
+  endY,
+  isSelected,
+  isHighlighted,
+}: WireControlProps) => {
+  // const [selectingWireIds, setSelectingWireIds] = useRecoilState(
+  //   selectingWireIdsState,
+  // );
+  const wireData: WireData | undefined = useRecoilValue(
+    wireDataFromWireIdState(id),
+  );
 
-    const isToLeft = startX > endX;
+  // useLayoutEffect(() => {
+  //   const oldIsSelected: boolean = selectingWireIds.includes(id);
 
-    const curveX1 = startX + offsetDistance;
-    const curveY1 = startY;
-    const curveX2 = endX - offsetDistance;
-    const curveY2 = endY;
+  //   if (!isSelected && oldIsSelected) {
+  //     setSelectingWireIds(selectingWireIds.filter((wId) => wId !== id));
+  //   } else if (isSelected && !oldIsSelected) {
+  //     setSelectingWireIds([...selectingWireIds, id]);
+  //   }
+  // }, [isSelected, selectingWireIds, setSelectingWireIds]);
 
-    const middleY = (endY + startY) / 2;
-
-    const wirePath =
-      startX <= endX
-        ? `M${startX},${startY} C${curveX1},${curveY1} ${curveX2},${curveY2} ${endX},${endY}`
-        : `M${startX},${startY} C${curveX1},${curveY1} ${curveX1},${middleY} ${startX},${middleY} ` +
-          `L${endX},${middleY} C${curveX2},${middleY} ${curveX2},${curveY2} ${endX},${endY}`;
-
+  if (!wireData) {
     return (
-      <path
-        className={clsx('wire', {
-          selected: isSelected,
-          highlighted: isHighlighted,
-          toleft: isToLeft,
-        })}
-        d={wirePath}
+      <AdaptiveBezierWire
+        id={id}
+        startX={startX}
+        startY={startY}
+        endX={endX}
+        endY={endY}
+        isSelected={isSelected}
+        isHighlighted={isHighlighted}
+        wireOptions={defaultWireOptions['adaptive-bezier']}
       />
     );
-  },
-);
+  }
 
-Wire.displayName = 'Wire';
+  if (wireData.wireType === 'adaptive-bezier') {
+    return (
+      <AdaptiveBezierWire
+        id={id}
+        startX={startX}
+        startY={startY}
+        endX={endX}
+        endY={endY}
+        isSelected={isSelected}
+        isHighlighted={isHighlighted}
+        wireOptions={wireData?.wireOptions as AdaptiveBezierWireOptions}
+      />
+    );
+  } else if (wireData.wireType === 'bezier') {
+    return (
+      <BezierWire
+        id={id}
+        startX={startX}
+        startY={startY}
+        endX={endX}
+        endY={endY}
+        isSelected={isSelected}
+        isHighlighted={isHighlighted}
+        wireOptions={wireData?.wireOptions as BezierWireOptions}
+      />
+    );
+  } else if (wireData.wireType === 'smooth-step') {
+    return (
+      <SmoothStepWire
+        id={id}
+        startX={startX}
+        startY={startY}
+        endX={endX}
+        endY={endY}
+        isSelected={isSelected}
+        isHighlighted={isHighlighted}
+        wireOptions={wireData?.wireOptions as SmoothStepWireOptions}
+      />
+    );
+  }
+
+  return (
+    <StraightWire
+      id={id}
+      startX={startX}
+      startY={startY}
+      endX={endX}
+      endY={endY}
+      isSelected={isSelected}
+      isHighlighted={isHighlighted}
+      wireOptions={wireData?.wireOptions as StraightWireOptions}
+    />
+  );
+};
