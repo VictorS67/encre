@@ -16,3 +16,8 @@ export const isOnlyDraggingCanvasState = atom<boolean>({
   key: 'isOnlyDraggingCanvas',
   default: false,
 });
+
+export const isDraggingMultipleNodesState = atom<boolean>({
+  key: 'isDraggingMultipleNodesState',
+  default: false,
+});

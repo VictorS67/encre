@@ -43,7 +43,7 @@ export interface CallableNode<
 > extends SerializableNode<NodeType, NodeData> {}
 
 export type NodeInputPortDef = {
-  id: RecordId;
+  nodeId: RecordId;
 
   name: string;
 
@@ -55,7 +55,7 @@ export type NodeInputPortDef = {
 };
 
 export type NodeOutputPortDef = {
-  id: RecordId;
+  nodeId: RecordId;
 
   name: string;
 
@@ -69,11 +69,11 @@ export type NodeOutputPortDef = {
 export type NodeConnection = {
   inputNodeId: RecordId;
 
-  inputId: RecordId;
+  inputName: string;
 
   outputNodeId: RecordId;
 
-  outputId: RecordId;
+  outputName: string;
 };
 
 export type NodeBody =

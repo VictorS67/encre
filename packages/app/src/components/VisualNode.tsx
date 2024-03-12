@@ -10,6 +10,8 @@ import React, {
 } from 'react';
 
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
+import { useMergeRefs } from '@floating-ui/react';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -17,11 +19,14 @@ import { useRecoilValue } from 'recoil';
 
 import { Icon } from './Icon';
 import { NodeContentBody } from './NodeContentBody';
+import { NodePortGroup } from './NodePortGroup';
 import { ResizeBox } from './ResizeBox';
+import { useRipple } from '../hooks/useAnimation';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { themeState } from '../state/settings';
+import { draggingWireClosestPortState, draggingWireState } from '../state/wire';
 import {
   MinimizedVisualNodeContentProps,
   VisualNodeContentProps,
@@ -29,13 +34,32 @@ import {
 } from '../types/node.type';
 import { getColorMode } from '../utils/colorMode';
 
-const visualNodeStyles = css`
+const VisualNodeContainer = styled.div`
   color: var(--text-color);
   background: var(--node-background-color);
   border-radius: 7px;
+  border: 3px solid var(--primary-color);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  position: absolute;
+  // overflow: hidden;
+  transition-timing-function: ease-out;
+  transition-property: box-shadow, border-color;
+  transform-origin: top left;
+
+  &.selected::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border: 2px solid var(--text-disabled-color);
+    border-radius: calc(7px + 8px - 3px - 2px);
+    box-sizing: border-box;
+    z-index: -1;
+  }
 
   .resize-box {
     width: 10px;
@@ -45,44 +69,21 @@ const visualNodeStyles = css`
     right: 0;
     bottom: 0;
     border-top-left-radius: 10px;
+    border-bottom-right-radius: calc(7px - 3px);
     background-color: var(--canvas-foreground-color-1);
   }
 `;
 
-const nodeContentStyles = css`
+const NodeContentContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 
-  .node-minimize-content,
-  .node-content {
-    background: var(--node-forground-color);
-    flex-grow: 1;
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-self: stretch;
-    gap: 2px;
-    padding: 8px 4px 8px 7px;
-  }
-
-  .node-minimize-content > * {
-    visibility: hidden;
-    align-self: stretch;
-  }
-
-  .node-content-body {
-    color: var(--text-color);
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
   .node-minimize-card,
   .node-card {
-    background: var(--node-background-color);
+    // background: var(--node-background-color);
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -91,8 +92,24 @@ const nodeContentStyles = css`
     padding: 8px 10px;
   }
 
-  .node-minimize-card > .node-header {
-    visibility: collapse;
+  .node-card-info {
+    background: var(--node-background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: 5px;
+    border-top-left-radius: calc(7px - 3px);
+    border-top-right-radius: calc(7px - 3px);
+    position: relative;
+  }
+
+  .node-card-dragging-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 
   .node-header {
@@ -146,9 +163,47 @@ const nodeContentStyles = css`
     hyphens: auto;
   }
 
+  .node-minimize-card > .node-header {
+    visibility: collapse;
+  }
+
   .node-minimize-card > .node-title {
     width: 100%;
     text-align: center;
+  }
+
+  .node-card-body {
+    background: var(--node-forground-color);
+    flex-grow: 1;
+    display: flex;
+    align-self: stretch;
+    border-bottom-right-radius: calc(7px - 3px);
+    border-bottom-left-radius: calc(7px - 3px);
+    overflow: hidden;
+  }
+
+  .node-minimize-content,
+  .node-content {
+    width: 100%;
+    height: inherit;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: stretch;
+    gap: 2px;
+    padding: 8px 4px 8px 7px;
+  }
+
+  .node-minimize-content > * {
+    visibility: hidden;
+    align-self: stretch;
+  }
+
+  .node-content-body {
+    color: var(--text-color);
+    font-size: 14px;
+    line-height: 1.4;
   }
 `;
 
@@ -163,6 +218,8 @@ export const VisualNode = memo(
       attributes,
       attributeListeners,
       isDragging,
+      isSelecting,
+      isOverlay,
       isMinimized,
       scale,
       canvasZoom,
@@ -170,6 +227,8 @@ export const VisualNode = memo(
       onNodeSelect,
       onNodeMouseOver,
       onNodeMouseOut,
+      onWireStartDrag,
+      onWireEndDrag,
     }: VisualNodeProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) {
@@ -181,10 +240,9 @@ export const VisualNode = memo(
         transform: `translate(${node.visualInfo.position.x + xDelta}px, ${
           node.visualInfo.position.y + yDelta
         }px) scale(${scale ?? 1})`,
-        zIndex: node.visualInfo.position.zIndex,
+        zIndex: node.visualInfo.position.zIndex ?? 0,
         width: node.visualInfo.size.width,
         height: node.visualInfo.size.height,
-        border: '3px solid var(--primary-color)',
       };
 
       return styling;
@@ -222,16 +280,20 @@ export const VisualNode = memo(
     });
 
     return (
-      <div
+      <VisualNodeContainer
         className={clsx('node', {
+          dragged: isDragging,
+          selected: isSelecting,
+          overlayed: isOverlay,
           minimized: isMinimized,
         })}
         ref={nodeRef}
-        css={visualNodeStyles}
         style={style}
         {...attributes}
+        data-nodeid={node.id}
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
+        onClick={onNodeGrabClick}
       >
         <VisualNodeContent
           node={node}
@@ -241,8 +303,10 @@ export const VisualNode = memo(
           attributeListeners={attributeListeners}
           onNodeGrabClick={onNodeGrabClick}
           onNodeSizeChange={onNodeSizeChange}
+          onWireStartDrag={onWireStartDrag}
+          onWireEndDrag={onWireEndDrag}
         />
-      </div>
+      </VisualNodeContainer>
     );
   }),
 );
@@ -257,9 +321,17 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     attributeListeners,
     onNodeGrabClick,
     onNodeSizeChange,
+    onWireStartDrag,
+    onWireEndDrag,
   }: VisualNodeContentProps) => {
     const theme = useRecoilValue(themeState);
+    const draggingWire = useRecoilValue(draggingWireState);
+    const draggingWireClosestPort = useRecoilValue(
+      draggingWireClosestPortState,
+    );
 
+    const [nodeWidth, setNodeWidth] = useState<number>(300);
+    const [nodeHeight, setNodeHeight] = useState<number>(500);
     const [startHeight, setStartHeight] = useState<number | undefined>();
     const [startWidth, setStartWidth] = useState<number | undefined>();
     const [startMouseX, setStartMouseX] = useState(0);
@@ -286,13 +358,13 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           (node.outputs ? Object.keys(node.outputs).length : 0);
 
         const cardStyling: CSSProperties = {
-          minHeight: 50 + 30 * numPorts,
+          minHeight: 50,
         };
 
         const titleStyling: CSSProperties = isMinimized
           ? {
               fontSize: `${32 * (canvasZoom + 0.4)}px`,
-              height: 50 + 30 * numPorts,
+              height: 50,
             }
           : {
               fontSize: '18px',
@@ -324,7 +396,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       const nodeElement: HTMLElement | null = elementorChild.closest('.node');
 
       if (!nodeElement) {
-        return [100, 100];
+        return [nodeWidth, nodeHeight];
       }
 
       const cssWidth: string = window.getComputedStyle(nodeElement).width;
@@ -376,6 +448,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
         (newWidth !== startWidth || newHeight !== startHeight)
       ) {
         onNodeSizeChange?.(newWidth, newHeight);
+        setNodeWidth(newWidth);
+        setNodeHeight(newHeight);
       }
     });
 
@@ -383,14 +457,13 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       e.stopPropagation();
     });
 
-    // TODO: Add Input and Output circles
     return (
-      <>
-        <div onClick={onNodeGrabClick} css={nodeContentStyles}>
+      <NodeContentContainer>
+        <div className="node-card-info">
+          <div className="node-card-dragging-area" {...attributeListeners} />
           <div
             className={isMinimized ? 'node-minimize-card' : 'node-card'}
             style={cardHeightStyling}
-            {...attributeListeners}
           >
             <div className="node-header">
               <div className="node-tag-grp">
@@ -416,10 +489,26 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
               {node.title}
             </div>
           </div>
+
+          <div style={{ width: '100%' }}>
+            <ErrorBoundary fallback={<div />}>
+              <NodePortGroup
+                node={node}
+                connections={connections}
+                nodeWidth={nodeWidth}
+                draggingWire={draggingWire}
+                draggingWireClosestPort={draggingWireClosestPort}
+                onWireStartDrag={onWireStartDrag}
+                onWireEndDrag={onWireEndDrag}
+              />
+            </ErrorBoundary>
+          </div>
+        </div>
+
+        <div className={clsx('node-card-body')} onWheel={onScrollNodeBody}>
           <div
             className={isMinimized ? 'node-minimize-content' : 'node-content'}
             style={contentTopBorderStyling}
-            onWheel={onScrollNodeBody}
           >
             <ErrorBoundary
               fallback={
@@ -431,13 +520,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           </div>
         </div>
 
-        <div>
-          <ResizeBox
-            onResizeStart={onReiszeStart}
-            onResizeMove={onResizeMove}
-          />
-        </div>
-      </>
+        <ResizeBox onResizeStart={onReiszeStart} onResizeMove={onResizeMove} />
+      </NodeContentContainer>
     );
   },
 );

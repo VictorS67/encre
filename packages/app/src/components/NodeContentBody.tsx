@@ -1,6 +1,7 @@
 import React, { FC, memo, useState } from 'react';
 
 import styled from '@emotion/styled';
+import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';
 
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
@@ -30,13 +31,19 @@ const NodeContentBodyWrapper = styled.div<{
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
-    const [body, setBody] = useState<NodeBody | undefined>();
+    const {
+      isPending,
+      error,
+      data: body,
+      isFetching,
+    } = useQuery({
+      queryKey: ['nodeBody', node.id],
+      queryFn: () => node.getBody(),
+    });
 
-    useAsyncEffect(async () => {
-      const renderedBody = await node.getBody();
+    if (isPending) return <></>;
 
-      setBody(renderedBody);
-    }, [node]);
+    if (error) return <div>An error occurred: {error.message}</div>;
 
     const bodyStyle: UIContext | UIContext[] | undefined =
       typeof body === 'string' ? { type: 'plain', text: body } : body;

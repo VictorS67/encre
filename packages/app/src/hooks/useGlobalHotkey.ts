@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useLatest } from 'ahooks';
 
 export function useGlobalHotkey(
-  key: string,
+  key: string | string[],
   onKeyDown: (event: KeyboardEvent) => void,
   onKeyUp: (event: KeyboardEvent) => void,
 ) {
@@ -11,14 +11,16 @@ export function useGlobalHotkey(
   const latestKeyUp = useLatest(onKeyUp);
 
   useEffect(() => {
+    const keys: string[] = Array.isArray(key) ? key : [key];
+
     const onKeyDownLatest = (e: KeyboardEvent) => {
-      if (e.code === key) {
+      if (keys.some((k) => e.code === k)) {
         latestKeyDown.current(e);
       }
     };
 
     const onKeyUpLatest = (e: KeyboardEvent) => {
-      if (e.code === key) {
+      if (keys.some((k) => e.code === k)) {
         latestKeyUp.current(e);
       }
     };

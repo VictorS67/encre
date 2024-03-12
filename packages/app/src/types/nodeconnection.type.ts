@@ -1,4 +1,6 @@
-export type NodeConnection = {
-  inputNodeId: string;
-  outputNodeId: string;
+export type PartialConnection = {
+  nodeId: string;
+  portName: string;
+  toX: number;
+  toY: number;
 };

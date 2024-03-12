@@ -1,5 +1,4 @@
-import { NodeConnection } from './nodeconnection.type';
-import { Node } from './studio.type';
+import { Node, NodeConnection } from './studio.type';
 
 export type CanvasPosition = {
   x: number;
@@ -23,5 +22,6 @@ export type NodeCanvasProps = {
   nodes: Node[];
   connections: NodeConnection[];
   onNodesChange: (newNodes: Node[]) => void;
-  onNodesSelect: (newNodes: Node[]) => void;
+  onConnectionsChange: (newConnections: NodeConnection[]) => void;
+  onNodesSelect: (newNodes: Node[], isMulti?: boolean) => void;
 };

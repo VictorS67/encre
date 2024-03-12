@@ -1,0 +1,11 @@
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes ripple-effect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}

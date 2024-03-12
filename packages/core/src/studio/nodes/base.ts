@@ -3,28 +3,29 @@ import {
   SecretFields,
   SerializedFields,
   SerializedKeyAlias,
-} from '../../load/keymap.js';
-import { SerializedCallableFields } from '../../record/callable.js';
-import { DataFields } from '../data.js';
+} from "../../load/keymap.js";
+import { SerializedCallableFields } from "../../record/callable.js";
+import { DataFields } from "../data.js";
 import {
   ProcessContext,
   ProcessInputMap,
   ProcessOutputMap,
   validateProcessDataFromPorts,
-} from '../processor.js';
-import { UIContext } from '../ui.js';
-import { coerceToData } from '../utils/coerce.js';
+} from "../processor.js";
+import { UIContext } from "../ui.js";
+import { coerceToData } from "../utils/coerce.js";
 import {
   displayUIFromDataFields,
   displayUIFromSecretFields,
-} from '../utils/display.js';
+} from "../utils/display.js";
 import {
   CallableNode,
   NodeBody,
+  NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
   SerializableNode,
-} from './index.js';
+} from "./index.js";
 
 export interface NodeImplConstructor<T extends SerializableNode> {
   new (node: T): NodeImpl<T>;
@@ -33,8 +34,8 @@ export interface NodeImplConstructor<T extends SerializableNode> {
 
 export abstract class NodeImpl<
   T extends SerializableNode,
-  Type extends T['type'] = T['type'],
-  SubType extends T['subType'] = T['subType'],
+  Type extends T["type"] = T["type"],
+  SubType extends T["subType"] = T["subType"],
 > {
   readonly node: T;
 
@@ -73,19 +74,19 @@ export abstract class NodeImpl<
     return this.node.data._id[this.node.data._id.length - 1];
   }
 
-  get visualInfo(): T['visualInfo'] {
+  get visualInfo(): T["visualInfo"] {
     return this.visualInfo;
   }
 
-  get data(): T['data'] {
+  get data(): T["data"] {
     return this.node.data;
   }
 
-  get inputs(): T['inputs'] {
+  get inputs(): T["inputs"] {
     return this.inputs;
   }
 
-  get outputs(): T['outputs'] {
+  get outputs(): T["outputs"] {
     return this.outputs;
   }
 
@@ -110,19 +111,25 @@ export abstract class NodeImpl<
     );
   }
 
-  getInputPortDefs(): NodeInputPortDef[] {
+  getInputPortDefs(
+    connections: NodeConnection[],
+    nodes: Record<RecordId, SerializableNode>
+  ): NodeInputPortDef[] {
     return Object.keys(this.inputs ?? {}).map((key: string) => ({
-      id: this.id,
+      nodeId: this.id,
       name: key,
-      type: this.inputs ? this.inputs[key] : 'unknown',
+      type: this.inputs ? this.inputs[key] : "unknown",
     }));
   }
 
-  getOutputPortDefs(): NodeOutputPortDef[] {
+  getOutputPortDefs(
+    connections: NodeConnection[],
+    nodes: Record<RecordId, SerializableNode>
+  ): NodeOutputPortDef[] {
     return Object.keys(this.outputs ?? {}).map((key: string) => ({
-      id: this.id,
+      nodeId: this.id,
       name: key,
-      type: this.outputs ? this.outputs[key] : 'unknown',
+      type: this.outputs ? this.outputs[key] : "unknown",
     }));
   }
 
@@ -145,7 +152,9 @@ export abstract class NodeImpl<
     const secretUIContexts: UIContext[] = await displayUIFromSecretFields(
       this.secrets
     );
-    const kwargsUIContexts: UIContext[] = await displayUIFromDataFields(this.kwargs);
+    const kwargsUIContexts: UIContext[] = await displayUIFromDataFields(
+      this.kwargs
+    );
 
     return [...secretUIContexts, ...kwargsUIContexts];
   }
@@ -153,8 +162,8 @@ export abstract class NodeImpl<
 
 export abstract class CallableNodeImpl<
   T extends CallableNode,
-  Type extends T['type'] = T['type'],
-  SubType extends T['subType'] = T['subType'],
+  Type extends T["type"] = T["type"],
+  SubType extends T["subType"] = T["subType"],
 > extends NodeImpl<T, Type, SubType> {
   private _metadata: {
     type: string;
