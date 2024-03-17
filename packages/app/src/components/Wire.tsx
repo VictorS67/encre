@@ -29,6 +29,7 @@ export const RenderedWire: FC<RenderedWireProps> = ({
   portPositions,
   isSelected,
   isHighlighted,
+  isHoveringPort,
 }: RenderedWireProps) => {
   const fromNode = nodeMap[connection.fromNodeId]!;
   const toNode = nodeMap[connection.toNodeId]!;
@@ -59,6 +60,7 @@ export const RenderedWire: FC<RenderedWireProps> = ({
         endY={endPosition.y}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
       />
     </ErrorBoundary>
   );
@@ -102,6 +104,7 @@ export const WireControl: FC<WireControlProps> = ({
   endY,
   isSelected,
   isHighlighted,
+  isHoveringPort,
 }: WireControlProps) => {
   // const [selectingWireIds, setSelectingWireIds] = useRecoilState(
   //   selectingWireIdsState,
@@ -130,6 +133,7 @@ export const WireControl: FC<WireControlProps> = ({
         endY={endY}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
         wireOptions={defaultWireOptions['adaptive-bezier']}
       />
     );
@@ -145,6 +149,7 @@ export const WireControl: FC<WireControlProps> = ({
         endY={endY}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
         wireOptions={wireData?.wireOptions as AdaptiveBezierWireOptions}
       />
     );
@@ -158,6 +163,7 @@ export const WireControl: FC<WireControlProps> = ({
         endY={endY}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
         wireOptions={wireData?.wireOptions as BezierWireOptions}
       />
     );
@@ -171,6 +177,7 @@ export const WireControl: FC<WireControlProps> = ({
         endY={endY}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
         wireOptions={wireData?.wireOptions as SmoothStepWireOptions}
       />
     );
@@ -185,6 +192,7 @@ export const WireControl: FC<WireControlProps> = ({
       endY={endY}
       isSelected={isSelected}
       isHighlighted={isHighlighted}
+      isHoveringPort={isHoveringPort}
       wireOptions={wireData?.wireOptions as StraightWireOptions}
     />
   );
