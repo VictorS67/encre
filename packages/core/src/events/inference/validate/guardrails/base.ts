@@ -149,10 +149,10 @@ export abstract class BaseRule<T = any>
   const leftFunc = ${formatLambdaFuncStr(left.func.toString(), true)};
   const rightFunc = ${formatLambdaFuncStr(right.func.toString(), true)};
 
-  const result1 = await leftFunc(input, variables.left).catch(
+  const result1 = await leftFunc(input${left.variables ? ', variables.left' : ''}).catch(
     (e) => false
   );
-  const result2 = await rightFunc(input, variables.right).catch(
+  const result2 = await rightFunc(input${right.variables ? ', variables.right' : ''}).catch(
     (e) => false
   );
 

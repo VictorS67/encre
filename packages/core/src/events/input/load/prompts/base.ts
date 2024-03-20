@@ -31,8 +31,6 @@ export interface PromptTemplateParams extends BaseEventParams {
    */
   inputVariables: string[];
 
-  partialVariables: string[];
-
   guardrails?: VariableRules;
 }
 
@@ -58,8 +56,6 @@ export abstract class BasePromptTemplate<
 
   inputVariables: string[] = [];
 
-  partialVariables: string[] = [];
-
   guardrails?: VariableRules;
 
   constructor(fields?: Partial<PromptTemplateParams>) {
@@ -68,7 +64,6 @@ export abstract class BasePromptTemplate<
     this.template = fields?.template ?? this.template;
 
     this.inputVariables = fields?.inputVariables ?? this.inputVariables;
-    this.partialVariables = fields?.partialVariables ?? this.partialVariables;
 
     this.guardrails = fields?.guardrails;
 
@@ -133,6 +128,6 @@ export abstract class BasePromptTemplate<
   abstract formatPrompt(input: CallInput): Promise<CallOutput>;
 
   private _getAllVariables(): string[] {
-    return [...new Set([...this.inputVariables, ...this.partialVariables])];
+    return [...new Set(this.inputVariables)];
   }
 }

@@ -71,9 +71,14 @@ export function convertLambdaFuncFromStr(funcStr: string) {
   const isAsync = funcStr.trim().startsWith('async');
 
   if (isAsync) {
-    return new Function(...params, `return (async function(${params.join(', ')}) {${funcBody}}).apply(this, arguments)`);
+    return new Function(
+      ...params,
+      `return (async function(${params.join(
+        ', '
+      )}) {${funcBody}}).apply(this, [${params.join(', ')}])`
+    );
   }
-  
+
   return new Function(...params, funcBody);
 }
 
