@@ -47,6 +47,6 @@ jobs:
     - name: Install dependencies
       run: yarn install --unsafe-perm --immutable --network-timeout 500000
     - name: Install sharp
-      run: yarn add sharp --ignore-engines
+      run: yarn workspace encre-core add sharp --ignore-engines
     - name: Test
       run: yarn workspace encre-core run test
