@@ -41,6 +41,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     return {
       modelName: 'model',
       openAIApiKey: 'openai_api_key',
+      streaming: 'stream'
     };
   }
 
@@ -52,7 +53,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   temperature = 1;
 
-  maxTokens = 256;
+  maxTokens = 2048;
 
   topP = 1;
 
@@ -96,6 +97,24 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
         configuration?: OpenAIClientOptions;
       }
   ) {
+    fields = {
+      modelName: fields?.modelName ?? 'text-davinci-003',
+      temperature: fields?.temperature ?? 1,
+      maxTokens: fields?.maxTokens ?? 2048,
+      topP: fields?.topP ?? 1,
+      frequencyPenalty: fields?.frequencyPenalty ?? 0,
+      presencePenalty: fields?.presencePenalty ?? 0,
+      streaming: fields?.streaming ?? false,
+      bestOf: fields?.bestOf,
+      logitBias: fields?.logitBias,
+      logprobs: fields?.logprobs,
+      user: fields?.user,
+      stopWords: fields?.stopWords,
+      timeout: fields?.timeout,
+      additionalKwargs: fields?.additionalKwargs,
+      ...fields,
+    };
+
     super(fields ?? {});
 
     this.openAIApiKey =

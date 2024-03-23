@@ -17,6 +17,9 @@ export async function getNumTokens(
 ) {
   // fallback for calulating text's tokens
   // 1 token ~= 4 chars in English
+  if (text.length === 0) {
+    return 0;
+  }
 
   let numTokens: number = Math.ceil(text.length / 4);
 

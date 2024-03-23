@@ -93,7 +93,11 @@ export abstract class NodeImpl<
   get kwargs(): DataFields {
     return this._kwargs;
   }
+  
+  // TODO: add runtime, memory??
 
+  // TODO: for each connection of this node, get all parent nodeIds and children nodeIds
+  
   setKwarg(key: string, value: unknown): void {
     if (!(key in this._kwargs)) {
       throw new Error(`keyword ${key} does not exist in ${this.title}`);

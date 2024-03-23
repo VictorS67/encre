@@ -86,44 +86,44 @@ describe('test BaseRule and GeneralRule', () => {
   });
 
   test('merging variables in concat rules', async () => {
-const isStringRule = new GeneralRule({
-  description: 'is string',
-  func: async (input: unknown) => {
-    return typeof input === 'string';
-  },
-});
+    const isStringRule = new GeneralRule({
+      description: 'is string',
+      func: async (input: unknown) => {
+        return typeof input === 'string';
+      },
+    });
 
-expect(await isStringRule.validate('John')).toBeTruthy();
-expect(await isStringRule.validate('Peter')).toBeTruthy();
+    expect(await isStringRule.validate('John')).toBeTruthy();
+    expect(await isStringRule.validate('Peter')).toBeTruthy();
 
-// Instead of checking if the input is John, I want the name to be flexible
-const isSomeNameRule = new GeneralRule({
-  description: 'is {{name}}',
-  variables: { name: 'John' },
-  func: async (input: string, variables: { name: string }) => {
-    return input === variables.name;
-  },
-});
+    // Instead of checking if the input is John, I want the name to be flexible
+    const isSomeNameRule = new GeneralRule({
+      description: 'is {{name}}',
+      variables: { name: 'John' },
+      func: async (input: string, variables: { name: string }) => {
+        return input === variables.name;
+      },
+    });
 
-expect(await isSomeNameRule.validate('John')).toBeTruthy();
-expect(await isSomeNameRule.validate('Peter')).toBeFalsy();
+    expect(await isSomeNameRule.validate('John')).toBeTruthy();
+    expect(await isSomeNameRule.validate('Peter')).toBeFalsy();
 
-// Use `concat` with a 'and' conjunction can merge two rules
-const newRule = isStringRule.concat(isSomeNameRule, 'and');
+    // Use `concat` with a 'and' conjunction can merge two rules
+    const newRule = isStringRule.concat(isSomeNameRule, 'and');
 
-// The variable in `isSomeNameRule` is wrapped in the `right` attribute, because
-// `isSomeNameRule` is the right rule when merging
-expect(newRule.variables).toStrictEqual({
-  left: {},
-  right: { name: 'John' },
-});
-expect(await newRule.validate('John')).toBeTruthy();
-expect(await newRule.validate('Peter')).toBeFalsy();
+    // The variable in `isSomeNameRule` is wrapped in the `right` attribute, because
+    // `isSomeNameRule` is the right rule when merging
+    expect(newRule.variables).toStrictEqual({
+      left: {},
+      right: { name: 'John' },
+    });
+    expect(await newRule.validate('John')).toBeTruthy();
+    expect(await newRule.validate('Peter')).toBeFalsy();
 
-// Now I want to change the name to be 'Peter' instead of 'John'
-newRule.variables = { left: {}, right: { name: 'Peter' } };
+    // Now I want to change the name to be 'Peter' instead of 'John'
+    newRule.variables = { left: {}, right: { name: 'Peter' } };
 
-expect(await newRule.validate('John')).toBeFalsy();
-expect(await newRule.validate('Peter')).toBeTruthy();
+    expect(await newRule.validate('John')).toBeFalsy();
+    expect(await newRule.validate('Peter')).toBeTruthy();
   });
 });
