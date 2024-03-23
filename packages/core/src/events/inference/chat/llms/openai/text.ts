@@ -19,12 +19,12 @@ import { LLMResult } from '../../../../output/provide/llmresult.js';
 import { BaseLLM, BaseLLMParams, calculateMaxToken } from '../../base.js';
 import { TokenUsage } from '../../index.js';
 import {
-  OpenAICallOptions,
   OpenAIInput,
+  OpenAITextCallOptions,
   wrapOpenAIClientError,
 } from './index.js';
 
-export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
+export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOptions>
   extends BaseLLM<CallOptions>
   implements OpenAIInput
 {
@@ -67,11 +67,15 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   bestOf?: number | undefined;
 
+  echo?: boolean;
+
   additionalKwargs?: OpenAIInput['additionalKwargs'];
 
   logitBias?: Record<string, number>;
 
   logprobs?: number;
+
+  seed?: number;
 
   user?: string | undefined;
 
@@ -108,6 +112,8 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
       bestOf: fields?.bestOf,
       logitBias: fields?.logitBias,
       logprobs: fields?.logprobs,
+      echo: fields?.echo,
+      seed: fields?.seed,
       user: fields?.user,
       stopWords: fields?.stopWords,
       timeout: fields?.timeout,
@@ -135,6 +141,8 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     this.bestOf = fields?.bestOf ?? this.bestOf;
     this.logitBias = fields?.logitBias;
     this.logprobs = fields?.logprobs;
+    this.echo = fields?.echo;
+    this.seed = fields?.seed;
     this.additionalKwargs = fields?.additionalKwargs ?? {};
 
     this.user = fields?.user;
@@ -189,6 +197,9 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
       logit_bias: this.logitBias,
       logprobs: this.logprobs,
       stop: options?.stopWords ?? this.stopWords,
+      suffix: options?.suffix,
+      echo: this.echo,
+      seed: this.seed,
       user: this.user,
       stream: this.streaming,
       ...this.additionalKwargs,
