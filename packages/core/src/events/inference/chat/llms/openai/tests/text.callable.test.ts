@@ -27,6 +27,7 @@ describe('test OpenAI Callable', () => {
       kwargs: {
         verbose: undefined,
         callbacks: undefined,
+        echo: undefined,
         modelName: 'gpt-3.5-turbo-instruct',
         temperature: 1,
         topP: 1,
@@ -35,6 +36,7 @@ describe('test OpenAI Callable', () => {
         maxTokens: 2048,
         streaming: false,
         bestOf: undefined,
+        seed: undefined,
         stopWords: undefined,
         logitBias: undefined,
         logprobs: undefined,
@@ -97,6 +99,7 @@ describe('test OpenAI Callable', () => {
       kwargs: {
         verbose: undefined,
         callbacks: undefined,
+        echo: undefined,
         modelName: 'gpt-3.5-turbo-instruct',
         temperature: 1,
         topP: 1,
@@ -105,6 +108,7 @@ describe('test OpenAI Callable', () => {
         maxTokens: 2048,
         streaming: false,
         bestOf: undefined,
+        seed: undefined,
         stopWords: undefined,
         logitBias: undefined,
         logprobs: undefined,
