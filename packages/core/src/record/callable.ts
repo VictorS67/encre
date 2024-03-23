@@ -16,7 +16,11 @@ import {
 import { AsyncCallError, AsyncCaller } from '../utils/asyncCaller.js';
 import { shallowCopy } from '../utils/copy.js';
 import { ReadableStreamAsyncIterable } from '../utils/stream.js';
-import { convertCallableLikeToCallable, isValidLambdaFunc } from './utils.js';
+import {
+  convertCallableLikeToCallable,
+  convertLambdaFuncFromStr,
+  isValidLambdaFunc,
+} from './utils.js';
 
 /**
  * Type for defining fields in a callable configuration.
@@ -837,16 +841,7 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
    * @returns A callable function derived from the stored string.
    */
   private _func(): CallableFunc<CallInput, CallOutput> {
-    const funcBody: string = this.func.slice(
-      this.func.indexOf('{') + 1,
-      this.func.lastIndexOf('}')
-    );
-
-    const params: string[] = this.func
-      .slice(this.func.indexOf('(') + 1, this.func.indexOf(')'))
-      .split(',');
-
-    return new Function(...params, funcBody) as CallableFunc<
+    return convertLambdaFuncFromStr(this.func) as CallableFunc<
       CallInput,
       CallOutput
     >;

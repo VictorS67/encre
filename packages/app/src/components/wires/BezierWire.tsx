@@ -13,6 +13,7 @@ export const BezierWire: FC<WireProps<'bezier'>> = memo(
     endY,
     isSelected,
     isHighlighted,
+    isHoveringPort,
     wireOptions,
   }: BezierWireProps) => {
     const { path, centerX, centerY } = getBezierPath({
@@ -30,6 +31,7 @@ export const BezierWire: FC<WireProps<'bezier'>> = memo(
         center={{ centerX, centerY }}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
       />
     );
   },

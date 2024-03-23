@@ -1,7 +1,11 @@
 import { Serializable } from '../../../../load/serializable.js';
 import { CallableConfig } from '../../../../record/callable.js';
-import { VariableValidator } from '../../../../utils/promptTemplateValidator/variableValidator.js';
 import { BaseEvent, BaseEventParams } from '../../../base.js';
+import { ValidateResult } from '../../../inference/validate/index.js';
+import {
+  VariableRules,
+  VariableValidator,
+} from '../../../inference/validate/validators/variable.js';
 import { BaseMessage } from '../msgs/base.js';
 
 export abstract class BasePrompt extends Serializable {
@@ -27,14 +31,12 @@ export interface PromptTemplateParams extends BaseEventParams {
    */
   inputVariables: string[];
 
-  partialVariables: string[];
-
-  validator?: VariableValidator;
+  guardrails?: VariableRules;
 }
 
 export interface BasePromptTemplateInput {
   [key: string]: unknown;
-};
+}
 
 export abstract class BasePromptTemplate<
     CallInput extends BasePromptTemplateInput = BasePromptTemplateInput,
@@ -54,9 +56,7 @@ export abstract class BasePromptTemplate<
 
   inputVariables: string[] = [];
 
-  partialVariables: string[] = [];
-
-  validator?: VariableValidator;
+  guardrails?: VariableRules;
 
   constructor(fields?: Partial<PromptTemplateParams>) {
     super(fields ?? {});
@@ -64,9 +64,8 @@ export abstract class BasePromptTemplate<
     this.template = fields?.template ?? this.template;
 
     this.inputVariables = fields?.inputVariables ?? this.inputVariables;
-    this.partialVariables = fields?.partialVariables ?? this.partialVariables;
 
-    this.validator = fields?.validator ?? this.validator;
+    this.guardrails = fields?.guardrails;
 
     if (this.template && this.inputVariables) {
       this._isInputExists(this.template, this.inputVariables);
@@ -102,24 +101,33 @@ export abstract class BasePromptTemplate<
     input: CallInput,
     options?: Partial<CallOptions>
   ): Promise<CallOutput> {
-    if (!this.validate(input)) {
-      throw new Error('the validation for inputValue failed');
+    const validateResult = await this.validate(input);
+
+    if (!validateResult.isValid) {
+      throw new Error(
+        `CANNOT format prompt because of error - ${validateResult.errorMessage}`
+      );
     }
 
     return this.formatPrompt(input);
   }
 
-  validate(input: CallInput): boolean {
-    if (this.validator) {
-      const validationResult = this.validator.validate(input);
-      if (!validationResult.isValid) {
-        return false;
-      }
-    }
-    return true;
+  async validate(input: CallInput): Promise<ValidateResult> {
+    if (!this.guardrails) return { isValid: true };
+
+    const validator = new VariableValidator({
+      variables: this._getAllVariables(),
+      rules: this.guardrails,
+    });
+
+    return validator.invoke(input);
   }
 
   abstract format(input: CallInput): Promise<string>;
 
   abstract formatPrompt(input: CallInput): Promise<CallOutput>;
+
+  private _getAllVariables(): string[] {
+    return [...new Set(this.inputVariables)];
+  }
 }

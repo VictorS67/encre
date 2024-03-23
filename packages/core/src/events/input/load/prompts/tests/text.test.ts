@@ -1,6 +1,6 @@
 import { expect, test, describe } from '@jest/globals';
 import { stringify } from 'yaml';
-import { VariableValidator } from '../../../../../utils/promptTemplateValidator/variableValidator.js';
+import { GeneralRule } from '../../../../inference/validate/guardrails/base.js';
 import { StringPrompt, StringPromptTemplate } from '../text.js';
 
 test('test custom StringPrompt', async () => {
@@ -36,20 +36,24 @@ describe('test StringPromptTemplate', () => {
     );
   });
 
-  test('validator', async () => {
-    const isString = (s) => typeof s === 'string';
-
-    const validator = new VariableValidator(['name']);
-    validator.addSpecificRule('name', isString);
+  test('adding guardrails', async () => {
+    const isStringRule = new GeneralRule({
+      description: 'is string',
+      func: async (input: unknown) => {
+        return typeof input === 'string';
+      }
+    });
 
     const promptTemplate = new StringPromptTemplate({
       template: '{{name}}',
       inputVariables: ['name'],
-      validator: validator,
+      guardrails: {
+        default: isStringRule
+      }
     });
 
-    await expect(promptTemplate.invoke({ name: 1 })).rejects.toThrow(
-      'the validation for inputValue failed'
+    expect(() => promptTemplate.invoke({ name: 1 })).rejects.toThrow(
+      "CANNOT format prompt because of error - Validation failed in variable 'name'"
     );
   });
 
