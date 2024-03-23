@@ -17,7 +17,7 @@ import {
 } from '../index.js';
 
 describe('OpenAIChat', () => {
-  const OPENAI_API_KEY = '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';
+  const OPENAI_API_KEY = 'you_should_get_this_api_from_openai';
 
   test('test OpenAIChat text', async () => {
     const openaiChat = new OpenAIChat({
@@ -536,7 +536,7 @@ describe('OpenAIChat', () => {
         content:
           "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
       }),
-      // You can push the bot message from the vison model directly to a model that you want to 
+      // You CANNOT push the bot message from the vison model directly to a model that you want to 
       // call the function... I guess this could be the reason why vison does not support functions/tools
       new HumanMessage({
         content: generations1[0].message.content
