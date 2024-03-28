@@ -19,12 +19,12 @@ import { LLMResult } from '../../../../output/provide/llmresult.js';
 import { BaseLLM, BaseLLMParams, calculateMaxToken } from '../../base.js';
 import { TokenUsage } from '../../index.js';
 import {
-  OpenAICallOptions,
   OpenAIInput,
+  OpenAITextCallOptions,
   wrapOpenAIClientError,
 } from './index.js';
 
-export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
+export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOptions>
   extends BaseLLM<CallOptions>
   implements OpenAIInput
 {
@@ -41,6 +41,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     return {
       modelName: 'model',
       openAIApiKey: 'openai_api_key',
+      streaming: 'stream'
     };
   }
 
@@ -52,7 +53,7 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   temperature = 1;
 
-  maxTokens = 256;
+  maxTokens = 2048;
 
   topP = 1;
 
@@ -66,11 +67,15 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
 
   bestOf?: number | undefined;
 
+  echo?: boolean;
+
   additionalKwargs?: OpenAIInput['additionalKwargs'];
 
   logitBias?: Record<string, number>;
 
   logprobs?: number;
+
+  seed?: number;
 
   user?: string | undefined;
 
@@ -96,6 +101,26 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
         configuration?: OpenAIClientOptions;
       }
   ) {
+    fields = {
+      modelName: fields?.modelName ?? 'text-davinci-003',
+      temperature: fields?.temperature ?? 1,
+      maxTokens: fields?.maxTokens ?? 2048,
+      topP: fields?.topP ?? 1,
+      frequencyPenalty: fields?.frequencyPenalty ?? 0,
+      presencePenalty: fields?.presencePenalty ?? 0,
+      streaming: fields?.streaming ?? false,
+      bestOf: fields?.bestOf,
+      logitBias: fields?.logitBias,
+      logprobs: fields?.logprobs,
+      echo: fields?.echo,
+      seed: fields?.seed,
+      user: fields?.user,
+      stopWords: fields?.stopWords,
+      timeout: fields?.timeout,
+      additionalKwargs: fields?.additionalKwargs,
+      ...fields,
+    };
+
     super(fields ?? {});
 
     this.openAIApiKey =
@@ -116,6 +141,8 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
     this.bestOf = fields?.bestOf ?? this.bestOf;
     this.logitBias = fields?.logitBias;
     this.logprobs = fields?.logprobs;
+    this.echo = fields?.echo;
+    this.seed = fields?.seed;
     this.additionalKwargs = fields?.additionalKwargs ?? {};
 
     this.user = fields?.user;
@@ -170,6 +197,9 @@ export class OpenAI<CallOptions extends OpenAICallOptions = OpenAICallOptions>
       logit_bias: this.logitBias,
       logprobs: this.logprobs,
       stop: options?.stopWords ?? this.stopWords,
+      suffix: options?.suffix,
+      echo: this.echo,
+      seed: this.seed,
       user: this.user,
       stream: this.streaming,
       ...this.additionalKwargs,

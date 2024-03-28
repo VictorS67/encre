@@ -139,18 +139,6 @@ export abstract class BaseLM<
   ): Promise<LLMResult>;
 
   /**
-   * Calculates the number of tokens in the given text.
-   * @param {string} text - The input text.
-   * @returns {Promise<number>} The number of tokens in the input text.
-   */
-  async getNumTokens(text: string): Promise<number> {
-    return getNumTokens(
-      text,
-      'modelName' in this ? getTiktokenModel(this.modelName as string) : 'gpt2'
-    );
-  }
-
-  /**
    * Converts a given {@link BaseLMInput} to a {@link BasePrompt}.
    * @param {BaseLMInput} input - The input for the language model.
    * @returns {BasePrompt} The corresponding prompt.

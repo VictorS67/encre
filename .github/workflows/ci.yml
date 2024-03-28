@@ -45,6 +45,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: "yarn"
     - name: Install dependencies
-      run: yarn install --immutable --network-timeout 500000
+      run: yarn install --unsafe-perm --immutable --network-timeout 500000
+    - name: Install sharp
+      run: yarn workspace encre-core add sharp --ignore-engines
     - name: Test
       run: yarn workspace encre-core run test
