@@ -275,6 +275,35 @@ export abstract class NodeImpl<
     }
   }
 
+  async serialize(connections: NodeConnection[]): Promise<SerializedNode> {
+    const outgoingConnections: {
+      [key in string]: { toNodeId: RecordId; toPortName: string };
+    } = {};
+
+    for (const conn of connections) {
+      const { fromPortName, toNodeId, toPortName } = conn;
+      outgoingConnections[fromPortName] = { toNodeId, toPortName };
+    }
+
+    return {
+      _type: 'node',
+      id: this.id,
+      type: this.type,
+      subType: this.subType,
+      registerArgs: this.registerArgs,
+      title: this.title,
+      description: this.description,
+      runtime: this.runtime,
+      memory: this.memory,
+      data: JSON.parse(JSON.stringify(this.data)),
+      visualInfo: this.visualInfo,
+      inputs: this.inputs,
+      outputs: this.outputs,
+      outputSizes: this.outputSizes,
+      outgoingConnections,
+    };
+  }
+
   private _initSize(): NodePortSizes {
     return Object.fromEntries(
       Object.keys(this.outputs ?? {}).map((key: string) => [key, 0])

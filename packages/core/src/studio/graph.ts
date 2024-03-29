@@ -13,7 +13,7 @@ import {
 } from './nodes/index.js';
 import { globalNodeRegistry, NodeRegistration } from './nodes/registration.js';
 import { GraphNode } from './nodes/utility/graph.node.js';
-import { SerializedGraph } from './serde.js';
+import { SerializedGraph, SerializedNode } from './serde.js';
 
 export interface NodeGraph {
   id?: RecordId;
@@ -472,6 +472,33 @@ export abstract class BaseGraph<
       connections,
       registry,
     });
+  }
+
+  async serialize(): Promise<SerializedGraph> {
+    const serializedNodes: SerializedNode[] = [];
+
+    for (const node of this.nodes) {
+      const nodeId: RecordId = node.id;
+      const nodeImpl: NodeImpl<SerializableNode> | undefined =
+        this.nodeImplMap[nodeId];
+      const nodeConnections: NodeConnection[] | undefined =
+        this.nodeConnMap[node.id];
+
+      if (!nodeImpl || !nodeConnections) {
+        console.warn(`CANNOT serialize node with id: ${nodeId}`);
+        continue;
+      }
+
+      serializedNodes.push(await nodeImpl.serialize(nodeConnections));
+    }
+
+    return {
+      _type: 'graph',
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      nodes: serializedNodes,
+    };
   }
 
   abstract schedule(): Promise<SerializableNode<string, Serializable>[][]>;
