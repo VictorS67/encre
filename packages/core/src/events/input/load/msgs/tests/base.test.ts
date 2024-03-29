@@ -1,14 +1,9 @@
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
-import {
-  BaseMessage,
-  BaseMessageFields,
-  BotMessage,
-  HumanMessage,
-  MessageRole,
-  convertMessageLikeToMessage,
-  getChatString,
-} from '../base.js';
+import { BaseMessage, BaseMessageFields, MessageRole } from '../base.js';
+import { BotMessage } from '../bot.js';
+import { HumanMessage } from '../human.js';
+import { convertMessageLikeToMessage, getChatString } from '../utils.js';
 
 test('test custom BaseMessage', async () => {
   class TestMessage extends BaseMessage {

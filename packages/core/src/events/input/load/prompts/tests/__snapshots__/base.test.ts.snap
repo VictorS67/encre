@@ -13,18 +13,22 @@ exports[`test custom BasePrompt 2`] = `
 "- _grp: 1
   _type: constructor
   _id:
+    - events
     - input
     - load
     - msgs
+    - system
     - SystemMessage
   _kwargs:
     content: this is a system message.
 - _grp: 1
   _type: constructor
   _id:
+    - events
     - input
     - load
     - msgs
+    - system
     - SystemMessage
   _kwargs:
     content: this is a test prompt.

@@ -56,7 +56,7 @@ describe('test OpenAIChat Callable', () => {
         {
           _grp: 1,
           _type: 'constructor',
-          _id: ['inference', 'chat', 'llms', 'openai', 'OpenAIChat'],
+          _id: ['events', 'inference', 'chat', 'chatlms', 'openai', 'OpenAIChat'],
           _kwargs: {
             model: 'gpt-4-turbo-preview',
             frequency_penalty: 0,
@@ -81,7 +81,9 @@ describe('test OpenAIChat Callable', () => {
     const anotherOpenAI: OpenAIChat = await load<OpenAIChat>(
       str,
       { OPENAI_API_KEY: 'this_is_api_key' } as SecretMap,
-      { 'inference/chat/llms/openai': { OpenAIChat } } as OptionalImportMap
+      {
+        'events/inference/chat/chatlms/openai': { OpenAIChat },
+      } as OptionalImportMap
     );
 
     expect(anotherOpenAI).toBeInstanceOf(OpenAIChat);

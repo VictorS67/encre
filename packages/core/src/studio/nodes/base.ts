@@ -4,7 +4,9 @@ import {
   SerializedFields,
   SerializedKeyAlias,
 } from '../../load/keymap.js';
+import { Serializable, Serialized } from '../../load/serializable.js';
 import { SerializedCallableFields } from '../../record/callable.js';
+import { isNotNull } from '../../utils/safeTypes.js';
 import { DataFields } from '../data.js';
 import {
   ProcessContext,
@@ -12,18 +14,23 @@ import {
   ProcessOutputMap,
   validateProcessDataFromPorts,
 } from '../processor.js';
+import { SerializedNode } from '../serde.js';
 import { UIContext } from '../ui.js';
 import { coerceToData } from '../utils/coerce.js';
 import {
   displayUIFromDataFields,
   displayUIFromSecretFields,
 } from '../utils/display.js';
+import { NodeRegistration } from './registration.js';
 import {
   CallableNode,
   NodeBody,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
+  NodePortDef,
+  NodePortFields,
+  NodePortSizes,
   SerializableNode,
 } from './index.js';
 
@@ -39,8 +46,6 @@ export abstract class NodeImpl<
 > {
   readonly node: T;
 
-  title: string;
-
   readonly aliases: SerializedKeyAlias;
 
   readonly secrets: SecretFields;
@@ -50,16 +55,22 @@ export abstract class NodeImpl<
   constructor(node: T) {
     this.node = node;
 
-    this.title = this.name;
-
     const { aliases, secrets, kwargs } = this.node.data.getAttributes();
     this.aliases = aliases;
     this.secrets = secrets;
     this._kwargs = this._coerceSerializedToData(kwargs);
   }
 
+  get title(): string {
+    return this.node.title ?? this.name;
+  }
+
+  get description(): string {
+    return this.node.description ?? '';
+  }
+
   get id(): RecordId {
-    return this.node.data.getNodeId();
+    return this.node.id;
   }
 
   get type(): Type {
@@ -70,12 +81,16 @@ export abstract class NodeImpl<
     return this.node.subType as SubType;
   }
 
+  get registerArgs(): Record<string, unknown> | undefined {
+    return this.node.registerArgs;
+  }
+
   get name(): string {
     return this.node.data._id[this.node.data._id.length - 1];
   }
 
   get visualInfo(): T['visualInfo'] {
-    return this.visualInfo;
+    return this.node.visualInfo;
   }
 
   get data(): T['data'] {
@@ -83,21 +98,29 @@ export abstract class NodeImpl<
   }
 
   get inputs(): T['inputs'] {
-    return this.inputs;
+    return this.node.inputs;
   }
 
   get outputs(): T['outputs'] {
-    return this.outputs;
+    return this.node.outputs;
+  }
+
+  get outputSizes(): NodePortSizes {
+    return this.node.outputSizes ?? this._initSize();
   }
 
   get kwargs(): DataFields {
     return this._kwargs;
   }
-  
-  // TODO: add runtime, memory??
 
-  // TODO: for each connection of this node, get all parent nodeIds and children nodeIds
-  
+  get runtime(): number {
+    return this.node.runtime ?? 0;
+  }
+
+  get memory(): number {
+    return this.node.memory ?? 0;
+  }
+
   setKwarg(key: string, value: unknown): void {
     if (!(key in this._kwargs)) {
       throw new Error(`keyword ${key} does not exist in ${this.title}`);
@@ -117,24 +140,66 @@ export abstract class NodeImpl<
 
   getInputPortDefs(
     connections: NodeConnection[],
-    nodes: Record<RecordId, SerializableNode>
+    nodeMap: Record<RecordId, SerializableNode>
   ): NodeInputPortDef[] {
-    return Object.keys(this.inputs ?? {}).map((key: string) => ({
-      nodeId: this.id,
-      name: key,
-      type: this.inputs ? this.inputs[key] : 'unknown',
-    }));
+    return this._initPorts(this.inputs);
   }
 
   getOutputPortDefs(
     connections: NodeConnection[],
-    nodes: Record<RecordId, SerializableNode>
+    nodeMap: Record<RecordId, SerializableNode>
   ): NodeOutputPortDef[] {
-    return Object.keys(this.outputs ?? {}).map((key: string) => ({
-      nodeId: this.id,
-      name: key,
-      type: this.outputs ? this.outputs[key] : 'unknown',
-    }));
+    return this._initPorts(this.outputs);
+  }
+
+  /**
+   * Get all from-node ids from the current workflow.
+   *
+   * @param connections connections in the current workflow
+   * @param nodeMap nodeMap in the current workflow
+   * @returns all from-node ids of the node
+   */
+  getFromNodeIds(
+    connections: NodeConnection[],
+    nodeMap: Record<RecordId, SerializableNode>
+  ): RecordId[] {
+    return connections
+      .filter((c) => {
+        const inputPorts: string[] = Object.keys(this.inputs ?? {});
+
+        if (inputPorts.length === 0) {
+          return c.toNodeId === this.id;
+        }
+
+        return c.toNodeId === this.id && inputPorts.includes(c.toPortName);
+      })
+      .map((c) => c.fromNodeId)
+      .filter((nId) => isNotNull(nodeMap[nId]));
+  }
+
+  /**
+   * Get all to-node ids from the current workflow.
+   *
+   * @param connections connections in the current workflow
+   * @param nodeMap nodeMap in the current workflow
+   * @returns all to-node ids of the node
+   */
+  getToNodeIds(
+    connections: NodeConnection[],
+    nodeMap: Record<RecordId, SerializableNode>
+  ): RecordId[] {
+    return connections
+      .filter((c) => {
+        const outputPorts: string[] = Object.keys(this.outputs ?? {});
+
+        if (outputPorts.length === 0) {
+          return c.fromNodeId === this.id;
+        }
+
+        return c.fromNodeId === this.id && outputPorts.includes(c.fromPortName);
+      })
+      .map((c) => c.toNodeId)
+      .filter((nId) => isNotNull(nodeMap[nId]));
   }
 
   validateInputs(inputs?: ProcessInputMap): boolean {
@@ -161,6 +226,67 @@ export abstract class NodeImpl<
     );
 
     return [...secretUIContexts, ...kwargsUIContexts];
+  }
+
+  static async deserialize(
+    serialized: SerializedNode,
+    values: Record<string, unknown> = {},
+    registry?: NodeRegistration
+  ): Promise<SerializableNode> {
+    if (serialized._type !== 'node') {
+      throw new Error(
+        `CANNOT deserialize this type in node: ${serialized._type}`
+      );
+    }
+
+    switch (serialized.type) {
+      case 'graph': {
+        const { GraphNodeImpl } = await import('./utility/graph.node.js');
+        return GraphNodeImpl.deserialize(serialized, values, registry);
+      }
+      case 'splitter': {
+        const { SplitterNodeImpl } = await import('./input/splitter.node.js');
+        return SplitterNodeImpl.deserialize(serialized);
+      }
+      case 'prompt': {
+        const { PromptNodeImpl } = await import('./input/prompt.node.js');
+        return PromptNodeImpl.deserialize(serialized);
+      }
+      case 'message': {
+        const { MessageNodeImpl } = await import('./input/message.node.js');
+        return MessageNodeImpl.deserialize(serialized);
+      }
+      case 'loader': {
+        const { LoaderNodeImpl } = await import('./input/loader.node.js');
+        return LoaderNodeImpl.deserialize(serialized);
+      }
+      case 'llm': {
+        const { LLMNodeImpl } = await import('./inference/chat/llm.node.js');
+        return LLMNodeImpl.deserialize(serialized);
+      }
+      case 'chatlm': {
+        const { ChatLMNodeImpl } = await import(
+          './inference/chat/chatlm.node.js'
+        );
+        return ChatLMNodeImpl.deserialize(serialized);
+      }
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
+  private _initSize(): NodePortSizes {
+    return Object.fromEntries(
+      Object.keys(this.outputs ?? {}).map((key: string) => [key, 0])
+    );
+  }
+
+  private _initPorts(ports: NodePortFields | undefined): NodePortDef[] {
+    return Object.keys(ports ?? {}).map((key: string) => ({
+      nodeId: this.id,
+      name: key,
+      type: ports ? ports[key] : 'unknown',
+    }));
   }
 }
 

@@ -2,10 +2,10 @@ import { OpenAI as OpenAIClient } from 'openai';
 
 import {
   BaseMessage,
-  ChatMessage,
   ContentLike,
   MessageRole,
 } from '../../../../input/load/msgs/base.js';
+import { ChatMessage } from '../../../../input/load/msgs/chat.js';
 
 export function isModalityRequiredInMessage(message: BaseMessage): boolean {
   // Multi-modal model does not suport any function/tools

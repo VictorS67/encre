@@ -1,0 +1,1 @@
+export * from '../../../../../build/events/inference/chat/llms/vertexai/gemini/text.js'

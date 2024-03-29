@@ -24,9 +24,12 @@ export class VariableValidator<
   extends BaseEvent<CallInput, CallOutput, CallOptions>
   implements VariableValidatorParams
 {
+
   _isSerializable = true;
 
-  _namespace: string[] = ['inference', 'validate', 'validator'];
+  _eventNamespace(): string[] {
+    return ['inference', 'validate', 'validator'];
+  }
 
   static _name(): string {
     return 'VariableValidator';

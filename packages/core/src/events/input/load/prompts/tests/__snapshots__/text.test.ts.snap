@@ -4,6 +4,7 @@ exports[`test custom StringPrompt 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - prompts
@@ -18,9 +19,11 @@ exports[`test custom StringPrompt 2`] = `
 "- _grp: 1
   _type: constructor
   _id:
+    - events
     - input
     - load
     - msgs
+    - human
     - HumanMessage
   _kwargs:
     content: this is a test prompt.

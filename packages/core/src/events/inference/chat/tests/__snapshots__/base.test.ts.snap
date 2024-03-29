@@ -4,9 +4,10 @@ exports[`test BaseChatLM 1`] = `
 "_grp: 1
 _type: not_implemented
 _id:
+  - events
   - inference
   - chat
-  - llms
+  - chatlms
   - test_chatlm
   - TestChatLM
 "
@@ -88,6 +89,7 @@ exports[`test BaseLLM 1`] = `
 "_grp: 1
 _type: not_implemented
 _id:
+  - events
   - inference
   - chat
   - llms
@@ -164,6 +166,7 @@ exports[`test BaseLM 1`] = `
 "_grp: 1
 _type: not_implemented
 _id:
+  - events
   - tests
   - TestLM
 "

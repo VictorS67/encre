@@ -16,10 +16,9 @@ import {
 import { BaseEvent, BaseEventParams } from '../../base.js';
 import {
   type BaseMessageLike,
-  convertMessageLikeToMessage,
   BaseMessage,
-  isMessageLike,
 } from '../../input/load/msgs/base.js';
+import { convertMessageLikeToMessage, isMessageLike } from '../../input/load/msgs/utils.js';
 import { BasePrompt } from '../../input/load/prompts/base.js';
 import { ChatPrompt } from '../../input/load/prompts/chat.js';
 import { StringPrompt } from '../../input/load/prompts/text.js';
@@ -217,7 +216,9 @@ export abstract class BaseLLM<
   /**
    * A predefined namespace array to identify the type of language model and other related namespaces.
    */
-  _namespace: string[] = ['inference', 'chat', 'llms', this._llmType()];
+  _eventNamespace(): string[] {
+    return ['inference', 'chat', 'llms', this._llmType()];
+  }
 
   /**
    * Constructor for the BaseLLM class.
@@ -385,7 +386,9 @@ export abstract class BaseChatLM<
   /**
    * A predefined namespace array to identify the type of language model and other related namespaces.
    */
-  _namespace: string[] = ['inference', 'chat', 'llms', this._llmType()];
+  _eventNamespace(): string[] {
+    return ['inference', 'chat', 'chatlms', this._llmType()];
+  }
 
   constructor(fields: BaseChatLMParams) {
     super(fields);

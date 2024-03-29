@@ -2,11 +2,11 @@ import { Content, InlineDataPart, Part } from '@google/generative-ai';
 
 import {
   BaseMessage,
-  BotMessage,
-  ChatMessage,
   ContentLike,
-  HumanMessage,
 } from '../../../../../input/load/msgs/base.js';
+import { BotMessage } from '../../../../../input/load/msgs/bot.js';
+import { ChatMessage } from '../../../../../input/load/msgs/chat.js';
+import { HumanMessage } from '../../../../../input/load/msgs/human.js';
 import {
   GeminiContentRole,
   GeminiInlineData,

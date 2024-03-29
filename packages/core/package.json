@@ -126,6 +126,31 @@
       "import": "./events/input/load/msgs/base.js",
       "require": "./events/input/load/msgs/base.cjs"
     },
+    "./events/input/load/msgs/bot": {
+      "types": "./events/input/load/msgs/bot.d.ts",
+      "import": "./events/input/load/msgs/bot.js",
+      "require": "./events/input/load/msgs/bot.cjs"
+    },
+    "./events/input/load/msgs/human": {
+      "types": "./events/input/load/msgs/human.d.ts",
+      "import": "./events/input/load/msgs/human.js",
+      "require": "./events/input/load/msgs/human.cjs"
+    },
+    "./events/input/load/msgs/system": {
+      "types": "./events/input/load/msgs/system.d.ts",
+      "import": "./events/input/load/msgs/system.js",
+      "require": "./events/input/load/msgs/system.cjs"
+    },
+    "./events/input/load/msgs/function": {
+      "types": "./events/input/load/msgs/function.d.ts",
+      "import": "./events/input/load/msgs/function.js",
+      "require": "./events/input/load/msgs/function.cjs"
+    },
+    "./events/input/load/msgs/general": {
+      "types": "./events/input/load/msgs/general.d.ts",
+      "import": "./events/input/load/msgs/general.js",
+      "require": "./events/input/load/msgs/general.cjs"
+    },
     "./events/input/load/prompts/base": {
       "types": "./events/input/load/prompts/base.d.ts",
       "import": "./events/input/load/prompts/base.js",
@@ -171,6 +196,51 @@
       "import": "./events/output/provide/message.js",
       "require": "./events/output/provide/message.cjs"
     },
+    "./events/inference/validate/utils": {
+      "types": "./events/inference/validate/utils.d.ts",
+      "import": "./events/inference/validate/utils.js",
+      "require": "./events/inference/validate/utils.cjs"
+    },
+    "./events/inference/validate": {
+      "types": "./events/inference/validate.d.ts",
+      "import": "./events/inference/validate.js",
+      "require": "./events/inference/validate.cjs"
+    },
+    "./events/inference/validate/guardrails/base": {
+      "types": "./events/inference/validate/guardrails/base.d.ts",
+      "import": "./events/inference/validate/guardrails/base.js",
+      "require": "./events/inference/validate/guardrails/base.cjs"
+    },
+    "./events/inference/validate/guardrails/array": {
+      "types": "./events/inference/validate/guardrails/array.d.ts",
+      "import": "./events/inference/validate/guardrails/array.js",
+      "require": "./events/inference/validate/guardrails/array.cjs"
+    },
+    "./events/inference/validate/guardrails/boolean": {
+      "types": "./events/inference/validate/guardrails/boolean.d.ts",
+      "import": "./events/inference/validate/guardrails/boolean.js",
+      "require": "./events/inference/validate/guardrails/boolean.cjs"
+    },
+    "./events/inference/validate/guardrails/object": {
+      "types": "./events/inference/validate/guardrails/object.d.ts",
+      "import": "./events/inference/validate/guardrails/object.js",
+      "require": "./events/inference/validate/guardrails/object.cjs"
+    },
+    "./events/inference/validate/guardrails/number": {
+      "types": "./events/inference/validate/guardrails/number.d.ts",
+      "import": "./events/inference/validate/guardrails/number.js",
+      "require": "./events/inference/validate/guardrails/number.cjs"
+    },
+    "./events/inference/validate/guardrails/string": {
+      "types": "./events/inference/validate/guardrails/string.d.ts",
+      "import": "./events/inference/validate/guardrails/string.js",
+      "require": "./events/inference/validate/guardrails/string.cjs"
+    },
+    "./events/inference/validate/validator": {
+      "types": "./events/inference/validate/validator.d.ts",
+      "import": "./events/inference/validate/validator.js",
+      "require": "./events/inference/validate/validator.cjs"
+    },
     "./events/inference/chat/base": {
       "types": "./events/inference/chat/base.d.ts",
       "import": "./events/inference/chat/base.js",
@@ -186,30 +256,25 @@
       "import": "./events/inference/chat/llms/openai.js",
       "require": "./events/inference/chat/llms/openai.cjs"
     },
-    "./events/inference/chat/llms/openai/text": {
-      "types": "./events/inference/chat/llms/openai/text.d.ts",
-      "import": "./events/inference/chat/llms/openai/text.js",
-      "require": "./events/inference/chat/llms/openai/text.cjs"
-    },
-    "./events/inference/chat/llms/openai/chat": {
-      "types": "./events/inference/chat/llms/openai/chat.d.ts",
-      "import": "./events/inference/chat/llms/openai/chat.js",
-      "require": "./events/inference/chat/llms/openai/chat.cjs"
+    "./events/inference/chat/chatlms/openai": {
+      "types": "./events/inference/chat/chatlms/openai.d.ts",
+      "import": "./events/inference/chat/chatlms/openai.js",
+      "require": "./events/inference/chat/chatlms/openai.cjs"
     },
     "./events/inference/chat/llms/vertexai": {
       "types": "./events/inference/chat/llms/vertexai.d.ts",
       "import": "./events/inference/chat/llms/vertexai.js",
       "require": "./events/inference/chat/llms/vertexai.cjs"
     },
-    "./events/inference/chat/llms/vertexai/gemini/text": {
-      "types": "./events/inference/chat/llms/vertexai/gemini/text.d.ts",
-      "import": "./events/inference/chat/llms/vertexai/gemini/text.js",
-      "require": "./events/inference/chat/llms/vertexai/gemini/text.cjs"
+    "./events/inference/chat/llms/gemini": {
+      "types": "./events/inference/chat/llms/gemini.d.ts",
+      "import": "./events/inference/chat/llms/gemini.js",
+      "require": "./events/inference/chat/llms/gemini.cjs"
     },
-    "./events/inference/chat/llms/vertexai/gemini/chat": {
-      "types": "./events/inference/chat/llms/vertexai/gemini/chat.d.ts",
-      "import": "./events/inference/chat/llms/vertexai/gemini/chat.js",
-      "require": "./events/inference/chat/llms/vertexai/gemini/chat.cjs"
+    "./events/inference/chat/chatlms/gemini": {
+      "types": "./events/inference/chat/chatlms/gemini.d.ts",
+      "import": "./events/inference/chat/chatlms/gemini.js",
+      "require": "./events/inference/chat/chatlms/gemini.cjs"
     },
     "./events/inference/chat/llms/vertexai/gemini/utils": {
       "types": "./events/inference/chat/llms/vertexai/gemini/utils.d.ts",
@@ -225,6 +290,11 @@
       "types": "./studio/processor.d.ts",
       "import": "./studio/processor.js",
       "require": "./studio/processor.cjs"
+    },
+    "./studio/graph": {
+      "types": "./studio/graph.d.ts",
+      "import": "./studio/graph.js",
+      "require": "./studio/graph.cjs"
     },
     "./studio/nodes": {
       "types": "./studio/nodes.d.ts",
@@ -265,6 +335,11 @@
       "types": "./studio/nodes/input/splitter.d.ts",
       "import": "./studio/nodes/input/splitter.js",
       "require": "./studio/nodes/input/splitter.cjs"
+    },
+    "./studio/nodes/utility/graph": {
+      "types": "./studio/nodes/utility/graph.d.ts",
+      "import": "./studio/nodes/utility/graph.js",
+      "require": "./studio/nodes/utility/graph.cjs"
     },
     "./studio/utils/coerce": {
       "types": "./studio/utils/coerce.d.ts",
@@ -313,6 +388,21 @@
     "events/input/load/msgs/base.cjs",
     "events/input/load/msgs/base.js",
     "events/input/load/msgs/base.d.ts",
+    "events/input/load/msgs/bot.cjs",
+    "events/input/load/msgs/bot.js",
+    "events/input/load/msgs/bot.d.ts",
+    "events/input/load/msgs/human.cjs",
+    "events/input/load/msgs/human.js",
+    "events/input/load/msgs/human.d.ts",
+    "events/input/load/msgs/system.cjs",
+    "events/input/load/msgs/system.js",
+    "events/input/load/msgs/system.d.ts",
+    "events/input/load/msgs/function.cjs",
+    "events/input/load/msgs/function.js",
+    "events/input/load/msgs/function.d.ts",
+    "events/input/load/msgs/general.cjs",
+    "events/input/load/msgs/general.js",
+    "events/input/load/msgs/general.d.ts",
     "events/input/load/prompts/base.cjs",
     "events/input/load/prompts/base.js",
     "events/input/load/prompts/base.d.ts",
@@ -340,6 +430,33 @@
     "events/output/provide/message.cjs",
     "events/output/provide/message.js",
     "events/output/provide/message.d.ts",
+    "events/inference/validate/utils.cjs",
+    "events/inference/validate/utils.js",
+    "events/inference/validate/utils.d.ts",
+    "events/inference/validate.cjs",
+    "events/inference/validate.js",
+    "events/inference/validate.d.ts",
+    "events/inference/validate/guardrails/base.cjs",
+    "events/inference/validate/guardrails/base.js",
+    "events/inference/validate/guardrails/base.d.ts",
+    "events/inference/validate/guardrails/array.cjs",
+    "events/inference/validate/guardrails/array.js",
+    "events/inference/validate/guardrails/array.d.ts",
+    "events/inference/validate/guardrails/boolean.cjs",
+    "events/inference/validate/guardrails/boolean.js",
+    "events/inference/validate/guardrails/boolean.d.ts",
+    "events/inference/validate/guardrails/object.cjs",
+    "events/inference/validate/guardrails/object.js",
+    "events/inference/validate/guardrails/object.d.ts",
+    "events/inference/validate/guardrails/number.cjs",
+    "events/inference/validate/guardrails/number.js",
+    "events/inference/validate/guardrails/number.d.ts",
+    "events/inference/validate/guardrails/string.cjs",
+    "events/inference/validate/guardrails/string.js",
+    "events/inference/validate/guardrails/string.d.ts",
+    "events/inference/validate/validator.cjs",
+    "events/inference/validate/validator.js",
+    "events/inference/validate/validator.d.ts",
     "events/inference/chat/base.cjs",
     "events/inference/chat/base.js",
     "events/inference/chat/base.d.ts",
@@ -349,21 +466,18 @@
     "events/inference/chat/llms/openai.cjs",
     "events/inference/chat/llms/openai.js",
     "events/inference/chat/llms/openai.d.ts",
-    "events/inference/chat/llms/openai/text.cjs",
-    "events/inference/chat/llms/openai/text.js",
-    "events/inference/chat/llms/openai/text.d.ts",
-    "events/inference/chat/llms/openai/chat.cjs",
-    "events/inference/chat/llms/openai/chat.js",
-    "events/inference/chat/llms/openai/chat.d.ts",
+    "events/inference/chat/chatlms/openai.cjs",
+    "events/inference/chat/chatlms/openai.js",
+    "events/inference/chat/chatlms/openai.d.ts",
     "events/inference/chat/llms/vertexai.cjs",
     "events/inference/chat/llms/vertexai.js",
     "events/inference/chat/llms/vertexai.d.ts",
-    "events/inference/chat/llms/vertexai/gemini/text.cjs",
-    "events/inference/chat/llms/vertexai/gemini/text.js",
-    "events/inference/chat/llms/vertexai/gemini/text.d.ts",
-    "events/inference/chat/llms/vertexai/gemini/chat.cjs",
-    "events/inference/chat/llms/vertexai/gemini/chat.js",
-    "events/inference/chat/llms/vertexai/gemini/chat.d.ts",
+    "events/inference/chat/llms/gemini.cjs",
+    "events/inference/chat/llms/gemini.js",
+    "events/inference/chat/llms/gemini.d.ts",
+    "events/inference/chat/chatlms/gemini.cjs",
+    "events/inference/chat/chatlms/gemini.js",
+    "events/inference/chat/chatlms/gemini.d.ts",
     "events/inference/chat/llms/vertexai/gemini/utils.cjs",
     "events/inference/chat/llms/vertexai/gemini/utils.js",
     "events/inference/chat/llms/vertexai/gemini/utils.d.ts",
@@ -373,6 +487,9 @@
     "studio/processor.cjs",
     "studio/processor.js",
     "studio/processor.d.ts",
+    "studio/graph.cjs",
+    "studio/graph.js",
+    "studio/graph.d.ts",
     "studio/nodes.cjs",
     "studio/nodes.js",
     "studio/nodes.d.ts",
@@ -397,6 +514,9 @@
     "studio/nodes/input/splitter.cjs",
     "studio/nodes/input/splitter.js",
     "studio/nodes/input/splitter.d.ts",
+    "studio/nodes/utility/graph.cjs",
+    "studio/nodes/utility/graph.js",
+    "studio/nodes/utility/graph.d.ts",
     "studio/utils/coerce.cjs",
     "studio/utils/coerce.js",
     "studio/utils/coerce.d.ts",

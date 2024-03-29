@@ -10,6 +10,7 @@ import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertex
 import { BaseMessage } from '../../../../events/input/load/msgs/base.js';
 import { LLMResult } from '../../../../events/output/provide/llmresult.js';
 import { ChatGenerationChunk } from '../../../../events/output/provide/message.js';
+import { getRecordId } from '../../../../utils/nanoid.js';
 import { Data } from '../../../data.js';
 import {
   ProcessInputMap,
@@ -91,10 +92,12 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
   static create(): ChatLMNode {
     const openaiChat = new OpenAIChat({
       modelName: 'gpt-3.5-turbo',
+      openAIApiKey: 'openai-secret-placeholder',
       maxTokens: 2048,
     });
 
     const node: ChatLMNode = {
+      id: getRecordId(),
       type: 'chatlm',
       subType: 'openai',
       data: openaiChat,
@@ -148,10 +151,12 @@ export class GeminiChatNodeImpl extends ChatLMNodeImpl {
   static create(): ChatLMNode {
     const geminiChat = new GeminiChat({
       modelName: 'gemini-pro-vision',
+      googleApiKey: 'google-secret-placeholder',
       maxOutputTokens: 2048,
     });
 
     const node: ChatLMNode = {
+      id: getRecordId(),
       type: 'chatlm',
       subType: 'gemini',
       data: geminiChat,

@@ -36,8 +36,6 @@ export abstract class ContextSplitter<
 {
   _isSerializable = true;
 
-  _namespace: string[] = ['input', 'transform', 'splitter'];
-
   static _name(): string {
     return 'ContextSplitter';
   }
@@ -52,6 +50,10 @@ export abstract class ContextSplitter<
   computeContextSize:
     | ((text: string) => number)
     | ((text: string) => Promise<number>);
+
+  _eventNamespace(): string[] {
+    return ['input', 'transform', 'splitter'];
+  }
 
   constructor(fields?: Partial<ContextSplitterParams>) {
     super(fields ?? {});
