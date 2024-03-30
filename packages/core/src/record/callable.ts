@@ -1,3 +1,4 @@
+import { BaseRule } from '../events/inference/validate/guardrails/base.js';
 import {
   RecordId,
   RecordType,
@@ -114,6 +115,9 @@ export type CallableBatchOptions = {
 
 export type SerializedCallableFields = {
   [key: string]:
+    | ReturnType<Serializable['getAttributes']>
+    | Record<string, ReturnType<Serializable['getAttributes']>>
+    | Array<ReturnType<Serializable['getAttributes']>>
     | ReturnType<Callable['getAttributes']>
     | Record<string, ReturnType<Callable['getAttributes']>>
     | Array<ReturnType<Callable['getAttributes']>>;
@@ -1624,5 +1628,113 @@ export class CallableSequence<
         last: this.last.getAttributes(),
       },
     };
+  }
+}
+
+export type CallableIfConfig = CallableConfig & {
+  variables?: Record<string, unknown>;
+};
+
+export class CallableIf<
+  CallInput,
+  CallOutput extends Record<string, unknown> = Record<string, unknown>,
+  CallOptions extends CallableIfConfig = CallableIfConfig,
+> extends Callable<CallInput, CallOutput, CallOptions> {
+  declare CallIfOptions: Omit<CallOptions, keyof CallableConfig>;
+
+  _isCallable = true;
+
+  _isSerializable = true;
+
+  _namespace: string[] = ['record', 'callable'];
+
+  static _name(): string {
+    return 'CallableIf';
+  }
+
+  protected _rules: Record<string, BaseRule>;
+
+  protected _actions: Record<string, Callable<CallInput>>;
+
+  constructor(fields: {
+    rules: Record<string, BaseRule>;
+    actions: Record<string, CallableLike<CallInput>>;
+  }) {
+    super(fields);
+
+    this._rules = fields.rules;
+
+    this._actions = {};
+    for (const [k, v] of Object.entries(fields.actions)) {
+      if (!this._rules[k]) {
+        throw new Error(`CANNOT find rule of "${k}"`);
+      }
+
+      this._actions[k] = convertCallableLikeToCallable(v);
+    }
+  }
+
+  static from<CallInput>(
+    rules: Record<string, BaseRule>,
+    actions: Record<string, CallableLike<CallInput>>
+  ): CallableIf<CallInput> {
+    return new CallableIf<CallInput>({ rules, actions });
+  }
+
+  async invoke(
+    input: CallInput,
+    options?: Partial<CallOptions> | undefined
+  ): Promise<CallOutput> {
+    const [callOptions, { variables }] =
+      this._splitCallIfOptionsFromConfig(options);
+
+    const ruleResults: Record<string, boolean> = {};
+    const output: Record<string, unknown> = {};
+
+    try {
+      await Promise.all(
+        Object.entries(this._rules).map(async ([k, rule]) => {
+          ruleResults[k] = await rule.validate(input, variables);
+        })
+      );
+
+      await Promise.all(
+        Object.entries(this._actions).map(async ([k, callable]) => {
+          output[k] = ruleResults[k]
+            ? await callable.invoke(input, callOptions)
+            : undefined;
+        })
+      );
+    } catch (e) {
+      throw e;
+    }
+
+    return output as CallOutput;
+  }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableIf',
+      callables: {
+        rules: Object.fromEntries(
+          Object.entries(this._rules).map(([k, v]) => [k, v.getAttributes()])
+        ),
+        actions: Object.fromEntries(
+          Object.entries(this._actions).map(([k, v]) => [k, v.getAttributes()])
+        ),
+      },
+    };
+  }
+
+  private _splitCallIfOptionsFromConfig(
+    options: Partial<CallOptions> = {}
+  ): [CallableConfig, this['CallIfOptions']] {
+    const [callOptions, callIfOptions] =
+      super._splitCallableOptionsFromCallOptions(options);
+
+    return [callOptions, callIfOptions as this['CallIfOptions']];
   }
 }
