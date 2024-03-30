@@ -1,15 +1,14 @@
 import {
   BaseMessage,
-  BotMessage,
-  ChatMessage,
-  ChatMessageFields,
   ContentLike,
-  FunctionMessage,
-  HumanMessage,
   MessageRole,
-  SystemMessage,
-  checkMessageRole,
 } from '../../input/load/msgs/base.js';
+import { BotMessage } from '../../input/load/msgs/bot.js';
+import { ChatMessage, ChatMessageFields } from '../../input/load/msgs/chat.js';
+import { FunctionMessage } from '../../input/load/msgs/function.js';
+import { HumanMessage } from '../../input/load/msgs/human.js';
+import { SystemMessage } from '../../input/load/msgs/system.js';
+import { checkMessageRole } from '../../input/load/msgs/utils.js';
 import { Generation, GenerationChunk } from './generation.js';
 
 export interface SerializedMessageData {

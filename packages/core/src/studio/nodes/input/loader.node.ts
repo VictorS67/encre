@@ -4,6 +4,7 @@ import {
 } from '../../../events/input/load/docs/base.js';
 import { Context } from '../../../events/input/load/docs/context.js';
 import { PDFLoader } from '../../../events/input/load/docs/pdf.js';
+import { getRecordId } from '../../../utils/nanoid.js';
 import {
   ArrayOf,
   BlobData,
@@ -30,6 +31,7 @@ export class PDFLoaderNodeImpl extends LoaderNodeImpl {
     const loader = new PDFLoader({ shouldSplit: scalarDefaults['boolean'] });
 
     const node: LoaderNode = {
+      id: getRecordId(),
       type: 'loader',
       subType: 'pdf',
       data: loader,

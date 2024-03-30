@@ -19,7 +19,7 @@ export abstract class BufferLoader<
     return 'buffer';    
   }
 
-  _loaderType(): string {
+  _docType(): string {
     return 'buffer';
   }
 

@@ -1,6 +1,7 @@
 import { BasePrompt } from '../../../events/input/load/prompts/base.js';
 import { ChatPrompt } from '../../../events/input/load/prompts/chat.js';
 import { StringPrompt } from '../../../events/input/load/prompts/text.js';
+import { getRecordId } from '../../../utils/nanoid.js';
 import { scalarDefaults } from '../../data.js';
 import {
   ProcessContext,
@@ -33,6 +34,7 @@ export class StringPromptNodeImpl extends PromptNodeImpl {
     const stringPrompt = new StringPrompt(scalarDefaults['string']);
 
     const node: PromptNode = {
+      id: getRecordId(),
       type: 'prompt',
       subType: 'string',
       data: stringPrompt,
@@ -61,6 +63,7 @@ export class ChatPromptNodeImpl extends PromptNodeImpl {
     const chatPrompt = new ChatPrompt([]);
 
     const node: PromptNode = {
+      id: getRecordId(),
       type: 'prompt',
       subType: 'chat',
       data: chatPrompt,

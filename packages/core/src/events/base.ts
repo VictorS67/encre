@@ -20,6 +20,8 @@ export abstract class BaseEvent<
   extends Callable<CallInput, CallOutput, CallOptions>
   implements BaseEventParams
 {
+  _namespace: string[] = ['events', ...this._eventNamespace()];
+
   /**
    * Whether to print out response text.
    */
@@ -47,4 +49,6 @@ export abstract class BaseEvent<
     this.metadata = fields.metadata ?? {};
     this.callbacks = fields.callbacks;
   }
+
+  abstract _eventNamespace(): string[];
 }

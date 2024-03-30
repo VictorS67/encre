@@ -25,6 +25,7 @@ export abstract class BaseRule<T = any>
   _isSerializable = false;
 
   _namespace: string[] = [
+    'events',
     'inference',
     'validate',
     'guardrails',

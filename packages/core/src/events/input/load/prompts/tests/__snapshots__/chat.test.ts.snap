@@ -4,6 +4,7 @@ exports[`test custom ChatPrompt 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - prompts
@@ -14,18 +15,22 @@ _kwargs:
     - _grp: 1
       _type: constructor
       _id:
+        - events
         - input
         - load
         - msgs
+        - system
         - SystemMessage
       _kwargs:
         content: this is a system message
     - _grp: 1
       _type: constructor
       _id:
+        - events
         - input
         - load
         - msgs
+        - assistant
         - BotMessage
       _kwargs:
         content: this is a bot message
@@ -36,18 +41,22 @@ exports[`test custom ChatPrompt 2`] = `
 "- _grp: 1
   _type: constructor
   _id:
+    - events
     - input
     - load
     - msgs
+    - system
     - SystemMessage
   _kwargs:
     content: this is a system message
 - _grp: 1
   _type: constructor
   _id:
+    - events
     - input
     - load
     - msgs
+    - assistant
     - BotMessage
   _kwargs:
     content: this is a bot message

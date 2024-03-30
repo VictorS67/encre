@@ -9,6 +9,7 @@ import { Gemini } from '../../../../events/inference/chat/llms/vertexai/gemini/t
 import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
 import { Generation } from '../../../../events/output/provide/generation.js';
 import { LLMResult } from '../../../../events/output/provide/llmresult.js';
+import { getRecordId } from '../../../../utils/nanoid.js';
 import { Data } from '../../../data.js';
 import {
   ProcessInputMap,
@@ -87,10 +88,12 @@ export class OpenAINodeImpl extends LLMNodeImpl {
   static create(): LLMNode {
     const openai = new OpenAI({
       modelName: 'text-davinci-003',
+      openAIApiKey: 'openai-secret-placeholder',
       maxTokens: 2048,
     });
 
     const node: LLMNode = {
+      id: getRecordId(),
       type: 'llm',
       subType: 'openai',
       data: openai,
@@ -143,10 +146,12 @@ export class GeminiNodeImpl extends LLMNodeImpl {
   static create(): LLMNode {
     const gemini = new Gemini({
       modelName: 'gemini-pro',
+      googleApiKey: 'google-secret-placeholder',
       maxOutputTokens: 2048,
     });
 
     const node: LLMNode = {
+      id: getRecordId(),
       type: 'llm',
       subType: 'gemini',
       data: gemini,

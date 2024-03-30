@@ -8,7 +8,13 @@ export type NodePortFields = {
   [key: string]: DataType | Readonly<DataType[]>;
 };
 
+export type NodePortSizes = {
+  [key: string]: number;
+}
+
 export interface BaseNode {
+  id: RecordId;
+
   visualInfo: {
     position: {
       x: number;
@@ -24,6 +30,13 @@ export interface BaseNode {
   inputs: NodePortFields | undefined;
 
   outputs: NodePortFields | undefined;
+
+  title?: string | undefined;
+
+  description?: string | undefined;
+
+  // data size for each output port, default is 0
+  outputSizes?: NodePortSizes | undefined;
 }
 
 export interface SerializableNode<
@@ -34,6 +47,14 @@ export interface SerializableNode<
 
   subType: string;
 
+  registerArgs?: Record<string, unknown>;
+
+  // runtime per process, default is 0
+  runtime?: number;
+
+  // RAM used per process, default is 0
+  memory?: number;
+
   data: NodeData;
 }
 
@@ -41,6 +62,8 @@ export interface CallableNode<
   NodeType extends string = string,
   NodeData extends Callable = Callable,
 > extends SerializableNode<NodeType, NodeData> {}
+
+export type NodePortDef = NodeInputPortDef | NodeOutputPortDef;
 
 export type NodeInputPortDef = {
   nodeId: RecordId;
@@ -66,14 +89,22 @@ export type NodeOutputPortDef = {
   default?: unknown;
 };
 
+/**
+ * A.portA ---> B.portB
+ * 
+ * fromNodeId: A
+ * fromPortName: portA
+ * toNodeId: B
+ * toPortName: portB
+ */
 export type NodeConnection = {
-  inputNodeId: RecordId;
+  fromNodeId: RecordId;
 
-  inputName: string;
+  fromPortName: string;
 
-  outputNodeId: RecordId;
+  toNodeId: RecordId;
 
-  outputName: string;
+  toPortName: string;
 };
 
 export type NodeBody =

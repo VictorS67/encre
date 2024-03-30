@@ -55,7 +55,7 @@ describe('test OpenAI Callable', () => {
         {
           _grp: 1,
           _type: 'constructor',
-          _id: ['inference', 'chat', 'llms', 'openai', 'OpenAI'],
+          _id: ['events', 'inference', 'chat', 'llms', 'openai', 'OpenAI'],
           _kwargs: {
             model: 'gpt-3.5-turbo-instruct',
             temperature: 1,
@@ -80,7 +80,7 @@ describe('test OpenAI Callable', () => {
     const anotherOpenAI: OpenAI = await load<OpenAI>(
       str,
       { OPENAI_API_KEY: 'this_is_api_key' } as SecretMap,
-      { 'inference/chat/llms/openai': { OpenAI } } as OptionalImportMap
+      { 'events/inference/chat/llms/openai': { OpenAI } } as OptionalImportMap
     );
 
     expect(anotherOpenAI).toBeInstanceOf(OpenAI);

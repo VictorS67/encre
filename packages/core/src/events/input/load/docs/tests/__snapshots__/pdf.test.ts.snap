@@ -4,10 +4,12 @@ exports[`test PDF loader from file 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - docs
   - pdf
+  - PDFLoader
 _kwargs: {}
 "
 `;
@@ -16,10 +18,12 @@ exports[`test PDF loader from file to single document 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - docs
   - pdf
+  - PDFLoader
 _kwargs:
   should_split: false
 "

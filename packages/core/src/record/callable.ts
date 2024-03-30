@@ -703,7 +703,7 @@ export class CallableBind<
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -760,7 +760,7 @@ export class CallableBind<
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -1097,7 +1097,7 @@ export class CallableEach<
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -1138,7 +1138,7 @@ export class CallableEach<
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -1330,7 +1330,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -1380,7 +1380,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)

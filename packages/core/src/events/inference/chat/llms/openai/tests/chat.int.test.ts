@@ -3,11 +3,9 @@ import path from 'path';
 import url from 'url';
 import { describe, expect, test } from '@jest/globals';
 
-import {
-  FunctionMessage,
-  HumanMessage,
-  SystemMessage,
-} from '../../../../../input/load/msgs/base.js';
+import { FunctionMessage } from '../../../../../input/load/msgs/function.js';
+import { HumanMessage } from '../../../../../input/load/msgs/human.js';
+import { SystemMessage } from '../../../../../input/load/msgs/system.js';
 import { ChatGenerationChunk } from '../../../../../output/provide/message.js';
 import { OpenAIChat } from '../chat.js';
 import {

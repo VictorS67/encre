@@ -1,8 +1,8 @@
 import { Context } from '../events/input/load/docs/context.js';
 import {
   BaseMessageLike,
-  HumanMessage,
 } from '../events/input/load/msgs/base.js';
+import { HumanMessage } from '../events/input/load/msgs/human.js';
 import { exhaustiveTuple } from '../utils/exhuastive.js';
 
 export type DataDef<T extends string, RuntimeType> = {

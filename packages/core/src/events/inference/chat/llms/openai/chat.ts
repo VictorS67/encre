@@ -18,14 +18,12 @@ import {
 } from '../../../../../utils/tokenizer.js';
 import {
   BaseMessage,
-  BotMessage,
-  ChatMessage,
-  ContentLike,
-  FunctionMessage,
-  HumanMessage,
-  MessageRole,
-  SystemMessage,
 } from '../../../../input/load/msgs/base.js';
+import { BotMessage } from '../../../../input/load/msgs/bot.js';
+import { ChatMessage } from '../../../../input/load/msgs/chat.js';
+import { FunctionMessage } from '../../../../input/load/msgs/function.js';
+import { HumanMessage } from '../../../../input/load/msgs/human.js';
+import { SystemMessage } from '../../../../input/load/msgs/system.js';
 import { LLMResult } from '../../../../output/provide/llmresult.js';
 import { ChatGenerationChunk } from '../../../../output/provide/message.js';
 import { BaseChatLM, BaseLLMParams } from '../../base.js';

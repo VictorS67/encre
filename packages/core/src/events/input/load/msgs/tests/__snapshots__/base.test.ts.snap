@@ -4,9 +4,11 @@ exports[`test convertMessageLikeToMessage 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - msgs
+  - human
   - HumanMessage
 _kwargs:
   content: this is a message.
@@ -17,9 +19,11 @@ exports[`test convertMessageLikeToMessage 2`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - msgs
+  - assistant
   - BotMessage
 _kwargs:
   content: this is a bot message
@@ -30,9 +34,11 @@ exports[`test custom BaseMessage 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - msgs
+  - human
   - TestHumanMessage
 _kwargs:
   content: this is a message.
@@ -50,9 +56,11 @@ exports[`test custom BaseMessage 3`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - msgs
+  - human
   - TestHumanMessage
 _kwargs:
   content: this is a message with a name
@@ -72,9 +80,11 @@ exports[`test custom BaseMessage 5`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - load
   - msgs
+  - human
   - TestHumanMessage
 _kwargs:
   content: this is a message.this is a message with a name
