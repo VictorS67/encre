@@ -1,3 +1,4 @@
+import { BaseRule } from "../events/inference/validate/guardrails/base.js";
 import {
   RecordId,
   RecordType,
@@ -7,20 +8,20 @@ import {
   keyToJson,
   mapKeyTypes,
   mapKeys,
-} from '../load/keymap.js';
+} from "../load/keymap.js";
 import {
   Serializable,
   Serialized,
   SerializedInputRecord,
-} from '../load/serializable.js';
-import { AsyncCallError, AsyncCaller } from '../utils/asyncCaller.js';
-import { shallowCopy } from '../utils/copy.js';
-import { ReadableStreamAsyncIterable } from '../utils/stream.js';
+} from "../load/serializable.js";
+import { AsyncCallError, AsyncCaller } from "../utils/asyncCaller.js";
+import { shallowCopy } from "../utils/copy.js";
+import { ReadableStreamAsyncIterable } from "../utils/stream.js";
 import {
   convertCallableLikeToCallable,
   convertLambdaFuncFromStr,
   isValidLambdaFunc,
-} from './utils.js';
+} from "./utils.js";
 
 /**
  * Type for defining fields in a callable configuration.
@@ -54,6 +55,14 @@ export type CallableConfig = {
    * TODO: Add callbacks.
    */
   callbacks?: any;
+};
+
+/**
+ * Extends `CallableConfig` with an optional `variables` record for additional configuration.
+ * @property `variables` - Additional variables for guardrail rule validation.
+ */
+export type CallableIfConfig = CallableConfig & {
+  variables?: Record<string, unknown>;
 };
 
 /**
@@ -114,9 +123,12 @@ export type CallableBatchOptions = {
 
 export type SerializedCallableFields = {
   [key: string]:
-    | ReturnType<Callable['getAttributes']>
-    | Record<string, ReturnType<Callable['getAttributes']>>
-    | Array<ReturnType<Callable['getAttributes']>>;
+    | ReturnType<Serializable["getAttributes"]>
+    | Record<string, ReturnType<Serializable["getAttributes"]>>
+    | Array<ReturnType<Serializable["getAttributes"]>>
+    | ReturnType<Callable["getAttributes"]>
+    | Record<string, ReturnType<Callable["getAttributes"]>>
+    | Array<ReturnType<Callable["getAttributes"]>>;
 };
 
 /**
@@ -405,7 +417,7 @@ export abstract class Callable<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'Callable',
+      type: "Callable",
     };
   }
 
@@ -416,7 +428,7 @@ export abstract class Callable<
     const result: SerializedFields = shallowCopy(root);
 
     for (const [path, callable] of Object.entries(callablesMap)) {
-      const [last, ...partsReverse] = path.split('.').reverse();
+      const [last, ...partsReverse] = path.split(".").reverse();
 
       let current: SerializedFields = result;
       for (const key of partsReverse.reverse()) {
@@ -429,8 +441,8 @@ export abstract class Callable<
       }
 
       if (current[last] !== undefined) {
-        if (path.split('.').length > 1) {
-          delete result[path.split('.')[0]];
+        if (path.split(".").length > 1) {
+          delete result[path.split(".")[0]];
         } else {
           delete current[last];
         }
@@ -517,10 +529,10 @@ export class CallableBind<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableBind';
+    return "CallableBind";
   }
 
   /**
@@ -557,9 +569,9 @@ export class CallableBind<
 
     if (config) {
       for (const key of Object.keys(config)) {
-        if (key === 'metadata') {
+        if (key === "metadata") {
           configCopy[key] = { ...configCopy[key], ...config[key] };
-        } else if (key === 'tags') {
+        } else if (key === "tags") {
           configCopy[key] = (configCopy[key] ?? []).concat(config[key] ?? []);
         } else {
           configCopy[key] = config[key] ?? configCopy[key];
@@ -687,7 +699,7 @@ export class CallableBind<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'CallableBind',
+      type: "CallableBind",
       callables: {
         bound: this.bound.getAttributes(),
       },
@@ -701,7 +713,7 @@ export class CallableBind<
   ): Promise<Serialized> {
     return {
       _grp: 2,
-      _type: 'input_record',
+      _type: "input_record",
       _id: this._id,
       _recordId: this._recordId,
       _kwargs: mapKeys(
@@ -722,7 +734,7 @@ export class CallableBind<
     parent?: RecordId | undefined
   ): Promise<Serialized> {
     let serializedOutputs: SerializedFields;
-    if (typeof outputs === 'object') {
+    if (typeof outputs === "object") {
       serializedOutputs = (outputs ?? {}) as SerializedFields;
     } else {
       serializedOutputs = (outputs ? { outputs } : {}) as SerializedFields;
@@ -758,7 +770,7 @@ export class CallableBind<
 
     return {
       _grp: 2,
-      _type: 'event_record',
+      _type: "event_record",
       _id: this._id,
       _recordId: this._recordId,
       _kwargs: mapKeys(
@@ -806,10 +818,10 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableLambda';
+    return "CallableLambda";
   }
 
   /**
@@ -820,9 +832,9 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   constructor(fields: { func: CallableFunc<CallInput, CallOutput> | string }) {
     let funcStr: string | undefined;
 
-    if (typeof fields.func === 'string') {
+    if (typeof fields.func === "string") {
       if (!isValidLambdaFunc(fields.func)) {
-        throw new Error('Function Str is not valid');
+        throw new Error("Function Str is not valid");
       }
 
       funcStr = fields.func;
@@ -875,7 +887,7 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
     try {
       output = await this._func()(input);
     } catch {
-      throw new Error('Function is not valid');
+      throw new Error("Function is not valid");
     }
 
     if (output && Callable.isCallable(output)) {
@@ -904,7 +916,7 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'CallableLambda',
+      type: "CallableLambda",
     };
   }
 }
@@ -924,10 +936,10 @@ export class CallableMap<CallInput> extends Callable<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableMap';
+    return "CallableMap";
   }
 
   /**
@@ -990,7 +1002,7 @@ export class CallableMap<CallInput> extends Callable<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'CallableMap',
+      type: "CallableMap",
       callables: {
         steps: Object.fromEntries(
           Object.entries(this.steps).map(([k, v]) => [k, v.getAttributes()])
@@ -1018,10 +1030,10 @@ export class CallableEach<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableEach';
+    return "CallableEach";
   }
 
   /**
@@ -1081,7 +1093,7 @@ export class CallableEach<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'CallableEach',
+      type: "CallableEach",
       callables: {
         bound: this.bound.getAttributes(),
       },
@@ -1095,7 +1107,7 @@ export class CallableEach<
   ): Promise<Serialized> {
     return {
       _grp: 2,
-      _type: 'input_record',
+      _type: "input_record",
       _id: this._id,
       _recordId: this._recordId,
       _kwargs: mapKeys(
@@ -1136,7 +1148,7 @@ export class CallableEach<
 
     return {
       _grp: 2,
-      _type: 'event_record',
+      _type: "event_record",
       _id: this._id,
       _recordId: this._recordId,
       _kwargs: mapKeys(
@@ -1178,14 +1190,14 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   CallInput,
   CallOutput
 > {
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   _isCallable = true;
 
   _isSerializable = true;
 
   static _name(): string {
-    return 'CallableWithFallbacks';
+    return "CallableWithFallbacks";
   }
 
   /**
@@ -1244,7 +1256,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     }
 
     if (firstError === undefined) {
-      throw new Error('Fallbacks end without Error stored.');
+      throw new Error("Fallbacks end without Error stored.");
     }
 
     throw firstError;
@@ -1302,7 +1314,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     }
 
     if (firstError === undefined) {
-      throw new Error('Fallbacks end without Error stored.');
+      throw new Error("Fallbacks end without Error stored.");
     }
 
     throw firstError;
@@ -1313,7 +1325,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'CallableWithFallbacks',
+      type: "CallableWithFallbacks",
       callables: {
         callable: this.callable.getAttributes(),
         fallbacks: this.fallbacks.map((fallback) => fallback.getAttributes()),
@@ -1328,7 +1340,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   ): Promise<Serialized> {
     return {
       _grp: 2,
-      _type: 'input_record',
+      _type: "input_record",
       _id: this._id,
       _recordId: this._recordId,
       _kwargs: mapKeys(
@@ -1349,7 +1361,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     parent?: RecordId | undefined
   ): Promise<Serialized> {
     let serializedOutputs: SerializedFields;
-    if (typeof outputs === 'object') {
+    if (typeof outputs === "object") {
       serializedOutputs = (outputs ?? {}) as SerializedFields;
     } else {
       serializedOutputs = (outputs ? { outputs } : {}) as SerializedFields;
@@ -1378,7 +1390,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
 
     return {
       _grp: 2,
-      _type: 'event_record',
+      _type: "event_record",
       _id: this._id,
       _recordId: this._recordId,
       _kwargs: mapKeys(
@@ -1425,10 +1437,10 @@ export class CallableSequence<
 
   _isSerializable = true;
 
-  _namespace: string[] = ['record', 'callable'];
+  _namespace: string[] = ["record", "callable"];
 
   static _name(): string {
-    return 'CallableSequence';
+    return "CallableSequence";
   }
 
   /**
@@ -1617,12 +1629,153 @@ export class CallableSequence<
     callables?: SerializedCallableFields;
   } {
     return {
-      type: 'CallableSequence',
+      type: "CallableSequence",
       callables: {
         first: this.first.getAttributes(),
         middle: this.middle.map((mid) => mid.getAttributes()),
         last: this.last.getAttributes(),
       },
     };
+  }
+}
+
+/**
+ * {@link CallableIf} class extends {@link Callable} class for mapping multiple Callable
+ * instances based on a set of rules.
+ * It allows the execution of multiple callables in parallel and aggregates their results.
+ * If the rule validation does not pass for a certain callable, then the callable will not
+ * be executed and returns `undefined` as the result.
+ *
+ * Generics:
+ * - `CallInput`: The input type for the callable.
+ * - `CallOutput`: The output type for the callable, defaults to a record.
+ * - `CallOptions`: The options type for the callable, extends `CallableIfConfig`.
+ */
+export class CallableIf<
+  CallInput,
+  CallOutput extends Record<string, unknown> = Record<string, unknown>,
+  CallOptions extends CallableIfConfig = CallableIfConfig,
+> extends Callable<CallInput, CallOutput, CallOptions> {
+  declare CallIfOptions: Omit<CallOptions, keyof CallableConfig>;
+
+  _isCallable = true;
+
+  _isSerializable = true;
+
+  _namespace: string[] = ["record", "callable"];
+
+  static _name(): string {
+    return "CallableIf";
+  }
+
+  protected _rules: Record<string, BaseRule>;
+
+  protected _actions: Record<string, Callable<CallInput>>;
+
+  /**
+   * Initializes a new instance of `CallableIf` with the given rules and actions.
+   * @param {Object} fields - The rules and actions for the instance.
+   * @param {Record<string, BaseRule>} fields.rules - A mapping of guardrail identifiers 
+   * to `BaseRule` instances.
+   * @param {Record<string, CallableLike<CallInput>>} fields.actions - A mapping of action 
+   * identifiers to `CallableLike` instances.
+   * @throws Will throw an error if an action does not have a corresponding rule.
+   */
+  constructor(fields: {
+    rules: Record<string, BaseRule>;
+    actions: Record<string, CallableLike<CallInput>>;
+  }) {
+    super(fields);
+
+    this._rules = fields.rules;
+
+    this._actions = {};
+    for (const [k, v] of Object.entries(fields.actions)) {
+      if (!this._rules[k]) {
+        throw new Error(`CANNOT find rule of "${k}"`);
+      }
+
+      this._actions[k] = convertCallableLikeToCallable(v);
+    }
+  }
+
+  /**
+   * Creates a new `CallableIf` instance from the specified rules and actions.
+   * @static
+   * @param {Record<string, BaseRule>} rules - The rules for the callable instance.
+   * @param {Record<string, CallableLike<CallInput>>} actions - The actions for the 
+   * callable instance.
+   * @returns {CallableIf<CallInput>} A new instance of `CallableIf`.
+   */
+  static from<CallInput>(
+    rules: Record<string, BaseRule>,
+    actions: Record<string, CallableLike<CallInput>>
+  ): CallableIf<CallInput> {
+    return new CallableIf<CallInput>({ rules, actions });
+  }
+
+  /**
+   * Invokes the callable, evaluating each rule against the input and executing the 
+   * corresponding action if the rule is true.
+   * @async
+   * @param {CallInput} input - The input to evaluate rules against and pass to actions.
+   * @param {Partial<CallOptions>} [options] - Optional configuration for the invocation.
+   * @returns {Promise<CallOutput>} The result of the action executions.
+   */
+  async invoke(
+    input: CallInput,
+    options?: Partial<CallOptions> | undefined
+  ): Promise<CallOutput> {
+    const [callOptions, { variables }] =
+      this._splitCallIfOptionsFromConfig(options);
+
+    const ruleResults: Record<string, boolean> = {};
+    const output: Record<string, unknown> = {};
+
+    try {
+      await Promise.all(
+        Object.entries(this._rules).map(async ([k, rule]) => {
+          ruleResults[k] = await rule.validate(input, variables);
+        })
+      );
+
+      await Promise.all(
+        Object.entries(this._actions).map(async ([k, callable]) => {
+          output[k] = ruleResults[k]
+            ? await callable.invoke(input, callOptions)
+            : undefined;
+        })
+      );
+    } catch (e) {
+      throw e;
+    }
+
+    return output as CallOutput;
+  }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: "CallableIf",
+      callables: {
+        rules: Object.fromEntries(
+          Object.entries(this._rules).map(([k, v]) => [k, v.getAttributes()])
+        ),
+        actions: Object.fromEntries(
+          Object.entries(this._actions).map(([k, v]) => [k, v.getAttributes()])
+        ),
+      },
+    };
+  }
+
+  private _splitCallIfOptionsFromConfig(
+    options: Partial<CallOptions> = {}
+  ): [CallableConfig, this["CallIfOptions"]] {
+    const [callOptions, callIfOptions] =
+      super._splitCallableOptionsFromCallOptions(options);
+
+    return [callOptions, callIfOptions as this["CallIfOptions"]];
   }
 }

@@ -1,9 +1,10 @@
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
-import { load } from '../../load';
+import { GeneralRule } from '../../events/inference/validate/guardrails/base.js';
 import { OptionalImportMap, SecretMap } from '../../load/importType.js';
-import { SecretFields } from '../../load/keymap';
-import { SerializedConstructor } from '../../load/serializable';
+import { load } from '../../load/index.js';
+import { SecretFields } from '../../load/keymap.js';
+import { SerializedConstructor } from '../../load/serializable.js';
 import {
   Callable,
   CallableConfigFields,
@@ -14,7 +15,8 @@ import {
   CallableWithFallbacks,
   CallableWithFallbacksArg,
   CallableLambda,
-} from '../callable';
+  CallableIf,
+} from '../callable.js';
 
 test('test custom callable', async () => {
   type TestInput = {
@@ -820,4 +822,71 @@ test('test CallableLambda', async () => {
 
   expect(revivedFromRecord).toBeInstanceOf(CallableLambda);
   expect(JSON.stringify(revivedFromRecord, null, 2)).toBe(serializedStr);
+});
+
+test('test CallableIf', async () => {
+  type TestInput = {
+    input: string | boolean;
+  };
+
+  const isStringRule = new GeneralRule({
+    description: 'is string',
+    func: async (input: { input: TestInput }) => {
+      return typeof input.input === 'string';
+    },
+  });
+
+  const isJohnRule = new GeneralRule({
+    description: 'is John',
+    func: async (input: { input: TestInput }) => {
+      return String(input.input) === 'John';
+    },
+  });
+
+
+  type TestOutputA = string;
+
+  type TestOutputB = Array<string>;
+
+  const handlerFunc = async (input: TestInput): Promise<TestOutputA> => {
+    return new Promise((resovle, reject) => resovle(String(input.input)));
+  };
+
+  const handlerFunc2 = async (input: TestInput): Promise<TestOutputB> => {
+    return new Promise((resovle, reject) => resovle([String(input.input)]));
+  };
+
+  const callableLambdaA = new CallableLambda<TestInput, TestOutputA>({
+    func: handlerFunc,
+  });
+
+  const callableLambdaB = new CallableLambda<TestInput, TestOutputB>({
+    func: handlerFunc2,
+  });
+
+  const callableIf = CallableIf.from<TestInput>(
+    {
+      'if input is a string': isStringRule,
+      'if input is equal to "John"': isJohnRule,
+    },
+    {
+      'if input is a string': callableLambdaA,
+      'if input is equal to "John"': callableLambdaB,
+    }
+  );
+
+  expect(await callableIf.invoke({ input: 'input' })).toStrictEqual({
+    'if input is a string': 'input',
+    'if input is equal to "John"': undefined,
+  });
+
+  expect(await callableIf.invoke({ input: 'John' })).toStrictEqual({
+    'if input is a string': 'John',
+    'if input is equal to "John"': ['John'],
+  });
+
+  expect(await callableIf.invoke({ input: true })).toStrictEqual({
+    'if input is a string': undefined,
+    'if input is equal to "John"': undefined,
+  });
 });
