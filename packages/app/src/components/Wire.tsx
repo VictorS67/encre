@@ -1,10 +1,18 @@
-import React, { FC, memo, useLayoutEffect } from 'react';
+import React, {
+  FC,
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { AdaptiveBezierWire } from './wires/AdaptiveBezierWire';
+import { BaseWire } from './wires/BaseWire';
 import { BezierWire } from './wires/BezierWire';
 import { SmoothStepWire } from './wires/SmoothStepWire';
 import { StraightWire } from './wires/StraightWire';
@@ -21,13 +29,15 @@ import {
   StraightWireOptions,
   WireControlProps,
   WireData,
+  WireOptions,
+  WireType,
 } from '../types/wire.type';
 
 export const RenderedWire: FC<RenderedWireProps> = ({
   connection,
   nodeMap,
   portPositions,
-  isSelected,
+  isSelecting = false,
   isHighlighted,
   isHoveringPort,
 }: RenderedWireProps) => {
@@ -58,7 +68,7 @@ export const RenderedWire: FC<RenderedWireProps> = ({
         startY={startPosition.y}
         endX={endPosition.x}
         endY={endPosition.y}
-        isSelected={isSelected}
+        isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
       />
@@ -102,28 +112,27 @@ export const WireControl: FC<WireControlProps> = ({
   startY,
   endX,
   endY,
-  isSelected,
+  isSelecting,
   isHighlighted,
   isHoveringPort,
 }: WireControlProps) => {
-  // const [selectingWireIds, setSelectingWireIds] = useRecoilState(
-  //   selectingWireIdsState,
-  // );
   const wireData: WireData | undefined = useRecoilValue(
     wireDataFromWireIdState(id),
   );
 
-  // useLayoutEffect(() => {
-  //   const oldIsSelected: boolean = selectingWireIds.includes(id);
+  const [wireType, setWireType] = useState<WireType>('adaptive-bezier');
+  const [wireOptions, setWireOptions] = useState<WireOptions | undefined>(
+    defaultWireOptions['adaptive-bezier'],
+  );
 
-  //   if (!isSelected && oldIsSelected) {
-  //     setSelectingWireIds(selectingWireIds.filter((wId) => wId !== id));
-  //   } else if (isSelected && !oldIsSelected) {
-  //     setSelectingWireIds([...selectingWireIds, id]);
-  //   }
-  // }, [isSelected, selectingWireIds, setSelectingWireIds]);
+  useEffect(() => {
+    if (wireData) {
+      setWireType(wireData.wireType);
+      setWireOptions(wireData.wireOptions);
+    }
+  }, [wireData]);
 
-  if (!wireData) {
+  if (!wireType) {
     return (
       <AdaptiveBezierWire
         id={id}
@@ -131,15 +140,15 @@ export const WireControl: FC<WireControlProps> = ({
         startY={startY}
         endX={endX}
         endY={endY}
-        isSelected={isSelected}
+        isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
-        wireOptions={defaultWireOptions['adaptive-bezier']}
+        wireOptions={wireOptions as AdaptiveBezierWireOptions}
       />
     );
   }
 
-  if (wireData.wireType === 'adaptive-bezier') {
+  if (wireType === 'adaptive-bezier') {
     return (
       <AdaptiveBezierWire
         id={id}
@@ -147,13 +156,13 @@ export const WireControl: FC<WireControlProps> = ({
         startY={startY}
         endX={endX}
         endY={endY}
-        isSelected={isSelected}
+        isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
-        wireOptions={wireData?.wireOptions as AdaptiveBezierWireOptions}
+        wireOptions={wireOptions as AdaptiveBezierWireOptions}
       />
     );
-  } else if (wireData.wireType === 'bezier') {
+  } else if (wireType === 'bezier') {
     return (
       <BezierWire
         id={id}
@@ -161,13 +170,13 @@ export const WireControl: FC<WireControlProps> = ({
         startY={startY}
         endX={endX}
         endY={endY}
-        isSelected={isSelected}
+        isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
-        wireOptions={wireData?.wireOptions as BezierWireOptions}
+        wireOptions={wireOptions as BezierWireOptions}
       />
     );
-  } else if (wireData.wireType === 'smooth-step') {
+  } else if (wireType === 'smooth-step') {
     return (
       <SmoothStepWire
         id={id}
@@ -175,10 +184,10 @@ export const WireControl: FC<WireControlProps> = ({
         startY={startY}
         endX={endX}
         endY={endY}
-        isSelected={isSelected}
+        isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
-        wireOptions={wireData?.wireOptions as SmoothStepWireOptions}
+        wireOptions={wireOptions as SmoothStepWireOptions}
       />
     );
   }
@@ -190,10 +199,10 @@ export const WireControl: FC<WireControlProps> = ({
       startY={startY}
       endX={endX}
       endY={endY}
-      isSelected={isSelected}
+      isSelecting={isSelecting}
       isHighlighted={isHighlighted}
       isHoveringPort={isHoveringPort}
-      wireOptions={wireData?.wireOptions as StraightWireOptions}
+      wireOptions={wireOptions as StraightWireOptions}
     />
   );
 };

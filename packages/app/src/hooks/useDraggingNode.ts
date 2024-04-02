@@ -17,6 +17,7 @@ import {
   selectingNodeIdsState,
 } from '../state/node';
 import { Node } from '../types/studio.type';
+import { isNotNull } from '../utils/safeTypes';
 
 export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
   const isDraggingMultipleNodes = useRecoilValue(isDraggingMultipleNodesState);
@@ -37,23 +38,15 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
         isDraggingMultipleNodes && selectingNodeIds.length > 0
           ? [...new Set([...selectingNodeIds, draggingNodeId])]
               .map((id) => nodeMap[id])
-              .filter((val) => val != null)
-          : [nodeMap[draggingNodeId]].filter((val) => val != null);
+              .filter(isNotNull)
+          : [nodeMap[draggingNodeId]].filter(isNotNull);
 
       setDraggingNodes(nodesToDrag);
       setSelectingNodeIds(
         isDraggingMultipleNodes
-          ? [...new Set([...selectingNodeIds, draggingNodeId])].filter(
-              (id) => nodeMap[id] != null,
-            )
+          ? [...new Set([...selectingNodeIds, draggingNodeId])]
           : [draggingNodeId],
       );
-
-      // console.log(
-      //   `onNodeStartDrag: selectingNodeIds: ${JSON.stringify(
-      //     selectingNodeIds,
-      //   )} draggingNodeId: ${draggingNodeId}, isDraggingMultipleNodes: ${isDraggingMultipleNodes}`,
-      // );
 
       const maxZIndex: number = nodes.reduce((maxVal, node) => {
         const zIndex: number =
@@ -64,10 +57,6 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
 
         return Math.max(maxVal, zIndex);
       }, 0);
-
-      console.log(
-        `onNodeStartDrag: draggingNodeId: ${draggingNodeId}, maxZIndex: ${maxZIndex}`,
-      );
 
       onNodesChange(
         nodes.map((node): Node => {
@@ -109,12 +98,6 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
       };
 
       setDraggingNodes([]);
-
-      console.log(
-        `onNodeEndDrag: draggingNodeIds: ${JSON.stringify(
-          draggingNodeIds,
-        )}, delta: ${JSON.stringify(delta)}`,
-      );
 
       onNodesChange(
         produce(nodes, (draft) => {

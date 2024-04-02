@@ -46,7 +46,13 @@ import {
   lastMousePositionState,
 } from '../state/canvas';
 import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
-import { draggingWireClosestPortState } from '../state/wire';
+import {
+  draggingWireClosestPortState,
+  hoveringWireIdState,
+  hoveringWirePortIdState,
+  isSelectingMultiWiresState,
+  selectingWireIdsState,
+} from '../state/wire';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
 import { HighlightedPort } from '../types/port.type';
@@ -140,6 +146,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   onNodesChange,
   onConnectionsChange,
   onNodesSelect,
+  onWiresSelect,
+  onContextMenuSelect,
 }) => {
   const { canvasPosition, canvasToClientPosition, clientToCanvasPosition } =
     useCanvasPosition();
@@ -172,12 +180,15 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     useDraggingNode(onNodesChange);
   const [hoveringNodeId, setHoveringNodeId] =
     useRecoilState(hoveringNodeIdState);
-  const [selectingNodeIds, SetSelectingNodeIds] = useRecoilState(
+  const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
     selectingNodeIdsState,
   );
 
   const { draggingWire, onWireStartDrag, onWireEndDrag } =
     useDraggingWire(onConnectionsChange);
+  // const [selectingWireIds, setSelectingWireIds] = useRecoilState(
+  //   selectingWireIdsState,
+  // );
 
   const [hoveringPort, setHoveringPort] = useState<
     HighlightedPort | undefined
@@ -246,11 +257,70 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     setReference,
   ]);
 
-  const defaultCanvasContextMenu: ContextMenuConfigContextData | null =
+  const extractCanvasContextMenu: ContextMenuConfigContextData | null =
     useMemo(() => {
+      if (contextMenu.data?.type.startsWith('node-')) {
+        const nodeIdentifier: string = contextMenu.data.type.replace(
+          'node-',
+          '',
+        );
+        const nodeId: string = contextMenu.data.element.dataset
+          .nodeid as string;
+
+        const parts = nodeIdentifier.split('-');
+        if (parts.length !== 2) {
+          return {
+            type: 'blankSpace',
+            data: {},
+            group: [],
+          };
+        }
+
+        const [type, subType] = parts;
+        return {
+          type: 'node',
+          data: {
+            nodeId: nodeId,
+            nodeType: type,
+            nodeSubType: subType,
+          },
+          group: [],
+        };
+      } else if (contextMenu.data?.type.startsWith('wire-')) {
+        const wireIdentifier: string = contextMenu.data.type.replace(
+          'wire-',
+          '',
+        );
+        const wireId: string = contextMenu.data.element.dataset
+          .wireid as string;
+
+        const parts = wireIdentifier.split('-');
+        if (parts.length !== 4) {
+          return {
+            type: 'blankSpace',
+            data: {},
+            group: [],
+          };
+        }
+
+        const [fromNodeId, fromPortName, toNodeId, toPortName] = parts;
+        return {
+          type: 'wire',
+          data: {
+            wireId,
+            wireFromNodeId: fromNodeId,
+            wireFromPortName: fromPortName,
+            wireToNodeId: toNodeId,
+            wireToPortName: toPortName,
+          },
+          group: [],
+        };
+      }
+
       return {
         type: 'blankSpace',
-        data: [],
+        data: {},
+        group: [],
       };
     }, [contextMenu]);
 
@@ -366,12 +436,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       clientX: number,
       clientY: number,
     ) => {
-      console.log(
-        `zoomDebounced: isAnyParentScrollable: ${isAnyParentScrollable(
-          target,
-        )}`,
-      );
-
       // Check if mouse is placed on the background
       if (isAnyParentScrollable(target)) return;
 
@@ -447,12 +511,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const selectingUniqueNodeIds = useMemo(() => {
     const nodeSet = new Set(selectingNodeIds);
 
-    // if (hoveringNodeId && !hoveringPort) {
-    //   nodeSet.add(hoveringNodeId);
-    // }
-
-    // console.log(`selectingUniqueNodeIds: ${JSON.stringify([...nodeSet])}`);
-
     return [...nodeSet];
   }, [selectingNodeIds]);
 
@@ -461,27 +519,17 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
       produce(nodes, (draft) => {
         const nodeToChange = draft.find((n) => n.id === node.id);
 
-        console.log(
-          `onNodeSizeChange - onNodesChange: nodeToChange: ${nodeToChange?.id}`,
-        );
-
         if (nodeToChange) {
           nodeToChange.visualInfo.size.width = width;
           nodeToChange.visualInfo.size.height = height;
         }
       }),
     );
-
-    console.log(
-      `onNodeSizeChange: node: ${node.id}, width: ${width}, height: ${height}`,
-    );
   };
 
   const onNodeSelect = useCallback(
     (node: Node) => {
       onNodesSelect([node], isDraggingMultipleNodes);
-
-      // console.log(`onNodeSelect: node: ${node.id}`);
     },
     [isDraggingMultipleNodes],
   );
@@ -489,23 +537,17 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const onNodeMouseOver = useStableCallback(
     (event: React.MouseEvent, nodeId: string) => {
       setHoveringNodeId(nodeId);
-
-      // console.log(`onNodeMouseOver: nodeId: ${nodeId}`);
     },
   );
 
   const onNodeMouseOut = useStableCallback((event: React.MouseEvent) => {
     setHoveringNodeId(undefined);
-
-    // console.log('onNodeMouseOut');
   });
 
   const isMinimized: boolean = canvasPosition.zoom < 0.6;
 
   const onNodeMoveDrag = useCallback(
     (e: DragMoveEvent) => {
-      console.log('I am dragging!');
-
       recalculatePortPositions();
     },
     [recalculatePortPositions],
@@ -580,7 +622,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                     onWireStartDrag={onWireStartDrag}
                     onWireEndDrag={onWireEndDrag}
                   />
-                  // TODO: render connections, consider duplicate connections
                 );
               })}
             </div>
@@ -623,11 +664,12 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
             isDraggingFromNode={draggingNodes.length > 0}
             highlightedNodeIds={selectingUniqueNodeIds}
             highlightedPort={hoveringPort}
+            onWiresSelect={onWiresSelect}
           />
           <CSSTransition
             classNames="context-menu-box"
             nodeRef={contextMenuRef}
-            in={showContextMenu && !!defaultCanvasContextMenu}
+            in={showContextMenu && !!extractCanvasContextMenu}
             timeout={200}
             onEnter={() => {
               setIsContextMenuDisabled(false);
@@ -642,7 +684,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
               x={contextMenu.x}
               y={contextMenu.y}
               disabled={isContextMenuDisabled}
-              context={defaultCanvasContextMenu!}
+              context={extractCanvasContextMenu!}
+              onSelect={onContextMenuSelect}
             ></ContextMenu>
           </CSSTransition>
         </div>

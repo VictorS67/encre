@@ -16,18 +16,18 @@ export const BaseWire: FC<BaseWireProps> = ({
   interactionWidth = 20,
   startMarker,
   endMarker,
-  isSelected,
+  isSelecting,
   isHighlighted,
   isHoveringPort,
   className,
 }: BaseWireProps) => {
   return (
-    <g opacity={isHighlighted || isSelected ? 1 : 0.5}>
+    <g opacity={isHighlighted || isSelecting ? 1 : 0.5}>
       <path
         className={clsx(
           'wire',
           {
-            selected: isSelected,
+            selected: isSelecting,
             highlighted: isHighlighted,
           },
           className?.split(' '),

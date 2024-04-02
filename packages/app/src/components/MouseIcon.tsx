@@ -1,20 +1,21 @@
 import React, { FC } from 'react';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
 import {
   isDraggingMultipleNodesState,
   isOnlyDraggingCanvasState,
 } from '../state/canvas';
+import { isSelectingMultiWiresState } from '../state/wire';
 
 export const MouseIcon: FC = () => {
-  const [isOnlyDraggingCanvas, setIsOnlyDraggingCanvas] = useRecoilState(
-    isOnlyDraggingCanvasState,
-  );
-
-  const [isDraggingMultipleNodes, setIsDraggingMultipleNodes] = useRecoilState(
+  const setIsOnlyDraggingCanvas = useSetRecoilState(isOnlyDraggingCanvasState);
+  const setIsDraggingMultipleNodes = useSetRecoilState(
     isDraggingMultipleNodesState,
+  );
+  const setIsSelectingMultiWires = useSetRecoilState(
+    isSelectingMultiWiresState,
   );
 
   useGlobalHotkey(
@@ -34,10 +35,12 @@ export const MouseIcon: FC = () => {
     (e: KeyboardEvent) => {
       e.preventDefault();
       setIsDraggingMultipleNodes(true);
+      setIsSelectingMultiWires(true);
     },
     (e: KeyboardEvent) => {
       e.preventDefault();
       setIsDraggingMultipleNodes(false);
+      setIsSelectingMultiWires(false);
     },
   );
 

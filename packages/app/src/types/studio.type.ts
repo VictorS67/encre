@@ -54,6 +54,7 @@ export interface Node {
   id: string;
   type: string;
   subType: string;
+  registerArgs?: Record<string, unknown>;
   title: string;
   name: string;
   aliases: {

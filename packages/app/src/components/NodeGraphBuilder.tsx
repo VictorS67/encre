@@ -1,60 +1,53 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { NodeCanvas } from './NodeCanvas';
+import { useContextMenuNodeGraphHandler } from '../hooks/useContextMenuNodeGraphHandler';
 import { useStableCallback } from '../hooks/useStableCallback';
-import { isDraggingMultipleNodesState } from '../state/canvas';
 import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
+import { selectingWireIdsState, wireDataMapState } from '../state/wire';
 import { Node } from '../types/studio.type';
 
 export const NodeGraphBuilder: FC = () => {
   const [nodes, setNodes] = useRecoilState(nodesState);
   const [connections, setConnections] = useRecoilState(connectionsState);
-  const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
-    selectingNodeIdsState,
-  );
-
-  const nodeMap = useRecoilValue(nodeMapState);
+  const setSelectingNodeIds = useSetRecoilState(selectingNodeIdsState);
+  const setSelectingWireIds = useSetRecoilState(selectingWireIdsState);
+  const contextMenuNodeGraphHandler = useContextMenuNodeGraphHandler();
 
   const onNodesChange = useStableCallback((newNodes: Node[]) => {
     setNodes(newNodes);
-    // console.log(
-    //   `onNodesChange: nodes: ${JSON.stringify(nodes.map((n) => n.id))}`,
-    // );
   });
 
-  const onNodesSelect = useCallback(
+  const onNodesSelect = useStableCallback(
     (newNodes: Node[], isMulti?: boolean) => {
-      // console.log(
-      //   `onNodeStartDrag: selectingNodeIds: --- ${newNodes.map(
-      //     (n) => n.id,
-      //   )}, isDraggingMultipleNodes: ${isMulti}`,
-      // );
-
       if (isMulti) {
-        setSelectingNodeIds((nodeIds: string[]) =>
-          [...new Set([...nodeIds, ...newNodes.map((n) => n.id)])].filter(
-            (nodeId) => nodeMap[nodeId] !== null,
-          ),
-        );
+        setSelectingNodeIds((nodeIds: string[]) => [
+          ...new Set([...nodeIds, ...newNodes.map((n) => n.id)]),
+        ]);
       } else {
         if (newNodes.length > 1) return;
 
-        setSelectingNodeIds(
-          newNodes
-            .map((n) => n.id)
-            .filter((nodeId) => nodeMap[nodeId] !== null),
-        );
+        setSelectingNodeIds(newNodes.map((n) => n.id));
       }
-
-      // console.log(
-      //   `onNodesSelect: selectingNodeIds: ${JSON.stringify(selectingNodeIds)}`,
-      // );
     },
-    [nodeMap],
+  );
+
+  const onWiresSelect = useStableCallback(
+    (newWireIds: string[], isMulti?: boolean) => {
+      if (isMulti) {
+        setSelectingWireIds((wireIds: string[]) => [
+          ...new Set([...wireIds, ...newWireIds]),
+        ]);
+      } else {
+        if (newWireIds.length > 1) return;
+
+        setSelectingWireIds(newWireIds);
+      }
+    },
   );
 
   return (
@@ -67,6 +60,8 @@ export const NodeGraphBuilder: FC = () => {
         onNodesChange={onNodesChange}
         onConnectionsChange={setConnections}
         onNodesSelect={onNodesSelect}
+        onWiresSelect={onWiresSelect}
+        onContextMenuSelect={contextMenuNodeGraphHandler}
       />
     </ErrorBoundary>
   );

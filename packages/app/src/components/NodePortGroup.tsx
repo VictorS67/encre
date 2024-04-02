@@ -160,7 +160,6 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
       ) => {
         e.stopPropagation();
         e.preventDefault();
-        console.log(`Port ${portName} is moused down`);
         onWireStartDrag?.(e, node.id, portName, isInput);
       },
     );
@@ -169,7 +168,6 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
       (e: React.MouseEvent<HTMLDivElement>, portName: string) => {
         e.stopPropagation();
         e.preventDefault();
-        console.log(`Port ${portName} is moused up`);
         onWireEndDrag?.(e);
       },
     );

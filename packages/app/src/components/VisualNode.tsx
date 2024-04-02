@@ -275,8 +275,6 @@ export const VisualNode = memo(
 
       event.stopPropagation();
       onNodeSelect?.();
-
-      console.log('onNodeGrabClick');
     });
 
     return (
@@ -291,6 +289,7 @@ export const VisualNode = memo(
         style={style}
         {...attributes}
         data-nodeid={node.id}
+        data-contextmenutype={`node-${node.type}-${node.subType}`}
         onMouseOver={(event) => onNodeMouseOver?.(event, node.id)}
         onMouseOut={(event) => onNodeMouseOut?.(event, node.id)}
         onClick={onNodeGrabClick}

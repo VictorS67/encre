@@ -1,3 +1,7 @@
+import {
+  ContextMenuConfigContext,
+  ContextMenuConfigContextData,
+} from './contextmenu.type';
 import { Node, NodeConnection } from './studio.type';
 
 export type CanvasPosition = {
@@ -24,4 +28,11 @@ export type NodeCanvasProps = {
   onNodesChange: (newNodes: Node[]) => void;
   onConnectionsChange: (newConnections: NodeConnection[]) => void;
   onNodesSelect: (newNodes: Node[], isMulti?: boolean) => void;
+  onWiresSelect: (newWireIds: string[], isMulti?: boolean) => void;
+  onContextMenuSelect?: (
+    menuItemId: string,
+    context: ContextMenuConfigContextData,
+    meta: { x: number; y: number },
+    data: unknown,
+  ) => void;
 };

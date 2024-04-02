@@ -20,6 +20,11 @@ export const wireDataMapState = atom<Record<string, WireData>>({
   default: {},
 });
 
+export const isSelectingMultiWiresState = atom<boolean>({
+  key: 'isSelectingMultiWiresState',
+  default: false,
+});
+
 export const selectingWireIdsState = atom<string[]>({
   key: 'selectingWireIdsState',
   default: [],
@@ -85,5 +90,14 @@ export const removeWireDataState = selector<string>({
       delete updatedMap[id];
       set(wireDataMapState, updatedMap);
     }
+  },
+});
+
+export const currSelectingWireIdsState = selector({
+  key: 'currSelectingWireIdsState',
+  get: ({ get }) => {
+    const selectingWireIds = get(selectingWireIdsState);
+
+    return selectingWireIds;
   },
 });
