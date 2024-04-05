@@ -1,10 +1,14 @@
 import { useMemo } from 'react';
 
+import { css } from '@emotion/react';
 import { Abc, Cabin } from '@mui/icons-material';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
+import CropSquareOutlinedIcon from '@mui/icons-material/CropSquareOutlined';
+import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 
 import { useContextMenuAddNodeConfigContexts } from './useContextMenuAddNodeConfigContexts';
+import { useContextMenuChangeCommentColorConfigContexts } from './useContextMenuChangeCommentColorConfigContexts';
 import { useHotKeyDisplay } from './useHotKeyDisplay';
 import { ContextMenuConfigContexts } from '../types/contextmenu.type';
 import { HOTKEY } from '../types/hotkey.type';
@@ -12,9 +16,58 @@ import { typeOf } from '../utils/safeTypes';
 
 export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
   const avaliableNodes = useContextMenuAddNodeConfigContexts();
+  const commentColors = useContextMenuChangeCommentColorConfigContexts();
 
   const contexts: ContextMenuConfigContexts = useMemo(
     () => ({
+      comment: {
+        contextType: typeOf<{
+          commentId: string;
+        }>(),
+        group: [
+          {
+            metadata: {
+              label: 'edit',
+            },
+            items: [
+              {
+                id: 'duplicate-comment',
+                name: 'Duplicate comment',
+                tip: useHotKeyDisplay([HOTKEY.CTRL, 'D']),
+              },
+              {
+                id: 'copy-comment',
+                name: 'Copy comment',
+                tip: useHotKeyDisplay([HOTKEY.CTRL, 'C']),
+              },
+              {
+                id: 'paste-comment',
+                name: 'Paste comment',
+                tip: useHotKeyDisplay([HOTKEY.CTRL, 'V']),
+              },
+            ],
+          },
+          {
+            metadata: {
+              label: 'modify',
+            },
+            items: [
+              {
+                id: 'change-background-color',
+                name: 'Change background color',
+                contexts: [
+                  {
+                    metadata: {
+                      label: 'type',
+                    },
+                    items: commentColors,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
       node: {
         contextType: typeOf<{
           nodeId: string;
@@ -50,7 +103,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
               },
               {
                 id: 'select-all-node',
-                name: 'Select all',
+                name: 'Select all nodes',
                 tip: useHotKeyDisplay([HOTKEY.CTRL, 'A']),
               },
             ],
@@ -96,7 +149,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
             items: [
               {
                 id: 'group-node',
-                name: 'Group',
+                name: 'Group with comment',
                 tip: useHotKeyDisplay([HOTKEY.CTRL, 'G']),
               },
             ],
@@ -195,7 +248,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
         group: [
           {
             metadata: {
-              label: 'canvas',
+              label: 'node',
             },
             items: [
               {
@@ -217,30 +270,30 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
               },
               {
                 id: 'select-all-node',
-                name: 'Select all',
+                name: 'Select all nodes',
                 tip: useHotKeyDisplay([HOTKEY.CTRL, 'A']),
               },
             ],
           },
           {
             metadata: {
-              label: 'canvas',
+              label: 'comment',
             },
             items: [
               {
                 id: 'group-node',
-                name: 'Group',
+                name: 'Group with comment',
                 tip: useHotKeyDisplay([HOTKEY.CTRL, 'G']),
               },
               {
                 id: 'add-group',
-                name: 'Add group',
+                name: 'Add comment',
               },
             ],
           },
           {
             metadata: {
-              label: 'canvas',
+              label: 'relocate',
             },
             items: [
               {
@@ -251,7 +304,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
           },
           {
             metadata: {
-              label: 'canvas',
+              label: 'export',
             },
             items: [
               {

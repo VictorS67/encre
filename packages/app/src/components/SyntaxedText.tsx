@@ -12,6 +12,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
   language,
   keywords,
   theme,
+  style,
 }) => {
   const editorContainer = useRef<HTMLPreElement>(null);
 
@@ -70,7 +71,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
       ref={editorContainer}
       data-lang={language}
       className="pre-wrap"
-      style={{ wordBreak: 'break-word', userSelect: 'text' }}
+      style={{ wordBreak: 'break-word', userSelect: 'text', ...style }}
     >
       {text}
     </pre>

@@ -5,7 +5,11 @@ import { useCanvasPosition } from './useCanvasPosition';
 import { clipboardState } from '../state/clipboard';
 import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
-import { NodeConnection } from '../types/studio.type';
+import {
+  NodeConnection,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '../types/studio.type';
 import { fakeId } from '../utils/fakeId';
 import { isNotNull } from '../utils/safeTypes';
 
@@ -21,6 +25,12 @@ export function usePasteNodes() {
     if (clipboard?.type !== 'nodes') {
       return;
     }
+
+    console.log(
+      `paste: clipboard: nodes: ${JSON.stringify(
+        clipboard.nodes,
+      )}, connections: ${JSON.stringify(clipboard.connections)}`,
+    );
 
     const canvasPosition = clientToCanvasPosition(
       mousePosition.x,
@@ -43,10 +53,10 @@ export function usePasteNodes() {
         };
       },
       {
-        minX: Number.MIN_SAFE_INTEGER,
-        minY: Number.MIN_SAFE_INTEGER,
-        maxX: Number.MAX_SAFE_INTEGER,
-        maxY: Number.MAX_SAFE_INTEGER,
+        minX: Number.MAX_SAFE_INTEGER,
+        minY: Number.MAX_SAFE_INTEGER,
+        maxX: Number.MIN_SAFE_INTEGER,
+        maxY: Number.MIN_SAFE_INTEGER,
       },
     );
 
@@ -68,8 +78,33 @@ export function usePasteNodes() {
         draft.visualInfo.position.y =
           canvasPosition.y +
           (node.visualInfo.position.y - boundingBoxOfCopiedNodes.minY);
+
+        // TODO: we don't need this when the core is ready
+        draft.getBody = node.getBody;
+        const inputDefs: NodeInputPortDef[] = node.getInputPortDefs([], {});
+        const outputDefs: NodeOutputPortDef[] = node.getOutputPortDefs([], {});
+        draft.getInputPortDefs = function (
+          cs: NodeConnection[],
+          ns: Record<string, Node>,
+        ): NodeInputPortDef[] {
+          return inputDefs.map((def) => ({
+            ...def,
+            nodeId: newNodeId,
+          }));
+        } as any;
+        draft.getOutputPortDefs = function (
+          cs: NodeConnection[],
+          ns: Record<string, Node>,
+        ): NodeOutputPortDef[] {
+          return outputDefs.map((def) => ({
+            ...def,
+            nodeId: newNodeId,
+          }));
+        } as any;
       });
     });
+
+    console.log(`paste: newNodes: ${JSON.stringify(newNodes)}`);
 
     setNodes((ns) => [...ns, ...newNodes]);
     setSelectingNodeIds(newNodes.map((node) => node.id));
@@ -84,10 +119,9 @@ export function usePasteNodes() {
         }
 
         return {
+          ...c,
           fromNodeId,
-          fromPortName: c.fromPortName,
           toNodeId,
-          toPortName: c.toPortName,
         };
       })
       .filter(isNotNull);

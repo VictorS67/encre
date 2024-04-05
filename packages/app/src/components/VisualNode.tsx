@@ -13,9 +13,11 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useMergeRefs } from '@floating-ui/react';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import PushPinIcon from '@mui/icons-material/PushPin';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Icon } from './Icon';
 import { NodeContentBody } from './NodeContentBody';
@@ -25,6 +27,7 @@ import { useRipple } from '../hooks/useAnimation';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
+import { pinningNodeIdsState } from '../state/node';
 import { themeState } from '../state/settings';
 import { draggingWireClosestPortState, draggingWireState } from '../state/wire';
 import {
@@ -90,6 +93,7 @@ const NodeContentContainer = styled.div`
     align-items: flex-start;
     align-self: stretch;
     padding: 8px 10px;
+    transition: all 100ms ease-out;
   }
 
   .node-card-info {
@@ -122,7 +126,30 @@ const NodeContentContainer = styled.div`
 
   .node-tooling {
     flex-grow: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 5px;
+    cursor: pointer !important;
+    z-index: 1;
   }
+
+  .pin-tooling {
+    opacity: 0;
+  }
+
+  .pin-tooling.pinned {
+    opacity: 1;
+  }
+
+  .pin-tooling:hover {
+    opacity: 1;
+  }
+
+  // .pin-tooling.pinned,
+  // .pin-tooling:hover {
+  //   opacity: 1;
+  // }
 
   .node-tag-grp {
     display: flex;
@@ -221,6 +248,7 @@ export const VisualNode = memo(
       isSelecting,
       isOverlay,
       isMinimized,
+      isPinning,
       scale,
       canvasZoom,
       onNodeSizeChange,
@@ -298,6 +326,7 @@ export const VisualNode = memo(
           node={node}
           connections={connections}
           isMinimized={isMinimized}
+          isPinning={isPinning}
           canvasZoom={canvasZoom}
           attributeListeners={attributeListeners}
           onNodeGrabClick={onNodeGrabClick}
@@ -316,6 +345,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     node,
     connections = [],
     isMinimized,
+    isPinning,
     canvasZoom,
     attributeListeners,
     onNodeGrabClick,
@@ -328,6 +358,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     const draggingWireClosestPort = useRecoilValue(
       draggingWireClosestPortState,
     );
+    const setPinningNodeIds = useSetRecoilState(pinningNodeIdsState);
 
     const [nodeWidth, setNodeWidth] = useState<number>(300);
     const [nodeHeight, setNodeHeight] = useState<number>(500);
@@ -404,7 +435,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       return [parseInt(cssWidth, 10), parseInt(cssHeight, 10)];
     };
 
-    const onReiszeStart = useStableCallback((e: React.MouseEvent) => {
+    const onResizeStart = useStableCallback((e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -456,6 +487,19 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       e.stopPropagation();
     });
 
+    const onTogglePinningNode = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      setPinningNodeIds((prev) => {
+        if (prev.includes(node.id)) {
+          return prev.filter((n) => n !== node.id);
+        }
+
+        return [...prev, node.id];
+      });
+    });
+
     // TODO: add index (for example, node id) on the top left of the node.
     return (
       <NodeContentContainer>
@@ -474,6 +518,34 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
                 ))}
               </div>
               <div className="node-tooling">
+                <div
+                  className={clsx('pin-tooling', {
+                    pinned: isPinning,
+                  })}
+                  onClick={onTogglePinningNode}
+                >
+                  {isPinning ? (
+                    <Icon
+                      icon={PushPinIcon}
+                      width={'20px'}
+                      height={'20px'}
+                      fontSize={'20px'}
+                      additionalStyles={css`
+                        color: var(--text-color);
+                      `}
+                    />
+                  ) : (
+                    <Icon
+                      icon={PushPinOutlinedIcon}
+                      width={'20px'}
+                      height={'20px'}
+                      fontSize={'20px'}
+                      additionalStyles={css`
+                        color: var(--text-color);
+                      `}
+                    />
+                  )}
+                </div>
                 <Icon
                   icon={PlayArrowRoundedIcon}
                   width={'20px'}
@@ -520,7 +592,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           </div>
         </div>
 
-        <ResizeBox onResizeStart={onReiszeStart} onResizeMove={onResizeMove} />
+        <ResizeBox onResizeStart={onResizeStart} onResizeMove={onResizeMove} />
       </NodeContentContainer>
     );
   },

@@ -28,15 +28,19 @@ import { CSSTransition } from 'react-transition-group';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { ContextMenu } from './ContextMenu';
+import { DebugObserver, TimeTravelObserver } from './DebugObserver';
+import { DraggableComment } from './DraggableComment';
 import { DraggableNode } from './DraggableNode';
 import { MouseIcon } from './MouseIcon';
+import { VisualComment } from './VisualComment';
 import { VisualNode } from './VisualNode';
 import { WireLayer } from './WireLayer';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
+import { useCommentColorCache } from '../hooks/useCommentColorCache';
 import { useContextMenu } from '../hooks/useContextMenu';
+import { useDraggingComment } from '../hooks/useDraggingComment';
 import { useDraggingNode } from '../hooks/useDraggingNode';
 import { useDraggingWire } from '../hooks/useDraggingWire';
-import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
 import { useNodePortPositions } from '../hooks/usePortPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
@@ -45,18 +49,20 @@ import {
   isOnlyDraggingCanvasState,
   lastMousePositionState,
 } from '../state/canvas';
-import { hoveringNodeIdState, selectingNodeIdsState } from '../state/node';
 import {
-  draggingWireClosestPortState,
-  hoveringWireIdState,
-  hoveringWirePortIdState,
-  isSelectingMultiWiresState,
-  selectingWireIdsState,
-} from '../state/wire';
+  isDraggingMultipleCommentsState,
+  selectingCommentIdsState,
+} from '../state/comment';
+import {
+  hoveringNodeIdState,
+  pinningNodeIdsState,
+  selectingNodeIdsState,
+} from '../state/node';
+import { draggingWireClosestPortState } from '../state/wire';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
 import { HighlightedPort } from '../types/port.type';
-import { Node, NodeConnection } from '../types/studio.type';
+import { GraphComment, Node, NodeConnection } from '../types/studio.type';
 
 const styles = css`
   position: relative;
@@ -88,7 +94,16 @@ const styles = css`
   }
 
   .node-connection-grp {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  .comment-grp {
+    position: absolute;
+    top: 0;
+    left: 0;
     z-index: 0;
   }
 
@@ -143,9 +158,12 @@ type MouseInfo = {
 export const NodeCanvas: FC<NodeCanvasProps> = ({
   nodes,
   connections,
+  comments,
   onNodesChange,
+  onCommentsChange,
   onConnectionsChange,
   onNodesSelect,
+  onCommentsSelect,
   onWiresSelect,
   onContextMenuSelect,
 }) => {
@@ -183,6 +201,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
     selectingNodeIdsState,
   );
+  const pinningNodeIds = useRecoilValue(pinningNodeIdsState);
 
   const { draggingWire, onWireStartDrag, onWireEndDrag } =
     useDraggingWire(onConnectionsChange);
@@ -199,6 +218,19 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     { setTrue: showPortInfo, setFalse: hidePortInfo },
   ] = useBoolean(false);
   const closestPort = useRecoilValue(draggingWireClosestPortState);
+
+  const isDraggingMultipleComments = useRecoilValue(
+    isDraggingMultipleCommentsState,
+  );
+  const {
+    draggingComments,
+    draggingNodes: draggingNodesInComments,
+    onCommentStartDrag,
+    onCommentEndDrag,
+  } = useDraggingComment(onCommentsChange, onNodesChange);
+  const [selectingCommentIds, setSelectingCommentIds] = useRecoilState(
+    selectingCommentIdsState,
+  );
 
   const [isContextMenuDisabled, setIsContextMenuDisabled] = useState(true);
 
@@ -224,6 +256,12 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     setContextMenu,
     handleContextMenu,
   } = useContextMenu();
+
+  const commentColorCache = useCommentColorCache();
+
+  const nodesToDrag = useMemo(() => {
+    return [...new Set([...draggingNodes, ...draggingNodesInComments])];
+  }, [draggingNodes, draggingNodesInComments]);
 
   useEffect(() => {
     recalculatePortPositions();
@@ -259,7 +297,18 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   const extractCanvasContextMenu: ContextMenuConfigContextData | null =
     useMemo(() => {
-      if (contextMenu.data?.type.startsWith('node-')) {
+      if (contextMenu.data?.type.startsWith('comment')) {
+        const commentId: string = contextMenu.data.element.dataset
+          .commentid as string;
+
+        return {
+          type: 'comment',
+          data: {
+            commentId,
+          },
+          group: [],
+        };
+      } else if (contextMenu.data?.type.startsWith('node-')) {
         const nodeIdentifier: string = contextMenu.data.type.replace(
           'node-',
           '',
@@ -341,6 +390,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
     if (isClickingOnCanvas) {
       onNodesSelect([]);
+      onCommentsSelect([]);
     }
 
     // Check if only dragging canvas is true
@@ -500,7 +550,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   }, [nodes, connections]);
 
   const draggingNodeConnections: NodeConnection[] = useMemo(() => {
-    return draggingNodes.flatMap((draggingNode: Node) =>
+    return nodesToDrag.flatMap((draggingNode: Node) =>
       connections.filter(
         (c: NodeConnection) =>
           c.toNodeId === draggingNode.id || c.fromNodeId === draggingNode.id,
@@ -513,6 +563,12 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
     return [...nodeSet];
   }, [selectingNodeIds]);
+
+  const selectingUniqueCommentIds = useMemo(() => {
+    const commentSet = new Set(selectingCommentIds);
+
+    return [...commentSet];
+  }, [selectingCommentIds]);
 
   const onNodeSizeChange = (node: Node, width: number, height: number) => {
     onNodesChange(
@@ -527,11 +583,53 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     );
   };
 
+  const onCommentSizeChange = (
+    comment: GraphComment,
+    width: number,
+    height: number,
+  ) => {
+    onCommentsChange(
+      produce(comments, (draft) => {
+        const commentToChange = draft.find((c) => c.id === comment.id);
+
+        if (commentToChange) {
+          commentToChange.visualInfo.size.width = width;
+          commentToChange.visualInfo.size.height = height;
+        }
+      }),
+    );
+  };
+
+  const onCommentColorChange = (comment: GraphComment, color: string) => {
+    onCommentsChange(
+      produce(comments, (draft) => {
+        const commentToChange = draft.find((c) => c.id === comment.id);
+
+        if (commentToChange) {
+          if (!commentToChange.visualInfo.content) {
+            commentToChange.visualInfo.content = {
+              color: color as any,
+            };
+          } else {
+            commentToChange.visualInfo.content.color = color as any;
+          }
+        }
+      }),
+    );
+  };
+
   const onNodeSelect = useCallback(
     (node: Node) => {
       onNodesSelect([node], isDraggingMultipleNodes);
     },
     [isDraggingMultipleNodes],
+  );
+
+  const onCommentSelect = useCallback(
+    (comment: GraphComment) => {
+      onCommentsSelect([comment], isDraggingMultipleComments);
+    },
+    [isDraggingMultipleComments],
   );
 
   const onNodeMouseOver = useStableCallback(
@@ -557,8 +655,14 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     <div>
       <DebugOverlay enabled={true} />
       <DndContext
-        onDragStart={onNodeStartDrag}
-        onDragEnd={onNodeEndDrag}
+        onDragStart={(e) => {
+          onNodeStartDrag(e);
+          onCommentStartDrag(e);
+        }}
+        onDragEnd={(e) => {
+          onNodeEndDrag(e);
+          onCommentEndDrag(e);
+        }}
         onDragMove={onNodeMoveDrag}
       >
         <div
@@ -600,8 +704,11 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                 const nodeToRender: Node = nodeConnectionGroup.node;
                 const connectionsToRender: NodeConnection[] | undefined =
                   nodeConnectionGroup.connections;
+                const isPinning: boolean = pinningNodeIds.includes(
+                  nodeToRender.id,
+                );
 
-                if (draggingNodes.some((n) => n.id === nodeToRender.id)) {
+                if (nodesToDrag.some((n) => n.id === nodeToRender.id)) {
                   return null;
                 }
 
@@ -615,12 +722,36 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                     isSelecting={selectingUniqueNodeIds.includes(
                       nodeToRender.id,
                     )}
+                    isPinning={isPinning}
                     onNodeSizeChange={onNodeSizeChange}
                     onNodeSelect={onNodeSelect}
                     onNodeMouseOver={onNodeMouseOver}
                     onNodeMouseOut={onNodeMouseOut}
                     onWireStartDrag={onWireStartDrag}
                     onWireEndDrag={onWireEndDrag}
+                  />
+                );
+              })}
+            </div>
+            <div className="comment-grp">
+              {comments.map((commentToRender) => {
+                if (draggingComments.find((c) => c.id === commentToRender.id)) {
+                  return null;
+                }
+
+                return (
+                  <DraggableComment
+                    key={commentToRender.id}
+                    comment={commentToRender}
+                    commentColorCache={commentColorCache}
+                    canvasZoom={canvasPosition.zoom}
+                    isMinimized={isMinimized}
+                    isSelecting={selectingUniqueCommentIds.includes(
+                      commentToRender.id,
+                    )}
+                    onCommentSizeChange={onCommentSizeChange}
+                    onCommentColorChange={onCommentColorChange}
+                    onCommentSelect={onCommentSelect}
                   />
                 );
               })}
@@ -644,24 +775,44 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                 },
               ]}
             >
-              {draggingNodes.map((draggingNode: Node) => (
-                <VisualNode
-                  key={draggingNode.id}
-                  node={draggingNode}
-                  connections={draggingNodeConnections}
-                  isSelecting={selectingUniqueNodeIds.includes(draggingNode.id)}
-                  isOverlay
-                  isMinimized={isMinimized}
-                  canvasZoom={canvasPosition.zoom}
-                />
-              ))}
+              <div className="node-connection-grp">
+                {nodesToDrag.map((draggingNode: Node) => (
+                  <VisualNode
+                    key={draggingNode.id}
+                    node={draggingNode}
+                    connections={draggingNodeConnections}
+                    isSelecting={selectingUniqueNodeIds.includes(
+                      draggingNode.id,
+                    )}
+                    isOverlay
+                    isMinimized={isMinimized}
+                    isPinning={pinningNodeIds.includes(draggingNode.id)}
+                    canvasZoom={canvasPosition.zoom}
+                  />
+                ))}
+              </div>
+              <div className="comment-grp">
+                {draggingComments.map((draggingComment: GraphComment) => (
+                  <VisualComment
+                    key={draggingComment.id}
+                    comment={draggingComment}
+                    commentColorCache={commentColorCache}
+                    isSelecting={selectingUniqueCommentIds.includes(
+                      draggingComment.id,
+                    )}
+                    isOverlay
+                    isMinimized={isMinimized}
+                    canvasZoom={canvasPosition.zoom}
+                  />
+                ))}
+              </div>
             </DragOverlay>
           </div>
           <WireLayer
             connections={connections}
             portPositions={portPositions}
             draggingWire={draggingWire}
-            isDraggingFromNode={draggingNodes.length > 0}
+            isDraggingFromNode={nodesToDrag.length > 0}
             highlightedNodeIds={selectingUniqueNodeIds}
             highlightedPort={hoveringPort}
             onWiresSelect={onWiresSelect}

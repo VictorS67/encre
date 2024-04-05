@@ -4,6 +4,8 @@ import { graphState } from './graph';
 import { connectionMapState } from './nodeconnection';
 import { NodeGraph } from '../types/graph.type';
 import {
+  CommentVisualInfo,
+  GraphComment,
   Node,
   NodeConnection,
   NodeInputPortDef,
@@ -56,6 +58,29 @@ export const hoveringNodeIdState = atom<string | undefined>({
 export const draggingNodesState = atom<Node[]>({
   key: 'draggingNodesState',
   default: [],
+});
+
+export const draggingNodesInCommentsState = atom<Node[]>({
+  key: 'draggingNodesInCommentsState',
+  default: [],
+});
+
+// export const nodeIdsToDragInCommentState = atom<Record<string, string[]>>({
+//   key: 'nodeIdsToDragInCommentState',
+//   default: {}
+// })
+
+export const pinningNodeIdsState = atom<string[]>({
+  key: 'pinningNodeIdsState',
+  default: [],
+});
+
+export const isPinnedState = selectorFamily<boolean, string>({
+  key: 'isPinnedState',
+  get:
+    (nodeId: string) =>
+    ({ get }) =>
+      get(pinningNodeIdsState).includes(nodeId),
 });
 
 export const nodeIODefState = selector<
@@ -128,5 +153,39 @@ export const ioDefFromNodeIdState = selectorFamily<
       return nodeId
         ? get(nodeIODefState)[nodeId]!
         : { inputDefs: [], outputDefs: [] };
+    },
+});
+
+export const nodesToDragInCommentsState = selectorFamily<
+  Node[],
+  CommentVisualInfo[]
+>({
+  key: 'nodesToDragInCommentsState',
+  get:
+    (commentVisualInfos: CommentVisualInfo[]) =>
+    ({ get }) => {
+      const nodes: Node[] = [];
+
+      get(nodesState).forEach((node) => {
+        const intersects: boolean = commentVisualInfos.some(
+          (comment) =>
+            !(
+              node.visualInfo.position.x + node.visualInfo.size.width <
+                comment.position.x ||
+              comment.position.x + comment.size.width <
+                node.visualInfo.position.x ||
+              node.visualInfo.position.y + node.visualInfo.size.height <
+                comment.position.y ||
+              comment.position.y + comment.size.height <
+                node.visualInfo.position.y
+            ),
+        );
+
+        if (intersects) {
+          nodes.push(node);
+        }
+      });
+
+      return nodes;
     },
 });

@@ -90,6 +90,8 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
 
   const onNodeEndDrag = useCallback(
     (e: DragEndEvent) => {
+      if (draggingNodes.length === 0) return;
+
       const draggingNodeIds: string[] = draggingNodes.map((node) => node.id);
 
       const delta = {

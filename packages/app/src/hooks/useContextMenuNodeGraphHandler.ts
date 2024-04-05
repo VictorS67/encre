@@ -7,7 +7,13 @@ import { useCopyNodes } from './useCopyNodes';
 import { useDuplicateNode } from './useDuplicateNode';
 import { usePasteNodes } from './usePasteNodes';
 import { useStableCallback } from './useStableCallback';
-import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
+import { commentsState, selectingCommentIdsState } from '../state/comment';
+import {
+  nodeMapState,
+  nodesState,
+  pinningNodeIdsState,
+  selectingNodeIdsState,
+} from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { removeWireDataState, selectingWireIdsState } from '../state/wire';
 import { ContextMenuConfigContextData } from '../types/contextmenu.type';
@@ -27,15 +33,20 @@ import { isNotNull } from '../utils/safeTypes';
 
 export function useContextMenuNodeGraphHandler() {
   const [nodes, setNodes] = useRecoilState(nodesState);
+  const [comments, setComments] = useRecoilState(commentsState);
   const [connections, setConnections] = useRecoilState(connectionsState);
   const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
     selectingNodeIdsState,
+  );
+  const [selectingCommentIds, setSelectingCommentIds] = useRecoilState(
+    selectingCommentIdsState,
   );
   const nodeMap = useRecoilValue(nodeMapState);
   const [selectingWireIds, setSelectingWireIds] = useRecoilState(
     selectingWireIdsState,
   );
   const removeWireData = useSetRecoilState(removeWireDataState);
+  const setPinningNodeIds = useSetRecoilState(pinningNodeIdsState);
 
   const { clientToCanvasPosition } = useCanvasPosition();
   const copyNodes = useCopyNodes();
@@ -278,6 +289,115 @@ attr6: `,
           const allNodeIds = nodes.map((n) => n.id);
 
           setSelectingNodeIds(allNodeIds);
+        })
+        .with('pin-unpin-node', () => {
+          if (!context.data) {
+            return;
+          }
+
+          const { nodeId } = context.data as {
+            nodeId: string;
+          };
+
+          const nodeIds: string[] = (
+            selectingNodeIds.length > 0
+              ? [...new Set([...selectingNodeIds, nodeId])]
+              : [nodeId]
+          ).filter(isNotNull);
+
+          for (const nId of nodeIds) {
+            setPinningNodeIds((prev) => {
+              if (prev.includes(nId)) {
+                return prev.filter((n) => n !== nId);
+              }
+
+              return [...prev, nId];
+            });
+          }
+        })
+        .with('bring-to-front', () => {
+          if (!context.data) {
+            return;
+          }
+
+          const { nodeId } = context.data as {
+            nodeId: string;
+          };
+
+          const maxZIndex: number = nodes.reduce((maxVal, node) => {
+            const zIndex: number =
+              node.visualInfo.position.zIndex &&
+              !Number.isNaN(node.visualInfo.position.zIndex)
+                ? node.visualInfo.position.zIndex
+                : 0;
+
+            return Math.max(maxVal, zIndex);
+          }, 0);
+
+          const nodeIds: string[] = (
+            selectingNodeIds.length > 0
+              ? [...new Set([...selectingNodeIds, nodeId])]
+              : [nodeId]
+          ).filter(isNotNull);
+
+          changeNodes(
+            nodes.map((node): Node => {
+              return nodeIds.includes(node.id)
+                ? {
+                    ...node,
+                    visualInfo: {
+                      ...node.visualInfo,
+                      position: {
+                        ...node.visualInfo.position,
+                        zIndex: maxZIndex + 1,
+                      },
+                    },
+                  }
+                : node;
+            }),
+          );
+        })
+        .with('send-to-back', () => {
+          if (!context.data) {
+            return;
+          }
+
+          const { nodeId } = context.data as {
+            nodeId: string;
+          };
+
+          const minZIndex: number = nodes.reduce((minVal, node) => {
+            const zIndex: number =
+              node.visualInfo.position.zIndex &&
+              !Number.isNaN(node.visualInfo.position.zIndex)
+                ? node.visualInfo.position.zIndex
+                : 0;
+
+            return Math.min(minVal, zIndex);
+          }, 0);
+
+          const nodeIds: string[] = (
+            selectingNodeIds.length > 0
+              ? [...new Set([...selectingNodeIds, nodeId])]
+              : [nodeId]
+          ).filter(isNotNull);
+
+          changeNodes(
+            nodes.map((node): Node => {
+              return nodeIds.includes(node.id)
+                ? {
+                    ...node,
+                    visualInfo: {
+                      ...node.visualInfo,
+                      position: {
+                        ...node.visualInfo.position,
+                        zIndex: minZIndex - 1,
+                      },
+                    },
+                  }
+                : node;
+            }),
+          );
         })
         .with(P.string.startsWith('change-wire-type:'), () => {
           if (!context.data) {

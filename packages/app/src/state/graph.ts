@@ -355,7 +355,7 @@ export const graphState = atom<NodeGraph>({
       //         },
       //       },
       {
-        id: '2',
+        id: 'vyopwbzpnsanaan',
         type: 'prompt',
         subType: 'string',
         title: 'BotA Prompt',
@@ -399,7 +399,7 @@ export const graphState = atom<NodeGraph>({
         ): NodeOutputPortDef[] => {
           return [
             {
-              nodeId: '2',
+              nodeId: 'vyopwbzpnsanaan',
               name: 'prompt',
               type: ['string'],
             },
@@ -442,7 +442,7 @@ export const graphState = atom<NodeGraph>({
         },
       },
       {
-        id: '3',
+        id: 'absdfoawbfaaoewp',
         type: 'prompt',
         subType: 'string',
         title: 'BotB Prompt',
@@ -486,7 +486,7 @@ export const graphState = atom<NodeGraph>({
         ): NodeOutputPortDef[] => {
           return [
             {
-              nodeId: '3',
+              nodeId: 'absdfoawbfaaoewp',
               name: 'prompt',
               type: ['string'],
             },
@@ -529,7 +529,7 @@ export const graphState = atom<NodeGraph>({
         },
       },
       {
-        id: '4',
+        id: 'vbylbsauooanapw',
         type: 'chatlm',
         subType: 'openai',
         title: 'OpenAIChat',
@@ -574,7 +574,7 @@ export const graphState = atom<NodeGraph>({
         ): NodeInputPortDef[] {
           return [
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'prompt',
               type: ['string'],
             },
@@ -586,32 +586,32 @@ export const graphState = atom<NodeGraph>({
         ): NodeOutputPortDef[] => {
           return [
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'output',
               type: ['string'],
             },
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'message',
               type: ['string'],
             },
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'info',
               type: ['object', 'unknown'],
             },
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'completionTokens',
               type: ['number', 'unknown'],
             },
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'promptTokens',
               type: ['number', 'unknown'],
             },
             {
-              nodeId: '4',
+              nodeId: 'vbylbsauooanapw',
               name: 'totalTokens',
               type: ['number', 'unknown'],
             },
@@ -664,6 +664,62 @@ streaming: false`,
       },
     ],
     connections: [],
+    comments: [
+      {
+        id: 'hdafofndoiasn213nal',
+        visualInfo: {
+          position: {
+            x: 100,
+            y: 100,
+            zIndex: 1,
+          },
+          size: {
+            width: 500,
+            height: 500,
+          },
+          content: {
+            horitontal: 'start',
+            vertical: 'start',
+          },
+        },
+        title: 'Aggregating data with the Merge node',
+        description: 'Aggregating data with the Merge node',
+        type: 'code',
+        text: `var foo = function (bar) {
+  return bar++;
+};
+
+console.log(foo(5));`,
+        language: 'javascript',
+      },
+      {
+        id: 'bdsfbsidubfouis',
+        visualInfo: {
+          position: {
+            x: 800,
+            y: 800,
+            zIndex: 1,
+          },
+          size: {
+            width: 200,
+            height: 200,
+          },
+          content: {
+            horitontal: 'start',
+            vertical: 'start',
+          },
+        },
+        // title: "Aggregating data with the Merge node",
+        // description: "Aggregating data with the Merge node",
+        type: 'code',
+        text: `var foo = function (bar) {
+  return bar++;
+};
+
+console.log(foo(5));`,
+        language: 'javascript',
+      },
+    ],
   },
   effects: [persistAtom],
 });

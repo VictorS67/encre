@@ -9,6 +9,7 @@ export type DraggableNodeProps = {
   canvasZoom: number;
   isMinimized?: boolean;
   isSelecting?: boolean;
+  isPinning?: boolean;
   onNodeSizeChange?: (node: Node, width: number, height: number) => void;
   onNodeSelect?: (node: Node) => void;
   onNodeMouseOver?: (
@@ -39,6 +40,7 @@ export type VisualNodeProps = {
   isOverlay?: boolean;
   isMinimized?: boolean;
   isSelecting?: boolean;
+  isPinning?: boolean;
   scale?: number;
   canvasZoom: number;
   onNodeSizeChange?: (width: number, height: number) => void;
@@ -72,6 +74,7 @@ export type VisualNodeContentProps = {
   node: Node;
   connections?: NodeConnection[];
   isMinimized?: boolean;
+  isPinning?: boolean;
   canvasZoom: number;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;

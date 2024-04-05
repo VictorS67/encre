@@ -2,7 +2,7 @@ import {
   ContextMenuConfigContext,
   ContextMenuConfigContextData,
 } from './contextmenu.type';
-import { Node, NodeConnection } from './studio.type';
+import { GraphComment, Node, NodeConnection } from './studio.type';
 
 export type CanvasPosition = {
   x: number;
@@ -25,9 +25,12 @@ export type CanvasViewBounds = {
 export type NodeCanvasProps = {
   nodes: Node[];
   connections: NodeConnection[];
+  comments: GraphComment[];
   onNodesChange: (newNodes: Node[]) => void;
+  onCommentsChange: (newComments: GraphComment[]) => void;
   onConnectionsChange: (newConnections: NodeConnection[]) => void;
   onNodesSelect: (newNodes: Node[], isMulti?: boolean) => void;
+  onCommentsSelect: (newComments: GraphComment[], isMulti?: boolean) => void;
   onWiresSelect: (newWireIds: string[], isMulti?: boolean) => void;
   onContextMenuSelect?: (
     menuItemId: string,
