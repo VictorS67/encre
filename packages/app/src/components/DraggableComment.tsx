@@ -18,6 +18,7 @@ export const DraggableComment: FC<DraggableCommentProps> = ({
   isSelecting = false,
   onCommentSizeChange,
   onCommentColorChange,
+  onCommentContentChange,
   onCommentSelect,
 }: DraggableCommentProps) => {
   const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
@@ -50,6 +51,9 @@ export const DraggableComment: FC<DraggableCommentProps> = ({
         )}
         onCommentColorChange={useStableCallback(
           (color) => onCommentColorChange?.(comment, color),
+        )}
+        onCommentContentChange={useStableCallback(
+          (content) => onCommentContentChange?.(comment, content),
         )}
         onCommentSelect={useStableCallback(() => onCommentSelect?.(comment))}
       />

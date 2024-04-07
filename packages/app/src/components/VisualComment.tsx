@@ -12,7 +12,7 @@ import React, {
 import styled from '@emotion/styled';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { CommentContentBody } from './CommentContentBody';
 import { ResizeBox } from './ResizeBox';
@@ -21,9 +21,15 @@ import { useRandomColor } from '../hooks/useRandomColor';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
 import {
+  commentContentFromCommentIdState,
+  commentContentMapState,
+  updateCommentContentState,
+} from '../state/comment';
+import {
   VisualCommentContentProps,
   VisualCommentProps,
 } from '../types/comment.type';
+import { GraphComment } from '../types/studio.type';
 
 const VisualCommentContainer = styled.div`
   border-radius: 7px;
@@ -182,33 +188,93 @@ export const VisualComment = memo(
       canvasZoom,
       onCommentSizeChange,
       onCommentColorChange,
+      onCommentContentChange,
       onCommentSelect,
     }: VisualCommentProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) {
     const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
     const { pickRandomCommentColor } = useRandomColor();
+    const commentContent = useRecoilValue(
+      commentContentFromCommentIdState(comment.id),
+    );
+    const updateCommentContent = useSetRecoilState(updateCommentContentState);
+    const [content, setContent] = useState<
+      GraphComment['visualInfo']['content']
+    >({});
 
     useEffect(() => {
-      let pickedColor: string;
-      if (!comment.visualInfo.content?.color) {
-        pickedColor = pickRandomCommentColor();
-        onCommentColorChange?.(pickedColor);
+      let shouldUpdate = false;
+      let tempContent: GraphComment['visualInfo']['content'] = {};
+      if (commentContent) {
+        if (
+          !commentContent.color ||
+          comment.visualInfo.content?.color !== commentContent.color
+        ) {
+          tempContent.color =
+            comment.visualInfo.content?.color ??
+            (pickRandomCommentColor() as any);
+
+          shouldUpdate = true;
+        } else {
+          tempContent.color = commentContent.color;
+        }
+
+        if (
+          !commentContent.horitontal ||
+          comment.visualInfo.content?.horitontal !== commentContent.horitontal
+        ) {
+          tempContent.horitontal =
+            comment.visualInfo.content?.horitontal ?? 'start';
+
+          shouldUpdate = true;
+        } else {
+          tempContent.horitontal = commentContent.horitontal;
+        }
+
+        if (
+          !commentContent.vertical ||
+          comment.visualInfo.content?.vertical !== commentContent.vertical
+        ) {
+          tempContent.vertical =
+            comment.visualInfo.content?.vertical ?? 'start';
+
+          shouldUpdate = true;
+        } else {
+          tempContent.vertical = commentContent.vertical;
+        }
       } else {
-        pickedColor = comment.visualInfo.content?.color;
+        tempContent = {
+          color:
+            comment.visualInfo.content?.color ??
+            (pickRandomCommentColor() as any),
+          horitontal: comment.visualInfo.content?.horitontal ?? 'start',
+          vertical: comment.visualInfo.content?.vertical ?? 'start',
+        };
+
+        shouldUpdate = true;
       }
 
-      commentColorCache.set(comment.id, pickedColor);
+      if (shouldUpdate) {
+        onCommentContentChange?.(tempContent);
+        updateCommentContent({ id: comment.id, commentContent: tempContent });
+      }
+
+      setContent(tempContent);
+      commentColorCache.set(comment.id, tempContent.color as any);
     }, [
-      commentColorCache,
+      commentContent,
       comment.visualInfo.content?.color,
+      comment.visualInfo.content?.horitontal,
+      comment.visualInfo.content?.vertical,
       pickRandomCommentColor,
+      commentColorCache,
     ]);
 
     const style = useMemo(() => {
       const color = commentColorCache.has(comment.id)
         ? commentColorCache.get(comment.id)
-        : comment.visualInfo.content?.color ?? 'yellow';
+        : content?.color ?? 'yellow';
 
       const styling: CSSProperties = {
         opacity: isDragging ? '0' : '',
@@ -231,8 +297,8 @@ export const VisualComment = memo(
       comment.visualInfo.size.width,
       comment.visualInfo.size.height,
       comment.visualInfo.position.zIndex,
-      comment.visualInfo.content?.color,
       commentColorCache,
+      content,
       isDragging,
       scale,
     ]);
@@ -264,6 +330,7 @@ export const VisualComment = memo(
           minimized: isMinimized,
         })}
         ref={commentRef}
+        // color={content?.color ?? "yellow"}
         style={style}
         {...attributes}
         data-commentid={comment.id}

@@ -618,6 +618,21 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     );
   };
 
+  const onCommentContentChange = (
+    comment: GraphComment,
+    content: GraphComment['visualInfo']['content'],
+  ) => {
+    onCommentsChange(
+      produce(comments, (draft) => {
+        const commentToChange = draft.find((c) => c.id === comment.id);
+
+        if (commentToChange) {
+          commentToChange.visualInfo.content = content;
+        }
+      }),
+    );
+  };
+
   const onNodeSelect = useCallback(
     (node: Node) => {
       onNodesSelect([node], isDraggingMultipleNodes);
@@ -751,6 +766,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                     )}
                     onCommentSizeChange={onCommentSizeChange}
                     onCommentColorChange={onCommentColorChange}
+                    onCommentContentChange={onCommentContentChange}
                     onCommentSelect={onCommentSelect}
                   />
                 );

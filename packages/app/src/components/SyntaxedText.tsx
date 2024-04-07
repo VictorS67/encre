@@ -22,7 +22,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
   const [completionDisposable, setCompletionDisposable] =
     useState<monaco.IDisposable>();
 
-  const _keywords = keywords;
+  // const _keywords = keywords;
 
   useEffect(() => {
     return () => {
@@ -48,11 +48,11 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
 
   useLayoutEffect(() => {
     if (!tokenDisposable) {
-      setTokenDisposable(defineTokens(_keywords));
+      setTokenDisposable(defineTokens(keywords));
     }
 
     if (!completionDisposable) {
-      setCompletionDisposable(defineSuggestions(_keywords));
+      setCompletionDisposable(defineSuggestions(keywords));
     }
 
     const colorMode = getColorMode();

@@ -9,6 +9,7 @@ import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 
 import { useContextMenuAddNodeConfigContexts } from './useContextMenuAddNodeConfigContexts';
 import { useContextMenuChangeCommentColorConfigContexts } from './useContextMenuChangeCommentColorConfigContexts';
+import { useContextMenuMoveToNodeConfigContexts } from './useContextMenuMoveToNodeConfigContexts';
 import { useHotKeyDisplay } from './useHotKeyDisplay';
 import { ContextMenuConfigContexts } from '../types/contextmenu.type';
 import { HOTKEY } from '../types/hotkey.type';
@@ -16,6 +17,7 @@ import { typeOf } from '../utils/safeTypes';
 
 export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
   const avaliableNodes = useContextMenuAddNodeConfigContexts();
+  const currentNodes = useContextMenuMoveToNodeConfigContexts();
   const commentColors = useContextMenuChangeCommentColorConfigContexts();
 
   const contexts: ContextMenuConfigContexts = useMemo(
@@ -45,6 +47,11 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
                 name: 'Paste comment',
                 tip: useHotKeyDisplay([HOTKEY.CTRL, 'V']),
               },
+              {
+                id: 'delete-comment',
+                name: 'Remove comment',
+                tip: useHotKeyDisplay(['Del']),
+              },
             ],
           },
           {
@@ -53,14 +60,67 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
             },
             items: [
               {
-                id: 'change-background-color',
-                name: 'Change background color',
+                id: 'change-comment-color',
+                name: 'Change comment color',
                 contexts: [
                   {
                     metadata: {
                       label: 'type',
                     },
                     items: commentColors,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            metadata: {
+              label: 'item',
+            },
+            items: [
+              {
+                id: 'add-node',
+                name: 'Add node',
+                contexts: [
+                  {
+                    metadata: {
+                      label: 'node-type',
+                    },
+                    items: avaliableNodes,
+                  },
+                ],
+              },
+              {
+                id: 'add-comment',
+                name: 'Add comment',
+                contexts: [
+                  {
+                    metadata: {
+                      label: 'type',
+                    },
+                    items: [
+                      {
+                        id: 'add-comment:plain',
+                        name: 'Plain Text',
+                        data: {
+                          commentType: 'plain',
+                        },
+                      },
+                      {
+                        id: 'add-comment:markdown',
+                        name: 'Markdown',
+                        data: {
+                          commentType: 'markdown',
+                        },
+                      },
+                      {
+                        id: 'add-comment:code',
+                        name: 'Code Snippet',
+                        data: {
+                          commentType: 'code',
+                        },
+                      },
+                    ],
                   },
                 ],
               },
@@ -286,8 +346,38 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
                 tip: useHotKeyDisplay([HOTKEY.CTRL, 'G']),
               },
               {
-                id: 'add-group',
+                id: 'add-comment',
                 name: 'Add comment',
+                contexts: [
+                  {
+                    metadata: {
+                      label: 'type',
+                    },
+                    items: [
+                      {
+                        id: 'add-comment:plain',
+                        name: 'Plain Text',
+                        data: {
+                          commentType: 'plain',
+                        },
+                      },
+                      {
+                        id: 'add-comment:markdown',
+                        name: 'Markdown',
+                        data: {
+                          commentType: 'markdown',
+                        },
+                      },
+                      {
+                        id: 'add-comment:code',
+                        name: 'Code Snippet',
+                        data: {
+                          commentType: 'code',
+                        },
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
@@ -299,6 +389,14 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
               {
                 id: 'move-to-node',
                 name: 'Move to node',
+                contexts: [
+                  {
+                    metadata: {
+                      label: 'node title',
+                    },
+                    items: currentNodes,
+                  },
+                ],
               },
             ],
           },

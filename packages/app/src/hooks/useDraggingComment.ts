@@ -9,6 +9,7 @@ import {
   commentMapState,
   commentsState,
   draggingCommentsState,
+  isDraggingCommentsOnlyState,
   isDraggingMultipleCommentsState,
   selectingCommentIdsState,
 } from '../state/comment';
@@ -27,6 +28,7 @@ export function useDraggingComment(
   const isDraggingMultipleComments = useRecoilValue(
     isDraggingMultipleCommentsState,
   );
+  const isDraggingCommentsOnly = useRecoilValue(isDraggingCommentsOnlyState);
   const [selectingCommentIds, setSelectingCommentIds] = useRecoilState(
     selectingCommentIdsState,
   );
@@ -100,38 +102,7 @@ export function useDraggingComment(
         }
       });
 
-      const nodesToDragInComments: Node[] = [];
-      const nodeIdsToDragInComments: string[] = [];
-      nodes.forEach((node) => {
-        const intersects: boolean = commentsToDrag.some(
-          (comment) =>
-            !(
-              node.visualInfo.position.x + node.visualInfo.size.width <
-                comment.visualInfo.position.x ||
-              comment.visualInfo.position.x + comment.visualInfo.size.width <
-                node.visualInfo.position.x ||
-              node.visualInfo.position.y + node.visualInfo.size.height <
-                comment.visualInfo.position.y ||
-              comment.visualInfo.position.y + comment.visualInfo.size.height <
-                node.visualInfo.position.y
-            ),
-        );
-
-        if (
-          intersects &&
-          !nodeIdsToDragInComments.includes(node.id) &&
-          isNotNull(nodeMap[node.id])
-        ) {
-          nodesToDragInComments.push(node);
-          nodeIdsToDragInComments.push(node.id);
-        }
-      });
-
-      // const nodesToDragInComments: Node[] =
-      //   useNodesToDragInComments(commentsToDrag);
-
       setDraggingComments(commentsToDrag);
-      setDraggingNodes(nodesToDragInComments);
       setSelectingCommentIds(
         isDraggingMultipleComments
           ? [
@@ -149,16 +120,6 @@ export function useDraggingComment(
           comment.visualInfo.position.zIndex &&
           !Number.isNaN(comment.visualInfo.position.zIndex)
             ? comment.visualInfo.position.zIndex
-            : 0;
-
-        return Math.max(maxVal, zIndex);
-      }, 0);
-
-      const maxZIndexInNodes: number = nodes.reduce((maxVal, node) => {
-        const zIndex: number =
-          node.visualInfo.position.zIndex &&
-          !Number.isNaN(node.visualInfo.position.zIndex)
-            ? node.visualInfo.position.zIndex
             : 0;
 
         return Math.max(maxVal, zIndex);
@@ -186,29 +147,71 @@ export function useDraggingComment(
         }),
       );
 
-      onNodesChange(
-        nodes.map((node): Node => {
-          const isDragging: boolean = nodesToDragInComments.some(
-            (n) => node.id === n.id,
+      if (!isDraggingCommentsOnly) {
+        const nodesToDragInComments: Node[] = [];
+        const nodeIdsToDragInComments: string[] = [];
+        nodes.forEach((node) => {
+          const intersects: boolean = commentsToDrag.some(
+            (comment) =>
+              !(
+                node.visualInfo.position.x + node.visualInfo.size.width <
+                  comment.visualInfo.position.x ||
+                comment.visualInfo.position.x + comment.visualInfo.size.width <
+                  node.visualInfo.position.x ||
+                node.visualInfo.position.y + node.visualInfo.size.height <
+                  comment.visualInfo.position.y ||
+                comment.visualInfo.position.y + comment.visualInfo.size.height <
+                  node.visualInfo.position.y
+              ),
           );
 
-          return isDragging
-            ? {
-                ...node,
-                visualInfo: {
-                  ...node.visualInfo,
-                  position: {
-                    ...node.visualInfo.position,
-                    zIndex: maxZIndexInNodes + 1,
+          if (
+            intersects &&
+            !nodeIdsToDragInComments.includes(node.id) &&
+            isNotNull(nodeMap[node.id])
+          ) {
+            nodesToDragInComments.push(node);
+            nodeIdsToDragInComments.push(node.id);
+          }
+        });
+
+        setDraggingNodes(nodesToDragInComments);
+
+        const maxZIndexInNodes: number = nodes.reduce((maxVal, node) => {
+          const zIndex: number =
+            node.visualInfo.position.zIndex &&
+            !Number.isNaN(node.visualInfo.position.zIndex)
+              ? node.visualInfo.position.zIndex
+              : 0;
+
+          return Math.max(maxVal, zIndex);
+        }, 0);
+
+        onNodesChange(
+          nodes.map((node): Node => {
+            const isDragging: boolean = nodesToDragInComments.some(
+              (n) => node.id === n.id,
+            );
+
+            return isDragging
+              ? {
+                  ...node,
+                  visualInfo: {
+                    ...node.visualInfo,
+                    position: {
+                      ...node.visualInfo.position,
+                      zIndex: maxZIndexInNodes + 1,
+                    },
                   },
-                },
-              }
-            : node;
-        }),
-      );
+                }
+              : node;
+          }),
+        );
+      }
     },
     [
       isDraggingMultipleComments,
+      isDraggingCommentsOnly,
       selectingCommentIds,
       nodes,
       nodeMap,
@@ -242,7 +245,7 @@ export function useDraggingComment(
       onCommentsChange(
         produce(comments, (draft) => {
           for (const commentId of draggingCommentIds) {
-            const commentToChange = draft.find((n) => n.id === commentId);
+            const commentToChange = draft.find((c) => c.id === commentId);
 
             if (commentToChange) {
               commentToChange.visualInfo.position.x += delta.x;

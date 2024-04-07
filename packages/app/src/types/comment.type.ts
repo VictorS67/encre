@@ -14,6 +14,10 @@ export type DraggableCommentProps = {
     height: number,
   ) => void;
   onCommentColorChange?: (comment: GraphComment, color: string) => void;
+  onCommentContentChange?: (
+    comment: GraphComment,
+    content: GraphComment['visualInfo']['content'],
+  ) => void;
   onCommentSelect?: (comment: GraphComment) => void;
 };
 
@@ -31,6 +35,9 @@ export type VisualCommentProps = {
   scale?: number;
   canvasZoom: number;
   onCommentSizeChange?: (width: number, height: number) => void;
+  onCommentContentChange?: (
+    content: GraphComment['visualInfo']['content'],
+  ) => void;
   onCommentColorChange?: (color: string) => void;
   onCommentSelect?: () => void;
 };

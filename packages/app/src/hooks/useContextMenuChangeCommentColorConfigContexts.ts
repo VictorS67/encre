@@ -8,7 +8,7 @@ export function useContextMenuChangeCommentColorConfigContexts() {
   const { original, remaining } = useRecoilValue(commentColorsState);
 
   return original.map((color) => ({
-    id: `change-background-color:${color}`,
+    id: `change-comment-color:${color}`,
     name: color,
     data: {
       colorType: color,

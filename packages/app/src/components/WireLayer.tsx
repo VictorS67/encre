@@ -301,7 +301,7 @@ export const WireLayer: FC<WireLayerProps> = ({
           return (
             <ErrorBoundary
               fallback={<></>}
-              key={`wire-${c.toNodeId}-${c.toPortName}`}
+              key={`wire-${c.fromNodeId}-${c.fromPortName}-${c.toNodeId}-${c.toPortName}`}
             >
               <RenderedWire
                 connection={c}

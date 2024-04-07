@@ -1,17 +1,31 @@
 import React, { CSSProperties, FC, memo, Suspense, useMemo } from 'react';
 
+import { useRecoilValue } from 'recoil';
+
 import { LazySyntaxedText } from './LazyComponents';
 import { useMarkdown } from '../hooks/useMarkdown';
+import { commentContentFromCommentIdState } from '../state/comment';
 import { CommentContentBodyProps } from '../types/commentbody.type';
 import { GraphComment, UIContext } from '../types/studio.type';
 
 export const CommentContentBody: FC<CommentContentBodyProps> = memo(
   ({ comment }: CommentContentBodyProps) => {
+    const commentContent = useRecoilValue(
+      commentContentFromCommentIdState(comment.id),
+    );
+
     let ui: UIContext;
     if (comment.type === 'plain' && comment.text.startsWith('::markdown')) {
       ui = {
         type: 'markdown',
         text: comment.text.replace(/^::markdown/, '').trim(),
+      };
+    } else if (comment.type === 'code') {
+      ui = {
+        type: comment.type,
+        text: comment.text,
+        language: comment.language,
+        keywords: comment.keywords,
       };
     } else {
       ui = {
@@ -23,13 +37,16 @@ export const CommentContentBody: FC<CommentContentBodyProps> = memo(
     return (
       <div className="comment-content-body">
         {ui.type === 'plain' && (
-          <PlainTextCommentContentBody comment={comment} {...ui} />
+          <PlainTextCommentContentBody
+            commentContent={commentContent}
+            {...ui}
+          />
         )}
         {ui.type === 'markdown' && (
-          <MarkdownCommentContentBody comment={comment} {...ui} />
+          <MarkdownCommentContentBody commentContent={commentContent} {...ui} />
         )}
         {ui.type === 'code' && (
-          <CodeCommentContentBody comment={comment} {...ui} />
+          <CodeCommentContentBody commentContent={commentContent} {...ui} />
         )}
       </div>
     );
@@ -40,17 +57,20 @@ CommentContentBody.displayName = 'CommentContentBody';
 
 /* eslint-disable react/prop-types */
 export const PlainTextCommentContentBody: FC<
-  { comment: GraphComment } & Extract<UIContext, { type: 'plain' }>
-> = memo(({ comment, text }) => {
+  { commentContent: GraphComment['visualInfo']['content'] } & Extract<
+    UIContext,
+    { type: 'plain' }
+  >
+> = memo(({ commentContent, text }) => {
   const contentTextStyle = useMemo(() => {
-    const hAlign = comment.visualInfo.content?.horitontal ?? 'start';
+    const hAlign = commentContent?.horitontal ?? 'start';
 
     const styling: CSSProperties = {
       textAlign: hAlign,
     };
 
     return styling;
-  }, [comment.visualInfo.content?.horitontal]);
+  }, [commentContent?.horitontal]);
 
   return (
     <pre
@@ -71,18 +91,21 @@ PlainTextCommentContentBody.displayName = 'PlainTextCommentContentBody';
 
 /* eslint-disable react/prop-types */
 export const MarkdownCommentContentBody: FC<
-  { comment: GraphComment } & Extract<UIContext, { type: 'markdown' }>
-> = memo(({ comment, text }) => {
+  { commentContent: GraphComment['visualInfo']['content'] } & Extract<
+    UIContext,
+    { type: 'markdown' }
+  >
+> = memo(({ commentContent, text }) => {
   const markdownBody = useMarkdown(text);
   const contentTextStyle = useMemo(() => {
-    const hAlign = comment.visualInfo.content?.horitontal ?? 'start';
+    const hAlign = commentContent?.horitontal ?? 'start';
 
     const styling: CSSProperties = {
       textAlign: hAlign,
     };
 
     return styling;
-  }, [comment.visualInfo.content?.horitontal]);
+  }, [commentContent?.horitontal]);
 
   return (
     <div
@@ -100,17 +123,20 @@ MarkdownCommentContentBody.displayName = 'MarkdownCommentContentBody';
 
 /* eslint-disable react/prop-types */
 export const CodeCommentContentBody: FC<
-  { comment: GraphComment } & Extract<UIContext, { type: 'code' }>
-> = memo(({ comment, text, language, keywords }) => {
+  { commentContent: GraphComment['visualInfo']['content'] } & Extract<
+    UIContext,
+    { type: 'code' }
+  >
+> = memo(({ commentContent, text, language, keywords }) => {
   const contentTextStyle = useMemo(() => {
-    const hAlign = comment.visualInfo.content?.horitontal ?? 'start';
+    const hAlign = commentContent?.horitontal ?? 'start';
 
     const styling: CSSProperties = {
       textAlign: hAlign,
     };
 
     return styling;
-  }, [comment.visualInfo.content?.horitontal]);
+  }, [commentContent?.horitontal]);
 
   return (
     <Suspense fallback={<div />}>

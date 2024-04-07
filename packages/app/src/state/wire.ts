@@ -92,12 +92,3 @@ export const removeWireDataState = selector<string>({
     }
   },
 });
-
-export const currSelectingWireIdsState = selector({
-  key: 'currSelectingWireIdsState',
-  get: ({ get }) => {
-    const selectingWireIds = get(selectingWireIdsState);
-
-    return selectingWireIds;
-  },
-});

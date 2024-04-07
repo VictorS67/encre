@@ -1,4 +1,4 @@
-import { atom, DefaultValue, selector } from 'recoil';
+import { atom, DefaultValue, selector, selectorFamily } from 'recoil';
 
 import { graphState } from './graph';
 import { NodeGraph } from '../types/graph.type';
@@ -32,6 +32,13 @@ export const commentMapState = selector({
   },
 });
 
+export const commentContentMapState = atom<
+  Record<string, GraphComment['visualInfo']['content']>
+>({
+  key: 'commentContentMapState',
+  default: {},
+});
+
 export const selectingCommentIdsState = atom<string[]>({
   key: 'selectingCommentIdsState',
   default: [],
@@ -44,6 +51,11 @@ export const draggingCommentsState = atom<GraphComment[]>({
 
 export const isDraggingMultipleCommentsState = atom<boolean>({
   key: 'isDraggingMultipleCommentsState',
+  default: false,
+});
+
+export const isDraggingCommentsOnlyState = atom<boolean>({
+  key: 'isDraggingCommentsOnlyState',
   default: false,
 });
 
@@ -87,5 +99,60 @@ export const commentColorsState = atom<{
       'silver',
       'dark',
     ],
+  },
+});
+
+export const commentContentFromCommentIdState = selectorFamily<
+  GraphComment['visualInfo']['content'] | undefined,
+  string | undefined
+>({
+  key: 'commentContentFromCommentIdState',
+  get:
+    (commentId: string | undefined) =>
+    ({ get }) => {
+      return commentId ? get(commentContentMapState)[commentId] : undefined;
+    },
+});
+
+export const updateCommentContentState = selector<{
+  id: string;
+  commentContent: GraphComment['visualInfo']['content'];
+}>({
+  key: 'updateCommentContentState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateCommentContentState should only be used to update comment map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+    const id: string = newVal.id;
+    const commentContent: GraphComment['visualInfo']['content'] =
+      newVal.commentContent;
+
+    const currMap = get(commentContentMapState);
+    const updatedMap = { ...currMap, [id]: commentContent };
+    set(commentContentMapState, updatedMap);
+  },
+});
+
+export const removeCommentContentState = selector<string>({
+  key: 'removeCommentContentState',
+  get: ({ get }) => {
+    throw new Error(
+      'removeCommentContentState should only be used when removing from comment map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+
+    const id: string = newVal;
+    const currMap = get(commentContentMapState);
+
+    if (currMap[id]) {
+      const updatedMap = { ...currMap };
+      delete updatedMap[id];
+      set(commentContentMapState, updatedMap);
+    }
   },
 });
