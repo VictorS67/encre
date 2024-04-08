@@ -1,4 +1,28 @@
+import { SubGraph } from "../graph";
+import { NodeConnection } from "../nodes";
+import { globalNodeRegistry } from "../nodes/registration";
 
+
+const pdfLoaderNode = globalNodeRegistry.createDynamic("loader", "pdf");
+const textSplitterNode = globalNodeRegistry.createDynamic(
+  "splitter",
+  "text"
+);
+
+const connection: NodeConnection = {
+  fromNodeId: pdfLoaderNode.id,
+  fromPortName: "contexts",
+  toNodeId: textSplitterNode.id,
+  toPortName: "input",
+};
+
+const graph = new SubGraph({
+  nodes: [pdfLoaderNode, textSplitterNode],
+  connections: [connection]
+})
+
+const flattenNodes = graph.flattenNodes;
+const flattenConns = graph.flattenConnections;
 
 let mem_usage: number = 0;
 let max_mem_usage: number = 0;
@@ -64,7 +88,9 @@ function find_set(node: string, group_set: string[][]): string[] | null {
 function topo_search(workflow: component.Workflow, in_degree_vec: { [key: string]: number }, group_set: string[][]): [{ [key: string]: [number, number] }, { [key: string]: [string, number] }] {
     const dist_vec: { [key: string]: [number, number] } = {};
     const prev_vec: { [key: string]: [string, number] } = {};
-    let q: string[];
+    // let q: string[];
+
+    let q: string[] = [];
 
     for (const name of workflow.start_functions) {
         q.push(workflow.nodes[name]);
@@ -265,7 +291,15 @@ function get_max_mem_usage(workflow: component.Workflow): number {
 function get_grouping_config(workflow: component.Workflow): [NodeInfo, { [key: string]: any }, { [key: string]: any }, Set<string>] {
    
 
-    const node_info_list: any = yaml.load(open('node_info.yaml'), Loader=yaml.FullLoader);
+    // const node_info_list: any = yaml.load(open('node_info.yaml'), Loader=yaml.FullLoader);
+   
+    const node_info_list = {
+        nodes: [
+            { worker_address: "worker1", scale_limit: 100 },
+            { worker_address: "worker2", scale_limit: 100 },
+            { worker_address: "worker3", scale_limit: 100},
+        ],
+    };
     const node_info_dict: NodeInfo = {};
     for (const node_info of node_info_list.nodes) {
         node_info_dict[node_info.worker_address] = node_info.scale_limit;
