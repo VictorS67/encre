@@ -8,7 +8,6 @@ import {
 } from '../state/comment';
 
 export function useChangeCommentContent() {
-  // const updateWireData = useSetRecoilState(updateWireDataState);
   const commentContentMap = useRecoilValue(commentContentMapState);
   const updateCommentContent = useSetRecoilState(updateCommentContentState);
 

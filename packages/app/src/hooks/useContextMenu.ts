@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { showContextMenuState } from '../state/contextmenu';
-import { nodeMapState, selectingNodeIdsState } from '../state/node';
-import { selectingWireIdsState, wireDataMapState } from '../state/wire';
+import { selectingNodeIdsState } from '../state/node';
+import { selectingWireIdsState } from '../state/wire';
 import { ContextMenuData, ContextMenu } from '../types/contextmenu.type';
-import { isNotNull } from '../utils/safeTypes';
+
 /**
  * `useContextMenu` hook
  *
@@ -52,8 +52,6 @@ import { isNotNull } from '../utils/safeTypes';
  * </div>
  */
 export function useContextMenu() {
-  // const nodeMap = useRecoilValue(nodeMapState);
-  // const wireDataMap = useRecoilValue(wireDataMapState);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [showContextMenu, setShowContextMenu] =
     useRecoilState(showContextMenuState);

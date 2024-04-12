@@ -7,9 +7,9 @@ import { NodeCanvas } from './NodeCanvas';
 import { useContextMenuNodeGraphHandler } from '../hooks/useContextMenuNodeGraphHandler';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { commentsState, selectingCommentIdsState } from '../state/comment';
-import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
+import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
-import { selectingWireIdsState, wireDataMapState } from '../state/wire';
+import { selectingWireIdsState } from '../state/wire';
 import { GraphComment, Node } from '../types/studio.type';
 
 export const NodeGraphBuilder: FC = () => {

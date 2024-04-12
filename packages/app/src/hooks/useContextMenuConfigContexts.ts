@@ -379,6 +379,11 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
                   },
                 ],
               },
+              {
+                id: 'paste-comment',
+                name: 'Paste comment',
+                tip: useHotKeyDisplay([HOTKEY.CTRL, 'V']),
+              },
             ],
           },
           {

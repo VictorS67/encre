@@ -53,8 +53,8 @@ export function useDuplicateNodes() {
             ...node.visualInfo,
             position: {
               ...node.visualInfo.position,
-              x: node.visualInfo.position.x,
-              y: node.visualInfo.position.y + 200,
+              x: node.visualInfo.position.x + 100,
+              y: node.visualInfo.position.y + 100,
             },
           },
           title: node.title,

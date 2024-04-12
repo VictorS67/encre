@@ -1,10 +1,7 @@
-import React, { FC, useLayoutEffect } from 'react';
+import React, { FC } from 'react';
 
-import { useToggle } from 'ahooks';
 import clsx from 'clsx';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { updateWireDataState, wireDataFromWireIdState } from '../../state/wire';
 import { BaseWireProps, WireData } from '../../types/wire.type';
 import { WirePort } from '../WirePort';
 

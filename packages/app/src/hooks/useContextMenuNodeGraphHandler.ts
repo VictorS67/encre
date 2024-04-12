@@ -16,7 +16,9 @@ import { usePasteNodes } from './usePasteNodes';
 import { useStableCallback } from './useStableCallback';
 import { canvasPositionState } from '../state/canvas';
 import { commentsState, selectingCommentIdsState } from '../state/comment';
+import { showContextMenuState } from '../state/contextmenu';
 import {
+  collapsingNodeIdsState,
   nodeMapState,
   nodesState,
   pinningNodeIdsState,
@@ -41,6 +43,7 @@ import { fakeId } from '../utils/fakeId';
 import { isNotNull } from '../utils/safeTypes';
 
 export function useContextMenuNodeGraphHandler() {
+  const setShowContextMenu = useSetRecoilState(showContextMenuState);
   const [nodes, setNodes] = useRecoilState(nodesState);
   const [comments, setComments] = useRecoilState(commentsState);
   const [connections, setConnections] = useRecoilState(connectionsState);
@@ -56,6 +59,7 @@ export function useContextMenuNodeGraphHandler() {
   );
   const removeWireData = useSetRecoilState(removeWireDataState);
   const setPinningNodeIds = useSetRecoilState(pinningNodeIdsState);
+  const setCollapsingNodeIds = useSetRecoilState(collapsingNodeIdsState);
   const [canvasPosition, setCanvasPosition] =
     useRecoilState(canvasPositionState);
 
@@ -345,6 +349,8 @@ attr6: `,
       meta: { x: number; y: number },
       data: unknown,
     ) => {
+      let shouldCloseContextMenu = true;
+
       match(menuItemId)
         .with(P.string.startsWith('add-comment:'), () => {
           const { commentType } = data as {
@@ -521,6 +527,31 @@ attr6: `,
             });
           }
         })
+        .with('collapse-expand-node', () => {
+          if (!context.data) {
+            return;
+          }
+
+          const { nodeId } = context.data as {
+            nodeId: string;
+          };
+
+          const nodeIds: string[] = (
+            selectingNodeIds.length > 0
+              ? [...new Set([...selectingNodeIds, nodeId])]
+              : [nodeId]
+          ).filter(isNotNull);
+
+          for (const nId of nodeIds) {
+            setCollapsingNodeIds((prev) => {
+              if (prev.includes(nId)) {
+                return prev.filter((n) => n !== nId);
+              }
+
+              return [...prev, nId];
+            });
+          }
+        })
         .with('bring-to-front', () => {
           if (!context.data) {
             return;
@@ -674,8 +705,13 @@ attr6: `,
           setSelectingWireIds([]);
         })
         .otherwise(() => {
+          shouldCloseContextMenu = false;
           console.log(`Unknown menu item selected: ${menuItemId}`);
         });
+
+      if (shouldCloseContextMenu) {
+        setShowContextMenu(false);
+      }
     },
   );
 }

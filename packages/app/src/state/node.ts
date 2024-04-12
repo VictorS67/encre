@@ -65,13 +65,13 @@ export const draggingNodesInCommentsState = atom<Node[]>({
   default: [],
 });
 
-// export const nodeIdsToDragInCommentState = atom<Record<string, string[]>>({
-//   key: 'nodeIdsToDragInCommentState',
-//   default: {}
-// })
-
 export const pinningNodeIdsState = atom<string[]>({
   key: 'pinningNodeIdsState',
+  default: [],
+});
+
+export const collapsingNodeIdsState = atom<string[]>({
+  key: 'collapsingNodeIdsState',
   default: [],
 });
 

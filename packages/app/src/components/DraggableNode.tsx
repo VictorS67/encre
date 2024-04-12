@@ -16,6 +16,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   isMinimized,
   isSelecting = false,
   isPinning,
+  isCollapsed,
   onNodeSizeChange,
   onNodeSelect,
   onNodeMouseOver,
@@ -44,6 +45,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         isMinimized={isMinimized}
         isSelecting={isSelecting}
         isPinning={isPinning}
+        isCollapsed={isCollapsed}
         canvasZoom={canvasZoom}
         onNodeSizeChange={useStableCallback(
           (width, height) => onNodeSizeChange?.(node, width, height),

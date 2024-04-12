@@ -40,6 +40,14 @@ export function useDuplicateComments() {
 
         const newComment: GraphComment = {
           ...comment,
+          visualInfo: {
+            ...comment.visualInfo,
+            position: {
+              ...comment.visualInfo.position,
+              x: comment.visualInfo.position.x + 100,
+              y: comment.visualInfo.position.y + 100,
+            },
+          },
           id: newCommentId,
         };
 

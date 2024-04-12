@@ -9,6 +9,7 @@ import { NodePortGroupProps } from '../types/port.type';
 import { NodeInputPortDef, NodeOutputPortDef } from '../types/studio.type';
 
 const NodePortGrp = styled.div<{
+  isCollapsed?: boolean;
   nodeWidth: number;
 }>`
   display: flex;
@@ -25,11 +26,22 @@ const NodePortGrp = styled.div<{
   }
 
   .input-ports .port {
+    ${(props) =>
+      props.isCollapsed
+        ? `position: absolute;
+    top: 26px;`
+        : ''}
     justify-content: flex-start;
     margin-right: auto;
   }
 
   .output-ports .port {
+    ${(props) =>
+      props.isCollapsed
+        ? `position: absolute;
+    top: 26px;
+    right: -11px;`
+        : ''}
     justify-content: flex-end;
     margin-left: auto;
   }
@@ -83,6 +95,7 @@ const NodePortGrp = styled.div<{
     align-self: strech;
     cursor: default;
 
+    max-width: ${(props) => props.nodeWidth / 2 - 17}px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -147,6 +160,7 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
     attributeListeners,
     draggingWire,
     draggingWireClosestPort,
+    isCollapsed,
     onWireStartDrag,
     onWireEndDrag,
   }: NodePortGroupProps) => {
@@ -173,7 +187,11 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
     );
 
     return (
-      <NodePortGrp nodeWidth={nodeWidth} {...attributeListeners}>
+      <NodePortGrp
+        nodeWidth={nodeWidth}
+        isCollapsed={isCollapsed}
+        {...attributeListeners}
+      >
         <div className="input-ports">
           {inputDefs.map((inputDef: NodeInputPortDef) => {
             const isConnected: boolean =
@@ -200,8 +218,9 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
                 }
                 isInput
                 isConnected={isConnected}
-                onMouseDown={onMouseDownPort}
-                onMouseUp={onMouseUpPort}
+                isCollapsed={isCollapsed}
+                onMouseDown={isCollapsed ? undefined : onMouseDownPort}
+                onMouseUp={isCollapsed ? undefined : onMouseUpPort}
               />
             );
           })}
@@ -226,8 +245,9 @@ export const NodePortGroup: FC<NodePortGroupProps> = memo(
                 attributeListeners={attributeListeners}
                 draggingDataType={draggingWire?.dataType}
                 isConnected={isConnected}
-                onMouseDown={onMouseDownPort}
-                onMouseUp={onMouseUpPort}
+                isCollapsed={isCollapsed}
+                onMouseDown={isCollapsed ? undefined : onMouseDownPort}
+                onMouseUp={isCollapsed ? undefined : onMouseUpPort}
               />
             );
           })}

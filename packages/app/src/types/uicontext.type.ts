@@ -23,3 +23,10 @@ export type UIContextContainerProps = {
   editableContents: Record<string, UIContext[]>;
   readonlyLabels: string[];
 };
+
+export type UIContextContainerVisualContentData = {
+  type: 'container';
+  expandedContentName?: string;
+};
+
+export type UIContextVisualContentData = UIContextContainerVisualContentData;

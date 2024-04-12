@@ -15,6 +15,7 @@ export const Port: FC<PortProps> = memo(
     isClosestPortToWire,
     isInput,
     isConnected,
+    isCollapsed,
     onMouseDown,
     onMouseUp,
   }: PortProps) => {
@@ -43,7 +44,7 @@ export const Port: FC<PortProps> = memo(
         >
           {isDragToEnabled && <div className={clsx('port-hover-area')} />}
         </div>
-        <div className={clsx('port-label')}>{title}</div>
+        {!isCollapsed && <div className={clsx('port-label')}>{title}</div>}
       </div>
     );
   },

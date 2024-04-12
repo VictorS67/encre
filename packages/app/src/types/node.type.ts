@@ -10,7 +10,8 @@ export type DraggableNodeProps = {
   isMinimized?: boolean;
   isSelecting?: boolean;
   isPinning?: boolean;
-  onNodeSizeChange?: (node: Node, width: number, height: number) => void;
+  isCollapsed?: boolean;
+  onNodeSizeChange?: (node: Node, width?: number, height?: number) => void;
   onNodeSelect?: (node: Node) => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
@@ -41,9 +42,10 @@ export type VisualNodeProps = {
   isMinimized?: boolean;
   isSelecting?: boolean;
   isPinning?: boolean;
+  isCollapsed?: boolean;
   scale?: number;
   canvasZoom: number;
-  onNodeSizeChange?: (width: number, height: number) => void;
+  onNodeSizeChange?: (width?: number, height?: number) => void;
   onNodeSelect?: () => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
@@ -75,10 +77,11 @@ export type VisualNodeContentProps = {
   connections?: NodeConnection[];
   isMinimized?: boolean;
   isPinning?: boolean;
+  isCollapsed?: boolean;
   canvasZoom: number;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onNodeGrabClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  onNodeSizeChange?: (width: number, height: number) => void;
+  onNodeSizeChange?: (width?: number, height?: number) => void;
   onWireStartDrag?: (
     event: React.MouseEvent<HTMLElement>,
     fromNodeId: string,
@@ -87,3 +90,11 @@ export type VisualNodeContentProps = {
   ) => void;
   onWireEndDrag?: (event: React.MouseEvent<HTMLElement>) => void;
 };
+
+export interface HeightCache {
+  get: (id: string) => number;
+
+  has: (id: string) => boolean;
+
+  set: (id: string, height: number) => void;
+}

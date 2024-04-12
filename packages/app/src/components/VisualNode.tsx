@@ -12,6 +12,7 @@ import React, {
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useMergeRefs } from '@floating-ui/react';
+import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
@@ -21,6 +22,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { Icon } from './Icon';
 import { NodeContentBody } from './NodeContentBody';
+import { NodeContentBodyMask } from './NodeContentBodyMask';
 import { NodePortGroup } from './NodePortGroup';
 import { ResizeBox } from './ResizeBox';
 import { useRipple } from '../hooks/useAnimation';
@@ -37,7 +39,9 @@ import {
 } from '../types/node.type';
 import { getColorMode } from '../utils/colorMode';
 
-const VisualNodeContainer = styled.div`
+const VisualNodeContainer = styled.div<{
+  isCollapsed?: boolean;
+}>`
   color: var(--text-color);
   background: var(--node-background-color);
   border-radius: 7px;
@@ -73,7 +77,10 @@ const VisualNodeContainer = styled.div`
     bottom: 0;
     border-top-left-radius: 10px;
     border-bottom-right-radius: calc(7px - 3px);
-    background-color: var(--canvas-foreground-color-1);
+    background-color: ${(props) =>
+      props.isCollapsed
+        ? 'var(--canvas-background-color-1)'
+        : 'var(--canvas-foreground-color-1)'};
   }
 `;
 
@@ -84,7 +91,6 @@ const NodeContentContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
 
-  .node-minimize-card,
   .node-card {
     // background: var(--node-background-color);
     display: flex;
@@ -134,6 +140,10 @@ const NodeContentContainer = styled.div`
     z-index: 1;
   }
 
+  .node-tooling.minimized {
+    visibility: collapse;
+  }
+
   .pin-tooling {
     opacity: 0;
   }
@@ -145,11 +155,6 @@ const NodeContentContainer = styled.div`
   .pin-tooling:hover {
     opacity: 1;
   }
-
-  // .pin-tooling.pinned,
-  // .pin-tooling:hover {
-  //   opacity: 1;
-  // }
 
   .node-tag-grp {
     display: flex;
@@ -171,42 +176,91 @@ const NodeContentContainer = styled.div`
     font-weight: 400;
     line-height: 100%;
     text-transform: lowercase;
-    background: var(--node-forground-color);
+    background: var(--node-foreground-color);
     color: var(--text-color);
   }
 
+  .node-title-grp {
+    display: flex;
+    align-self: stretch;
+    align-items: center;
+    gap: 3.5px;
+  }
+
   .node-title {
+    flex-grow: 1;
     align-self: strech;
     color: var(--text-color);
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     display: grid;
-    place-items: center;
-    height: 30px;
+    place-items: flex-start;
     user-select: none;
     overflow: hidden;
     word-break: break-word;
     hyphens: auto;
   }
 
-  .node-minimize-card > .node-header {
+  .node-header.minimized {
     visibility: collapse;
   }
 
-  .node-minimize-card > .node-title {
+  .node-title.minimized {
     width: 100%;
     text-align: center;
+    place-items: center;
   }
 
   .node-card-body {
-    background: var(--node-forground-color);
+    background: var(--node-foreground-color);
     flex-grow: 1;
     display: flex;
     align-self: stretch;
     border-bottom-right-radius: calc(7px - 3px);
     border-bottom-left-radius: calc(7px - 3px);
     overflow: hidden;
+  }
+
+  .node-card-body.collapsed {
+    border-top: 2px solid var(--primary-color);
+  }
+
+  .node-card-body-collapse {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+  }
+
+  .collapse-btn {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-bottom: 2px solid var(--primary-color);
+    cursor: pointer;
+    opacity: 0;
+  }
+
+  .collapse-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    margin-left: -10px;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 8px solid var(--primary-color);
+    opacity: 0;
+  }
+
+  .collapse-btn:hover {
+    opacity: 1;
+  }
+
+  .collapse-btn:hover::after {
+    opacity: 1;
   }
 
   .node-minimize-content,
@@ -249,6 +303,7 @@ export const VisualNode = memo(
       isOverlay,
       isMinimized,
       isPinning,
+      isCollapsed,
       scale,
       canvasZoom,
       onNodeSizeChange,
@@ -270,7 +325,7 @@ export const VisualNode = memo(
         }px) scale(${scale ?? 1})`,
         zIndex: node.visualInfo.position.zIndex ?? 0,
         width: node.visualInfo.size.width,
-        height: node.visualInfo.size.height,
+        height: isCollapsed ? 70 + 10 : node.visualInfo.size.height,
       };
 
       return styling;
@@ -284,6 +339,7 @@ export const VisualNode = memo(
       node.visualInfo.position.zIndex,
       node.state,
       isDragging,
+      isCollapsed,
       scale,
     ]);
 
@@ -307,6 +363,7 @@ export const VisualNode = memo(
 
     return (
       <VisualNodeContainer
+        isCollapsed={isCollapsed}
         className={clsx('node', {
           dragged: isDragging,
           selected: isSelecting,
@@ -327,6 +384,7 @@ export const VisualNode = memo(
           connections={connections}
           isMinimized={isMinimized}
           isPinning={isPinning}
+          isCollapsed={isCollapsed}
           canvasZoom={canvasZoom}
           attributeListeners={attributeListeners}
           onNodeGrabClick={onNodeGrabClick}
@@ -346,6 +404,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     connections = [],
     isMinimized,
     isPinning,
+    isCollapsed,
     canvasZoom,
     attributeListeners,
     onNodeGrabClick,
@@ -353,7 +412,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     onWireStartDrag,
     onWireEndDrag,
   }: VisualNodeContentProps) => {
-    const theme = useRecoilValue(themeState);
     const draggingWire = useRecoilValue(draggingWireState);
     const draggingWireClosestPort = useRecoilValue(
       draggingWireClosestPortState,
@@ -368,57 +426,36 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     const [startMouseY, setStartMouseY] = useState(0);
     const { clientToCanvasPosition } = useCanvasPosition();
 
-    const tagBorderStyling: CSSProperties = useMemo(() => {
-      const colorMode = getColorMode();
+    const [minCardHeight, hasMinCardHeight, minTitleStyling] = useMemo(() => {
+      const numPorts: number = Math.max(
+        node.inputs ? Object.keys(node.inputs).length : 0,
+        node.outputs ? Object.keys(node.outputs).length : 0,
+      );
 
-      const styling: CSSProperties =
-        colorMode === 'light'
-          ? {
-              border: '2px solid var(--primary-color)',
-            }
-          : {};
+      const minHeight: number = isCollapsed
+        ? Number.MAX_SAFE_INTEGER
+        : 70 + numPorts * 30 + 10 + 30;
 
-      return styling;
-    }, [theme]);
+      const hasMinHeight: boolean = minHeight >= node.visualInfo.size.height;
 
-    const [cardHeightStyling, minTitleStyling, minVisibilityStyling] =
-      useMemo(() => {
-        const numPorts: number =
-          (node.inputs ? Object.keys(node.inputs).length : 0) +
-          (node.outputs ? Object.keys(node.outputs).length : 0);
+      const titleStyling: CSSProperties = isMinimized
+        ? {
+            fontSize: `${32 * (canvasZoom + 0.4)}px`,
+            height: 50,
+          }
+        : {
+            fontSize: '18px',
+          };
 
-        const cardStyling: CSSProperties = {
-          minHeight: 50,
-        };
-
-        const titleStyling: CSSProperties = isMinimized
-          ? {
-              fontSize: `${32 * (canvasZoom + 0.4)}px`,
-              height: 50,
-            }
-          : {
-              fontSize: '18px',
-            };
-
-        const visibilityStyling: CSSProperties = isMinimized
-          ? { visibility: 'hidden' }
-          : {};
-
-        return [cardStyling, titleStyling, visibilityStyling];
-      }, [node.inputs, node.outputs, canvasZoom, isMinimized]);
-
-    const contentTopBorderStyling: CSSProperties = useMemo(() => {
-      const colorMode = getColorMode();
-
-      const styling: CSSProperties =
-        colorMode === 'light'
-          ? {
-              borderTop: '2px solid var(--primary-color)',
-            }
-          : {};
-
-      return styling;
-    }, [theme]);
+      return [minHeight, hasMinHeight, titleStyling];
+    }, [
+      node.visualInfo.size.height,
+      node.inputs,
+      node.outputs,
+      canvasZoom,
+      isMinimized,
+      isCollapsed,
+    ]);
 
     const getNodeCurrentDimensions = (
       elementorChild: HTMLElement,
@@ -477,9 +514,38 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
         newHeight &&
         (newWidth !== startWidth || newHeight !== startHeight)
       ) {
-        onNodeSizeChange?.(newWidth, newHeight);
-        setNodeWidth(newWidth);
-        setNodeHeight(newHeight);
+        onNodeSizeChange?.(
+          Math.max(200, newWidth),
+          minCardHeight === Number.MAX_SAFE_INTEGER
+            ? undefined
+            : Math.max(minCardHeight, newHeight),
+        );
+
+        setNodeWidth(Math.max(200, newWidth));
+        if (minCardHeight !== Number.MAX_SAFE_INTEGER) {
+          setNodeHeight(Math.max(minCardHeight, newHeight));
+        }
+      }
+    });
+
+    const onResizeExpand = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
+
+      onNodeSizeChange?.(undefined, height + 210);
+      setNodeWidth(Math.max(200, width));
+      setNodeHeight(height + 210);
+    });
+
+    const onResizeCollapse = useStableCallback((e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (minCardHeight !== Number.MAX_SAFE_INTEGER) {
+        onNodeSizeChange?.(undefined, minCardHeight);
+        setNodeHeight(minCardHeight);
       }
     });
 
@@ -505,60 +571,108 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       <NodeContentContainer>
         <div className="node-card-info">
           <div className="node-card-dragging-area" {...attributeListeners} />
-          <div
-            className={isMinimized ? 'node-minimize-card' : 'node-card'}
-            style={cardHeightStyling}
-          >
-            <div className="node-header">
-              <div className="node-tag-grp">
-                {node.tags?.map((t) => (
-                  <div className="node-tag" key={t} style={tagBorderStyling}>
-                    {t}
-                  </div>
-                ))}
-              </div>
-              <div className="node-tooling">
-                <div
-                  className={clsx('pin-tooling', {
-                    pinned: isPinning,
-                  })}
-                  onClick={onTogglePinningNode}
-                >
-                  {isPinning ? (
-                    <Icon
-                      icon={PushPinIcon}
-                      width={'20px'}
-                      height={'20px'}
-                      fontSize={'20px'}
-                      additionalStyles={css`
-                        color: var(--text-color);
-                      `}
-                    />
-                  ) : (
-                    <Icon
-                      icon={PushPinOutlinedIcon}
-                      width={'20px'}
-                      height={'20px'}
-                      fontSize={'20px'}
-                      additionalStyles={css`
-                        color: var(--text-color);
-                      `}
-                    />
-                  )}
+          <div className={'node-card'}>
+            {!isCollapsed && (
+              <div className={clsx('node-header', { minimized: isMinimized })}>
+                <div className="node-tag-grp">
+                  {node.tags?.map((t) => (
+                    <div className="node-tag" key={t}>
+                      {t}
+                    </div>
+                  ))}
                 </div>
-                <Icon
-                  icon={PlayArrowRoundedIcon}
-                  width={'20px'}
-                  height={'20px'}
-                  fontSize={'30px'}
-                  additionalStyles={css`
-                    color: var(--success-color);
-                  `}
-                />
+                <div className="node-tooling">
+                  <div
+                    className={clsx('pin-tooling', {
+                      pinned: isPinning,
+                    })}
+                    onClick={onTogglePinningNode}
+                  >
+                    {isPinning ? (
+                      <Icon
+                        icon={PushPinIcon}
+                        width={'20px'}
+                        height={'20px'}
+                        fontSize={'20px'}
+                        additionalStyles={css`
+                          color: var(--text-color);
+                        `}
+                      />
+                    ) : (
+                      <Icon
+                        icon={PushPinOutlinedIcon}
+                        width={'20px'}
+                        height={'20px'}
+                        fontSize={'20px'}
+                        additionalStyles={css`
+                          color: var(--text-color);
+                        `}
+                      />
+                    )}
+                  </div>
+                  <Icon
+                    icon={PlayArrowRoundedIcon}
+                    width={'20px'}
+                    height={'20px'}
+                    fontSize={'30px'}
+                    additionalStyles={css`
+                      color: var(--success-color);
+                    `}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="node-title" style={minTitleStyling}>
-              {node.title}
+            )}
+
+            <div className="node-title-grp">
+              <div
+                className={clsx('node-title', { minimized: isMinimized })}
+                style={minTitleStyling}
+              >
+                {node.title}
+              </div>
+              {isCollapsed && (
+                <div
+                  className={clsx('node-tooling', { minimized: isMinimized })}
+                >
+                  <div
+                    className={clsx('pin-tooling', {
+                      pinned: isPinning,
+                    })}
+                    onClick={onTogglePinningNode}
+                  >
+                    {isPinning ? (
+                      <Icon
+                        icon={PushPinIcon}
+                        width={'20px'}
+                        height={'20px'}
+                        fontSize={'20px'}
+                        additionalStyles={css`
+                          color: var(--text-color);
+                        `}
+                      />
+                    ) : (
+                      <Icon
+                        icon={PushPinOutlinedIcon}
+                        width={'20px'}
+                        height={'20px'}
+                        fontSize={'20px'}
+                        additionalStyles={css`
+                          color: var(--text-color);
+                        `}
+                      />
+                    )}
+                  </div>
+                  <Icon
+                    icon={PlayArrowRoundedIcon}
+                    width={'20px'}
+                    height={'20px'}
+                    fontSize={'30px'}
+                    additionalStyles={css`
+                      color: var(--success-color);
+                    `}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -567,30 +681,48 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
               <NodePortGroup
                 node={node}
                 connections={connections}
-                nodeWidth={nodeWidth}
+                nodeWidth={node.visualInfo.size.width}
                 draggingWire={draggingWire}
                 draggingWireClosestPort={draggingWireClosestPort}
+                isCollapsed={isCollapsed}
                 onWireStartDrag={onWireStartDrag}
                 onWireEndDrag={onWireEndDrag}
               />
             </ErrorBoundary>
           </div>
+          {!isCollapsed && !hasMinCardHeight && (
+            <div className="node-card-body-collapse">
+              <div className="collapse-btn" onClick={onResizeCollapse} />
+            </div>
+          )}
         </div>
 
-        <div className={clsx('node-card-body')} onWheel={onScrollNodeBody}>
+        {!isCollapsed && (
           <div
-            className={isMinimized ? 'node-minimize-content' : 'node-content'}
-            style={contentTopBorderStyling}
+            className={clsx('node-card-body', {
+              collapsed: hasMinCardHeight,
+            })}
+            onWheel={onScrollNodeBody}
           >
-            <ErrorBoundary
-              fallback={
-                <div>Something wrong when rendering node content body...</div>
-              }
+            <div
+              className={isMinimized ? 'node-minimize-content' : 'node-content'}
             >
-              <NodeContentBody node={node} />
-            </ErrorBoundary>
+              <ErrorBoundary
+                fallback={
+                  <div>Something wrong when rendering node content body...</div>
+                }
+              >
+                {hasMinCardHeight && (
+                  <NodeContentBodyMask
+                    height={26}
+                    onExpandClick={onResizeExpand}
+                  />
+                )}
+                <NodeContentBody node={node} />
+              </ErrorBoundary>
+            </div>
           </div>
-        </div>
+        )}
 
         <ResizeBox onResizeStart={onResizeStart} onResizeMove={onResizeMove} />
       </NodeContentContainer>

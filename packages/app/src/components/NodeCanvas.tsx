@@ -54,6 +54,7 @@ import {
   selectingCommentIdsState,
 } from '../state/comment';
 import {
+  collapsingNodeIdsState,
   hoveringNodeIdState,
   pinningNodeIdsState,
   selectingNodeIdsState,
@@ -202,6 +203,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     selectingNodeIdsState,
   );
   const pinningNodeIds = useRecoilValue(pinningNodeIdsState);
+  const collapsingNodeIds = useRecoilValue(collapsingNodeIdsState);
 
   const { draggingWire, onWireStartDrag, onWireEndDrag } =
     useDraggingWire(onConnectionsChange);
@@ -265,7 +267,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
   useEffect(() => {
     recalculatePortPositions();
-  }, [recalculatePortPositions]);
+  }, [recalculatePortPositions, collapsingNodeIds]);
 
   useEffect(() => {
     if (closestPort?.portName) {
@@ -570,14 +572,18 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     return [...commentSet];
   }, [selectingCommentIds]);
 
-  const onNodeSizeChange = (node: Node, width: number, height: number) => {
+  const onNodeSizeChange = (node: Node, width?: number, height?: number) => {
     onNodesChange(
       produce(nodes, (draft) => {
         const nodeToChange = draft.find((n) => n.id === node.id);
 
         if (nodeToChange) {
-          nodeToChange.visualInfo.size.width = width;
-          nodeToChange.visualInfo.size.height = height;
+          if (width) {
+            nodeToChange.visualInfo.size.width = width;
+          }
+          if (height) {
+            nodeToChange.visualInfo.size.height = height;
+          }
         }
       }),
     );
@@ -722,6 +728,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                 const isPinning: boolean = pinningNodeIds.includes(
                   nodeToRender.id,
                 );
+                const isCollapsing: boolean = collapsingNodeIds.includes(
+                  nodeToRender.id,
+                );
 
                 if (nodesToDrag.some((n) => n.id === nodeToRender.id)) {
                   return null;
@@ -738,6 +747,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                       nodeToRender.id,
                     )}
                     isPinning={isPinning}
+                    isCollapsed={isCollapsing}
                     onNodeSizeChange={onNodeSizeChange}
                     onNodeSelect={onNodeSelect}
                     onNodeMouseOver={onNodeMouseOver}
@@ -803,6 +813,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                     isOverlay
                     isMinimized={isMinimized}
                     isPinning={pinningNodeIds.includes(draggingNode.id)}
+                    isCollapsed={collapsingNodeIds.includes(draggingNode.id)}
                     canvasZoom={canvasPosition.zoom}
                   />
                 ))}
