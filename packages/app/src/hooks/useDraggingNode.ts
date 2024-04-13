@@ -34,19 +34,17 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
     (e: DragStartEvent) => {
       const draggingNodeId: string = e.active.id as string;
 
-      const nodesToDrag: Node[] =
+      const nodeIdsToDrag: string[] =
         isDraggingMultipleNodes && selectingNodeIds.length > 0
           ? [...new Set([...selectingNodeIds, draggingNodeId])]
-              .map((id) => nodeMap[id])
-              .filter(isNotNull)
-          : [nodeMap[draggingNodeId]].filter(isNotNull);
+          : [draggingNodeId];
+
+      const nodesToDrag: Node[] = nodeIdsToDrag
+        .map((id) => nodeMap[id])
+        .filter(isNotNull);
 
       setDraggingNodes(nodesToDrag);
-      setSelectingNodeIds(
-        isDraggingMultipleNodes
-          ? [...new Set([...selectingNodeIds, draggingNodeId])]
-          : [draggingNodeId],
-      );
+      setSelectingNodeIds(nodeIdsToDrag);
 
       const maxZIndex: number = nodes.reduce((maxVal, node) => {
         const zIndex: number =
@@ -60,7 +58,7 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
 
       onNodesChange(
         nodes.map((node): Node => {
-          const isDragging: boolean = nodesToDrag.some((n) => node.id === n.id);
+          const isDragging: boolean = nodeIdsToDrag.includes(node.id);
 
           return isDragging
             ? {
@@ -107,6 +105,10 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
             const nodeToChange = draft.find((n) => n.id === nodeId);
 
             if (nodeToChange) {
+              console.log(
+                `dragging nodes after: z-index: ${nodeToChange.visualInfo.position.zIndex}`,
+              );
+
               nodeToChange.visualInfo.position.x += delta.x;
               nodeToChange.visualInfo.position.y += delta.y;
             }

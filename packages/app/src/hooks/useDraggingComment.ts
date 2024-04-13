@@ -175,38 +175,40 @@ export function useDraggingComment(
           }
         });
 
-        setDraggingNodes(nodesToDragInComments);
+        if (nodesToDragInComments.length > 0) {
+          setDraggingNodes(nodesToDragInComments);
 
-        const maxZIndexInNodes: number = nodes.reduce((maxVal, node) => {
-          const zIndex: number =
-            node.visualInfo.position.zIndex &&
-            !Number.isNaN(node.visualInfo.position.zIndex)
-              ? node.visualInfo.position.zIndex
-              : 0;
+          const maxZIndexInNodes: number = nodes.reduce((maxVal, node) => {
+            const zIndex: number =
+              node.visualInfo.position.zIndex &&
+              !Number.isNaN(node.visualInfo.position.zIndex)
+                ? node.visualInfo.position.zIndex
+                : 0;
 
-          return Math.max(maxVal, zIndex);
-        }, 0);
+            return Math.max(maxVal, zIndex);
+          }, 0);
 
-        onNodesChange(
-          nodes.map((node): Node => {
-            const isDragging: boolean = nodesToDragInComments.some(
-              (n) => node.id === n.id,
-            );
+          onNodesChange(
+            nodes.map((node): Node => {
+              const isDragging: boolean = nodesToDragInComments.some(
+                (n) => node.id === n.id,
+              );
 
-            return isDragging
-              ? {
-                  ...node,
-                  visualInfo: {
-                    ...node.visualInfo,
-                    position: {
-                      ...node.visualInfo.position,
-                      zIndex: maxZIndexInNodes + 1,
+              return isDragging
+                ? {
+                    ...node,
+                    visualInfo: {
+                      ...node.visualInfo,
+                      position: {
+                        ...node.visualInfo.position,
+                        zIndex: maxZIndexInNodes + 1,
+                      },
                     },
-                  },
-                }
-              : node;
-          }),
-        );
+                  }
+                : node;
+            }),
+          );
+        }
       }
     },
     [
