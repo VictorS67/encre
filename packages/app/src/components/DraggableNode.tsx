@@ -18,6 +18,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   isPinning,
   isCollapsed,
   onNodeSizeChange,
+  onNodeVisualContentChange,
   onNodeSelect,
   onNodeMouseOver,
   onNodeMouseOut,
@@ -49,6 +50,9 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         canvasZoom={canvasZoom}
         onNodeSizeChange={useStableCallback(
           (width, height) => onNodeSizeChange?.(node, width, height),
+        )}
+        onNodeVisualContentChange={useStableCallback(
+          (content) => onNodeVisualContentChange?.(node, content),
         )}
         onNodeSelect={useStableCallback(() => onNodeSelect?.(node))}
         onNodeMouseOver={onNodeMouseOver}

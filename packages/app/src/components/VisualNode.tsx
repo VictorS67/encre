@@ -5,6 +5,7 @@ import React, {
   ForwardedRef,
   forwardRef,
   memo,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -29,7 +30,11 @@ import { useRipple } from '../hooks/useAnimation';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
-import { pinningNodeIdsState } from '../state/node';
+import {
+  nodeVisualContentDataFromNodeIdState,
+  pinningNodeIdsState,
+  updateNodeVisualContentDataState,
+} from '../state/node';
 import { themeState } from '../state/settings';
 import { draggingWireClosestPortState, draggingWireState } from '../state/wire';
 import {
@@ -37,13 +42,13 @@ import {
   VisualNodeContentProps,
   VisualNodeProps,
 } from '../types/node.type';
+import { Node } from '../types/studio.type';
 import { getColorMode } from '../utils/colorMode';
 
 const VisualNodeContainer = styled.div<{
   isCollapsed?: boolean;
 }>`
   color: var(--text-color);
-  background: var(--node-background-color);
   border-radius: 7px;
   border: 3px solid var(--primary-color);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -103,7 +108,6 @@ const NodeContentContainer = styled.div`
   }
 
   .node-card-info {
-    background: var(--node-background-color);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -293,6 +297,7 @@ export const VisualNode = memo(
   forwardRef<HTMLDivElement, VisualNodeProps>(function MyVisualNode(
     {
       node,
+      // nodeColorCache,
       connections = [],
       xDelta = 0,
       yDelta = 0,
@@ -307,6 +312,7 @@ export const VisualNode = memo(
       scale,
       canvasZoom,
       onNodeSizeChange,
+      onNodeVisualContentChange,
       onNodeSelect,
       onNodeMouseOver,
       onNodeMouseOut,
@@ -316,8 +322,49 @@ export const VisualNode = memo(
     ref: ForwardedRef<HTMLDivElement>,
   ) {
     const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
+    const nodeVisualContent = useRecoilValue(
+      nodeVisualContentDataFromNodeIdState(node.id),
+    );
+    const updateNodeVisualContentData = useSetRecoilState(
+      updateNodeVisualContentDataState,
+    );
+    const [content, setContent] = useState<Node['visualInfo']['content']>({});
+
+    useEffect(() => {
+      let shouldUpdate = false;
+      let tempContent: Node['visualInfo']['content'] = {};
+
+      if (nodeVisualContent) {
+        if (node.visualInfo.content?.color !== nodeVisualContent.color) {
+          tempContent.color = node.visualInfo.content?.color;
+          shouldUpdate = true;
+        } else {
+          tempContent.color = nodeVisualContent.color;
+        }
+      } else {
+        tempContent = {
+          color: node.visualInfo.content?.color,
+        };
+      }
+
+      if (shouldUpdate) {
+        if ((tempContent.color as any) === 'default') {
+          tempContent.color = undefined;
+        }
+
+        onNodeVisualContentChange?.(tempContent);
+        updateNodeVisualContentData({
+          id: node.id,
+          nodeVisualContentData: tempContent,
+        });
+      }
+
+      setContent(tempContent);
+    }, [nodeVisualContent, node.visualInfo.content?.color]);
 
     const style = useMemo(() => {
+      const color = content?.color ?? node.visualInfo.content?.color;
+
       const styling: CSSProperties = {
         opacity: isDragging ? '0' : '',
         transform: `translate(${node.visualInfo.position.x + xDelta}px, ${
@@ -326,6 +373,7 @@ export const VisualNode = memo(
         zIndex: node.visualInfo.position.zIndex ?? 0,
         width: node.visualInfo.size.width,
         height: isCollapsed ? 70 + 10 : node.visualInfo.size.height,
+        background: `var(--node-background${color ? `-${color}` : ''}-color)`,
       };
 
       return styling;
@@ -338,6 +386,8 @@ export const VisualNode = memo(
       node.visualInfo.size.height,
       node.visualInfo.position.zIndex,
       node.state,
+      node.visualInfo.content?.color,
+      content,
       isDragging,
       isCollapsed,
       scale,

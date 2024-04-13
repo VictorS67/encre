@@ -1,10 +1,12 @@
 import { HTMLAttributes } from 'react';
 
+import { ColorCache } from './canvas.type';
 import { Node, NodeConnection } from './studio.type';
 import { DraggingWire } from './wire.type';
 
 export type DraggableNodeProps = {
   node: Node;
+  // nodeColorCache: ColorCache;
   connections?: NodeConnection[];
   canvasZoom: number;
   isMinimized?: boolean;
@@ -12,6 +14,10 @@ export type DraggableNodeProps = {
   isPinning?: boolean;
   isCollapsed?: boolean;
   onNodeSizeChange?: (node: Node, width?: number, height?: number) => void;
+  onNodeVisualContentChange?: (
+    node: Node,
+    content: Node['visualInfo']['content'],
+  ) => void;
   onNodeSelect?: (node: Node) => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
@@ -32,6 +38,7 @@ export type DraggableNodeProps = {
 
 export type VisualNodeProps = {
   node: Node;
+  // nodeColorCache: ColorCache;
   connections?: NodeConnection[];
   xDelta?: number;
   yDelta?: number;
@@ -46,6 +53,7 @@ export type VisualNodeProps = {
   scale?: number;
   canvasZoom: number;
   onNodeSizeChange?: (width?: number, height?: number) => void;
+  onNodeVisualContentChange?: (content: Node['visualInfo']['content']) => void;
   onNodeSelect?: () => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
@@ -98,3 +106,7 @@ export interface HeightCache {
 
   set: (id: string, height: number) => void;
 }
+
+export type NodeVisualContentData = {
+  color?: string;
+};

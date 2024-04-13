@@ -36,7 +36,6 @@ import { VisualComment } from './VisualComment';
 import { VisualNode } from './VisualNode';
 import { WireLayer } from './WireLayer';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
-import { useCommentColorCache } from '../hooks/useCommentColorCache';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingComment } from '../hooks/useDraggingComment';
 import { useDraggingNode } from '../hooks/useDraggingNode';
@@ -258,8 +257,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     setContextMenu,
     handleContextMenu,
   } = useContextMenu();
-
-  const commentColorCache = useCommentColorCache();
 
   const nodesToDrag = useMemo(() => {
     return [...new Set([...draggingNodes, ...draggingNodesInComments])];
@@ -589,6 +586,21 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     );
   };
 
+  const onNodeVisualContentChange = (
+    node: Node,
+    content: Node['visualInfo']['content'],
+  ) => {
+    onNodesChange(
+      produce(nodes, (draft) => {
+        const nodeToChange = draft.find((n) => n.id === node.id);
+
+        if (nodeToChange) {
+          nodeToChange.visualInfo.content = content;
+        }
+      }),
+    );
+  };
+
   const onCommentSizeChange = (
     comment: GraphComment,
     width: number,
@@ -601,24 +613,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
         if (commentToChange) {
           commentToChange.visualInfo.size.width = width;
           commentToChange.visualInfo.size.height = height;
-        }
-      }),
-    );
-  };
-
-  const onCommentColorChange = (comment: GraphComment, color: string) => {
-    onCommentsChange(
-      produce(comments, (draft) => {
-        const commentToChange = draft.find((c) => c.id === comment.id);
-
-        if (commentToChange) {
-          if (!commentToChange.visualInfo.content) {
-            commentToChange.visualInfo.content = {
-              color: color as any,
-            };
-          } else {
-            commentToChange.visualInfo.content.color = color as any;
-          }
         }
       }),
     );
@@ -749,6 +743,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                     isPinning={isPinning}
                     isCollapsed={isCollapsing}
                     onNodeSizeChange={onNodeSizeChange}
+                    onNodeVisualContentChange={onNodeVisualContentChange}
                     onNodeSelect={onNodeSelect}
                     onNodeMouseOver={onNodeMouseOver}
                     onNodeMouseOut={onNodeMouseOut}
@@ -768,14 +763,12 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                   <DraggableComment
                     key={commentToRender.id}
                     comment={commentToRender}
-                    commentColorCache={commentColorCache}
                     canvasZoom={canvasPosition.zoom}
                     isMinimized={isMinimized}
                     isSelecting={selectingUniqueCommentIds.includes(
                       commentToRender.id,
                     )}
                     onCommentSizeChange={onCommentSizeChange}
-                    onCommentColorChange={onCommentColorChange}
                     onCommentContentChange={onCommentContentChange}
                     onCommentSelect={onCommentSelect}
                   />
@@ -823,7 +816,6 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
                   <VisualComment
                     key={draggingComment.id}
                     comment={draggingComment}
-                    commentColorCache={commentColorCache}
                     isSelecting={selectingUniqueCommentIds.includes(
                       draggingComment.id,
                     )}

@@ -27,6 +27,24 @@ export type VisualInfo = {
     width: number;
     height: number;
   };
+  content?: {
+    color?:
+      | 'red'
+      | 'orange'
+      | 'gold'
+      | 'yellow'
+      | 'palmera'
+      | 'green'
+      | 'meadow'
+      | 'cyan'
+      | 'blue'
+      | 'cornflower'
+      | 'purple'
+      | 'pink'
+      | 'razzmatazz'
+      | 'silver'
+      | 'dark';
+  };
 };
 
 export type CommentVisualInfo = VisualInfo & {

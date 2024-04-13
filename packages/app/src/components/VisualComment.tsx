@@ -175,7 +175,7 @@ export const VisualComment = memo(
   forwardRef<HTMLDivElement, VisualCommentProps>(function MyVisualNode(
     {
       comment,
-      commentColorCache,
+      // commentColorCache,
       xDelta = 0,
       yDelta = 0,
       attributes,
@@ -187,7 +187,7 @@ export const VisualComment = memo(
       scale,
       canvasZoom,
       onCommentSizeChange,
-      onCommentColorChange,
+      // onCommentColorChange,
       onCommentContentChange,
       onCommentSelect,
     }: VisualCommentProps,
@@ -261,20 +261,23 @@ export const VisualComment = memo(
       }
 
       setContent(tempContent);
-      commentColorCache.set(comment.id, tempContent.color as any);
+      // commentColorCache.set(comment.id, tempContent.color as any);
     }, [
       commentContent,
       comment.visualInfo.content?.color,
       comment.visualInfo.content?.horitontal,
       comment.visualInfo.content?.vertical,
       pickRandomCommentColor,
-      commentColorCache,
+      // commentColorCache,
     ]);
 
     const style = useMemo(() => {
-      const color = commentColorCache.has(comment.id)
-        ? commentColorCache.get(comment.id)
-        : content?.color ?? 'yellow';
+      // const color = commentColorCache.has(comment.id)
+      //   ? commentColorCache.get(comment.id)
+      //   : content?.color ?? 'yellow';
+
+      const color =
+        content?.color ?? comment.visualInfo.content?.color ?? 'yellow';
 
       const styling: CSSProperties = {
         opacity: isDragging ? '0' : '',
@@ -297,7 +300,8 @@ export const VisualComment = memo(
       comment.visualInfo.size.width,
       comment.visualInfo.size.height,
       comment.visualInfo.position.zIndex,
-      commentColorCache,
+      comment.visualInfo.content?.color,
+      // commentColorCache,
       content,
       isDragging,
       scale,

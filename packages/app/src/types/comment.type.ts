@@ -1,10 +1,11 @@
 import { HTMLAttributes } from 'react';
 
+import { ColorCache } from './canvas.type';
 import { GraphComment } from './studio.type';
 
 export type DraggableCommentProps = {
   comment: GraphComment;
-  commentColorCache: CommentColorCache;
+  // commentColorCache: ColorCache;
   canvasZoom: number;
   isMinimized?: boolean;
   isSelecting?: boolean;
@@ -13,7 +14,7 @@ export type DraggableCommentProps = {
     width: number,
     height: number,
   ) => void;
-  onCommentColorChange?: (comment: GraphComment, color: string) => void;
+  // onCommentColorChange?: (comment: GraphComment, color: string) => void;
   onCommentContentChange?: (
     comment: GraphComment,
     content: GraphComment['visualInfo']['content'],
@@ -23,7 +24,7 @@ export type DraggableCommentProps = {
 
 export type VisualCommentProps = {
   comment: GraphComment;
-  commentColorCache: CommentColorCache;
+  // commentColorCache: ColorCache;
   xDelta?: number;
   yDelta?: number;
   attributes?: HTMLAttributes<HTMLDivElement>;
@@ -38,7 +39,7 @@ export type VisualCommentProps = {
   onCommentContentChange?: (
     content: GraphComment['visualInfo']['content'],
   ) => void;
-  onCommentColorChange?: (color: string) => void;
+  // onCommentColorChange?: (color: string) => void;
   onCommentSelect?: () => void;
 };
 
@@ -49,11 +50,3 @@ export type VisualCommentContentProps = {
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   onCommentSizeChange?: (width: number, height: number) => void;
 };
-
-export interface CommentColorCache {
-  get: (commentId: string) => string;
-
-  has: (commentId: string) => boolean;
-
-  set: (commentId: string, color: string) => void;
-}

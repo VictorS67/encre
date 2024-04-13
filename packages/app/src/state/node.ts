@@ -3,6 +3,7 @@ import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
 import { graphState } from './graph';
 import { connectionMapState } from './nodeconnection';
 import { NodeGraph } from '../types/graph.type';
+import { NodeVisualContentData } from '../types/node.type';
 import {
   CommentVisualInfo,
   GraphComment,
@@ -38,6 +39,13 @@ export const nodeMapState = selector({
       {} as Record<string, Node>,
     );
   },
+});
+
+export const nodeVisualContentDataMapState = atom<
+  Record<string, NodeVisualContentData>
+>({
+  key: 'nodeVisualContentDataMapState',
+  default: {},
 });
 
 export const selectingNodeIdsState = atom<string[]>({
@@ -139,6 +147,18 @@ export const nodeFromNodeIdState = selectorFamily<
     },
 });
 
+export const nodeVisualContentDataFromNodeIdState = selectorFamily<
+  NodeVisualContentData | undefined,
+  string | undefined
+>({
+  key: 'nodeVisualContentDataFromNodeIdState',
+  get:
+    (nodeId: string | undefined) =>
+    ({ get }) => {
+      return nodeId ? get(nodeVisualContentDataMapState)[nodeId] : undefined;
+    },
+});
+
 export const ioDefFromNodeIdState = selectorFamily<
   {
     inputDefs: NodeInputPortDef[];
@@ -188,4 +208,47 @@ export const nodesToDragInCommentsState = selectorFamily<
 
       return nodes;
     },
+});
+
+export const updateNodeVisualContentDataState = selector<{
+  id: string;
+  nodeVisualContentData: NodeVisualContentData;
+}>({
+  key: 'updateNodeVisualContentDataState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateNodeVisualContentDataState should only be used to update nodeVisualContentData map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+    const id: string = newVal.id;
+    const nodeVisualContentData: NodeVisualContentData =
+      newVal.nodeVisualContentData;
+
+    const currMap = get(nodeVisualContentDataMapState);
+    const updatedMap = { ...currMap, [id]: nodeVisualContentData };
+    set(nodeVisualContentDataMapState, updatedMap);
+  },
+});
+
+export const removeNodeVisualContentDataState = selector<string>({
+  key: 'removeNodeVisualContentDataState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateNodeVisualContentDataState should only be used to remove nodeVisualContentData from nodeVisualContentData map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+
+    const id: string = newVal;
+    const currMap = get(nodeVisualContentDataMapState);
+
+    if (currMap[id]) {
+      const updatedMap = { ...currMap };
+      delete updatedMap[id];
+      set(nodeVisualContentDataMapState, updatedMap);
+    }
+  },
 });

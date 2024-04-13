@@ -39,3 +39,11 @@ export type NodeCanvasProps = {
     data: unknown,
   ) => void;
 };
+
+export interface ColorCache {
+  get: (id: string) => string;
+
+  has: (id: string) => boolean;
+
+  set: (id: string, color: string) => void;
+}

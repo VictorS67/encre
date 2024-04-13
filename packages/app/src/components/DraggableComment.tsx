@@ -12,12 +12,10 @@ import { DraggableCommentProps } from '../types/comment.type';
 
 export const DraggableComment: FC<DraggableCommentProps> = ({
   comment,
-  commentColorCache,
   canvasZoom,
   isMinimized,
   isSelecting = false,
   onCommentSizeChange,
-  onCommentColorChange,
   onCommentContentChange,
   onCommentSelect,
 }: DraggableCommentProps) => {
@@ -36,8 +34,6 @@ export const DraggableComment: FC<DraggableCommentProps> = ({
       <VisualComment
         ref={setNodeRef}
         comment={comment}
-        commentColorCache={commentColorCache}
-        // commentColor={commentColor}
         xDelta={transform ? transform.x / canvasZoom : 0}
         yDelta={transform ? transform.y / canvasZoom : 0}
         attributes={attributes}
@@ -48,9 +44,6 @@ export const DraggableComment: FC<DraggableCommentProps> = ({
         canvasZoom={canvasZoom}
         onCommentSizeChange={useStableCallback(
           (width, height) => onCommentSizeChange?.(comment, width, height),
-        )}
-        onCommentColorChange={useStableCallback(
-          (color) => onCommentColorChange?.(comment, color),
         )}
         onCommentContentChange={useStableCallback(
           (content) => onCommentContentChange?.(comment, content),

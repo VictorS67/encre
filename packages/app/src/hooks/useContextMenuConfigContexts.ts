@@ -9,6 +9,7 @@ import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 
 import { useContextMenuAddNodeConfigContexts } from './useContextMenuAddNodeConfigContexts';
 import { useContextMenuChangeCommentColorConfigContexts } from './useContextMenuChangeCommentColorConfigContexts';
+import { useContextMenuChangeNodeColorConfigContexts } from './useContextMenuChangeNodeColorConfigContexts';
 import { useContextMenuMoveToNodeConfigContexts } from './useContextMenuMoveToNodeConfigContexts';
 import { useHotKeyDisplay } from './useHotKeyDisplay';
 import { ContextMenuConfigContexts } from '../types/contextmenu.type';
@@ -19,6 +20,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
   const avaliableNodes = useContextMenuAddNodeConfigContexts();
   const currentNodes = useContextMenuMoveToNodeConfigContexts();
   const commentColors = useContextMenuChangeCommentColorConfigContexts();
+  const nodeColors = useContextMenuChangeNodeColorConfigContexts();
 
   const contexts: ContextMenuConfigContexts = useMemo(
     () => ({
@@ -237,6 +239,14 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
               {
                 id: 'change-background-color',
                 name: 'Change background color',
+                contexts: [
+                  {
+                    metadata: {
+                      label: 'type',
+                    },
+                    items: nodeColors,
+                  },
+                ],
               },
             ],
           },

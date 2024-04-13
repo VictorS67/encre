@@ -5,8 +5,8 @@ import { match, P } from 'ts-pattern';
 import { useCanvasPosition } from './useCanvasPosition';
 import { useCanvasViewBounds } from './useCanvasViewBounds';
 import { useChangeCommentContent } from './useChangeCommentContent';
+import { useChangeNodeVisualContent } from './useChangeNodeVisualContent';
 import { useChangeWireType } from './useChangeWireType';
-import { useCommentColorCache } from './useCommentColorCache';
 import { useCopyComments } from './useCopyComments';
 import { useCopyNodes } from './useCopyNodes';
 import { useDuplicateComments } from './useDuplicateComments';
@@ -72,6 +72,7 @@ export function useContextMenuNodeGraphHandler() {
   const pasteComments = usePasteComments();
   const duplicateComments = useDuplicateComments();
   const { updateCommentColor } = useChangeCommentContent();
+  const { updateNodeColor } = useChangeNodeVisualContent();
 
   const changeComments = useStableCallback((newComments: GraphComment[]) => {
     setComments?.(newComments);
@@ -663,6 +664,46 @@ attr6: `,
           };
 
           moveToNode(nodeId);
+        })
+        .with(P.string.startsWith('change-node-color:'), () => {
+          if (!context.data) {
+            return;
+          }
+
+          const { nodeId } = context.data as {
+            nodeId: string;
+          };
+
+          const { colorType } = data as {
+            colorType: string;
+          };
+
+          const nodeIds: string[] = (
+            selectingNodeIds.length > 0
+              ? [...new Set([...selectingNodeIds, nodeId])]
+              : [nodeId]
+          ).filter(isNotNull);
+
+          for (const nId of nodeIds) {
+            updateNodeColor(nId, colorType);
+          }
+          changeNodes(
+            produce(nodes, (draft) => {
+              const nodeToChange = draft.find((n) => nodeIds.includes(n.id));
+              const colorToChange =
+                colorType === 'default' ? undefined : colorType;
+
+              if (nodeToChange) {
+                if (!nodeToChange.visualInfo.content) {
+                  nodeToChange.visualInfo.content = {
+                    color: colorToChange as any,
+                  };
+                } else {
+                  nodeToChange.visualInfo.content.color = colorToChange as any;
+                }
+              }
+            }),
+          );
         })
         .with(P.string.startsWith('change-wire-type:'), () => {
           if (!context.data) {
