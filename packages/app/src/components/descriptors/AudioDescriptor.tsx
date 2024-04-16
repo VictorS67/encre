@@ -40,7 +40,7 @@ const Audio = styled.div`
     right: 0;
     padding: 3px;
     border-bottom-left-radius: 5px;
-    background-color: var(--node-forground-color-1);
+    background-color: var(--node-foreground-color-2);
     color: var(--text-disabled-color);
     text-decoration: none;
     opacity: 0;

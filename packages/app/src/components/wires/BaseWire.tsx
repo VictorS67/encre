@@ -1,10 +1,7 @@
-import React, { FC, useLayoutEffect } from 'react';
+import React, { FC } from 'react';
 
-import { useToggle } from 'ahooks';
 import clsx from 'clsx';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { updateWireDataState, wireDataFromWireIdState } from '../../state/wire';
 import { BaseWireProps, WireData } from '../../types/wire.type';
 import { WirePort } from '../WirePort';
 
@@ -16,18 +13,18 @@ export const BaseWire: FC<BaseWireProps> = ({
   interactionWidth = 20,
   startMarker,
   endMarker,
-  isSelected,
+  isSelecting,
   isHighlighted,
   isHoveringPort,
   className,
 }: BaseWireProps) => {
   return (
-    <g opacity={isHighlighted || isSelected ? 1 : 0.5}>
+    <g opacity={isHighlighted || isSelecting ? 1 : 0.5}>
       <path
         className={clsx(
           'wire',
           {
-            selected: isSelected,
+            selected: isSelecting,
             highlighted: isHighlighted,
           },
           className?.split(' '),

@@ -15,7 +15,10 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   canvasZoom,
   isMinimized,
   isSelecting = false,
+  isPinning,
+  isCollapsed,
   onNodeSizeChange,
+  onNodeVisualContentChange,
   onNodeSelect,
   onNodeMouseOver,
   onNodeMouseOut,
@@ -25,7 +28,7 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
   const isOnlyDraggingCanvas = useRecoilValue(isOnlyDraggingCanvasState);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({ id: node.id, disabled: isOnlyDraggingCanvas });
+    useDraggable({ id: node.id, disabled: isOnlyDraggingCanvas || isPinning });
 
   return (
     <ErrorBoundary
@@ -42,9 +45,14 @@ export const DraggableNode: FC<DraggableNodeProps> = ({
         isDragging={isDragging}
         isMinimized={isMinimized}
         isSelecting={isSelecting}
+        isPinning={isPinning}
+        isCollapsed={isCollapsed}
         canvasZoom={canvasZoom}
         onNodeSizeChange={useStableCallback(
           (width, height) => onNodeSizeChange?.(node, width, height),
+        )}
+        onNodeVisualContentChange={useStableCallback(
+          (content) => onNodeVisualContentChange?.(node, content),
         )}
         onNodeSelect={useStableCallback(() => onNodeSelect?.(node))}
         onNodeMouseOver={onNodeMouseOver}

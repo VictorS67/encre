@@ -18,6 +18,8 @@ export const WirePort: FC<WirePortProps> = ({
     <circle
       id={id}
       className={'wire-port'}
+      data-wireid={id}
+      data-contextmenutype={id}
       cx={centerX}
       cy={centerY}
       r={radius}

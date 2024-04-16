@@ -253,7 +253,7 @@ defineTheme('light', {
   variable: '#005fb8',
   replacement: '#005fb8',
   string: '#212121',
-  comment: '#49494a',
+  comment: '#00A844',
 });
 
 defineTheme('dark', {
@@ -265,5 +265,5 @@ defineTheme('dark', {
   variable: '#146ba1',
   replacement: '#146ba1',
   string: '#c2c2c2',
-  comment: '#474748',
+  comment: '#005800',
 });

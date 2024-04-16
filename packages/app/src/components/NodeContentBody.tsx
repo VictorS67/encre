@@ -25,7 +25,7 @@ const NodeContentBodyWrapper = styled.div<{
       : "'Roboto', sans-serif"};
 
   &:hover {
-    background: var(--node-forground-color-1);
+    background: var(--node-foreground-color-2);
   }
 `;
 

@@ -15,3 +15,13 @@ code {
 .pre-wrap {
   white-space: pre-wrap;
 }
+
+html[data-color-mode='light'] {
+  .node-card-body {
+    border-top: 2px solid var(--primary-color);
+  }
+
+  .node-tag {
+    border: 2px solid var(--primary-color);
+  }
+}

@@ -2,6 +2,7 @@ import { RecordId } from '../load/keymap.js';
 import { Serializable } from '../load/serializable.js';
 import { Callable, CallableConfig } from '../record/callable.js';
 import { getRecordId } from '../utils/nanoid.js';
+import { GraphComment } from './comments/index.js';
 import { DataType } from './data.js';
 import { NodeImpl } from './nodes/base.js';
 import {
@@ -24,6 +25,7 @@ export interface NodeGraph {
 
   nodes: SerializableNode[];
   connections: NodeConnection[];
+  comments?: GraphComment[];
 }
 
 /** The input and output values from a graph */
@@ -52,6 +54,8 @@ export abstract class BaseGraph<
   // all of the connections in the graph, this allows the connection with
   // subgraph nodes
   connections: NodeConnection[];
+
+  comments: GraphComment[];
 
   // all of the non-subgraph nodes in the graph
   readonly flattenNodes: SerializableNode[];
@@ -104,6 +108,7 @@ export abstract class BaseGraph<
 
     this.nodes = fields?.nodes ?? [];
     this.connections = fields?.connections ?? [];
+    this.comments = fields?.comments ?? [];
 
     this.registry =
       registry ?? (globalNodeRegistry as unknown as NodeRegistration);

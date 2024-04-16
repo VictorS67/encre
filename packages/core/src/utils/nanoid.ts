@@ -6,7 +6,7 @@ import { RecordId } from '../load/keymap';
  */
 export class IdProvider {
   private _alphabet =
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-@';
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz@';
 
   constructor(alphabet?: string) {
     this._alphabet = alphabet ?? this._alphabet;
@@ -39,7 +39,7 @@ export class IdProvider {
 
 export function getRecordId(): RecordId {
   const _alphabet =
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-@';
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz@';
   const nanoid = customAlphabet(_alphabet, 17);
 
   return nanoid() as RecordId;

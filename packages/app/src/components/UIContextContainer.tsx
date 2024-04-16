@@ -71,7 +71,7 @@ const UIContainer = styled.div`
 
     border-radius: 4px;
     border: 1px solid var(--text-color-accent-4);
-    background: var(--node-forground-color);
+    background: var(--node-foreground-color);
 
     color: var(--text-color-accent-4);
     text-transform: uppercase;
@@ -86,14 +86,14 @@ const UIContainer = styled.div`
     align-items: center;
 
     border-radius: 4px;
-    background: var(--node-forground-color);
-    border: 1px solid var(--node-forground-color);
+    background: var(--node-foreground-color);
+    border: 1px solid var(--node-foreground-color);
 
     color: var(--text-color);
     word-wrap: break-word;
 
     &:hover {
-      background: var(--node-background-color-2);
+      background: var(--node-background-color-1);
       border: 1px solid var(--text-color-accent-3);
     }
 
@@ -137,7 +137,7 @@ const UIContainer = styled.div`
     flex-direction: column;
     display: flex;
 
-    background: var(--node-forground-color);
+    background: var(--node-foreground-color);
   }
 `;
 
@@ -175,7 +175,7 @@ export const UIContextContainer: FC<UIContextContainerProps> = memo(
             width={'18px'}
             fontSize={'24px'}
             additionalStyles={css`
-              color: var(--node-background-color) !important;
+              color: var(--node-foreground-color) !important;
             `}
           />
         </div>

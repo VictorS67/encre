@@ -35,6 +35,7 @@ export type PortProps = {
   isClosestPortToWire?: boolean;
   isInput?: boolean;
   isConnected?: boolean;
+  isCollapsed?: boolean;
   onMouseDown?: (
     e: React.MouseEvent<HTMLDivElement>,
     portName: string,
@@ -50,6 +51,7 @@ export type NodePortGroupProps = {
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
   draggingWire?: DraggingWire;
   draggingWireClosestPort?: DraggingWireClosestPort;
+  isCollapsed?: boolean;
   onWireStartDrag?: (
     event: React.MouseEvent<HTMLElement>,
     fromNodeId: string,

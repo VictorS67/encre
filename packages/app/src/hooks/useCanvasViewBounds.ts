@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 
 import { useCanvasPosition } from './useCanvasPosition';
-import { CanvasViewBounds } from '../types/canvas.type';
+import { CanvasPosition, CanvasViewBounds } from '../types/canvas.type';
 
 /**
  * Custom React hook that calculates and returns the bounds of a canvas view.
@@ -60,3 +60,26 @@ export const useCanvasViewBounds = (): CanvasViewBounds => {
 
   return bounds;
 };
+
+export function fitBoundsToViewport(nodeBounds: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}): CanvasPosition {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  // Calculate the required zoom level
+  const zoomX = viewportWidth / nodeBounds.width;
+  const zoomY = viewportHeight / nodeBounds.height;
+  const zoom = Math.min(zoomX, zoomY);
+
+  // Calculate the required position
+  const x =
+    -nodeBounds.x + (viewportWidth - nodeBounds.width * zoom) / (2 * zoom);
+  const y =
+    -nodeBounds.y + (viewportHeight - nodeBounds.height * zoom) / (2 * zoom);
+
+  return { x, y, zoom };
+}
