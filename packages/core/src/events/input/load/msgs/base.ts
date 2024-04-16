@@ -2,6 +2,7 @@ import {
   Serializable,
   SerializedConstructor,
 } from '../../../../load/serializable.js';
+import { isDeepEqual } from '../../../../utils/equal.js';
 import { exhaustiveTuple } from '../../../../utils/exhuastive.js';
 import {
   SerializedMessage,
@@ -73,23 +74,23 @@ export abstract class BaseMessage
     };
   }
 
-  hasEmptyContent(): boolean {
-    const isEmptyContentLike = (contentLike: ContentLike): boolean => {
+  coerceToBoolean(): boolean | undefined {
+    const coerceContentLikeToBoolean = (contentLike: ContentLike): boolean => {
       if (typeof contentLike === 'string') {
-        return contentLike.length === 0;
+        return contentLike.length > 0 && contentLike.toLowerCase() !== 'false';
       }
 
-      return Object.keys(contentLike).length === 0;
+      return true;
     };
 
     if (Array.isArray(this.content)) {
       return (
         this.content.length > 0 &&
-        this.content.every((c) => isEmptyContentLike(c))
+        this.content.every((c) => coerceContentLikeToBoolean(c))
       );
     }
 
-    return isEmptyContentLike(this.content);
+    return coerceContentLikeToBoolean(this.content);
   }
 
   abstract concat(message: BaseMessage): BaseMessage;
@@ -166,6 +167,24 @@ export abstract class BaseMessage
     }
 
     return additionalKwargs;
+  }
+
+  static isEqualMessage(message1: BaseMessage, message2: BaseMessage) {
+    return isDeepEqual(message1.toSerialized(), message2.toSerialized());
+  }
+
+  static isEqualMessageArray(messageArray1: BaseMessage[], messageArray2: BaseMessage[]) {
+    if (messageArray1.length !== messageArray2.length) {
+      return false;
+    }
+
+    for (let i = 0; i < messageArray1.length; i++) {
+      if (!this.isEqualMessage(messageArray1[i], messageArray2[i])) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 
@@ -334,6 +353,11 @@ export class FunctionMessage extends BaseMessage {
       name: this.name ?? '',
     });
   }
+
+  coerceToBoolean(): boolean | undefined {
+    return undefined;
+  }
+
 }
 
 export function getChatString(
