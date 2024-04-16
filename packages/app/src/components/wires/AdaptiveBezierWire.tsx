@@ -13,6 +13,7 @@ export const AdaptiveBezierWire: FC<WireProps<'adaptive-bezier'>> = memo(
     endY,
     isSelected,
     isHighlighted,
+    isHoveringPort,
   }: AdaptiveBezierWireProps) => {
     const { path, centerX, centerY } = getAdaptiveBezierPath({
       startX,
@@ -28,6 +29,7 @@ export const AdaptiveBezierWire: FC<WireProps<'adaptive-bezier'>> = memo(
         center={{ centerX, centerY }}
         isSelected={isSelected}
         isHighlighted={isHighlighted}
+        isHoveringPort={isHoveringPort}
       />
     );
   },

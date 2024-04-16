@@ -30,6 +30,11 @@ export const hoveringWireIdState = atom<string | undefined>({
   default: undefined,
 });
 
+export const hoveringWirePortIdState = atom<string | undefined>({
+  key: 'hoveringWirePortIdState',
+  default: undefined,
+});
+
 export const wireDataFromWireIdState = selectorFamily<
   WireData | undefined,
   string | undefined

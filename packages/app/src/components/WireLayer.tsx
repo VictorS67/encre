@@ -18,6 +18,7 @@ import { nodeIODefState, nodeMapState } from '../state/node';
 import {
   draggingWireClosestPortState,
   hoveringWireIdState,
+  hoveringWirePortIdState,
   selectingWireIdsState,
 } from '../state/wire';
 import { NodeInputPortDef } from '../types/studio.type';
@@ -49,6 +50,7 @@ const WireLayerContainer = styled.svg`
 
   .wire-port {
     stroke: var(--primary-color);
+    pointer-events: auto;
   }
 
   @keyframes dashdraw {
@@ -80,6 +82,9 @@ export const WireLayer: FC<WireLayerProps> = ({
   );
   const [hoveringWireId, setHoveringWireId] =
     useRecoilState(hoveringWireIdState);
+  const [hoveringWirePortId, setHoveringWirePortId] = useRecoilState(
+    hoveringWirePortIdState,
+  );
   const { canvasPosition, clientToCanvasPosition } = useCanvasPosition();
   const mousePositionCanvas = clientToCanvasPosition(
     mousePosition.x,
@@ -108,21 +113,36 @@ export const WireLayer: FC<WireLayerProps> = ({
       const { clientX, clientY } = e;
 
       if (!isDraggingFromNode && !draggingWire) {
-        const clickingWire = (e.target as HTMLElement).closest(
-          '.wire-interaction',
-        );
+        const hoveringWire = (
+          document.elementFromPoint(clientX, clientY) as HTMLElement
+        ).closest('.wire-interaction');
 
-        if (clickingWire) {
-          const wireId = clickingWire.id;
-          setHoveringWireId(wireId);
-        } else {
+        const hoveringWirePort = (
+          document.elementFromPoint(clientX, clientY) as HTMLElement
+        ).closest('.wire-port');
+
+        const wireId: string | undefined =
+          hoveringWire?.id || hoveringWirePort?.id;
+
+        if (!wireId) {
           setHoveringWireId(undefined);
+          setHoveringWirePortId(undefined);
+          return;
+        }
+
+        setHoveringWireId(wireId);
+
+        if (hoveringWirePort) {
+          setHoveringWirePortId(wireId);
+        } else {
+          setHoveringWirePortId(undefined);
         }
 
         return;
       }
 
       setHoveringWireId(undefined);
+      setHoveringWirePortId(undefined);
       setMousePosition({ x: clientX, y: clientY });
 
       if (draggingWire) {
@@ -181,8 +201,10 @@ export const WireLayer: FC<WireLayerProps> = ({
       nodeIODefMap,
       closestPort,
       hoveringWireId,
+      hoveringWirePortId,
       setClosestPort,
       setHoveringWireId,
+      setHoveringWirePortId,
     ],
   );
 
@@ -247,8 +269,14 @@ export const WireLayer: FC<WireLayerProps> = ({
           const isHoveringWire: boolean =
             hoveringWireId !== undefined && hoveringWireId === wireId;
 
+          const isHoveringWirePort: boolean =
+            hoveringWirePortId !== undefined && hoveringWirePortId === wireId;
+
           const isHighlighted: boolean =
-            isHighlightedNode || isHighlightedPort || isHoveringWire;
+            isHighlightedNode ||
+            isHighlightedPort ||
+            isHoveringWire ||
+            isHoveringWirePort;
 
           return (
             <ErrorBoundary
@@ -261,6 +289,7 @@ export const WireLayer: FC<WireLayerProps> = ({
                 portPositions={portPositions}
                 isSelected={selectingWireIds.includes(wireId)}
                 isHighlighted={!!isHighlighted}
+                isHoveringPort={!!isHoveringWirePort}
               />
             </ErrorBoundary>
           );

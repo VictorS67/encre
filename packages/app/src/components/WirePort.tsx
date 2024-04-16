@@ -5,16 +5,18 @@ import styled from '@emotion/styled';
 import { WirePortProps } from '../types/port.type';
 
 export const WirePort: FC<WirePortProps> = ({
+  id,
   centerX,
   centerY,
-  isSelected,
   isHighlighted,
+  isHoveringPort,
   radius = 5,
   strokeWidth = 3,
   onMouseDown,
 }: WirePortProps) => {
   return (
     <circle
+      id={id}
       className={'wire-port'}
       cx={centerX}
       cy={centerY}
@@ -23,7 +25,7 @@ export const WirePort: FC<WirePortProps> = ({
       opacity={isHighlighted ? 1 : 0}
       stroke="transparent"
       fill={
-        isHighlighted && isSelected
+        isHoveringPort
           ? 'var(--canvas-background-color)'
           : 'var(--primary-color)'
       }

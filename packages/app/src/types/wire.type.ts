@@ -37,6 +37,7 @@ export type RenderedWireProps = {
   portPositions: PortPositons;
   isSelected?: boolean;
   isHighlighted?: boolean;
+  isHoveringPort?: boolean;
 };
 
 export type PartialWireProps = {
@@ -52,6 +53,7 @@ export type WireControlProps = {
   endY: number;
   isSelected?: boolean;
   isHighlighted?: boolean;
+  isHoveringPort?: boolean;
 };
 
 export type WireProps<T extends WireOptions['type']> = {
@@ -62,6 +64,7 @@ export type WireProps<T extends WireOptions['type']> = {
   endY: number;
   isSelected?: boolean;
   isHighlighted?: boolean;
+  isHoveringPort?: boolean;
   wireOptions?: Extract<WireOptions, { type: T }>;
 };
 
@@ -89,6 +92,7 @@ export type BaseWireProps = {
   endMarker?: string;
   isSelected?: boolean;
   isHighlighted?: boolean;
+  isHoveringPort?: boolean;
   className?: string;
 };
 

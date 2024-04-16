@@ -60,10 +60,11 @@ export type NodePortGroupProps = {
 };
 
 export type WirePortProps = {
+  id: string;
   centerX: number;
   centerY: number;
-  isSelected?: boolean;
   isHighlighted?: boolean;
+  isHoveringPort?: boolean;
   radius?: number;
   strokeWidth?: number;
   onMouseDown?: (e: React.MouseEvent) => void;

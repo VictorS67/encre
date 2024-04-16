@@ -18,6 +18,7 @@ export const BaseWire: FC<BaseWireProps> = ({
   endMarker,
   isSelected,
   isHighlighted,
+  isHoveringPort,
   className,
 }: BaseWireProps) => {
   return (
@@ -51,10 +52,11 @@ export const BaseWire: FC<BaseWireProps> = ({
       )}
       {center && (
         <WirePort
+          id={id}
           centerX={center.centerX}
           centerY={center.centerY}
-          isSelected={isSelected}
           isHighlighted={isHighlighted}
+          isHoveringPort={isHoveringPort}
         />
       )}
     </g>

@@ -457,6 +457,7 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
       e.stopPropagation();
     });
 
+    // TODO: add index (for example, node id) on the top left of the node.
     return (
       <NodeContentContainer>
         <div className="node-card-info">
