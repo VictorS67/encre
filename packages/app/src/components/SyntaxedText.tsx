@@ -12,6 +12,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
   language,
   keywords,
   theme,
+  style,
 }) => {
   const editorContainer = useRef<HTMLPreElement>(null);
 
@@ -21,7 +22,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
   const [completionDisposable, setCompletionDisposable] =
     useState<monaco.IDisposable>();
 
-  const _keywords = keywords;
+  // const _keywords = keywords;
 
   useEffect(() => {
     return () => {
@@ -47,11 +48,11 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
 
   useLayoutEffect(() => {
     if (!tokenDisposable) {
-      setTokenDisposable(defineTokens(_keywords));
+      setTokenDisposable(defineTokens(keywords));
     }
 
     if (!completionDisposable) {
-      setCompletionDisposable(defineSuggestions(_keywords));
+      setCompletionDisposable(defineSuggestions(keywords));
     }
 
     const colorMode = getColorMode();
@@ -70,7 +71,7 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
       ref={editorContainer}
       data-lang={language}
       className="pre-wrap"
-      style={{ wordBreak: 'break-word', userSelect: 'text' }}
+      style={{ wordBreak: 'break-word', userSelect: 'text', ...style }}
     >
       {text}
     </pre>

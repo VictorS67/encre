@@ -11,13 +11,15 @@ export type ContextMenu = {
   data: ContextMenuData | null;
 };
 
-export type ContextMenuConfigContextItem = {
+export type ContextMenuConfigContextItem<Context = unknown, Data = unknown> = {
   id: string;
   name: string;
   description?: string;
+  tip?: string;
   icon?: IconProps;
-  contexts?: Array<ContextMenuConfigContext>;
-  onSelect?: () => void;
+  data?: Data | ((context: Context) => Data);
+  conditional?: (context: Context) => boolean;
+  contexts?: Array<ContextMenuConfigContext>; // The sub-level contexts
 };
 
 export type ContextMenuConfigContextMetadata = {
@@ -30,13 +32,18 @@ export type ContextMenuConfigContextMetadata = {
   'label' | 'showLabel'
 >;
 
-export type ContextMenuConfigContext = {
+export type ContextMenuConfigContextGroups<Context = unknown> = {
+  contextType: Context;
+  group: readonly ContextMenuConfigContext<Context>[];
+};
+
+export type ContextMenuConfigContext<Context = unknown> = {
   metadata: ContextMenuConfigContextMetadata;
-  items: readonly ContextMenuConfigContextItem[];
+  items: readonly ContextMenuConfigContextItem<Context>[];
 };
 
 export type ContextMenuConfigContexts = {
-  [key in string]: readonly ContextMenuConfigContext[];
+  [key in string]: ContextMenuConfigContextGroups;
 };
 
 export type ContextMenuConfigCommands = Array<ContextMenuConfigContextItem>;
@@ -45,7 +52,8 @@ export type ContextMenuConfig = {
   contexts: {
     [T in keyof ContextMenuConfigContexts]: {
       type: T;
-      data: ContextMenuConfigContexts[T];
+      data: ContextMenuConfigContexts[T]['contextType'];
+      group: ContextMenuConfigContexts[T]['group'];
     };
   };
   commands: ContextMenuConfigCommands;
@@ -59,13 +67,26 @@ export type ContextMenuProps = {
   y: number;
   context: ContextMenuConfigContextData;
   disabled?: boolean;
-  onSelect?: () => void;
+  onSelect?: (
+    id: string,
+    context: ContextMenuConfigContextData,
+    meta: { x: number; y: number },
+    data: unknown,
+  ) => void;
+};
+
+export type ContextMenuContextProps = {
+  type: string;
+  index: number;
+  context: ContextMenuConfigContext;
+  contextGroup: readonly ContextMenuConfigContext<unknown>[];
+  onSelect?: (id: string, data: unknown) => void;
 };
 
 export type ContextMenuItemProps = {
   config: ContextMenuConfigContextItem;
   context: unknown;
   active?: boolean;
-  onSelect?: () => void;
+  onSelect?: (id: string, data: unknown) => void;
   onHover?: () => void;
 };

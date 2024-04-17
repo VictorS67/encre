@@ -8,6 +8,7 @@ export function useMarkdown(text?: string, enabled: boolean = true) {
       return { __html: '' };
     }
 
+    // TODO: add complex renderer for nice-looking markdown
     const markdownHTML: string = marked(text ?? '');
 
     return { __html: markdownHTML };

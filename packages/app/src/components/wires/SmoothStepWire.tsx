@@ -11,7 +11,7 @@ export const SmoothStepWire: FC<WireProps<'smooth-step'>> = memo(
     startY,
     endX,
     endY,
-    isSelected,
+    isSelecting,
     isHighlighted,
     isHoveringPort,
   }: SmoothStepWireProps) => {
@@ -27,7 +27,7 @@ export const SmoothStepWire: FC<WireProps<'smooth-step'>> = memo(
         id={id}
         path={path}
         center={{ centerX, centerY }}
-        isSelected={isSelected}
+        isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
       />

@@ -1,6 +1,7 @@
-import { Node, NodeConnection } from './studio.type';
+import { GraphComment, Node, NodeConnection } from './studio.type';
 
 export type NodeGraph = {
   nodes: Node[];
   connections: NodeConnection[];
+  comments: GraphComment[];
 };

@@ -1,5 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import React, { ForwardedRef, forwardRef, useEffect, useState } from 'react';
+import React, {
+  FC,
+  ForwardedRef,
+  forwardRef,
+  useEffect,
+  useState,
+} from 'react';
 
 import { DN100, DN0, N0 } from '@atlaskit/theme/colors';
 import { token } from '@atlaskit/tokens';
@@ -14,8 +20,10 @@ import clsx from 'clsx';
 
 import { ContextMenuItem } from './ContextMenuItem';
 import { useContextMenuConfig } from '../hooks/useContextMenuConfig';
+import { useStableCallback } from '../hooks/useStableCallback';
 import {
   ContextMenuConfigContext,
+  ContextMenuContextProps,
   type ContextMenuConfigContextItem,
   type ContextMenuProps,
 } from '../types/contextmenu.type';
@@ -32,10 +40,9 @@ const contextMenuStyles = css`
   min-width: 150px;
   max-width: 250px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
+  font-size: 11px;
   border: 1px solid var(--primary-color);
-  border-radius: 5px;
-  padding: 8px 0;
+  padding: 5px 0;
   color: var(--text-color);
   background-color: var(--canvas-background-color);
   box-shadow: 0 8px 16px ${hexToRgba(DN0, 0.25)};
@@ -56,9 +63,9 @@ const contextMenuStyles = css`
 
   .context-menu-item-list .context-menu-item-label {
     display: flex;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
-    padding-left: 10px;
+    padding-left: 5px;
     padding-bottom: 5px;
     color: var(--text-color);
   }
@@ -66,12 +73,9 @@ const contextMenuStyles = css`
 
 export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
   function MyContextMenu(
-    props: ContextMenuProps,
+    { x, y, context, disabled, onSelect }: ContextMenuProps,
     ref: ForwardedRef<HTMLDivElement>,
   ) {
-    const { x, y, context, disabled } = props;
-    const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
-
     const { refs, floatingStyles, update } = useFloating({
       placement: 'bottom-start',
       whileElementsMounted: autoUpdate,
@@ -81,13 +85,19 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
     const mergedRef = useMergeRefs([ref, refs.setReference]);
 
     const { contexts, commands } = useContextMenuConfig();
-    const { type, data } = contexts[context['type']];
+    const { type, data, group } = contexts[context['type']];
+
+    console.log(`contextMenu: type: ${type}, data: ${JSON.stringify(data)}`);
 
     useEffect(() => {
       update();
     }, [update, x, y]);
 
-    const showContext: readonly ContextMenuConfigContext[] = data;
+    const showContext: readonly ContextMenuConfigContext[] = group;
+
+    const onMenuContextSelect = useStableCallback((id: string, d: unknown) => {
+      onSelect?.(id, context, { x, y }, d);
+    });
 
     return (
       <div
@@ -106,43 +116,54 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
         >
           {showContext.map(
             (itemList: ContextMenuConfigContext, index: number) => (
-              <div
-                className="context-menu-item-list"
+              <ContextMenuContext
                 key={`${type}-${itemList.metadata.label}-${index}`}
-              >
-                {index > 0 && <hr />}
-                {itemList.metadata.showLabel && (
-                  <span className="context-menu-item-label">
-                    {itemList.metadata.label}
-                  </span>
-                )}
-                {itemList.items.map(
-                  (item: ContextMenuConfigContextItem, listIndex: number) => (
-                    <ContextMenuItem
-                      key={`${type}-${itemList.metadata.label}-${item.id}`}
-                      config={item}
-                      context={context.data}
-                      active={listIndex === selectedItemIndex}
-                    />
-                  ),
-                )}
-              </div>
+                type={type}
+                index={index}
+                context={itemList}
+                contextGroup={context.group}
+                onSelect={onMenuContextSelect}
+              />
             ),
           )}
-          {/* <div className="context-menu-item-list">
-            {showItems.map(
-              (item: ContextMenuConfigContextItem, index: number) => (
-                <ContextMenuItem
-                  key={item.id}
-                  config={item}
-                  context={context.items}
-                  active={index === selectedItemIndex}
-                />
-              ),
-            )}
-          </div> */}
         </div>
       </div>
     );
   },
 );
+
+export const ContextMenuContext: FC<ContextMenuContextProps> = ({
+  type,
+  index,
+  context,
+  contextGroup,
+  onSelect,
+}: ContextMenuContextProps) => {
+  const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
+
+  const onMenuItemSelect = useStableCallback((id: string, data: unknown) => {
+    onSelect?.(id, data);
+  });
+
+  return (
+    <div className="context-menu-item-list">
+      {index > 0 && <hr />}
+      {context.metadata.showLabel && (
+        <span className="context-menu-item-label">
+          {context.metadata.label}
+        </span>
+      )}
+      {context.items.map(
+        (item: ContextMenuConfigContextItem, listIndex: number) => (
+          <ContextMenuItem
+            key={`${type}-${context.metadata.label}-${item.id}`}
+            config={item}
+            context={contextGroup}
+            active={listIndex === selectedItemIndex}
+            onSelect={onMenuItemSelect}
+          />
+        ),
+      )}
+    </div>
+  );
+};

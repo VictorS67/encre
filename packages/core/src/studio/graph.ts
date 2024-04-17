@@ -2,6 +2,7 @@ import { RecordId } from '../load/keymap.js';
 import { Serializable } from '../load/serializable.js';
 import { Callable, CallableConfig } from '../record/callable.js';
 import { getRecordId } from '../utils/nanoid.js';
+import { GraphComment } from './comments/index.js';
 import { DataType } from './data.js';
 import { NodeImpl } from './nodes/base.js';
 import {
@@ -24,6 +25,7 @@ export interface NodeGraph {
 
   nodes: SerializableNode[];
   connections: NodeConnection[];
+  comments?: GraphComment[];
 }
 
 /** The input and output values from a graph */
@@ -53,11 +55,27 @@ export abstract class BaseGraph<
   // subgraph nodes
   connections: NodeConnection[];
 
+  comments: GraphComment[];
+
   // all of the non-subgraph nodes in the graph
   readonly flattenNodes: SerializableNode[];
 
   // all of the connections after removing subgraph nodes in the graph
   readonly flattenConnections: NodeConnection[];
+
+  // input port fields of the graph
+  readonly graphInputs: Record<string, DataType | Readonly<DataType[]>>;
+
+  // output port fields of the graph
+  readonly graphOutputs: Record<string, DataType | Readonly<DataType[]>>;
+
+  // a lookup table with the key of the input port name and the value
+  // of the corresponding node id and actual input port name in the node
+  readonly graphInputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+
+  // a lookup table with the key of the output port name and the value
+  // of the corresponding node id and actual output port name in the node
+  readonly graphOutputNameMap: Record<string, { nodeId: RecordId; name: string }>;
 
   // node-map: a lookup table with the key of the non-subgraph node id and
   // the value of the non-subgraph node
@@ -104,6 +122,7 @@ export abstract class BaseGraph<
 
     this.nodes = fields?.nodes ?? [];
     this.connections = fields?.connections ?? [];
+    this.comments = fields?.comments ?? [];
 
     this.registry =
       registry ?? (globalNodeRegistry as unknown as NodeRegistration);
@@ -113,14 +132,26 @@ export abstract class BaseGraph<
     this.nodePortDefMap = {};
 
     // Flatten any subgraph in the nodes and connections, all nodes
-    // should be a non-subgraph node
-    const { flattenNodes, flattenConnections } = BaseGraph.flattenGraph(
+    // should be a non-subgraph node, also get graph inputs and outputs
+    // for the start nodes and end nodes
+    const { 
+      flattenNodes, 
+      flattenConnections, 
+      inputs, 
+      inputNameMap, 
+      outputs, 
+      outputNameMap 
+    } = BaseGraph.flattenGraph(
       this.id,
       this.nodes,
       this.connections
     );
     this.flattenNodes = flattenNodes;
     this.flattenConnections = flattenConnections;
+    this.graphInputs = inputs;
+    this.graphInputNameMap = inputNameMap;
+    this.graphOutputs = outputs;
+    this.graphOutputNameMap = outputNameMap;
 
     // Create nodeImpl-map and node-map for future lookup
     for (const node of this.flattenNodes) {
@@ -231,6 +262,9 @@ export abstract class BaseGraph<
    * node in the graph. Since the original connections use the subgraph node
    * id and port name, these will be replaced with the inner node id and port
    * name
+   * 
+   * In addition, get graph ports for the start nodes and end nodes in the
+   * flatten graph
    *
    * @param nodeId graph id
    * @param nodes all of the nodes in the graph, this allows subgraph nodes
@@ -239,6 +273,9 @@ export abstract class BaseGraph<
    * @returns `flattenNodes` - all of the non-subgraph nodes in the graph,
    * `flattenConnections` - all of the connections after removing subgraph
    * nodes in the graph
+   * `inputs` - input port fields, `outputs` - output port fields,
+   * `inputNameMap` and `outputNameMap` are the pointer to the original node id and
+   * port name for reversing the name to the original.
    */
   static flattenGraph(
     nodeId: RecordId,
@@ -247,6 +284,10 @@ export abstract class BaseGraph<
   ): {
     flattenNodes: SerializableNode[];
     flattenConnections: NodeConnection[];
+    inputs: Record<string, DataType | Readonly<DataType[]>>;
+    inputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    outputs: Record<string, DataType | Readonly<DataType[]>>;
+    outputNameMap: Record<string, { nodeId: RecordId; name: string }>;
   } {
     let flattenNodes: SerializableNode[] = [];
     let flattenConnections: NodeConnection[] = [];
@@ -330,7 +371,7 @@ export abstract class BaseGraph<
       }
     }
 
-    return { flattenNodes, flattenConnections };
+    return { flattenNodes, flattenConnections, inputs, inputNameMap, outputs, outputNameMap };
   }
 
   /**

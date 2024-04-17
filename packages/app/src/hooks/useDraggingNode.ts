@@ -17,6 +17,7 @@ import {
   selectingNodeIdsState,
 } from '../state/node';
 import { Node } from '../types/studio.type';
+import { isNotNull } from '../utils/safeTypes';
 
 export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
   const isDraggingMultipleNodes = useRecoilValue(isDraggingMultipleNodesState);
@@ -33,27 +34,17 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
     (e: DragStartEvent) => {
       const draggingNodeId: string = e.active.id as string;
 
-      const nodesToDrag: Node[] =
+      const nodeIdsToDrag: string[] =
         isDraggingMultipleNodes && selectingNodeIds.length > 0
           ? [...new Set([...selectingNodeIds, draggingNodeId])]
-              .map((id) => nodeMap[id])
-              .filter((val) => val != null)
-          : [nodeMap[draggingNodeId]].filter((val) => val != null);
+          : [draggingNodeId];
+
+      const nodesToDrag: Node[] = nodeIdsToDrag
+        .map((id) => nodeMap[id])
+        .filter(isNotNull);
 
       setDraggingNodes(nodesToDrag);
-      setSelectingNodeIds(
-        isDraggingMultipleNodes
-          ? [...new Set([...selectingNodeIds, draggingNodeId])].filter(
-              (id) => nodeMap[id] != null,
-            )
-          : [draggingNodeId],
-      );
-
-      // console.log(
-      //   `onNodeStartDrag: selectingNodeIds: ${JSON.stringify(
-      //     selectingNodeIds,
-      //   )} draggingNodeId: ${draggingNodeId}, isDraggingMultipleNodes: ${isDraggingMultipleNodes}`,
-      // );
+      setSelectingNodeIds(nodeIdsToDrag);
 
       const maxZIndex: number = nodes.reduce((maxVal, node) => {
         const zIndex: number =
@@ -65,13 +56,9 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
         return Math.max(maxVal, zIndex);
       }, 0);
 
-      console.log(
-        `onNodeStartDrag: draggingNodeId: ${draggingNodeId}, maxZIndex: ${maxZIndex}`,
-      );
-
       onNodesChange(
         nodes.map((node): Node => {
-          const isDragging: boolean = nodesToDrag.some((n) => node.id === n.id);
+          const isDragging: boolean = nodeIdsToDrag.includes(node.id);
 
           return isDragging
             ? {
@@ -101,6 +88,8 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
 
   const onNodeEndDrag = useCallback(
     (e: DragEndEvent) => {
+      if (draggingNodes.length === 0) return;
+
       const draggingNodeIds: string[] = draggingNodes.map((node) => node.id);
 
       const delta = {
@@ -110,18 +99,16 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
 
       setDraggingNodes([]);
 
-      console.log(
-        `onNodeEndDrag: draggingNodeIds: ${JSON.stringify(
-          draggingNodeIds,
-        )}, delta: ${JSON.stringify(delta)}`,
-      );
-
       onNodesChange(
         produce(nodes, (draft) => {
           for (const nodeId of draggingNodeIds) {
             const nodeToChange = draft.find((n) => n.id === nodeId);
 
             if (nodeToChange) {
+              console.log(
+                `dragging nodes after: z-index: ${nodeToChange.visualInfo.position.zIndex}`,
+              );
+
               nodeToChange.visualInfo.position.x += delta.x;
               nodeToChange.visualInfo.position.y += delta.y;
             }

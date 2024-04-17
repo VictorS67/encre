@@ -25,6 +25,24 @@ export interface BaseNode {
       width: number;
       height: number;
     };
+    content?: {
+      color?:
+      | 'red'
+      | 'orange'
+      | 'gold'
+      | 'yellow'
+      | 'palmera'
+      | 'green'
+      | 'meadow'
+      | 'cyan'
+      | 'blue'
+      | 'cornflower'
+      | 'purple'
+      | 'pink'
+      | 'razzmatazz'
+      | 'silver'
+      | 'dark';
+    }
   };
 
   inputs: NodePortFields | undefined;
