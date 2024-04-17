@@ -1,4 +1,3 @@
-import { blob } from 'stream/consumers';
 import { expect, jest, test } from '@jest/globals';
 import { Context } from '../../../events/input/load/docs/context.js';
 import {
@@ -9,16 +8,9 @@ import {
     BotMessage,
     SystemMessage,
     FunctionMessage,
-    checkMessageRole,
     convertMessageLikeToMessage,
-    isMessageLike,
   } from '../../../events/input/load/msgs/base.js';
   import {
-    isSerializedMessage,
-    mapSerializedMessageToChatMessage,
-  } from '../../../events/output/provide/message.js';
-  import {
-    Data,
     StringData,
     NumberData,
     BooleanData,
@@ -28,16 +20,6 @@ import {
     ContextData,
     ChatMessageData,
     ArrayData,
-    ArrayDataType,
-    DataType,
-    ScalarData,
-    ScalarDataType,
-    ValueOf,
-    getScalarTypeOf,
-    isArrayData,
-    isArrayDataType,
-    isScalarData,
-    toArrayFromScalar,
   } from '../../data.js';
 import {
     coerceToData,
@@ -291,8 +273,8 @@ test('coerceTypeOptional', async () => {
     // UnknownData
     const unknownD1: UnknownData = { type: 'unknown', value: undefined };
     const unknownD2: UnknownData = { type: 'unknown', value: null };
-    expect(await coerceTypeOptional(unknownD1, 'unknown')).toBe(undefined); // check if this is correct 对的
-    expect(await coerceTypeOptional(unknownD2, 'unknown')).toBe(null); // check if this is correct
+    expect(await coerceTypeOptional(unknownD1, 'unknown')).toBe(undefined);
+    expect(await coerceTypeOptional(unknownD2, 'unknown')).toBe(null);
     expect(await coerceTypeOptional(unknownD1, 'string')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD2, 'string')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'number')).toBe(undefined);
@@ -308,7 +290,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(unknownD1, 'object')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD2, 'object')).toBe(undefined);
 
-    expect(await coerceTypeOptional(unknownD1, 'unknown[]')).toBe(undefined); // should this be [undefined] 对的
+    expect(await coerceTypeOptional(unknownD1, 'unknown[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'string[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'number[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'boolean[]')).toBe(undefined);
@@ -316,7 +298,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(unknownD1, 'context[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'chat-message[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'object[]')).toBe(undefined);
-    expect(await coerceTypeOptional(unknownD2, 'unknown[]')).toStrictEqual([null]);  // 对的
+    expect(await coerceTypeOptional(unknownD2, 'unknown[]')).toStrictEqual([null]);
     expect(await coerceTypeOptional(unknownD2, 'string[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD2, 'number[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD2, 'boolean[]')).toBe(undefined);
@@ -444,7 +426,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(blobD, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(blobD2, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(blobD, 'blob')).toStrictEqual(new Blob(['Hello, world!'], { type: 'text/plain' }));
-    expect(await coerceTypeOptional(blobD, 'context')).toBe(undefined); // check if this is correct
+    expect(await coerceTypeOptional(blobD, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(blobD, 'chat-message')).toBe(undefined); 
     expect(await coerceTypeOptional(blobD, 'object')).toStrictEqual(new Blob(['Hello, world!'], { type: 'text/plain' }));
 
@@ -557,6 +539,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedChatMessageToChatMessage1 as BaseMessage, chatMessage1)).toBeTruthy();
     expect(await coerceTypeOptional(chatMessageD1, 'object')).toStrictEqual(chatMessage1);
 
+    expect(await coerceTypeOptional(chatMessageD1, 'unknown[]')).toStrictEqual([chatMessage1]);
     expect(await coerceTypeOptional(chatMessageD1, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(chatMessage1).toSerialized(),
         null,
@@ -585,6 +568,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedChatMessageToChatMessage2 as BaseMessage, chatMessage2)).toBeTruthy();
     expect(await coerceTypeOptional(chatMessageD2, 'object')).toStrictEqual(chatMessage2);
 
+    expect(await coerceTypeOptional(chatMessageD2, 'unknown[]')).toStrictEqual([chatMessage2]);
     expect(await coerceTypeOptional(chatMessageD2, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(chatMessage2).toSerialized(),
         null,
@@ -613,6 +597,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedChatMessageToChatMessage3 as BaseMessage, chatMessage3)).toBeTruthy();
     expect(await coerceTypeOptional(chatMessageD3, 'object')).toStrictEqual(chatMessage3);
 
+    expect(await coerceTypeOptional(chatMessageD3, 'unknown[]')).toStrictEqual([chatMessage3]);
     expect(await coerceTypeOptional(chatMessageD3, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(chatMessage3).toSerialized(),
         null,
@@ -642,6 +627,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedChatMessageToChatMessage4 as BaseMessage, convertedChatMessage)).toBeTruthy();
     expect(await coerceTypeOptional(chatMessageD4, 'object')).toStrictEqual(chatMessage4);
 
+    expect(await coerceTypeOptional(chatMessageD4, 'unknown[]')).toStrictEqual([chatMessage4]);
     expect(await coerceTypeOptional(chatMessageD4, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(chatMessage4).toSerialized(),
         null,
@@ -683,6 +669,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedHumanMessageToChatMessage1 as BaseMessage, humanMessage1)).toBeTruthy();
     expect(await coerceTypeOptional(humanMessageD1, 'object')).toStrictEqual(humanMessage1);
 
+    expect(await coerceTypeOptional(humanMessageD1, 'unknown[]')).toStrictEqual([humanMessage1]);
     expect(await coerceTypeOptional(humanMessageD1, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(humanMessage1).toSerialized(),
         null,
@@ -711,6 +698,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedHumanMessageToChatMessage2 as BaseMessage, humanMessage2)).toBeTruthy();
     expect(await coerceTypeOptional(humanMessageD2, 'object')).toStrictEqual(humanMessage2);
 
+    expect(await coerceTypeOptional(humanMessageD2, 'unknown[]')).toStrictEqual([humanMessage2]);
     expect(await coerceTypeOptional(humanMessageD2, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(humanMessage2).toSerialized(),
         null,
@@ -739,6 +727,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedHumanMessageToChatMessage3 as BaseMessage, humanMessage3)).toBeTruthy();
     expect(await coerceTypeOptional(humanMessageD3, 'object')).toStrictEqual(humanMessage3);
 
+    expect(await coerceTypeOptional(humanMessageD3, 'unknown[]')).toStrictEqual([humanMessage3]);
     expect(await coerceTypeOptional(humanMessageD3, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(humanMessage3).toSerialized(),
         null,
@@ -768,6 +757,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedHumanMessageToChatMessage4 as BaseMessage, convertedHumanMessage)).toBeTruthy(); 
     expect(await coerceTypeOptional(humanMessageD4, 'object')).toStrictEqual(humanMessage4);
 
+    expect(await coerceTypeOptional(humanMessageD4, 'unknown[]')).toStrictEqual([humanMessage4]);
     expect(await coerceTypeOptional(humanMessageD4, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(humanMessage4).toSerialized(),
         null,
@@ -809,6 +799,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedBotMessageToChatMessage1 as BaseMessage, botMessage1)).toBeTruthy();
     expect(await coerceTypeOptional(botMessageD1, 'object')).toStrictEqual(botMessage1);
 
+    expect(await coerceTypeOptional(botMessageD1, 'unknown[]')).toStrictEqual([botMessage1]);
     expect(await coerceTypeOptional(botMessageD1, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(botMessage1).toSerialized(),
         null,
@@ -837,6 +828,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedBotMessageToChatMessage2 as BaseMessage, botMessage2)).toBeTruthy();
     expect(await coerceTypeOptional(botMessageD2, 'object')).toStrictEqual(botMessage2);
 
+    expect(await coerceTypeOptional(botMessageD2, 'unknown[]')).toStrictEqual([botMessage2]);
     expect(await coerceTypeOptional(botMessageD2, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(botMessage2).toSerialized(),
         null,
@@ -865,6 +857,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedBotMessageToChatMessage3 as BaseMessage, botMessage3)).toBeTruthy();
     expect(await coerceTypeOptional(botMessageD3, 'object')).toStrictEqual(botMessage3);
 
+    expect(await coerceTypeOptional(botMessageD3, 'unknown[]')).toStrictEqual([botMessage3]);
     expect(await coerceTypeOptional(botMessageD3, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(botMessage3).toSerialized(),
         null,
@@ -894,6 +887,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedBotMessageToChatMessage4 as BaseMessage, convertedBotMessage)).toBeTruthy();
     expect(await coerceTypeOptional(botMessageD4, 'object')).toStrictEqual(botMessage4);
 
+    expect(await coerceTypeOptional(botMessageD4, 'unknown[]')).toStrictEqual([botMessage4]);
     expect(await coerceTypeOptional(botMessageD4, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(botMessage4).toSerialized(),
         null,
@@ -935,6 +929,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedSystemMessageToChatMessage1 as BaseMessage, systemMessage1)).toBeTruthy();
     expect(await coerceTypeOptional(systemMessageD1, 'object')).toStrictEqual(systemMessage1);
 
+    expect(await coerceTypeOptional(systemMessageD1, 'unknown[]')).toStrictEqual([systemMessage1]);
     expect(await coerceTypeOptional(systemMessageD1, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(systemMessage1).toSerialized(),
         null,
@@ -963,6 +958,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedSystemMessageToChatMessage2 as BaseMessage, systemMessage2)).toBeTruthy();
     expect(await coerceTypeOptional(systemMessageD2, 'object')).toStrictEqual(systemMessage2);
 
+    expect(await coerceTypeOptional(systemMessageD2, 'unknown[]')).toStrictEqual([systemMessage2]);
     expect(await coerceTypeOptional(systemMessageD2, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(systemMessage2).toSerialized(),
         null,
@@ -991,6 +987,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedSystemMessageToChatMessage3 as BaseMessage, systemMessage3)).toBeTruthy();
     expect(await coerceTypeOptional(systemMessageD3, 'object')).toStrictEqual(systemMessage3);
 
+    expect(await coerceTypeOptional(systemMessageD3, 'unknown[]')).toStrictEqual([systemMessage3]);
     expect(await coerceTypeOptional(systemMessageD3, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(systemMessage3).toSerialized(),
         null,
@@ -1020,6 +1017,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedSystemMessageToChatMessage4 as BaseMessage, convertedSystemMessage)).toBeTruthy();
     expect(await coerceTypeOptional(systemMessageD4, 'object')).toStrictEqual(systemMessage4);
 
+    expect(await coerceTypeOptional(systemMessageD4, 'unknown[]')).toStrictEqual([systemMessage4]);
     expect(await coerceTypeOptional(systemMessageD4, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(systemMessage4).toSerialized(),
         null,
@@ -1061,6 +1059,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedFunctionMessageToChatMessage1 as BaseMessage, functionMessage1)).toBeTruthy();
     expect(await coerceTypeOptional(functionMessageD1, 'object')).toStrictEqual(functionMessage1);
 
+    expect(await coerceTypeOptional(functionMessageD1, 'unknown[]')).toStrictEqual([functionMessage1]);
     expect(await coerceTypeOptional(functionMessageD1, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(functionMessage1).toSerialized(),
         null,
@@ -1089,6 +1088,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedFunctionMessageToChatMessage2 as BaseMessage, functionMessage2)).toBeTruthy();
     expect(await coerceTypeOptional(functionMessageD2, 'object')).toStrictEqual(functionMessage2);
 
+    expect(await coerceTypeOptional(functionMessageD2, 'unknown[]')).toStrictEqual([functionMessage2]);
     expect(await coerceTypeOptional(functionMessageD2, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(functionMessage2).toSerialized(),
         null,
@@ -1117,6 +1117,7 @@ test('coerceTypeOptional', async () => {
     expect(BaseMessage.isEqualMessage(coercedFunctionMessageToChatMessage3 as BaseMessage, functionMessage3)).toBeTruthy();
     expect(await coerceTypeOptional(functionMessageD3, 'object')).toStrictEqual(functionMessage3);
 
+    expect(await coerceTypeOptional(functionMessageD3, 'unknown[]')).toStrictEqual([functionMessage3]);
     expect(await coerceTypeOptional(functionMessageD3, 'string[]')).toStrictEqual([JSON.stringify(
         convertMessageLikeToMessage(functionMessage3).toSerialized(),
         null,
@@ -1132,15 +1133,12 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(functionMessageD3, 'object[]')).toStrictEqual([functionMessage3]); 
 
     // convertMessageLikeToMessage do not have case for ['function', 'Hello!'] CORRECT!
-    // functionMessageD4 actually could not exists, should be test?<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     // expect(await coerceTypeOptional(functionMessageD4, 'string')).rejects.toThrow(); // cannot handle this error
     expect(await coerceTypeOptional(functionMessageD4, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(functionMessageD4, 'boolean')).toBe(undefined); // get true, need to check
+    expect(await coerceTypeOptional(functionMessageD4, 'boolean')).toBe(undefined);
     expect(await coerceTypeOptional(functionMessageD4, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(functionMessageD4, 'context')).toBe(undefined);
-    // const coercedFunctionMessageToChatMessage4 = await coerceTypeOptional(functionMessageD4, 'chat-message'); // cannot handle this error
-    // expect(coercedFunctionMessageToChatMessage4===undefined).toBeFalsy();
-    // expect(BaseMessage.isEqualMessage(coercedFunctionMessageToChatMessage4 as BaseMessage, functionMessage4 as BaseMessage)).toBeTruthy(); // need correct the equal
+    // expect(await coerceTypeOptional(functionMessageD4, 'chat-message')).rejects.toThrow(); // cannot handle this error
     expect(await coerceTypeOptional(functionMessageD4, 'object')).toStrictEqual(functionMessage4);
 
     // JSONObjectData
@@ -1156,7 +1154,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(objectD1, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(objectD2, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(objectD3, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(objectD1, 'boolean')).toBe(true); // ? 对的
+    expect(await coerceTypeOptional(objectD1, 'boolean')).toBe(true); 
     expect(await coerceTypeOptional(objectD2, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(objectD3, 'boolean')).toBe(true); 
     expect(await coerceTypeOptional(objectD1, 'blob')).toStrictEqual(new Blob([JSON.stringify(object1, null, 2)], { type: 'text/plain' }));
@@ -1176,10 +1174,12 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(objectD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(objectD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(objectD3, 'chat-message')).toBe(undefined);
-    const object6: object = { role: 'general', json: { content: 'general message' } }; // json里需要一个role
+    const object6: object = { role: 'general', json: { role: 'general', content: 'general message' } };
     const objectD6: JSONObjectData = { type: 'object', value: object6 };
-    // const coercedObjectToChatMessage6 = await coerceTypeOptional(objectD6, 'chat-message');
-    const object7: object = { role: 'human', json: { content: 'human message' } }; // content也可以是json，list[string/ob]
+    const coercedObjectToChatMessage6 = await coerceTypeOptional(objectD6, 'chat-message');
+    const objectChatMessage = new ChatMessage('general message', 'general');
+    expect(BaseMessage.isEqualMessage(coercedObjectToChatMessage6 as BaseMessage, objectChatMessage)).toBeTruthy();
+    const object7: object = { role: 'human', json: { content: 'human message' } };
     const objectD7: JSONObjectData = { type: 'object', value: object7 };
     const coercedObjectToChatMessage7 = await coerceTypeOptional(objectD7, 'chat-message');
     const objectHumanMessage = new HumanMessage('human message');
@@ -1199,9 +1199,22 @@ test('coerceTypeOptional', async () => {
     const coercedObjectToChatMessage10 = await coerceTypeOptional(objectD10, 'chat-message');
     const objectFunctionMessage = new FunctionMessage('function message');
     expect(BaseMessage.isEqualMessage(coercedObjectToChatMessage10 as BaseMessage, objectFunctionMessage)).toBeTruthy();
+    const object11: object = { role: 'human', json: { content: { key: 'value' } } }; 
+    const objectD11: JSONObjectData = { type: 'object', value: object11 };
+    const coercedObjectToHumanMessage11 = await coerceTypeOptional(objectD11, 'chat-message');
+    const objectHumanOtherContentMessage = new HumanMessage( { content: { key: 'value' } } );
+    expect(BaseMessage.isEqualMessage(coercedObjectToHumanMessage11 as BaseMessage, objectHumanOtherContentMessage)).toBeTruthy();
+    const object12: object = { role: 'human', json: { content: ['1', '2'] } }; 
+    const objectD12: JSONObjectData = { type: 'object', value: object12 };
+    const coercedObjectToHumanMessage12 = await coerceTypeOptional(objectD12, 'chat-message');
+    const objectHumanOtherContentMessage2 = new HumanMessage( { content: ['1', '2'] } );
+    expect(BaseMessage.isEqualMessage(coercedObjectToHumanMessage12 as BaseMessage, objectHumanOtherContentMessage2)).toBeTruthy();
 
     expect(await coerceTypeOptional(objectD1, 'object')).toStrictEqual(object1);
 
+    expect(await coerceTypeOptional(objectD1, 'unknown[]')).toStrictEqual([object1]);
+    expect(await coerceTypeOptional(objectD2, 'unknown[]')).toStrictEqual([object2]);
+    expect(await coerceTypeOptional(objectD3, 'unknown[]')).toStrictEqual([object3]);
     expect(await coerceTypeOptional(objectD1, 'string[]')).toStrictEqual([JSON.stringify(object1, null, 2)]);
     expect(await coerceTypeOptional(objectD2, 'string[]')).toStrictEqual([JSON.stringify(object2, null, 2)]);
     expect(await coerceTypeOptional(objectD3, 'string[]')).toStrictEqual([JSON.stringify(object3, null, 2)]);
@@ -1210,7 +1223,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(objectD3, 'number[]')).toBe(undefined);
     expect(await coerceTypeOptional(objectD1, 'boolean[]')).toStrictEqual([true]);
     expect(await coerceTypeOptional(objectD2, 'boolean[]')).toStrictEqual([true]);
-    expect(await coerceTypeOptional(objectD3, 'boolean[]')).toStrictEqual([true]); 
+    expect(await coerceTypeOptional(objectD3, 'boolean[]')).toStrictEqual([true]);
     expect(await coerceTypeOptional(objectD1, 'blob[]')).toStrictEqual([new Blob([JSON.stringify(object1, null, 2)], { type: 'text/plain' })]);
     expect(await coerceTypeOptional(objectD2, 'blob[]')).toStrictEqual([new Blob([JSON.stringify(object2, null, 2)], { type: 'text/plain' })]);
     expect(await coerceTypeOptional(objectD3, 'blob[]')).toStrictEqual([new Blob([JSON.stringify(object3, null, 2)], { type: 'text/plain' })]);
@@ -1242,13 +1255,16 @@ test('coerceTypeOptional', async () => {
     // empty array
     const emptyArray: any[] = [];
     const emptyArrayD: ArrayData = { type: 'unknown[]', value: emptyArray };
+    expect(await coerceTypeOptional(emptyArrayD, 'unknown')).toStrictEqual([]); 
     expect(await coerceTypeOptional(emptyArrayD, 'string')).toBe(''); 
     expect(await coerceTypeOptional(emptyArrayD, 'number')).toBe(undefined); 
-    expect(await coerceTypeOptional(emptyArrayD, 'boolean')).toBe(true); // leave it
+    expect(await coerceTypeOptional(emptyArrayD, 'boolean')).toBe(true); // leave it ?????
     expect(await coerceTypeOptional(emptyArrayD, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(emptyArrayD, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(emptyArrayD, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(emptyArrayD, 'object')).toStrictEqual([]); 
+
+    expect(await coerceTypeOptional(emptyArrayD, 'unknown[]')).toStrictEqual([]); 
     expect(await coerceTypeOptional(emptyArrayD, 'string[]')).toStrictEqual([]); 
     expect(await coerceTypeOptional(emptyArrayD, 'number[]')).toStrictEqual([]); 
     expect(await coerceTypeOptional(emptyArrayD, 'boolean[]')).toStrictEqual([]);
@@ -1262,6 +1278,7 @@ test('coerceTypeOptional', async () => {
     const undefinedArray2: undefined[] = [undefined, undefined, undefined];
     const undefinedArrayD1: ArrayData = { type: 'unknown[]', value: undefinedArray1 };
     const undefinedArrayD2: ArrayData = { type: 'unknown[]', value: undefinedArray2 };
+    expect(await coerceTypeOptional(undefinedArrayD1, 'unknown')).toStrictEqual([undefined]); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'string')).toBe(''); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'number')).toBe(undefined); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'boolean')).toBe(false); 
@@ -1269,6 +1286,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(undefinedArrayD1, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(undefinedArrayD1, 'chat-message')).toBe(undefined); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'object')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD1, 'unknown[]')).toStrictEqual([undefined]); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'string[]')).toStrictEqual([undefined]); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'number[]')).toStrictEqual([undefined]); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'boolean[]')).toStrictEqual([undefined]);
@@ -1277,6 +1295,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(undefinedArrayD1, 'chat-message[]')).toStrictEqual([undefined]); 
     expect(await coerceTypeOptional(undefinedArrayD1, 'object[]')).toStrictEqual([undefined]); 
 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'unknown')).toStrictEqual([undefined, undefined, undefined]); 
     expect(await coerceTypeOptional(undefinedArrayD2, 'string')).toBe(''); 
     expect(await coerceTypeOptional(undefinedArrayD2, 'number')).toBe(undefined); 
     expect(await coerceTypeOptional(undefinedArrayD2, 'boolean')).toBe(false); 
@@ -1284,39 +1303,60 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(undefinedArrayD2, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(undefinedArrayD2, 'chat-message')).toBe(undefined); 
     expect(await coerceTypeOptional(undefinedArrayD2, 'object')).toStrictEqual([undefined, undefined, undefined]);
-    expect(await coerceTypeOptional(undefinedArrayD1, 'string[]')).toStrictEqual([undefined]); 
-    expect(await coerceTypeOptional(undefinedArrayD1, 'number[]')).toStrictEqual([undefined]); 
-    expect(await coerceTypeOptional(undefinedArrayD1, 'boolean[]')).toStrictEqual([undefined]);
-    expect(await coerceTypeOptional(undefinedArrayD1, 'blob[]')).toStrictEqual([undefined]); 
-    expect(await coerceTypeOptional(undefinedArrayD1, 'context[]')).toStrictEqual([undefined]); 
-    expect(await coerceTypeOptional(undefinedArrayD1, 'chat-message[]')).toStrictEqual([undefined]); 
-    expect(await coerceTypeOptional(undefinedArrayD1, 'object[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'unknown[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'string[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'number[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'boolean[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(undefinedArrayD2, 'blob[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'context[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'chat-message[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(undefinedArrayD2, 'object[]')).toStrictEqual([undefined, undefined, undefined]); 
 
     // null array
     const nullArray1: null[] = [null];
     const nullArray2: null[] = [null, null, null];
     const nullArrayD1: ArrayData = { type: 'unknown[]', value: nullArray1 };
     const nullArrayD2: ArrayData = { type: 'unknown[]', value: nullArray2 };
-    expect(await coerceTypeOptional(nullArrayD1, 'string')).toBe(''); 
-    expect(await coerceTypeOptional(nullArrayD1, 'number')).toBe(undefined); 
-    expect(await coerceTypeOptional(nullArrayD1, 'boolean')).toBe(false); 
-    expect(await coerceTypeOptional(nullArrayD1, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(nullArrayD1, 'unknown')).toStrictEqual([null]);
+    expect(await coerceTypeOptional(nullArrayD1, 'string')).toBe('');
+    expect(await coerceTypeOptional(nullArrayD1, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(nullArrayD1, 'boolean')).toBe(false);
+    expect(await coerceTypeOptional(nullArrayD1, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(nullArrayD1, 'context')).toBe(undefined);
-    expect(await coerceTypeOptional(nullArrayD1, 'chat-message')).toBe(undefined); 
-    expect(await coerceTypeOptional(nullArrayD1, 'object')).toStrictEqual([null]); 
-    expect(await coerceTypeOptional(nullArrayD2, 'string')).toBe(''); 
-    expect(await coerceTypeOptional(nullArrayD2, 'number')).toBe(undefined); 
-    expect(await coerceTypeOptional(nullArrayD2, 'boolean')).toBe(false); 
-    expect(await coerceTypeOptional(nullArrayD2, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(nullArrayD1, 'chat-message')).toBe(undefined);
+    expect(await coerceTypeOptional(nullArrayD1, 'object')).toStrictEqual([null]);
+    expect(await coerceTypeOptional(nullArrayD2, 'unknown')).toStrictEqual([null, null, null]);
+    expect(await coerceTypeOptional(nullArrayD2, 'string')).toBe('');
+    expect(await coerceTypeOptional(nullArrayD2, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(nullArrayD2, 'boolean')).toBe(false);
+    expect(await coerceTypeOptional(nullArrayD2, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(nullArrayD2, 'context')).toBe(undefined);
-    expect(await coerceTypeOptional(nullArrayD2, 'chat-message')).toBe(undefined); 
+    expect(await coerceTypeOptional(nullArrayD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(nullArrayD2, 'object')).toStrictEqual([null, null, null]);
+
+    expect(await coerceTypeOptional(nullArrayD1, 'unknown[]')).toStrictEqual([null]);
+    expect(await coerceTypeOptional(nullArrayD1, 'string[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(nullArrayD1, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(nullArrayD1, 'boolean[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(nullArrayD1, 'blob[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(nullArrayD1, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(nullArrayD1, 'chat-message[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(nullArrayD1, 'object[]')).toStrictEqual([undefined]); // ?
+    expect(await coerceTypeOptional(nullArrayD2, 'unknown[]')).toStrictEqual([null, null, null]);
+    expect(await coerceTypeOptional(nullArrayD2, 'string[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(nullArrayD2, 'number[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(nullArrayD2, 'boolean[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(nullArrayD2, 'blob[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(nullArrayD2, 'context[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(nullArrayD2, 'chat-message[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(nullArrayD2, 'object[]')).toStrictEqual([undefined, undefined, undefined]);
 
     // string array
     const stringArray1: string[] = ['Hello!'];
     const stringArray2: string[] = ['Hello!', 'Hi', 'yeah.'];
     const stringArrayD1: ArrayData = { type: 'string[]', value: stringArray1 };
     const stringArrayD2: ArrayData = { type: 'string[]', value: stringArray2 };
+    expect(await coerceTypeOptional(stringArrayD1, 'unknown')).toStrictEqual(['Hello!']);
     expect(await coerceTypeOptional(stringArrayD1, 'string')).toBe('Hello!');
     expect(await coerceTypeOptional(stringArrayD1, 'number')).toBe(undefined); 
     expect(await coerceTypeOptional(stringArrayD1, 'boolean')).toBe(true); 
@@ -1324,6 +1364,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(stringArrayD1, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(stringArrayD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(stringArrayD1, 'object')).toStrictEqual(['Hello!']);
+    expect(await coerceTypeOptional(stringArrayD2, 'unknown')).toStrictEqual(['Hello!', 'Hi', 'yeah.']);
     expect(await coerceTypeOptional(stringArrayD2, 'string')).toBe('Hello!\nHi\nyeah.');
     expect(await coerceTypeOptional(stringArrayD2, 'number')).toBe(undefined); 
     expect(await coerceTypeOptional(stringArrayD2, 'boolean')).toBe(true); 
@@ -1332,6 +1373,31 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(stringArrayD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(stringArrayD2, 'object')).toStrictEqual(['Hello!', 'Hi', 'yeah.']);
 
+    expect(await coerceTypeOptional(stringArrayD1, 'unknown[]')).toStrictEqual(['Hello!']);
+    expect(await coerceTypeOptional(stringArrayD1, 'string[]')).toStrictEqual(['Hello!']);
+    expect(await coerceTypeOptional(stringArrayD1, 'number[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(stringArrayD1, 'boolean[]')).toStrictEqual([true]); 
+    expect(await coerceTypeOptional(stringArrayD1, 'blob[]')).toStrictEqual([new Blob(['Hello!'], { type: 'text/plain' })]); 
+    expect(await coerceTypeOptional(stringArrayD1, 'context[]')).toStrictEqual([new Context({ pageContent: 'Hello!' })]);
+    const coercedStringArrayToChatMessageArray = await coerceTypeOptional(stringArrayD1, 'chat-message[]') as BaseMessage[];
+    const stringHumanMessageArray = [new HumanMessage('Hello!')];
+    expect(coercedStringArrayToChatMessageArray===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedStringArrayToChatMessageArray, stringHumanMessageArray)).toBeTruthy();
+    expect(await coerceTypeOptional(stringArrayD1, 'object[]')).toStrictEqual(['Hello!']);
+    expect(await coerceTypeOptional(stringArrayD2, 'unknown[]')).toStrictEqual(['Hello!', 'Hi', 'yeah.']);
+    expect(await coerceTypeOptional(stringArrayD2, 'string[]')).toStrictEqual(['Hello!', 'Hi', 'yeah.']);
+    expect(await coerceTypeOptional(stringArrayD2, 'number[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(stringArrayD2, 'boolean[]')).toStrictEqual([true, true, true]); 
+    expect(await coerceTypeOptional(stringArrayD2, 'blob[]')).toStrictEqual(
+        [new Blob(['Hello!'], { type: 'text/plain' }), new Blob(['Hi'], { type: 'text/plain' }), new Blob(['yeah.'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(stringArrayD2, 'context[]')).toStrictEqual(
+        [new Context({ pageContent: 'Hello!' }), new Context({ pageContent: 'Hi' }), new Context({ pageContent: 'yeah.' })]);
+    const coercedStringArrayToChatMessageArray2 = await coerceTypeOptional(stringArrayD2, 'chat-message[]') as BaseMessage[];
+    const stringHumanMessageArray2 = [new HumanMessage('Hello!'), new HumanMessage('Hi'), new HumanMessage('yeah.')];
+    expect(coercedStringArrayToChatMessageArray2===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedStringArrayToChatMessageArray2, stringHumanMessageArray2)).toBeTruthy();
+    expect(await coerceTypeOptional(stringArrayD2, 'object[]')).toStrictEqual(['Hello!', 'Hi', 'yeah.']);
+
     // boolean array
     const booleanArray1: boolean[] = [true];
     const booleanArray2: boolean[] = [false];
@@ -1339,14 +1405,17 @@ test('coerceTypeOptional', async () => {
     const booleanArrayD1: ArrayData = { type: 'boolean[]', value: booleanArray1 };
     const booleanArrayD2: ArrayData = { type: 'boolean[]', value: booleanArray2 };
     const booleanArrayD3: ArrayData = { type: 'boolean[]', value: booleanArray3 };
+    expect(await coerceTypeOptional(booleanArrayD1, 'unknown')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(booleanArrayD2, 'unknown')).toStrictEqual([false]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'unknown')).toStrictEqual([true, false, true]);
     expect(await coerceTypeOptional(booleanArrayD1, 'string')).toBe('true');
     expect(await coerceTypeOptional(booleanArrayD2, 'string')).toBe('false');
     expect(await coerceTypeOptional(booleanArrayD3, 'string')).toBe('true\nfalse\ntrue');
     // expect(await coerceTypeOptional(booleanArrayD1, 'number')).toBe(1); // undefined
     // expect(await coerceTypeOptional(booleanArrayD2, 'number')).toBe(0);
-    expect(await coerceTypeOptional(booleanArrayD1, 'boolean')).toBe(true); 
+    expect(await coerceTypeOptional(booleanArrayD1, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(booleanArrayD2, 'boolean')).toBe(false);
-    expect(await coerceTypeOptional(booleanArrayD3, 'boolean')).toBe(false); // 有false给false
+    expect(await coerceTypeOptional(booleanArrayD3, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(booleanArrayD1, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(booleanArrayD2, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(booleanArrayD3, 'blob')).toBe(undefined);
@@ -1360,6 +1429,42 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(booleanArrayD2, 'object')).toStrictEqual([false]);
     expect(await coerceTypeOptional(booleanArrayD3, 'object')).toStrictEqual([true, false, true]);
 
+    expect(await coerceTypeOptional(booleanArrayD1, 'unknown[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(booleanArrayD2, 'unknown[]')).toStrictEqual([false]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'unknown[]')).toStrictEqual([true, false, true]);
+    expect(await coerceTypeOptional(booleanArrayD1, 'string[]')).toStrictEqual(['true']);
+    expect(await coerceTypeOptional(booleanArrayD2, 'string[]')).toStrictEqual(['false']);
+    expect(await coerceTypeOptional(booleanArrayD3, 'string[]')).toStrictEqual(['true', 'false', 'true']);
+    expect(await coerceTypeOptional(booleanArrayD1, 'number[]')).toStrictEqual([1]); 
+    expect(await coerceTypeOptional(booleanArrayD2, 'number[]')).toStrictEqual([0]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'number[]')).toStrictEqual([1, 0, 1]);
+    expect(await coerceTypeOptional(booleanArrayD1, 'boolean[]')).toStrictEqual([true]); 
+    expect(await coerceTypeOptional(booleanArrayD2, 'boolean[]')).toStrictEqual([false]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'boolean[]')).toStrictEqual([true, false, true]); 
+    expect(await coerceTypeOptional(booleanArrayD1, 'blob[]')).toStrictEqual([new Blob(['true'], { type: 'text/plain' })]); 
+    expect(await coerceTypeOptional(booleanArrayD2, 'blob[]')).toStrictEqual([new Blob(['false'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'blob[]')).toStrictEqual(
+        [new Blob(['true'], { type: 'text/plain' }), new Blob(['false'], { type: 'text/plain' }), new Blob(['true'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(booleanArrayD1, 'context[]')).toStrictEqual([new Context({ pageContent: 'true' })]);
+    expect(await coerceTypeOptional(booleanArrayD2, 'context[]')).toStrictEqual([new Context({ pageContent: 'false' })]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'context[]')).toStrictEqual([
+        new Context({ pageContent: 'true' }), new Context({ pageContent: 'false' }), new Context({ pageContent: 'true' })]);
+    const coercedBooleanArrayToChatMessageArray1 = await coerceTypeOptional(booleanArrayD1, 'chat-message[]') as BaseMessage[];
+    const booleanHumanMessageArray1 = [new HumanMessage('true')];
+    expect(coercedBooleanArrayToChatMessageArray1===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedBooleanArrayToChatMessageArray1, booleanHumanMessageArray1)).toBeTruthy();
+    const coercedBooleanArrayToChatMessageArray2 = await coerceTypeOptional(booleanArrayD2, 'chat-message[]') as BaseMessage[];
+    const booleanHumanMessageArray2 = [new HumanMessage('false')];
+    expect(coercedBooleanArrayToChatMessageArray2===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedBooleanArrayToChatMessageArray2, booleanHumanMessageArray2)).toBeTruthy();
+    const coercedBooleanArrayToChatMessageArray3 = await coerceTypeOptional(booleanArrayD3, 'chat-message[]') as BaseMessage[];
+    const booleanHumanMessageArray3 = [new HumanMessage('true'), new HumanMessage('false'), new HumanMessage('true')];
+    expect(coercedBooleanArrayToChatMessageArray3===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedBooleanArrayToChatMessageArray3, booleanHumanMessageArray3)).toBeTruthy();
+    expect(await coerceTypeOptional(booleanArrayD1, 'object[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(booleanArrayD2, 'object[]')).toStrictEqual([false]);
+    expect(await coerceTypeOptional(booleanArrayD3, 'object[]')).toStrictEqual([true, false, true]);
+
     // number array
     const numberArray1: number[] = [1];
     const numberArray2: number[] = [3.4, -1, 999];
@@ -1369,9 +1474,14 @@ test('coerceTypeOptional', async () => {
     const numberArrayD2: ArrayData = { type: 'number[]', value: numberArray2 };
     const numberArrayD3: ArrayData = { type: 'number[]', value: numberArray3 };
     const numberArrayD4: ArrayData = { type: 'number[]', value: numberArray4 };
+    expect(await coerceTypeOptional(numberArrayD1, 'unknown')).toStrictEqual([1]);
+    expect(await coerceTypeOptional(numberArrayD2, 'unknown')).toStrictEqual([3.4, -1, 999]);
+    expect(await coerceTypeOptional(numberArrayD3, 'unknown')).toStrictEqual([0]);
+    expect(await coerceTypeOptional(numberArrayD4, 'unknown')).toStrictEqual([6, 0]);
     expect(await coerceTypeOptional(numberArrayD1, 'string')).toBe('1');
     // expect(await coerceTypeOptional(numberArrayD1, 'number')).toBe(1); // undefined
     expect(await coerceTypeOptional(numberArrayD1, 'boolean')).toBe(true); // 
+    expect(await coerceTypeOptional(numberArrayD2, 'boolean')).toBe(true); // 
     expect(await coerceTypeOptional(numberArrayD3, 'boolean')).toBe(false); // true for not 0
     expect(await coerceTypeOptional(numberArrayD4, 'boolean')).toBe(false); // 有0给false
     expect(await coerceTypeOptional(numberArrayD1, 'blob')).toBe(undefined);
@@ -1386,6 +1496,55 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(numberArrayD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(numberArrayD2, 'object')).toStrictEqual([3.4, -1, 999]);
 
+    expect(await coerceTypeOptional(numberArrayD1, 'unknown[]')).toStrictEqual([1]);
+    expect(await coerceTypeOptional(numberArrayD2, 'unknown[]')).toStrictEqual([3.4, -1, 999]);
+    expect(await coerceTypeOptional(numberArrayD3, 'unknown[]')).toStrictEqual([0]);
+    expect(await coerceTypeOptional(numberArrayD4, 'unknown[]')).toStrictEqual([6, 0]);
+    expect(await coerceTypeOptional(numberArrayD1, 'string[]')).toStrictEqual(['1']);
+    expect(await coerceTypeOptional(numberArrayD2, 'string[]')).toStrictEqual(['3.4', '-1', '999']);
+    expect(await coerceTypeOptional(numberArrayD3, 'string[]')).toStrictEqual(['0']);
+    expect(await coerceTypeOptional(numberArrayD4, 'string[]')).toStrictEqual(['6', '0']);
+    expect(await coerceTypeOptional(numberArrayD1, 'number[]')).toStrictEqual([1]);
+    expect(await coerceTypeOptional(numberArrayD2, 'number[]')).toStrictEqual([3.4, -1, 999]);
+    expect(await coerceTypeOptional(numberArrayD3, 'number[]')).toStrictEqual([0]);
+    expect(await coerceTypeOptional(numberArrayD4, 'number[]')).toStrictEqual([6, 0]);
+    expect(await coerceTypeOptional(numberArrayD1, 'boolean[]')).toStrictEqual([true]); 
+    expect(await coerceTypeOptional(numberArrayD2, 'boolean[]')).toStrictEqual([true, true, true]); 
+    expect(await coerceTypeOptional(numberArrayD3, 'boolean[]')).toStrictEqual([false]);
+    expect(await coerceTypeOptional(numberArrayD4, 'boolean[]')).toStrictEqual([true, false]);
+    expect(await coerceTypeOptional(numberArrayD1, 'blob[]')).toStrictEqual([new Blob(['1'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(numberArrayD2, 'blob[]')).toStrictEqual(
+        [new Blob(['3.4'], { type: 'text/plain' }), new Blob(['-1'], { type: 'text/plain' }), new Blob(['999'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(numberArrayD3, 'blob[]')).toStrictEqual([new Blob(['0'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(numberArrayD4, 'blob[]')).toStrictEqual(
+        [new Blob(['6'], { type: 'text/plain' }), new Blob(['0'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(numberArrayD1, 'context[]')).toStrictEqual([new Context({ pageContent: '1' })]);
+    expect(await coerceTypeOptional(numberArrayD2, 'context[]')).toStrictEqual(
+        [new Context({ pageContent: '3.4' }), new Context({ pageContent: '-1' }), new Context({ pageContent: '999' })]);
+    expect(await coerceTypeOptional(numberArrayD3, 'context[]')).toStrictEqual([new Context({ pageContent: '0' })]);
+    expect(await coerceTypeOptional(numberArrayD4, 'context[]')).toStrictEqual(
+        [new Context({ pageContent: '6' }), new Context({ pageContent: '0' })]);
+    const coercedNumberArrayToChatMessageArray = await coerceTypeOptional(numberArrayD1, 'chat-message[]') as BaseMessage[];
+    const numHumanMessageArray = [new HumanMessage('1')];
+    expect(coercedNumberArrayToChatMessageArray===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedNumberArrayToChatMessageArray, numHumanMessageArray)).toBeTruthy();
+    const coercedNumberArrayToChatMessageArray2 = await coerceTypeOptional(numberArrayD2, 'chat-message[]') as BaseMessage[];
+    const numHumanMessageArray2 = [new HumanMessage('3.4'), new HumanMessage('-1'), new HumanMessage('999')];
+    expect(coercedNumberArrayToChatMessageArray2===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedNumberArrayToChatMessageArray2, numHumanMessageArray2)).toBeTruthy();
+    const coercedNumberArrayToChatMessageArray3 = await coerceTypeOptional(numberArrayD3, 'chat-message[]') as BaseMessage[];
+    const numHumanMessageArray3 = [new HumanMessage('0')];
+    expect(coercedNumberArrayToChatMessageArray3===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedNumberArrayToChatMessageArray3, numHumanMessageArray3)).toBeTruthy();
+    const coercedNumberArrayToChatMessageArray4 = await coerceTypeOptional(numberArrayD4, 'chat-message[]') as BaseMessage[];
+    const numHumanMessageArray4 = [new HumanMessage('6'), new HumanMessage('0')];
+    expect(coercedNumberArrayToChatMessageArray4===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedNumberArrayToChatMessageArray4, numHumanMessageArray4)).toBeTruthy();
+    expect(await coerceTypeOptional(numberArrayD1, 'object[]')).toStrictEqual([1]);
+    expect(await coerceTypeOptional(numberArrayD2, 'object[]')).toStrictEqual([3.4, -1, 999]);
+    expect(await coerceTypeOptional(numberArrayD3, 'object[]')).toStrictEqual([0]);
+    expect(await coerceTypeOptional(numberArrayD4, 'object[]')).toStrictEqual([6, 0]);
+
 
     // blob array
     const blob3 = new Blob(['hello', ' ', 'world'], { type: 'text/plain' });
@@ -1393,6 +1552,7 @@ test('coerceTypeOptional', async () => {
     const blobArray2: Blob[] = [blob2, blob1, blob3];
     const blobArrayD1: ArrayData = { type: 'blob[]', value: blobArray1 };
     const blobArrayD2: ArrayData = { type: 'blob[]', value: blobArray2 };
+    expect(await coerceTypeOptional(blobArrayD1, 'unknown')).toStrictEqual([blob1]);
     expect(await coerceTypeOptional(blobArrayD1, 'string')).toBe('Hello, world!');
     expect(await coerceTypeOptional(blobArrayD1, 'number')).toBe(undefined); 
     expect(await coerceTypeOptional(blobArrayD1, 'boolean')).toBe(true);
@@ -1400,7 +1560,8 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(blobArrayD1, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(blobArrayD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(blobArrayD1, 'object')).toStrictEqual([new Blob(['Hello, world!'], { type: 'text/plain' })]);
-    expect(await coerceTypeOptional(blobArrayD2, 'string')).toBe('\nHello, world!\nhello world'); // ***include empty blob>
+    expect(await coerceTypeOptional(blobArrayD2, 'unknown')).toStrictEqual([blob2, blob1, blob3]);
+    expect(await coerceTypeOptional(blobArrayD2, 'string')).toBe('\nHello, world!\nhello world');
     expect(await coerceTypeOptional(blobArrayD2, 'number')).toBe(undefined); 
     expect(await coerceTypeOptional(blobArrayD2, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(blobArrayD2, 'blob')).toBe(undefined);
@@ -1408,11 +1569,28 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(blobArrayD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(blobArrayD2, 'object')).toStrictEqual([blob2, blob1, blob3]);
 
+    expect(await coerceTypeOptional(blobArrayD1, 'unknown[]')).toStrictEqual([blob1]);
+    expect(await coerceTypeOptional(blobArrayD1, 'string[]')).toStrictEqual(['Hello, world!']);
+    expect(await coerceTypeOptional(blobArrayD1, 'number[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(blobArrayD1, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(blobArrayD1, 'blob[]')).toStrictEqual([blob1]);
+    expect(await coerceTypeOptional(blobArrayD1, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(blobArrayD1, 'chat-message[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(blobArrayD1, 'object[]')).toStrictEqual([new Blob(['Hello, world!'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(blobArrayD2, 'string[]')).toStrictEqual(['', 'Hello, world!', 'hello world']);
+    expect(await coerceTypeOptional(blobArrayD2, 'number[]')).toStrictEqual([undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(blobArrayD2, 'boolean[]')).toStrictEqual([false, true, true]);
+    expect(await coerceTypeOptional(blobArrayD2, 'blob[]')).toStrictEqual([blob2, blob1, blob3]);
+    expect(await coerceTypeOptional(blobArrayD2, 'context[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(blobArrayD2, 'chat-message[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(blobArrayD2, 'object[]')).toStrictEqual([blob2, blob1, blob3]);
+
     // context array
     const contextArray1: Context[] = [context1];
     const contextArray2: Context[] = [context2, context1, context3];
     const contextArrayD1: ArrayData = { type: 'context[]', value: contextArray1 };
     const contextArrayD2: ArrayData = { type: 'context[]', value: contextArray2 };
+    expect(await coerceTypeOptional(contextArrayD1, 'unknown')).toStrictEqual([context1]);
     expect(await coerceTypeOptional(contextArrayD1, 'string')).toBe('This is the content of the page.');
     expect(await coerceTypeOptional(contextArrayD1, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(contextArrayD1, 'boolean')).toBe(true);
@@ -1420,6 +1598,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(contextArrayD1, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(contextArrayD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(contextArrayD1, 'object')).toStrictEqual([context1]);
+    expect(await coerceTypeOptional(contextArrayD2, 'unknown')).toStrictEqual([context2, context1, context3]);
     expect(await coerceTypeOptional(contextArrayD2, 'string')).toBe('\nThis is the content of the page.\nfalse');
     expect(await coerceTypeOptional(contextArrayD2, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(contextArrayD2, 'boolean')).toBe(false);
@@ -1427,6 +1606,31 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(contextArrayD2, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(contextArrayD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(contextArrayD2, 'object')).toStrictEqual([context2, context1, context3]);
+
+    expect(await coerceTypeOptional(contextArrayD1, 'unknown[]')).toStrictEqual([context1]);
+    expect(await coerceTypeOptional(contextArrayD1, 'string[]')).toStrictEqual(['This is the content of the page.']);
+    expect(await coerceTypeOptional(contextArrayD1, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(contextArrayD1, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(contextArrayD1, 'blob[]')).toStrictEqual([new Blob(['This is the content of the page.'], { type: 'text/plain' })]);
+    expect(await coerceTypeOptional(contextArrayD1, 'context[]')).toStrictEqual([context1]);
+    const coercedContextArrayToChatMessageArray = await coerceTypeOptional(contextArrayD1, 'chat-message[]') as BaseMessage[];
+    const contextHumanMessageArray = [new HumanMessage('This is the content of the page.')];
+    expect(coercedContextArrayToChatMessageArray===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedContextArrayToChatMessageArray, contextHumanMessageArray)).toBeTruthy();
+    expect(await coerceTypeOptional(contextArrayD1, 'object[]')).toStrictEqual([context1]);
+    expect(await coerceTypeOptional(contextArrayD2, 'unknown[]')).toStrictEqual([context2, context1, context3]);
+    expect(await coerceTypeOptional(contextArrayD2, 'string[]')).toStrictEqual(['', 'This is the content of the page.', 'false']);
+    expect(await coerceTypeOptional(contextArrayD2, 'number[]')).toStrictEqual([undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(contextArrayD2, 'boolean[]')).toStrictEqual([false, true, false]);
+    expect(await coerceTypeOptional(contextArrayD2, 'blob[]')).toStrictEqual(
+        [new Blob([''], { type: 'text/plain' }), new Blob(['This is the content of the page.'], { type: 'text/plain' }), new Blob(['false'], { type: 'text/plain' })]
+    );
+    expect(await coerceTypeOptional(contextArrayD2, 'context[]')).toStrictEqual([context2, context1, context3]);
+    const coercedContextArrayToChatMessageArray2 = await coerceTypeOptional(contextArrayD2, 'chat-message[]') as BaseMessage[];
+    const contextHumanMessageArray2 = [new HumanMessage(''), new HumanMessage('This is the content of the page.'), new HumanMessage('false')];
+    expect(coercedContextArrayToChatMessageArray2===undefined).toBeFalsy();
+    expect(BaseMessage.isEqualMessageArray(coercedContextArrayToChatMessageArray2, contextHumanMessageArray2)).toBeTruthy();
+    expect(await coerceTypeOptional(contextArrayD2, 'object[]')).toStrictEqual([context2, context1, context3]);
 
     // chat-message array
     // check if every message is empty or not
@@ -1450,7 +1654,12 @@ test('coerceTypeOptional', async () => {
 
     const chatMessageArray13: BaseMessageLike[] = [chatMessage1, humanMessage1, botMessage1, systemMessage1];
 
-    const chatMessageArray14: BaseMessageLike[] = [chatMessage4]; //>>>>>>>>>>>>>>>>>>
+    const chatMessageArray14: BaseMessageLike[] = [chatMessage4]; 
+    const chatMessageArray15: BaseMessageLike[] = [humanMessage4];
+    const chatMessageArray16: BaseMessageLike[] = [botMessage4];
+    const chatMessageArray17: BaseMessageLike[] = [systemMessage4];
+
+    const chatMessageArray18: BaseMessageLike[] = [chatMessage4, humanMessage1, botMessage3, systemMessage4];
 
     const chatMessageArrayD1: ArrayData = { type: 'chat-message[]', value: chatMessageArray1 };
     const chatMessageArrayD2: ArrayData = { type: 'chat-message[]', value: chatMessageArray2 };
@@ -1467,7 +1676,12 @@ test('coerceTypeOptional', async () => {
     const chatMessageArrayD12: ArrayData = { type: 'chat-message[]', value: chatMessageArray12 };
     const chatMessageArrayD13: ArrayData = { type: 'chat-message[]', value: chatMessageArray13 };
     const chatMessageArrayD14: ArrayData = { type: 'chat-message[]', value: chatMessageArray14 };
+    const chatMessageArrayD15: ArrayData = { type: 'chat-message[]', value: chatMessageArray15 };
+    const chatMessageArrayD16: ArrayData = { type: 'chat-message[]', value: chatMessageArray16 };
+    const chatMessageArrayD17: ArrayData = { type: 'chat-message[]', value: chatMessageArray17 };
+    const chatMessageArrayD18: ArrayData = { type: 'chat-message[]', value: chatMessageArray18 };
 
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'unknown')).toStrictEqual([chatMessage1]);
     expect(await coerceTypeOptional(chatMessageArrayD1, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(chatMessage1).toSerialized(),
         null,
@@ -1479,6 +1693,21 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD1, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD1, 'object')).toStrictEqual([chatMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'unknown[]')).toStrictEqual([chatMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(chatMessage1).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'chat-message[]')).toStrictEqual([chatMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD1, 'object[]')).toStrictEqual([chatMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'unknown')).toStrictEqual([humanMessage1]);
     expect(await coerceTypeOptional(chatMessageArrayD2, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(humanMessage1).toSerialized(),
         null,
@@ -1490,6 +1719,21 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD2, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD2, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD2, 'object')).toStrictEqual([humanMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'unknown[]')).toStrictEqual([humanMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(humanMessage1).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'chat-message[]')).toStrictEqual([humanMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'object[]')).toStrictEqual([humanMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'unknown')).toStrictEqual([botMessage1]);
     expect(await coerceTypeOptional(chatMessageArrayD3, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(botMessage1).toSerialized(),
         null,
@@ -1501,6 +1745,21 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD3, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD3, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD3, 'object')).toStrictEqual([botMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'unknown[]')).toStrictEqual([botMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(botMessage1).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'chat-message[]')).toStrictEqual([botMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'object[]')).toStrictEqual([botMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'unknown')).toStrictEqual([systemMessage1]);    
     expect(await coerceTypeOptional(chatMessageArrayD4, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(systemMessage1).toSerialized(),
         null,
@@ -1512,6 +1771,21 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD4, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD4, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD4, 'object')).toStrictEqual([systemMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'unknown[]')).toStrictEqual([systemMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(systemMessage1).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'chat-message[]')).toStrictEqual([systemMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'object[]')).toStrictEqual([systemMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'unknown')).toStrictEqual([functionMessage1]);    
     expect(await coerceTypeOptional(chatMessageArrayD5, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(functionMessage1).toSerialized(),
         null,
@@ -1523,6 +1797,20 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD5, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD5, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD5, 'object')).toStrictEqual([functionMessage1]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'unknown[]')).toStrictEqual([functionMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(functionMessage1).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'boolean[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'chat-message[]')).toStrictEqual([functionMessage1]);
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'object[]')).toStrictEqual([functionMessage1]);
+
 
     const messageStrings6 = [
         JSON.stringify(
@@ -1551,6 +1839,7 @@ test('coerceTypeOptional', async () => {
             2
         )
     ];
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'unknown')).toStrictEqual(chatMessageArray6);    
     expect(await coerceTypeOptional(chatMessageArrayD6, 'string')).toBe(messageStrings6.join('\n')); // *
     expect(await coerceTypeOptional(chatMessageArrayD6, 'number')).toBe(undefined);
     // expect(await coerceTypeOptional(chatMessageArrayD6, 'boolean')).toBe(false); // ****get false
@@ -1559,7 +1848,20 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD6, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD6, 'object')).toStrictEqual(chatMessageArray6);
 
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'unknown[]')).toStrictEqual(chatMessageArray6);    
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'string[]')).toStrictEqual(messageStrings6);
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'number[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'boolean[]')).toStrictEqual(
+        [true, true, true, true, undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'blob[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'context[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'chat-message[]')).toStrictEqual(chatMessageArray6);
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'object[]')).toStrictEqual(chatMessageArray6);
 
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'unknown')).toStrictEqual(chatMessageArray7);    
     expect(await coerceTypeOptional(chatMessageArrayD7, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(chatMessage3).toSerialized(),
         null,
@@ -1572,6 +1874,20 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD7, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD7, 'object')).toStrictEqual([chatMessage3]);
 
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'unknown[]')).toStrictEqual(chatMessageArray7);    
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(chatMessage3).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'boolean[]')).toStrictEqual([false]); 
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'chat-message[]')).toStrictEqual(chatMessageArray7);
+    expect(await coerceTypeOptional(chatMessageArrayD7, 'object[]')).toStrictEqual(chatMessageArray7);
+
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'unknown')).toStrictEqual(chatMessageArray8);    
     expect(await coerceTypeOptional(chatMessageArrayD8, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(humanMessage3).toSerialized(),
         null,
@@ -1584,6 +1900,20 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD8, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD8, 'object')).toStrictEqual([humanMessage3]);
 
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'unknown[]')).toStrictEqual(chatMessageArray8);    
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(humanMessage3).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'boolean[]')).toStrictEqual([false]); 
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'chat-message[]')).toStrictEqual(chatMessageArray8);
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'object[]')).toStrictEqual(chatMessageArray8);
+
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'unknown')).toStrictEqual(chatMessageArray9);    
     expect(await coerceTypeOptional(chatMessageArrayD9, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(botMessage3).toSerialized(),
         null,
@@ -1592,10 +1922,24 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD9, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD9, 'boolean')).toBe(false); 
     expect(await coerceTypeOptional(chatMessageArrayD9, 'blob')).toBe(undefined); 
-    // expect(await coerceTypeOptional(chatMessageArrayD9, 'context')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD9, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD9, 'object')).toStrictEqual([botMessage3]);
 
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'unknown[]')).toStrictEqual(chatMessageArray9);    
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(botMessage3).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'boolean[]')).toStrictEqual([false]); 
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'chat-message[]')).toStrictEqual(chatMessageArray9);
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'object[]')).toStrictEqual(chatMessageArray9);
+
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'unknown')).toStrictEqual(chatMessageArray10);    
     expect(await coerceTypeOptional(chatMessageArrayD10, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(systemMessage3).toSerialized(),
         null,
@@ -1608,6 +1952,20 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD10, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD10, 'object')).toStrictEqual([systemMessage3]);
 
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'unknown[]')).toStrictEqual(chatMessageArray10);    
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(systemMessage3).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'boolean[]')).toStrictEqual([false]); 
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'chat-message[]')).toStrictEqual(chatMessageArray10);
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'object[]')).toStrictEqual(chatMessageArray10);
+
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'unknown')).toStrictEqual(chatMessageArray11);    
     expect(await coerceTypeOptional(chatMessageArrayD11, 'string')).toBe(JSON.stringify(
         convertMessageLikeToMessage(functionMessage3).toSerialized(),
         null,
@@ -1619,6 +1977,19 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD11, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD11, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD11, 'object')).toStrictEqual([functionMessage3]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'unknown[]')).toStrictEqual(chatMessageArray11);    
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(functionMessage3).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'boolean[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'chat-message[]')).toStrictEqual(chatMessageArray11);
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'object[]')).toStrictEqual(chatMessageArray11);
 
     const messageStrings12 = [
         JSON.stringify(
@@ -1642,6 +2013,7 @@ test('coerceTypeOptional', async () => {
             2
         )
     ];
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'unknown')).toStrictEqual(chatMessageArray12);    
     expect(await coerceTypeOptional(chatMessageArrayD12, 'string')).toBe(messageStrings12.join('\n')); // *
     expect(await coerceTypeOptional(chatMessageArrayD12, 'number')).toBe(undefined);
     // expect(await coerceTypeOptional(chatMessageArrayD12, 'boolean')).toBe(false); // ****get false
@@ -1649,6 +2021,19 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD12, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD12, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD12, 'object')).toStrictEqual(chatMessageArray12);
+
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'unknown[]')).toStrictEqual(chatMessageArray12);    
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'string[]')).toStrictEqual(messageStrings12);
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'number[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'boolean[]')).toStrictEqual(
+        [false, true, true, true]); 
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'blob[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'context[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'chat-message[]')).toStrictEqual(chatMessageArray12);
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'object[]')).toStrictEqual(chatMessageArray12);
 
     const messageStrings13 = [
         JSON.stringify(
@@ -1672,6 +2057,7 @@ test('coerceTypeOptional', async () => {
             2
         )
     ];
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'unknown')).toStrictEqual(chatMessageArray13);    
     expect(await coerceTypeOptional(chatMessageArrayD13, 'string')).toBe(messageStrings13.join('\n')); // *
     expect(await coerceTypeOptional(chatMessageArrayD13, 'number')).toBe(undefined);
     // expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean')).toBe(false); // ****get false
@@ -1680,13 +2066,174 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(chatMessageArrayD13, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD13, 'object')).toStrictEqual(chatMessageArray13);
 
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'unknown[]')).toStrictEqual(chatMessageArray13);    
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'string[]')).toStrictEqual(messageStrings13);
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'number[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean[]')).toStrictEqual(
+        [true, true, true, true]); 
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'blob[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'context[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'chat-message[]')).toStrictEqual(chatMessageArray13);
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'object[]')).toStrictEqual(chatMessageArray13);
 
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'unknown')).toStrictEqual([chatMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'string')).toBe(JSON.stringify(
+        convertMessageLikeToMessage(chatMessage4).toSerialized(),
+        null,
+        2
+    ));
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'context')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'chat-message')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'object')).toStrictEqual([chatMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'unknown[]')).toStrictEqual([chatMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(chatMessage4).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'chat-message[]')).toStrictEqual([chatMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD14, 'object[]')).toStrictEqual([chatMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'unknown')).toStrictEqual([humanMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'string')).toBe(JSON.stringify(
+        convertMessageLikeToMessage(humanMessage4).toSerialized(),
+        null,
+        2
+    ));
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'context')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'chat-message')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'object')).toStrictEqual([humanMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'unknown[]')).toStrictEqual([humanMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(humanMessage4).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'chat-message[]')).toStrictEqual([humanMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'object[]')).toStrictEqual([humanMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'unknown')).toStrictEqual([botMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'string')).toBe(JSON.stringify(
+        convertMessageLikeToMessage(botMessage4).toSerialized(),
+        null,
+        2
+    ));
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'context')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'chat-message')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'object')).toStrictEqual([botMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'unknown[]')).toStrictEqual([botMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(botMessage4).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'chat-message[]')).toStrictEqual([botMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD16, 'object[]')).toStrictEqual([botMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'unknown')).toStrictEqual([systemMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'string')).toBe(JSON.stringify(
+        convertMessageLikeToMessage(systemMessage4).toSerialized(),
+        null,
+        2
+    ));
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'context')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'chat-message')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'object')).toStrictEqual([systemMessage4]);
+
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'unknown[]')).toStrictEqual([systemMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'string[]')).toStrictEqual([JSON.stringify(
+        convertMessageLikeToMessage(systemMessage4).toSerialized(),
+        null,
+        2
+    )]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'blob[]')).toStrictEqual([undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'chat-message[]')).toStrictEqual([systemMessage4]);
+    expect(await coerceTypeOptional(chatMessageArrayD17, 'object[]')).toStrictEqual([systemMessage4]);
+
+    const messageStrings18 = [
+        JSON.stringify(
+            convertMessageLikeToMessage(chatMessage4).toSerialized(),
+            null,
+            2
+        ),
+        JSON.stringify(
+            convertMessageLikeToMessage(humanMessage1).toSerialized(),
+            null,
+            2
+        ),
+        JSON.stringify(
+            convertMessageLikeToMessage(botMessage3).toSerialized(),
+            null,
+            2
+        ),
+        JSON.stringify(
+            convertMessageLikeToMessage(systemMessage4).toSerialized(),
+            null,
+            2
+        )
+    ];
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'unknown')).toStrictEqual(chatMessageArray18);    
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'string')).toBe(messageStrings18.join('\n')); // *
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'number')).toBe(undefined);
+    // expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'context')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'chat-message')).toBe(undefined);
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'object')).toStrictEqual(chatMessageArray18);
+
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'unknown[]')).toStrictEqual(chatMessageArray18);    
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'string[]')).toStrictEqual(messageStrings18);
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'number[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'boolean[]')).toStrictEqual(
+        [true, true, false, true]); 
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'blob[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]); 
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'context[]')).toStrictEqual(
+        [undefined, undefined, undefined, undefined]);
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'chat-message[]')).toStrictEqual(chatMessageArray18);
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'object[]')).toStrictEqual(chatMessageArray18);
 
     // object array
     const objectArray1: object[] = [object2];
-    const objectArray2: object[] = [object3, object2, object1];
+    const objectArray2: object[] = [object1, object2, object3, object4, object5, 
+        object6, object7, object8, object9, object10, object11, object12];
     const objectArrayD1: ArrayData = { type: 'object[]', value: objectArray1 };
     const objectArrayD2: ArrayData = { type: 'object[]', value: objectArray2 };
+    expect(await coerceTypeOptional(objectArrayD1, 'unknown')).toStrictEqual([object2]); 
     expect(await coerceTypeOptional(objectArrayD1, 'string')).toBe(JSON.stringify(object2, null, 2));
     expect(await coerceTypeOptional(objectArrayD1, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(objectArrayD1, 'boolean')).toBe(true); 
@@ -1695,26 +2242,91 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(objectArrayD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(objectArrayD1, 'object')).toStrictEqual([object2]);
 
+    expect(await coerceTypeOptional(objectArrayD1, 'unknown[]')).toStrictEqual([object2]);
+    expect(await coerceTypeOptional(objectArrayD1, 'string[]')).toStrictEqual([JSON.stringify(object2, null, 2)]);
+    expect(await coerceTypeOptional(objectArrayD1, 'number[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(objectArrayD1, 'boolean[]')).toStrictEqual([true]);
+    expect(await coerceTypeOptional(objectArrayD1, 'blob[]')).toStrictEqual([new Blob([JSON.stringify(object2, null, 2)], { type: 'text/plain' })]); 
+    expect(await coerceTypeOptional(objectArrayD1, 'context[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(objectArrayD1, 'chat-message[]')).toStrictEqual([undefined]);
+    expect(await coerceTypeOptional(objectArrayD1, 'object[]')).toStrictEqual([object2]);
+
     const objectStrings = [
-        JSON.stringify(object3, null, 2), JSON.stringify(object2, null, 2), JSON.stringify(object1, null, 2)
+        JSON.stringify(object1, null, 2), JSON.stringify(object2, null, 2), JSON.stringify(object3, null, 2),
+        JSON.stringify(object4, null, 2), JSON.stringify(object5, null, 2), JSON.stringify(object6, null, 2),
+        JSON.stringify(object7, null, 2), JSON.stringify(object8, null, 2), JSON.stringify(object9, null, 2),
+        JSON.stringify(object10, null, 2), JSON.stringify(object11, null, 2), JSON.stringify(object12, null, 2),
     ];
+    expect(await coerceTypeOptional(objectArrayD2, 'unknown')).toStrictEqual(objectArray2);
     expect(await coerceTypeOptional(objectArrayD2, 'string')).toBe(objectStrings.join('\n'));
     expect(await coerceTypeOptional(objectArrayD2, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(objectArrayD2, 'boolean')).toBe(true); 
-    expect(await coerceTypeOptional(objectArrayD2, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(objectArrayD2, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(objectArrayD2, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(objectArrayD2, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(objectArrayD2, 'chat-message')).toBe(undefined);
-    expect(await coerceTypeOptional(objectArrayD2, 'object')).toStrictEqual([object3, object2, object1]);
+    expect(await coerceTypeOptional(objectArrayD2, 'object')).toStrictEqual(objectArray2);
 
+    expect(await coerceTypeOptional(objectArrayD2, 'unknown[]')).toStrictEqual(objectArray2);
+    expect(await coerceTypeOptional(objectArrayD2, 'string[]')).toStrictEqual(objectStrings);
+    expect(await coerceTypeOptional(objectArrayD2, 'number[]')).toStrictEqual(
+        [
+            undefined, undefined, undefined, 
+            undefined, undefined, undefined,
+            undefined, undefined, undefined,
+            undefined, undefined, undefined
+        ]
+    );
+    expect(await coerceTypeOptional(objectArrayD2, 'boolean[]')).toStrictEqual(
+        [
+            true, true, true,
+            true, true, true,
+            true, true, true,
+            true, true, true
+        ]
+    );
+    expect(await coerceTypeOptional(objectArrayD2, 'blob[]')).toStrictEqual(
+        [
+            new Blob([JSON.stringify(object1, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object2, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object3, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object4, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object5, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object6, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object7, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object8, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object9, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object10, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object11, null, 2)], { type: 'text/plain' }),
+            new Blob([JSON.stringify(object12, null, 2)], { type: 'text/plain' })
+        ]
+    ); 
+    expect(await coerceTypeOptional(objectArrayD2, 'context[]')).toStrictEqual(
+        [
+            undefined, undefined, undefined,
+            new Context({ pageContent: 'Hello!' }), new Context({ pageContent: 'Hello!', metadata: { key1: 'Meta' } }), undefined,
+            undefined, undefined, undefined,
+            undefined, undefined, undefined
+        ]
+    );
+    const coercedObjectArrayToChatMessageArray = await coerceTypeOptional(objectArrayD2, 'chat-message[]') as BaseMessage[];
+    expect(coercedObjectArrayToChatMessageArray===undefined).toBeFalsy();
+    expect(coercedObjectArrayToChatMessageArray[0]===undefined).toBeTruthy();
+    expect(coercedObjectArrayToChatMessageArray[1]===undefined).toBeTruthy();
+    expect(coercedObjectArrayToChatMessageArray[2]===undefined).toBeTruthy();
+    expect(coercedObjectArrayToChatMessageArray[3]===undefined).toBeTruthy();
+    expect(coercedObjectArrayToChatMessageArray[4]===undefined).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[5] as BaseMessage, objectChatMessage)).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[6] as BaseMessage, objectHumanMessage)).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[7] as BaseMessage, objectBotMessage)).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[8] as BaseMessage, objectSystemMessage)).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[9] as BaseMessage, objectFunctionMessage)).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[10] as BaseMessage, objectHumanOtherContentMessage)).toBeTruthy();
+    expect(BaseMessage.isEqualMessage(coercedObjectArrayToChatMessageArray[11] as BaseMessage, objectHumanOtherContentMessage2)).toBeTruthy();
+    expect(await coerceTypeOptional(objectArrayD2, 'object[]')).toStrictEqual(objectArray2);
 
 });
 
 test('expectTypeOptional', () => {
-    // Write your tests for expectTypeOptional function
-    const data: NumberData = { type: 'number', value: 42 }; // NumberData
-    const numValue = expectTypeOptional(data, 'number'); 
-    // expect(numValue).toBe(1); // get {}, need to check
-    // // Error! `Expect data of type string but instead got number`
 
     // unknown
     const unknown1: UnknownData = { type: 'unknown', value: undefined };
@@ -1727,6 +2339,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(unknown1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(unknown1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(unknown1, 'unknown[]')).resolves.toStrictEqual([undefined]);
+    expect(expectTypeOptional(unknown1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown1, 'object[]')).rejects.toThrow();
+
     const unknown2: UnknownData = { type: 'unknown', value: null };
     expect(expectTypeOptional(unknown2, 'unknown')).resolves.toBe(null);
     expect(expectTypeOptional(unknown2, 'string')).rejects.toThrow();
@@ -1736,6 +2357,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(unknown2, 'context')).rejects.toThrow();
     expect(expectTypeOptional(unknown2, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(unknown2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(unknown2, 'unknown[]')).resolves.toStrictEqual([null]);
+    expect(expectTypeOptional(unknown2, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown2, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown2, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown2, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown2, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown2, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(unknown2, 'object[]')).rejects.toThrow();
 
     // string
     const string1: StringData = { type: 'string', value: 'Hello!' };
@@ -1748,6 +2378,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(string1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(string1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(string1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(string1, 'string[]')).resolves.toStrictEqual(['Hello!']);
+    expect(expectTypeOptional(string1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(string1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(string1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(string1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(string1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(string1, 'object[]')).rejects.toThrow();
+
     // number
     const number1: NumberData = { type: 'number', value: 66.6 };
     expect(expectTypeOptional(number1, 'unknown')).rejects.toThrow();
@@ -1758,6 +2397,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(number1, 'context')).rejects.toThrow();
     expect(expectTypeOptional(number1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(number1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(number1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(number1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(number1, 'number[]')).resolves.toStrictEqual([66.6]);
+    expect(expectTypeOptional(number1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(number1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(number1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(number1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(number1, 'object[]')).rejects.toThrow();
 
     // boolean
     const boolean1: BooleanData = { type: 'boolean', value: true };
@@ -1771,6 +2419,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(boolean1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(boolean1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(boolean1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(boolean1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(boolean1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(boolean1, 'boolean[]')).resolves.toStrictEqual([true]);
+    expect(expectTypeOptional(boolean1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(boolean1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(boolean1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(boolean1, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(boolean2, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(boolean2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(boolean2, 'number')).rejects.toThrow();
@@ -1780,9 +2437,18 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(boolean2, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(boolean2, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(boolean2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(boolean2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(boolean2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(boolean2, 'boolean[]')).resolves.toStrictEqual([false]);
+    expect(expectTypeOptional(boolean2, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(boolean2, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(boolean2, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(boolean2, 'object[]')).rejects.toThrow();
+
     // blob
     const blob1 = new Blob(['Hello, world!'], { type: 'text/plain' });
-    const blobD: BlobData = { type: 'blob', value: blob1 }; 
+    const blobD: BlobData = { type: 'blob', value: blob1 };
     expect(expectTypeOptional(blobD, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(blobD, 'string')).rejects.toThrow();
     expect(expectTypeOptional(blobD, 'number')).rejects.toThrow();
@@ -1791,6 +2457,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(blobD, 'context')).rejects.toThrow();
     expect(expectTypeOptional(blobD, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(blobD, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(blobD, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(blobD, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(blobD, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(blobD, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(blobD, 'blob[]')).resolves.toStrictEqual([blob1]);
+    expect(expectTypeOptional(blobD, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobD, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobD, 'object[]')).rejects.toThrow();
 
     // context
     const metadata1 = {
@@ -1811,6 +2486,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(contextD, 'context')).resolves.toBe(context1);
     expect(expectTypeOptional(contextD, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(contextD, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(contextD, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(contextD, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(contextD, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(contextD, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(contextD, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(contextD, 'context[]')).resolves.toStrictEqual([context1]);
+    expect(expectTypeOptional(contextD, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextD, 'object[]')).rejects.toThrow();
 
     // chat-message
     // ChatMessage
@@ -1834,6 +2518,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD1, 'chat-message')).resolves.toBe(chatMessage1);
     expect(expectTypeOptional(chatD1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(chatD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD1, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD1, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD1, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD1, 'chat-message[]')).resolves.toStrictEqual([chatMessage1]);
+    expect(expectTypeOptional(chatD1, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(chatD2, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(chatD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatD2, 'number')).rejects.toThrow();
@@ -1842,6 +2535,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD2, 'context')).rejects.toThrow();
     expect(expectTypeOptional(chatD2, 'chat-message')).resolves.toBe(chatMessage2);
     expect(expectTypeOptional(chatD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(chatD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD2, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD2, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD2, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD2, 'chat-message[]')).resolves.toStrictEqual([chatMessage2]);
+    expect(expectTypeOptional(chatD2, 'object[]')).rejects.toThrow();
 
     expect(expectTypeOptional(chatD3, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(chatD3, 'string')).rejects.toThrow();
@@ -1852,6 +2554,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD3, 'chat-message')).resolves.toBe(chatMessage3);
     expect(expectTypeOptional(chatD3, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(chatD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD3, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD3, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD3, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD3, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD3, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD3, 'chat-message[]')).resolves.toStrictEqual([chatMessage3]);
+    expect(expectTypeOptional(chatD3, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(chatD4, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(chatD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatD4, 'number')).rejects.toThrow();
@@ -1860,6 +2571,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD4, 'context')).rejects.toThrow();
     expect(expectTypeOptional(chatD4, 'chat-message')).resolves.toBe(chatMessage4);
     expect(expectTypeOptional(chatD4, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(chatD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD4, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD4, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD4, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD4, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(chatD4, 'chat-message[]')).resolves.toStrictEqual([chatMessage4]);
+    expect(expectTypeOptional(chatD4, 'object[]')).rejects.toThrow();
 
     // HumanMessage
     const humanMessage1 = new HumanMessage('Hello, how are you?');
@@ -1882,6 +2602,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD1, 'chat-message')).resolves.toBe(humanMessage1);
     expect(expectTypeOptional(humanMessageD1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(humanMessageD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD1, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD1, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD1, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD1, 'chat-message[]')).resolves.toStrictEqual([humanMessage1]);
+    expect(expectTypeOptional(humanMessageD1, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(humanMessageD2, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD2, 'number')).rejects.toThrow();
@@ -1890,6 +2619,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD2, 'context')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD2, 'chat-message')).resolves.toBe(humanMessage2);
     expect(expectTypeOptional(humanMessageD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(humanMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD2, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD2, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD2, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD2, 'chat-message[]')).resolves.toStrictEqual([humanMessage2]);
+    expect(expectTypeOptional(humanMessageD2, 'object[]')).rejects.toThrow();
 
     expect(expectTypeOptional(humanMessageD3, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD3, 'string')).rejects.toThrow();
@@ -1900,6 +2638,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD3, 'chat-message')).resolves.toBe(humanMessage3);
     expect(expectTypeOptional(humanMessageD3, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(humanMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD3, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD3, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD3, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD3, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD3, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD3, 'chat-message[]')).resolves.toStrictEqual([humanMessage3]);
+    expect(expectTypeOptional(humanMessageD3, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(humanMessageD4, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD4, 'number')).rejects.toThrow();
@@ -1908,6 +2655,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD4, 'context')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD4, 'chat-message')).resolves.toBe(humanMessage4);
     expect(expectTypeOptional(humanMessageD4, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(humanMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'chat-message[]')).resolves.toStrictEqual([humanMessage4]);
+    expect(expectTypeOptional(humanMessageD4, 'object[]')).rejects.toThrow();
 
     // BotMessage
     const botMessage1 = new BotMessage('Hello, I am a bot.');
@@ -1930,6 +2686,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD1, 'chat-message')).resolves.toBe(botMessage1);
     expect(expectTypeOptional(botMessageD1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(botMessageD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD1, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD1, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD1, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD1, 'chat-message[]')).resolves.toStrictEqual([botMessage1]);
+    expect(expectTypeOptional(botMessageD1, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(botMessageD2, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD2, 'number')).rejects.toThrow();
@@ -1938,6 +2703,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD2, 'context')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD2, 'chat-message')).resolves.toBe(botMessage2);
     expect(expectTypeOptional(botMessageD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(botMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'chat-message[]')).resolves.toStrictEqual([botMessage2]);
+    expect(expectTypeOptional(botMessageD2, 'object[]')).rejects.toThrow();
 
     expect(expectTypeOptional(botMessageD3, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD3, 'string')).rejects.toThrow();
@@ -1948,6 +2722,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD3, 'chat-message')).resolves.toBe(botMessage3);
     expect(expectTypeOptional(botMessageD3, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(botMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'chat-message[]')).resolves.toStrictEqual([botMessage3]);
+    expect(expectTypeOptional(botMessageD3, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(botMessageD4, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD4, 'number')).rejects.toThrow();
@@ -1956,6 +2739,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD4, 'context')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD4, 'chat-message')).resolves.toBe(botMessage4);
     expect(expectTypeOptional(botMessageD4, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(botMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'chat-message[]')).resolves.toStrictEqual([botMessage4]);
+    expect(expectTypeOptional(botMessageD4, 'object[]')).rejects.toThrow();
 
     // SystemMessage
     const systemMessage1 = new SystemMessage('This is a system message.');
@@ -1978,6 +2770,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD1, 'chat-message')).resolves.toBe(systemMessage1);
     expect(expectTypeOptional(systemMessageD1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(systemMessageD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'chat-message[]')).resolves.toStrictEqual([systemMessage1]);
+    expect(expectTypeOptional(systemMessageD1, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(systemMessageD2, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD2, 'number')).rejects.toThrow();
@@ -1986,6 +2787,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD2, 'context')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD2, 'chat-message')).resolves.toBe(systemMessage2);
     expect(expectTypeOptional(systemMessageD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(systemMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'chat-message[]')).resolves.toStrictEqual([systemMessage2]);
+    expect(expectTypeOptional(systemMessageD2, 'object[]')).rejects.toThrow();
 
     expect(expectTypeOptional(systemMessageD3, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD3, 'string')).rejects.toThrow();
@@ -1996,6 +2806,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD3, 'chat-message')).resolves.toBe(systemMessage3);
     expect(expectTypeOptional(systemMessageD3, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(systemMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'chat-message[]')).resolves.toStrictEqual([systemMessage3]);
+    expect(expectTypeOptional(systemMessageD3, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(systemMessageD4, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD4, 'number')).rejects.toThrow();
@@ -2004,6 +2823,16 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD4, 'context')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD4, 'chat-message')).resolves.toBe(systemMessage4);
     expect(expectTypeOptional(systemMessageD4, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(systemMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'chat-message[]')).resolves.toStrictEqual([systemMessage4]);
+    expect(expectTypeOptional(systemMessageD4, 'object[]')).rejects.toThrow();
+
 
     // FunctionMessage
     const functionMessage1 = new FunctionMessage('This is a function message.');
@@ -2026,6 +2855,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD1, 'chat-message')).resolves.toBe(functionMessage1);
     expect(expectTypeOptional(functionMessageD1, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(functionMessageD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'chat-message[]')).resolves.toStrictEqual([functionMessage1]);
+    expect(expectTypeOptional(functionMessageD1, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(functionMessageD2, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD2, 'number')).rejects.toThrow();
@@ -2034,6 +2872,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD2, 'context')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD2, 'chat-message')).resolves.toBe(functionMessage2);
     expect(expectTypeOptional(functionMessageD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(functionMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'chat-message[]')).resolves.toStrictEqual([functionMessage2]);
+    expect(expectTypeOptional(functionMessageD2, 'object[]')).rejects.toThrow();
 
     expect(expectTypeOptional(functionMessageD3, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD3, 'string')).rejects.toThrow();
@@ -2044,6 +2891,15 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD3, 'chat-message')).resolves.toBe(functionMessage3);
     expect(expectTypeOptional(functionMessageD3, 'object')).rejects.toThrow();
 
+    expect(expectTypeOptional(functionMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'chat-message[]')).resolves.toStrictEqual([functionMessage3]);
+    expect(expectTypeOptional(functionMessageD3, 'object[]')).rejects.toThrow();
+
     expect(expectTypeOptional(functionMessageD4, 'unknown')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD4, 'number')).rejects.toThrow();
@@ -2052,4 +2908,374 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD4, 'context')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD4, 'chat-message')).resolves.toBe(functionMessage4);
     expect(expectTypeOptional(functionMessageD4, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(functionMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'chat-message[]')).resolves.toStrictEqual([functionMessage4]);
+    expect(expectTypeOptional(functionMessageD4, 'object[]')).rejects.toThrow();
+
+    const object1: object = { key1: 'value' };
+    const object2: object = { key2: 1, key3: true };
+    const object3: object = { };
+    const object4: object = { role: 'general', json: { role: 'general', content: 'general message' } };
+    const objectD1: JSONObjectData = { type: 'object', value: object1 }; 
+    const objectD2: JSONObjectData = { type: 'object', value: object2 }; 
+    const objectD3: JSONObjectData = { type: 'object', value: object3 }; 
+    const objectD4: JSONObjectData = { type: 'object', value: object4 };
+
+    expect(expectTypeOptional(objectD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'object')).resolves.toBe(object1);
+
+    expect(expectTypeOptional(objectD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'chat-message[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'object[]')).resolves.toStrictEqual([object1]);
+
+    expect(expectTypeOptional(objectD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'object')).resolves.toBe(object2);
+
+    expect(expectTypeOptional(objectD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'chat-message[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'object[]')).resolves.toStrictEqual([object2]);
+
+    expect(expectTypeOptional(objectD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'object')).resolves.toBe(object3);
+
+    expect(expectTypeOptional(objectD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'chat-message[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'object[]')).resolves.toStrictEqual([object3]);
+
+    expect(expectTypeOptional(objectD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'object')).resolves.toBe(object4);
+
+    expect(expectTypeOptional(objectD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'string[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'number[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'boolean[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'blob[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'chat-message[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'object[]')).resolves.toStrictEqual([object4]);
+
+    //undefined array
+    const undefinedArray1: undefined[] = [undefined];
+    const undefinedArray2: undefined[] = [undefined, undefined, undefined];
+    const undefinedArrayD1: ArrayData = { type: 'unknown[]', value: undefinedArray1 };
+    const undefinedArrayD2: ArrayData = { type: 'unknown[]', value: undefinedArray2 };
+
+    expect(expectTypeOptional(undefinedArrayD1, 'unknown')).rejects.toThrow(); // ???????????????????
+    expect(expectTypeOptional(undefinedArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(undefinedArrayD1, 'unknown[]')).resolves.toStrictEqual([undefined]);
+    expect(expectTypeOptional(undefinedArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD1, 'object[]')).rejects.toThrow();
+
+    expect(expectTypeOptional(undefinedArrayD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(undefinedArrayD2, 'unknown[]')).resolves.toStrictEqual([undefined, undefined, undefined]);
+    expect(expectTypeOptional(undefinedArrayD2, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'object[]')).rejects.toThrow();
+
+    const nullArray1: null[] = [null];
+    const nullArray2: null[] = [null, null, null];
+    const nullArrayD1: ArrayData = { type: 'unknown[]', value: nullArray1 };
+    const nullArrayD2: ArrayData = { type: 'unknown[]', value: nullArray2 };
+
+    expect(expectTypeOptional(nullArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(nullArrayD1, 'unknown[]')).resolves.toStrictEqual([null]);
+    expect(expectTypeOptional(nullArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'object[]')).rejects.toThrow();
+
+    expect(expectTypeOptional(nullArrayD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(nullArrayD2, 'unknown[]')).resolves.toStrictEqual([null, null, null]);
+    expect(expectTypeOptional(nullArrayD2, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'object[]')).rejects.toThrow();
+
+    const stringArray1: string[] = ['Hello!'];
+    const stringArray2: string[] = ['Hello!', 'Hi', 'yeah.'];
+    const stringArrayD1: ArrayData = { type: 'string[]', value: stringArray1 };
+    const stringArrayD2: ArrayData = { type: 'string[]', value: stringArray2 };
+
+    expect(expectTypeOptional(stringArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(stringArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'string[]')).resolves.toStrictEqual(['Hello!']);
+    expect(expectTypeOptional(stringArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'object[]')).rejects.toThrow();
+
+    expect(expectTypeOptional(stringArrayD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(stringArrayD2, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'string[]')).resolves.toStrictEqual(['Hello!', 'Hi', 'yeah.']);
+    expect(expectTypeOptional(stringArrayD2, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'object[]')).rejects.toThrow();
+
+    const booleanArray1: boolean[] = [true, false, true];
+    const booleanArrayD1: ArrayData = { type: 'boolean[]', value: booleanArray1 };
+    expect(expectTypeOptional(booleanArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(booleanArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'boolean[]')).resolves.toStrictEqual([true, false, true]);
+    expect(expectTypeOptional(booleanArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'object[]')).rejects.toThrow();
+
+    const numberArray1: number[] = [3.4, -1, 999];
+    const numberArrayD1: ArrayData = { type: 'number[]', value: numberArray1 };
+    expect(expectTypeOptional(numberArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(numberArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'number[]')).resolves.toStrictEqual([3.4, -1, 999]);
+    expect(expectTypeOptional(numberArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'object[]')).rejects.toThrow();
+
+    const blob2 = new Blob([], { type: 'text/plain' });
+    const blob3 = new Blob(['hello', ' ', 'world'], { type: 'text/plain' });
+    const blobArray1: Blob[] = [blob2, blob1, blob3];
+    const blobArrayD1: ArrayData = { type: 'blob[]', value: blobArray1 };
+    expect(expectTypeOptional(blobArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(blobArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'blob[]')).resolves.toStrictEqual(blobArray1);
+    expect(expectTypeOptional(blobArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'object[]')).rejects.toThrow();
+
+    const metadata2 = {
+        key1: 'ge',
+        key2: 'aa',
+    };
+    const pageContent2 = '';
+    const context2 = new Context({
+        pageContent: pageContent2,
+        metadata: metadata2,
+    });
+
+    const metadata3 = {
+        key1: 'ge',
+        key2: 'aa',
+    };
+    const pageContent3 = 'false';
+    const context3 = new Context({
+        pageContent: pageContent3,
+        metadata: metadata3,
+    });
+
+    const metadata4 = {
+        key1: 'ge',
+        key2: 'aa',
+    };
+    const pageContent4 = 'False';
+    const context4 = new Context({
+        pageContent: pageContent4,
+        metadata: metadata4,
+    });
+    const contextArray1: Context[] = [context1, context2, context3, context4];
+    const contextArrayD1: ArrayData = { type: 'context[]', value: contextArray1 };
+    expect(expectTypeOptional(contextArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(contextArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'context[]')).resolves.toStrictEqual(contextArray1);
+    expect(expectTypeOptional(contextArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'object[]')).rejects.toThrow();
+
+    const chatMessageArray1: BaseMessageLike[] = [chatMessage4, humanMessage1, botMessage3, systemMessage4, functionMessage2];
+    const chatMessageArrayD1: ArrayData = { type: 'chat-message[]', value: chatMessageArray1 };
+    expect(expectTypeOptional(chatMessageArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(chatMessageArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'chat-message[]')).resolves.toStrictEqual(chatMessageArray1);
+    expect(expectTypeOptional(chatMessageArrayD1, 'object[]')).rejects.toThrow();
+
+    const objectArray1: object[] = [object1, object2, object3, object4];
+    const objectArrayD1: ArrayData = { type: 'object[]', value: objectArray1 };
+    expect(expectTypeOptional(objectArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'string')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'number')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'boolean')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'blob')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'context')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'chat-message')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'object')).rejects.toThrow();
+
+    expect(expectTypeOptional(objectArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'context[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'chat-message[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'object[]')).resolves.toStrictEqual(objectArray1);
+
+
+
+
+
 });
