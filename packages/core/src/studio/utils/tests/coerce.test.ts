@@ -3274,8 +3274,4 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectArrayD1, 'chat-message[]')).rejects.toThrow();
     expect(expectTypeOptional(objectArrayD1, 'object[]')).resolves.toStrictEqual(objectArray1);
 
-
-
-
-
 });
