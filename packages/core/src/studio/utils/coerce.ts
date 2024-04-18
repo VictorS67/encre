@@ -95,8 +95,8 @@ export async function coerceTypeOptional<T extends DataType>(
 ): Promise<ValueOf<T>['value'] | undefined> {
   if (isArrayDataType(type) && !isArrayData(data)) {
     const coerced = await coerceTypeOptional(data, getScalarTypeOf(type));
-    if (coerced === undefined) {
-      return undefined;
+    if (coerced === undefined || coerced === null) {
+      return coerced as ValueOf<T>['value'] | undefined;
     }
 
     return [coerced] as ValueOf<T>['value'] | undefined;

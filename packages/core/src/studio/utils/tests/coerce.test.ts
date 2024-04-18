@@ -298,7 +298,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(unknownD1, 'context[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'chat-message[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD1, 'object[]')).toBe(undefined);
-    expect(await coerceTypeOptional(unknownD2, 'unknown[]')).toStrictEqual([null]);
+    expect(await coerceTypeOptional(unknownD2, 'unknown[]')).toStrictEqual(null);
     expect(await coerceTypeOptional(unknownD2, 'string[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD2, 'number[]')).toBe(undefined);
     expect(await coerceTypeOptional(unknownD2, 'boolean[]')).toBe(undefined);
@@ -1339,7 +1339,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(nullArrayD1, 'blob[]')).toStrictEqual([undefined]);
     expect(await coerceTypeOptional(nullArrayD1, 'context[]')).toStrictEqual([undefined]);
     expect(await coerceTypeOptional(nullArrayD1, 'chat-message[]')).toStrictEqual([undefined]);
-    expect(await coerceTypeOptional(nullArrayD1, 'object[]')).toStrictEqual([undefined]); // ?
+    expect(await coerceTypeOptional(nullArrayD1, 'object[]')).toStrictEqual([undefined]);
     expect(await coerceTypeOptional(nullArrayD2, 'unknown[]')).toStrictEqual([null, null, null]);
     expect(await coerceTypeOptional(nullArrayD2, 'string[]')).toStrictEqual([undefined, undefined, undefined]);
     expect(await coerceTypeOptional(nullArrayD2, 'number[]')).toStrictEqual([undefined, undefined, undefined]);
