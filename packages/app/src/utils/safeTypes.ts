@@ -18,3 +18,11 @@ export function keys<K extends string>(obj: Record<K, any>): K[] {
 export function values<V>(obj: Record<string, V>): V[] {
   return Object.values(obj) as V[];
 }
+
+export function isNotNull<T>(value: T | undefined | null): value is T {
+  return value != null;
+}
+
+export function typeOf<T>(): T {
+  return undefined! as T;
+}

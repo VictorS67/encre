@@ -1,11 +1,12 @@
 import {
   BaseMessage,
-  BotMessage,
-  ChatMessage,
-  FunctionMessage,
-  HumanMessage,
-  SystemMessage,
 } from '../../../events/input/load/msgs/base.js';
+import { BotMessage } from '../../../events/input/load/msgs/bot.js';
+import { ChatMessage } from '../../../events/input/load/msgs/chat.js';
+import { FunctionMessage } from '../../../events/input/load/msgs/function.js';
+import { HumanMessage } from '../../../events/input/load/msgs/human.js';
+import { SystemMessage } from '../../../events/input/load/msgs/system.js';
+import { getRecordId } from '../../../utils/nanoid.js';
 import { scalarDefaults } from '../../data.js';
 import {
   ProcessInputMap,
@@ -39,6 +40,7 @@ export class ChatMessageNodeImpl extends MessageNodeImpl {
     });
 
     const node: MessageNode = {
+      id: getRecordId(),
       type: 'message',
       subType: 'chat',
       data: chatMessage,
@@ -67,6 +69,7 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
     const humanMessage = new HumanMessage(scalarDefaults['string']);
 
     const node: MessageNode = {
+      id: getRecordId(),
       type: 'message',
       subType: 'human',
       data: humanMessage,
@@ -95,6 +98,7 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
     const botMessage = new BotMessage(scalarDefaults['string']);
 
     const node: MessageNode = {
+      id: getRecordId(),
       type: 'message',
       subType: 'bot',
       data: botMessage,
@@ -123,6 +127,7 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
     const systemMessage = new SystemMessage(scalarDefaults['string']);
 
     const node: MessageNode = {
+      id: getRecordId(),
       type: 'message',
       subType: 'prompt',
       data: systemMessage,
@@ -154,6 +159,7 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
     });
 
     const node: MessageNode = {
+      id: getRecordId(),
       type: 'message',
       subType: 'function',
       data: functionMessage,

@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
-import { BaseMessage, SystemMessage } from '../../msgs/base.js';
+import { BaseMessage } from '../../msgs/base.js';
+import { SystemMessage } from '../../msgs/system.js';
 import {
   BasePrompt,
   BasePromptTemplate,

@@ -4,6 +4,7 @@ exports[`test TextSplitter 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - transform
   - splitter
@@ -20,6 +21,7 @@ exports[`test TextSplitter with newlines separator 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - transform
   - splitter
@@ -36,6 +38,7 @@ exports[`test custom ContextSplitter 1`] = `
 "_grp: 1
 _type: constructor
 _id:
+  - events
   - input
   - transform
   - splitter

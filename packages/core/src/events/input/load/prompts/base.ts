@@ -11,7 +11,13 @@ import { BaseMessage } from '../msgs/base.js';
 export abstract class BasePrompt extends Serializable {
   _isSerializable = false;
 
-  _namespace: string[] = ['input', 'load', 'prompts', this._promptType()];
+  _namespace: string[] = [
+    'events',
+    'input',
+    'load',
+    'prompts',
+    this._promptType(),
+  ];
 
   abstract _promptType(): string;
 
@@ -46,10 +52,12 @@ export abstract class BasePromptTemplate<
   extends BaseEvent<CallInput, CallOutput, CallOptions>
   implements PromptTemplateParams
 {
-  _namespace: string[] = ['input', 'load', 'prompts', this._templateType()];
-
   static _name(): string {
     return 'BasePromptTemplate';
+  }
+
+  _eventNamespace(): string[] {
+    return ['input', 'load', 'prompts', this._templateType()];
   }
 
   template = '';

@@ -4,11 +4,11 @@ import { MemoryCache } from '../../../../cache/index.js';
 import {
   BaseMessage,
   BaseMessageLike,
-  ChatMessage,
-  HumanMessage,
-  SystemMessage,
-  convertMessageLikeToMessage,
 } from '../../../input/load/msgs/base.js';
+import { ChatMessage } from '../../../input/load/msgs/chat.js';
+import { HumanMessage } from '../../../input/load/msgs/human.js';
+import { SystemMessage } from '../../../input/load/msgs/system.js';
+import { convertMessageLikeToMessage } from '../../../input/load/msgs/utils.js';
 import { BasePrompt } from '../../../input/load/prompts/base.js';
 import { ChatPrompt } from '../../../input/load/prompts/chat.js';
 import { StringPrompt } from '../../../input/load/prompts/text.js';
@@ -44,7 +44,9 @@ test('test calculateMaxToken', async () => {
 
 test('test BaseLM', async () => {
   class TestLM extends BaseLM {
-    _namespace: string[] = ['tests'];
+    _eventNamespace(): string[] {
+      return ['tests'];
+    }
 
     _llmType(): string {
       return 'test_llm';

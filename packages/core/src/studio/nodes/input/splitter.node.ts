@@ -11,6 +11,7 @@ import {
   TokenTextSplitter,
 } from '../../../events/input/transform/splitter.js';
 import { CallableConfig } from '../../../record/callable.js';
+import { getRecordId } from '../../../utils/nanoid.js';
 import { Data, scalarDefaults } from '../../data.js';
 import {
   ProcessInputMap,
@@ -93,6 +94,7 @@ export class TextSplitterNodeImpl extends SplitterNodeImpl {
     const textSplitter = new TextSplitter(scalarDefaults['object']);
 
     const node: SplitterNode = {
+      id: getRecordId(),
       type: 'splitter',
       subType: 'text',
       data: textSplitter,
@@ -123,6 +125,7 @@ export class RecursiveTextSplitterNodeImpl extends SplitterNodeImpl {
     const textSplitter = new RecursiveTextSplitter(scalarDefaults['object']);
 
     const node: SplitterNode = {
+      id: getRecordId(),
       type: 'splitter',
       subType: 'paragraph',
       data: textSplitter,
@@ -153,8 +156,10 @@ export class LanguageTextSplitterNodeImpl extends SplitterNodeImpl {
     const textSplitter = RecursiveTextSplitter.fromLanguage(fields.language);
 
     const node: SplitterNode = {
+      id: getRecordId(),
       type: 'splitter',
       subType: fields.language,
+      registerArgs: fields,
       data: textSplitter,
       visualInfo: {
         position: {
@@ -183,6 +188,7 @@ export class TokenTextSplitterNodeImpl extends SplitterNodeImpl {
     const tokenSplitter = new TokenTextSplitter(scalarDefaults['object']);
 
     const node: SplitterNode = {
+      id: getRecordId(),
       type: 'splitter',
       subType: 'token',
       data: tokenSplitter,

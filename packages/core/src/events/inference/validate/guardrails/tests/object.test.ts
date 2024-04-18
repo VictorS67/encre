@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import { JSONObjectRule } from '../jsonObject';
+import { JSONObjectRule } from '../object';
 
 describe('test JSONObjectRule', () => {
   test('exists', async () => {

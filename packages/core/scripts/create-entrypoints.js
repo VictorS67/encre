@@ -29,6 +29,11 @@ const entrypoints = {
   "events/input/load/docs/pdf": "events/input/load/docs/pdf",
   // events/input/load/msgs
   "events/input/load/msgs/base": "events/input/load/msgs/base",
+  "events/input/load/msgs/bot": "events/input/load/msgs/bot",
+  "events/input/load/msgs/human": "events/input/load/msgs/human",
+  "events/input/load/msgs/system": "events/input/load/msgs/system",
+  "events/input/load/msgs/function": "events/input/load/msgs/function",
+  "events/input/load/msgs/general": "events/input/load/msgs/chat",
   // events/input/load/prompts
   "events/input/load/prompts/base": "events/input/load/prompts/base",
   "events/input/load/prompts/text": "events/input/load/prompts/text",
@@ -41,29 +46,49 @@ const entrypoints = {
   "events/output/provide/generation": "events/output/provide/generation",
   "events/output/provide/llmresult": "events/output/provide/llmresult",
   "events/output/provide/message": "events/output/provide/message",
+  // events/inference/validate
+  "events/inference/validate/utils": "events/inference/validate/utils",
+  "events/inference/validate": "events/inference/validate/index",
+  // events/inference/validate/guardrails
+  "events/inference/validate/guardrails/base":
+    "events/inference/validate/guardrails/base",
+  "events/inference/validate/guardrails/array":
+    "events/inference/validate/guardrails/array",
+  "events/inference/validate/guardrails/boolean":
+    "events/inference/validate/guardrails/boolean",
+  "events/inference/validate/guardrails/object":
+    "events/inference/validate/guardrails/object",
+  "events/inference/validate/guardrails/number":
+    "events/inference/validate/guardrails/number",
+  "events/inference/validate/guardrails/string":
+    "events/inference/validate/guardrails/string",
+  // events/inference/validate/validators
+  "events/inference/validate/validator":
+    "events/inference/validate/validators/variable",
   // events/inference/chat
   "events/inference/chat/base": "events/inference/chat/base",
   "events/inference/chat": "events/inference/chat/index",
   // events/inference/chat/llms/openai
   "events/inference/chat/llms/openai":
     "events/inference/chat/llms/openai/index",
-  "events/inference/chat/llms/openai/text":
+  "events/inference/chat/llms/openai":
     "events/inference/chat/llms/openai/text",
-  "events/inference/chat/llms/openai/chat":
+  "events/inference/chat/chatlms/openai":
     "events/inference/chat/llms/openai/chat",
   // events/inference/chat/llms/vertexai
   "events/inference/chat/llms/vertexai":
     "events/inference/chat/llms/vertexai/index",
   // events/inference/chat/llms/vertexai/gemini
-  "events/inference/chat/llms/vertexai/gemini/text":
+  "events/inference/chat/llms/gemini":
     "events/inference/chat/llms/vertexai/gemini/text",
-  "events/inference/chat/llms/vertexai/gemini/chat":
+  "events/inference/chat/chatlms/gemini":
     "events/inference/chat/llms/vertexai/gemini/chat",
   "events/inference/chat/llms/vertexai/gemini/utils":
     "events/inference/chat/llms/vertexai/gemini/utils",
   // studio
   "studio/data": "studio/data",
   "studio/processor": "studio/processor",
+  "studio/graph": "studio/graph",
   // studio/nodes
   "studio/nodes": "studio/nodes/index",
   "studio/nodes/base": "studio/nodes/base",
@@ -76,6 +101,8 @@ const entrypoints = {
   "studio/nodes/input/message": "studio/nodes/input/message.node",
   "studio/nodes/input/prompt": "studio/nodes/input/prompt.node",
   "studio/nodes/input/splitter": "studio/nodes/input/splitter.node",
+  // studio/nodes/utility
+  "studio/nodes/utility/graph": "studio/nodes/utility/graph.node",
   // studio/utils
   "studio/utils/coerce": "studio/utils/coerce",
   // utils
@@ -85,32 +112,35 @@ const entrypoints = {
 const deprecatedNodeOnly = [];
 
 // Entrypoints in this list require an optional dependency to be installed.
-const reuqiresOptionalDependency = [
-  // cache
-  "cache/base",
+const reuqiresOptionalDependency = [,
   // events/input/load/docs
-  "events/input/load/docs/buffer",
   "events/input/load/docs/pdf",
+  // events/input/load/msgs
+  "events/input/load/msgs/bot",
+  "events/input/load/msgs/human",
+  "events/input/load/msgs/system",
+  "events/input/load/msgs/function",
+  "events/input/load/msgs/general",
+  // events/input/load/prompts
+  "events/input/load/prompts/text",
+  "events/input/load/prompts/chat",
   // events/input/transform
   "events/input/transform/splitter",
-  // events/output/provide
-  "events/output/provide/file",
-  // events/inference/chat
-  "events/inference/chat/base",
-  // events/inference/chat/llms/openai
+  // events/inference/validate/guardrails
+  "events/inference/validate/guardrails/array",
+  "events/inference/validate/guardrails/boolean",
+  "events/inference/validate/guardrails/object",
+  "events/inference/validate/guardrails/number",
+  "events/inference/validate/guardrails/string",
+  // events/inference/validate/validator
+  "events/inference/validate/validator",
+  // events/inference/chat/llms
   "events/inference/chat/llms/openai",
-  "events/inference/chat/llms/openai/text",
-  "events/inference/chat/llms/openai/chat",
-  // events/inference/chat/llms/vertexai
-  "events/inference/chat/llms/vertexai",
-  // events/inference/chat/llms/vertexai/gemini
-  "events/inference/chat/llms/vertexai/gemini/text",
-  "events/inference/chat/llms/vertexai/gemini/chat",
-  "events/inference/chat/llms/vertexai/gemini/utils",
+  "events/inference/chat/llms/gemini",
+  "events/inference/chat/chatlms/openai",
+  "events/inference/chat/chatlms/gemini",
   // studio
-  "studio/processor",
-  // studio/utils
-  "studio/utils/coerce",
+  "studio/graph",
 ];
 
 // const testExports = [

@@ -2,11 +2,9 @@ import { match } from 'ts-pattern';
 import { Context } from '../../events/input/load/docs/context.js';
 import {
   BaseMessageLike,
-  HumanMessage,
-  checkMessageRole,
-  convertMessageLikeToMessage,
-  isMessageLike,
 } from '../../events/input/load/msgs/base.js';
+import { HumanMessage } from '../../events/input/load/msgs/human.js';
+import { checkMessageRole, convertMessageLikeToMessage, isMessageLike } from '../../events/input/load/msgs/utils.js';
 import {
   isSerializedMessage,
   mapSerializedMessageToChatMessage,

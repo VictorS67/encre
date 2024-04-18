@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react';
+import { CSSProperties, MutableRefObject } from 'react';
 
 import { Node } from './studio.type';
 import { type monaco } from '../utils/monacoEditor';
@@ -72,6 +72,7 @@ export type SyntaxedTextProps = {
   language: string;
   keywords: string[];
   theme?: string;
+  style?: CSSProperties;
 };
 
 export type NodeEditorProps = {

@@ -30,8 +30,7 @@ const subMenuStyles = css`
   min-width: 150px;
   max-width: 250px;
   border: 1px solid var(--primary-color);
-  border-radius: 5px;
-  padding: 8px 0;
+  padding: 5px 0;
   color: var(--text-color);
   background-color: var(--canvas-background-color);
   box-shadow: 0 8px 16px ${hexToRgba(DN0, 0.25)};
@@ -64,7 +63,7 @@ const subMenuStyles = css`
     display: flex;
     font-size: 12px;
     font-weight: bold;
-    padding-left: 10px;
+    padding-left: 5px;
     padding-bottom: 5px;
     color: var(--text-color);
   }
@@ -92,8 +91,7 @@ const MyContextMenuItem = styled.div<{ hasSubMenu?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: start;
-  border-radius: 3px;
-  padding: 6px 10px;
+  padding: 3px 8px;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -109,6 +107,7 @@ const MyContextMenuItem = styled.div<{ hasSubMenu?: boolean }>`
 
   .label-container {
     display: flex;
+    flex: 1;
     flex-direction: row;
     justify-content: start;
     align-items: center;
@@ -117,10 +116,16 @@ const MyContextMenuItem = styled.div<{ hasSubMenu?: boolean }>`
 
   .label {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     justify-content: center;
     align-items: start;
     user-select: none;
+  }
+
+  .label-icon,
+  .label-tip {
+    flex-shrink: 1;
   }
 
   .label-text,
@@ -135,14 +140,14 @@ const MyContextMenuItem = styled.div<{ hasSubMenu?: boolean }>`
     font-weight: bold;
     margin: 0;
     padding: 0;
-    max-width: 130px;
+    max-width: 150px;
   }
 
   .sublabel-text {
     font-size: 10px;
     margin: 0;
     padding: 0;
-    max-width: 130px;
+    max-width: 150px;
   }
 
   ${(props) => props.hasSubMenu && hasSubMenuStyles}
@@ -181,7 +186,7 @@ export const ContextMenuItem: FC<ContextMenuItemProps> = (
       return;
     }
 
-    onSelect?.();
+    onSelect?.(config.id, config.data);
   };
 
   const mergedRef = useMergeRefs([subMenuFloating.refs.setReference]);
@@ -196,13 +201,22 @@ export const ContextMenuItem: FC<ContextMenuItemProps> = (
       onMouseLeave={handleMouseLeave}
     >
       <div className="label-container">
-        {config.icon && <Icon {...config.icon} />}
+        {config.icon && (
+          <div className="label-icon">
+            <Icon {...config.icon} />
+          </div>
+        )}
         <div className="label">
           <span className="label-text">{config.name}</span>
           {config.description && (
             <span className="sublabel-text">{config.description}</span>
           )}
         </div>
+        {config.tip && (
+          <div className="label-tip">
+            <span className="label-text">{config.tip}</span>
+          </div>
+        )}
       </div>
       <CSSTransition
         classNames="submenu-box"

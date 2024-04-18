@@ -31,7 +31,9 @@ export abstract class BaseLoader<
 {
   declare CallOptions: CallOptions;
 
-  _namespace: string[] = ['input', 'load', 'docs'];
+  _eventNamespace(): string[] {
+    return ['input', 'load', 'docs', this._docType()];
+  }
 
   shouldSplit?: boolean;
 
@@ -49,6 +51,8 @@ export abstract class BaseLoader<
 
     return this.load(input);
   }
+
+  abstract _docType(): string;
 
   /**
    * Abstract method that loads the readable source.

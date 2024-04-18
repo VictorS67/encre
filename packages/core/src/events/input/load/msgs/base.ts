@@ -45,7 +45,7 @@ export abstract class BaseMessage
   extends Serializable
   implements BaseMessageFields
 {
-  _namespace: string[] = ['input', 'load', 'msgs'];
+  _namespace: string[] = ['events', 'input', 'load', 'msgs', this._role()];
 
   content: ContentLike | ContentLike[];
 

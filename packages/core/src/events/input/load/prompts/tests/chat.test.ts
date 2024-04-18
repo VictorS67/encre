@@ -1,7 +1,8 @@
 import { expect, test } from '@jest/globals';
 import { stringify } from 'yaml';
-import { BotMessage, SystemMessage } from '../../msgs/base';
-import { ChatPrompt } from '../chat';
+import { BotMessage } from '../../msgs/bot';
+import { SystemMessage } from '../../msgs/system.js';
+import { ChatPrompt } from '../chat.js';
 
 test('test custom ChatPrompt', async () => {
   const testChatPrompt = new ChatPrompt([

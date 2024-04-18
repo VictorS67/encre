@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { shallowCopy } from '../utils/copy.js';
-import { IdProvider } from '../utils/nanoid.js';
+import { getRecordId, IdProvider } from '../utils/nanoid.js';
 // import { nanoid } from 'nanoid';
 import {
   type SerializedKeyAlias,
@@ -124,14 +124,11 @@ export abstract class Serializable {
     return undefined;
   }
 
-  private _idProvider: IdProvider;
-
-  private _nodeId: RecordId;
+  protected _recordId: RecordId;
 
   constructor(kwargs?: object, ..._args: never[]) {
     this._kwargs = toSerializedFields(kwargs || {});
-    this._idProvider = new IdProvider();
-    this._nodeId = uuidv4() as RecordId;
+    this._recordId = getRecordId();
   }
 
   protected _initKwargs(): SerializedFields {
@@ -141,12 +138,6 @@ export abstract class Serializable {
 
       return accumulator;
     }, {} as SerializedFields);
-  }
-
-  protected async _getRecordId(): Promise<RecordId> {
-    const nanoId = await this._idProvider.provideNanoId();
-
-    return nanoId as RecordId;
   }
 
   protected _replaceSecret(
@@ -294,10 +285,6 @@ export abstract class Serializable {
     return { aliases, secrets, kwargs };
   }
 
-  getNodeId(): RecordId {
-    return this._nodeId;
-  }
-
   getAttributes(): {
     aliases: SerializedKeyAlias;
     secrets: SecretFields;
@@ -352,7 +339,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'errno_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
     };
   }
 
@@ -361,7 +348,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'secret_record',
       _id: [...secretKey],
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
     };
   }
 
@@ -374,7 +361,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeyTypes(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -394,7 +381,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'output_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeyTypes(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -423,7 +410,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: this._nodeId,
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -454,7 +441,7 @@ export abstract class Serializable {
       _grp: 2,
       _type: 'template_record',
       _id: this._id,
-      _recordId: this._nodeId,
+      _recordId: this._recordId,
       _metadata: {
         _recordType: RecordType.TEMPLATE,
         _children: children ?? [],

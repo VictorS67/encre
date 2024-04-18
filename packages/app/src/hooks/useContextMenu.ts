@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+
+import { showContextMenuState } from '../state/contextmenu';
+import { selectingNodeIdsState } from '../state/node';
+import { selectingWireIdsState } from '../state/wire';
 import { ContextMenuData, ContextMenu } from '../types/contextmenu.type';
+
 /**
  * `useContextMenu` hook
  *
@@ -47,12 +53,15 @@ import { ContextMenuData, ContextMenu } from '../types/contextmenu.type';
  */
 export function useContextMenu() {
   const contextMenuRef = useRef<HTMLDivElement>(null);
-  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [showContextMenu, setShowContextMenu] =
+    useRecoilState(showContextMenuState);
   const [contextMenu, setContextMenu] = useState<ContextMenu>({
     x: -1000,
     y: 0,
     data: null,
   });
+  const setSelectingNodeIds = useSetRecoilState(selectingNodeIdsState);
+  const setSelectingWireIds = useSetRecoilState(selectingWireIdsState);
 
   useEffect(() => {
     const handleWindowClick = (event: Event) => {
@@ -95,12 +104,12 @@ export function useContextMenu() {
   const getContextMenuDataFromTarget = (
     target: HTMLElement | null,
   ): ContextMenuData | null => {
-    while (target && !target.dataset.contextMenuType) {
+    while (target && !target.dataset.contextmenutype) {
       target = target.parentElement;
     }
 
     return target
-      ? { type: target.dataset.contextMenuType!, element: target }
+      ? { type: target.dataset.contextmenutype!, element: target }
       : null;
   };
 
@@ -116,8 +125,19 @@ export function useContextMenu() {
       );
 
       setShowContextMenu(true);
-      console.log(`hx: ${event.clientX}, hy: ${event.clientY}`);
       setContextMenu({ x: event.clientX, y: event.clientY, data });
+
+      if (data?.type.startsWith('node-')) {
+        const nodeId: string = data.element.dataset.nodeid as string;
+        setSelectingNodeIds((nodeIds: string[]) => [
+          ...new Set([...nodeIds, nodeId]),
+        ]);
+      } else if (data?.type.startsWith('wire-')) {
+        const wireId: string = data.element.dataset.wireid as string;
+        setSelectingWireIds((wrieIds: string[]) => [
+          ...new Set([...wrieIds, wireId]),
+        ]);
+      }
     },
     [],
   );

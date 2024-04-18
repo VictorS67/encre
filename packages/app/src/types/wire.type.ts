@@ -29,13 +29,15 @@ export type WireLayerProps = {
   isDraggingFromNode?: boolean;
   highlightedNodeIds?: string[];
   highlightedPort?: HighlightedPort;
+  // selectingWireIds?: string[];
+  onWiresSelect?: (wireId: string[], isMulti?: boolean) => void;
 };
 
 export type RenderedWireProps = {
   connection: NodeConnection;
   nodeMap: Record<string, Node>;
   portPositions: PortPositons;
-  isSelected?: boolean;
+  isSelecting?: boolean;
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
 };
@@ -51,7 +53,7 @@ export type WireControlProps = {
   startY: number;
   endX: number;
   endY: number;
-  isSelected?: boolean;
+  isSelecting?: boolean;
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
 };
@@ -62,7 +64,7 @@ export type WireProps<T extends WireOptions['type']> = {
   startY: number;
   endX: number;
   endY: number;
-  isSelected?: boolean;
+  isSelecting?: boolean;
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
   wireOptions?: Extract<WireOptions, { type: T }>;
@@ -90,7 +92,7 @@ export type BaseWireProps = {
   interactionWidth?: number;
   startMarker?: string;
   endMarker?: string;
-  isSelected?: boolean;
+  isSelecting?: boolean;
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
   className?: string;

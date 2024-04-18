@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -14,11 +15,13 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { PartialWire, RenderedWire } from './Wire';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
+import { showContextMenuState } from '../state/contextmenu';
 import { nodeIODefState, nodeMapState } from '../state/node';
 import {
   draggingWireClosestPortState,
   hoveringWireIdState,
   hoveringWirePortIdState,
+  isSelectingMultiWiresState,
   selectingWireIdsState,
 } from '../state/wire';
 import { NodeInputPortDef } from '../types/studio.type';
@@ -67,6 +70,7 @@ export const WireLayer: FC<WireLayerProps> = ({
   isDraggingFromNode,
   highlightedNodeIds,
   highlightedPort,
+  onWiresSelect,
 }: WireLayerProps) => {
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
     x: 0,
@@ -77,6 +81,8 @@ export const WireLayer: FC<WireLayerProps> = ({
   );
   const nodeMap = useRecoilValue(nodeMapState);
   const nodeIODefMap = useRecoilValue(nodeIODefState);
+  const showContextMenu = useRecoilValue(showContextMenuState);
+  const isSelectingMultiWires = useRecoilValue(isSelectingMultiWiresState);
   const [selectingWireIds, setSelectingWireIds] = useRecoilState(
     selectingWireIdsState,
   );
@@ -91,35 +97,49 @@ export const WireLayer: FC<WireLayerProps> = ({
     mousePosition.y,
   );
 
-  const onMouseDownWireLayer = useCallback(
-    (e: MouseEvent) => {
-      const clickingWire = (e.target as HTMLElement).closest(
-        '.wire-interaction',
-      );
-      if (!clickingWire) {
-        const { clientX, clientY } = e;
-        setMousePosition({ x: clientX, y: clientY });
-        setSelectingWireIds([]);
-      } else {
-        const wireId = clickingWire.id;
-        setSelectingWireIds([...new Set([...selectingWireIds, wireId])]);
-      }
+  const selectingUniqueWireIds = useMemo(() => {
+    const wireSet = new Set(selectingWireIds);
+
+    return [...wireSet];
+  }, [selectingWireIds]);
+
+  const onWireSelect = useCallback(
+    (wireId: string) => {
+      onWiresSelect?.([wireId], isSelectingMultiWires);
     },
-    [selectingWireIds, setSelectingWireIds],
+    [isSelectingMultiWires],
   );
+
+  const onMouseDownWireLayer = useStableCallback((e: MouseEvent) => {
+    if (!e.target || e.button !== 0 || showContextMenu) {
+      return;
+    }
+    const clickingWire = (e.target as HTMLElement).closest('.wire-interaction');
+    if (!clickingWire) {
+      const { clientX, clientY } = e;
+      setMousePosition({ x: clientX, y: clientY });
+      setSelectingWireIds([]);
+    } else {
+      onWireSelect?.(clickingWire.id);
+    }
+  });
 
   const onMouseMoveWireLayer = useCallback(
     (e: MouseEvent) => {
       const { clientX, clientY } = e;
 
       if (!isDraggingFromNode && !draggingWire) {
-        const hoveringWire = (
-          document.elementFromPoint(clientX, clientY) as HTMLElement
-        ).closest('.wire-interaction');
+        const hoveringEl = document.elementFromPoint(
+          clientX,
+          clientY,
+        ) as HTMLElement;
 
-        const hoveringWirePort = (
-          document.elementFromPoint(clientX, clientY) as HTMLElement
-        ).closest('.wire-port');
+        if (!hoveringEl) {
+          return;
+        }
+
+        const hoveringWire = hoveringEl.closest('.wire-interaction');
+        const hoveringWirePort = hoveringEl.closest('.wire-port');
 
         const wireId: string | undefined =
           hoveringWire?.id || hoveringWirePort?.id;
@@ -281,13 +301,13 @@ export const WireLayer: FC<WireLayerProps> = ({
           return (
             <ErrorBoundary
               fallback={<></>}
-              key={`wire-${c.toNodeId}-${c.toPortName}`}
+              key={`wire-${c.fromNodeId}-${c.fromPortName}-${c.toNodeId}-${c.toPortName}`}
             >
               <RenderedWire
                 connection={c}
                 nodeMap={nodeMap}
                 portPositions={portPositions}
-                isSelected={selectingWireIds.includes(wireId)}
+                isSelecting={selectingUniqueWireIds.includes(wireId)}
                 isHighlighted={!!isHighlighted}
                 isHoveringPort={!!isHoveringWirePort}
               />

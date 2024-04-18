@@ -1,4 +1,5 @@
-import { BaseMessage, HumanMessage } from '../msgs/base.js';
+import { BaseMessage } from '../msgs/base.js';
+import { HumanMessage } from '../msgs/human.js';
 import {
   BasePrompt,
   BasePromptTemplate,

@@ -26,6 +26,8 @@ import { SerializableNode } from './index.js';
 
 type ExtractType<T> = T extends `${infer U}-${any}` ? U : never;
 
+type ExtractSubType<T> = T extends `${any}-${infer U}` ? U : never;
+
 export class NodeRegistration<
   NodeTypes extends string = never,
   NodeSubTypes extends string = never,
@@ -39,7 +41,9 @@ export class NodeRegistration<
 
   info = {} as {
     [P in `${NodeTypes}-${NodeSubTypes}`]: {
-      impl: NodeImplConstructor<Extract<Nodes, { type: ExtractType<P> }>>;
+      impl: NodeImplConstructor<
+        Extract<Nodes, { type: ExtractType<P>; subType: ExtractSubType<P> }>
+      >;
     };
   };
 
@@ -56,9 +60,16 @@ export class NodeRegistration<
     return Object.values(this.implsMap).map((nodeImpl) => nodeImpl.impl);
   }
 
+  get dynamicImplsMap(): Record<
+    string,
+    { impl: NodeImplConstructor<SerializableNode> }
+  > {
+    return this.implsMap;
+  }
+
   register<T extends SerializableNode>(
     impl: NodeImplConstructor<T>,
-    args?: Record<string, unknown>
+    registerArgs?: Record<string, unknown>
   ): NodeRegistration<
     NodeTypes | T['type'],
     NodeSubTypes | T['subType'],
@@ -70,7 +81,7 @@ export class NodeRegistration<
       Nodes | T
     >;
 
-    const node = impl.create(args);
+    const node = impl.create(registerArgs);
     const type = node.type as T['type'];
     const subType = node.subType as T['subType'];
 
@@ -99,32 +110,31 @@ export class NodeRegistration<
     return newRegistration;
   }
 
-  create<T extends NodeTypes>(
+  create<T extends NodeTypes, U extends NodeSubTypes>(
     type: T,
-    subType: string,
-    args?: Record<string, unknown>
-  ): Extract<Nodes, { type: T }> {
+    subType: U,
+    registerArgs?: Record<string, unknown>
+  ): Extract<Nodes, { type: T; subType: U }> {
     const key = [type, subType].join('-');
 
     const nodeImpl = this.info[key] as {
-      impl: NodeImplConstructor<Extract<Nodes, { type: T }>>;
+      impl: NodeImplConstructor<Extract<Nodes, { type: T; subType: U }>>;
     };
 
     if (!nodeImpl) {
-      throw new Error(`Unknown node type pair: ${key}`);
+      throw new Error(`Unknown node type pair: ${type}-${subType}`);
     }
 
-    return nodeImpl.impl.create(args);
+    return nodeImpl.impl.create(registerArgs);
   }
 
   createImpl<T extends Nodes>(node: T): NodeImpl<T> {
-    const type = node.type as Extract<NodeTypes, T['type']>;
-    const subType: string = node.subType;
-
-    const key = [type, subType].join('-');
+    const key = [node.type, node.subType].join('-');
 
     const nodeImpl = this.info[key] as {
-      impl: NodeImplConstructor<Extract<Nodes, { type: T }>>;
+      impl: NodeImplConstructor<
+        Extract<Nodes, { type: T['type']; subType: T['subType'] }>
+      >;
     };
 
     if (!nodeImpl) {
@@ -137,6 +147,40 @@ export class NodeRegistration<
 
     if (!newNodeImpl) {
       throw new Error(`Unknown node type pair: ${key}`);
+    }
+
+    return newNodeImpl;
+  }
+
+  createDynamic(
+    type: string,
+    subType: string,
+    registerArgs?: Record<string, unknown>
+  ): SerializableNode {
+    const implClass = this.dynamicImplsMap[`${type}-${subType}`];
+    if (!implClass) {
+      throw new Error(
+        `createDynamic: Unknown node - type: ${type}, subType: ${subType}`
+      );
+    }
+
+    return implClass.impl.create(registerArgs);
+  }
+
+  createDynamicImpl(node: SerializableNode): NodeImpl<SerializableNode> {
+    const { type, subType } = node;
+    const implClass = this.dynamicImplsMap[`${type}-${subType}`];
+    if (!implClass) {
+      throw new Error(
+        `createDynamicImpl: Unknown node - type: ${type}, subType: ${subType}`
+      );
+    }
+
+    const newNodeImpl = new implClass.impl(node);
+    if (!newNodeImpl) {
+      throw new Error(
+        `createDynamicImpl: Unknown node - type: ${type}, subType: ${subType}`
+      );
     }
 
     return newNodeImpl;

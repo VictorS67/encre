@@ -1,3 +1,4 @@
+import { BaseRule } from '../events/inference/validate/guardrails/base.js';
 import {
   RecordId,
   RecordType,
@@ -54,6 +55,14 @@ export type CallableConfig = {
    * TODO: Add callbacks.
    */
   callbacks?: any;
+};
+
+/**
+ * Extends `CallableConfig` with an optional `variables` record for additional configuration.
+ * @property `variables` - Additional variables for guardrail rule validation.
+ */
+export type CallableIfConfig = CallableConfig & {
+  variables?: Record<string, unknown>;
 };
 
 /**
@@ -114,6 +123,9 @@ export type CallableBatchOptions = {
 
 export type SerializedCallableFields = {
   [key: string]:
+    | ReturnType<Serializable['getAttributes']>
+    | Record<string, ReturnType<Serializable['getAttributes']>>
+    | Array<ReturnType<Serializable['getAttributes']>>
     | ReturnType<Callable['getAttributes']>
     | Record<string, ReturnType<Callable['getAttributes']>>
     | Array<ReturnType<Callable['getAttributes']>>;
@@ -703,7 +715,7 @@ export class CallableBind<
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -760,7 +772,7 @@ export class CallableBind<
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -1097,7 +1109,7 @@ export class CallableEach<
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -1138,7 +1150,7 @@ export class CallableEach<
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -1330,7 +1342,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
       _grp: 2,
       _type: 'input_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._removeSecret(kwargs, secrets)
@@ -1380,7 +1392,7 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
       _grp: 2,
       _type: 'event_record',
       _id: this._id,
-      _recordId: await this._getRecordId(),
+      _recordId: this._recordId,
       _kwargs: mapKeys(
         Object.keys(secrets).length
           ? this._replaceSecret(kwargs, secrets)
@@ -1624,5 +1636,146 @@ export class CallableSequence<
         last: this.last.getAttributes(),
       },
     };
+  }
+}
+
+/**
+ * {@link CallableIf} class extends {@link Callable} class for mapping multiple Callable
+ * instances based on a set of rules.
+ * It allows the execution of multiple callables in parallel and aggregates their results.
+ * If the rule validation does not pass for a certain callable, then the callable will not
+ * be executed and returns `undefined` as the result.
+ *
+ * Generics:
+ * - `CallInput`: The input type for the callable.
+ * - `CallOutput`: The output type for the callable, defaults to a record.
+ * - `CallOptions`: The options type for the callable, extends `CallableIfConfig`.
+ */
+export class CallableIf<
+  CallInput,
+  CallOutput extends Record<string, unknown> = Record<string, unknown>,
+  CallOptions extends CallableIfConfig = CallableIfConfig,
+> extends Callable<CallInput, CallOutput, CallOptions> {
+  declare CallIfOptions: Omit<CallOptions, keyof CallableConfig>;
+
+  _isCallable = true;
+
+  _isSerializable = true;
+
+  _namespace: string[] = ['record', 'callable'];
+
+  static _name(): string {
+    return 'CallableIf';
+  }
+
+  protected _rules: Record<string, BaseRule>;
+
+  protected _actions: Record<string, Callable<CallInput>>;
+
+  /**
+   * Initializes a new instance of `CallableIf` with the given rules and actions.
+   * @param {Object} fields - The rules and actions for the instance.
+   * @param {Record<string, BaseRule>} fields.rules - A mapping of guardrail identifiers 
+   * to `BaseRule` instances.
+   * @param {Record<string, CallableLike<CallInput>>} fields.actions - A mapping of action 
+   * identifiers to `CallableLike` instances.
+   * @throws Will throw an error if an action does not have a corresponding rule.
+   */
+  constructor(fields: {
+    rules: Record<string, BaseRule>;
+    actions: Record<string, CallableLike<CallInput>>;
+  }) {
+    super(fields);
+
+    this._rules = fields.rules;
+
+    this._actions = {};
+    for (const [k, v] of Object.entries(fields.actions)) {
+      if (!this._rules[k]) {
+        throw new Error(`CANNOT find rule of "${k}"`);
+      }
+
+      this._actions[k] = convertCallableLikeToCallable(v);
+    }
+  }
+
+  /**
+   * Creates a new `CallableIf` instance from the specified rules and actions.
+   * @static
+   * @param {Record<string, BaseRule>} rules - The rules for the callable instance.
+   * @param {Record<string, CallableLike<CallInput>>} actions - The actions for the 
+   * callable instance.
+   * @returns {CallableIf<CallInput>} A new instance of `CallableIf`.
+   */
+  static from<CallInput>(
+    rules: Record<string, BaseRule>,
+    actions: Record<string, CallableLike<CallInput>>
+  ): CallableIf<CallInput> {
+    return new CallableIf<CallInput>({ rules, actions });
+  }
+
+  /**
+   * Invokes the callable, evaluating each rule against the input and executing the 
+   * corresponding action if the rule is true.
+   * @async
+   * @param {CallInput} input - The input to evaluate rules against and pass to actions.
+   * @param {Partial<CallOptions>} [options] - Optional configuration for the invocation.
+   * @returns {Promise<CallOutput>} The result of the action executions.
+   */
+  async invoke(
+    input: CallInput,
+    options?: Partial<CallOptions> | undefined
+  ): Promise<CallOutput> {
+    const [callOptions, { variables }] =
+      this._splitCallIfOptionsFromConfig(options);
+
+    const ruleResults: Record<string, boolean> = {};
+    const output: Record<string, unknown> = {};
+
+    try {
+      await Promise.all(
+        Object.entries(this._rules).map(async ([k, rule]) => {
+          ruleResults[k] = await rule.validate(input, variables);
+        })
+      );
+
+      await Promise.all(
+        Object.entries(this._actions).map(async ([k, callable]) => {
+          output[k] = ruleResults[k]
+            ? await callable.invoke(input, callOptions)
+            : undefined;
+        })
+      );
+    } catch (e) {
+      throw e;
+    }
+
+    return output as CallOutput;
+  }
+
+  protected _getCallableMetadata(): {
+    type: string;
+    callables?: SerializedCallableFields;
+  } {
+    return {
+      type: 'CallableIf',
+      callables: {
+        rules: Object.fromEntries(
+          Object.entries(this._rules).map(([k, v]) => [k, v.getAttributes()])
+        ),
+        actions: Object.fromEntries(
+          Object.entries(this._actions).map(([k, v]) => [k, v.getAttributes()])
+        ),
+      },
+    };
+  }
+
+  private _splitCallIfOptionsFromConfig(
+    options: Partial<CallOptions> = {}
+  ): [CallableConfig, this['CallIfOptions']] {
+    const [callOptions, callIfOptions] =
+      super._splitCallableOptionsFromCallOptions(options);
+
+    return [callOptions, callIfOptions as this['CallIfOptions']];
   }
 }

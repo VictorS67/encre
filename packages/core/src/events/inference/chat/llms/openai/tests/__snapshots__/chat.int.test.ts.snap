@@ -1,0 +1,533 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OpenAIChat test OpenAIChat text 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "Hello! I'm an AI developed by OpenAI, designed to provide information, answer questions, and engage in conversation on a wide range of topics. How can I help you today?",
+        },
+        "_type": "constructor",
+      },
+      "output": "Hello! I'm an AI developed by OpenAI, designed to provide information, answer questions, and engage in conversation on a wide range of topics. How can I help you today?",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 37,
+      "promptTokens": 13,
+      "totalTokens": 50,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat text 2`] = `
+{
+  "completionTokens": 37,
+  "promptTokens": 13,
+  "totalTokens": 50,
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "tool_calls",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{"location": "San Francisco, CA", "format": "fahrenheit"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_VN6oS9PD39DAcVZ1QVG0MmP7",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Tokyo", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_EqxB96vXKwPJd906FD0Sa4I4",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Paris", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_U26xu6Fn4EJSOeefSg1Xf7uf",
+                "type": "function",
+              },
+            ],
+          },
+          "content": "",
+        },
+        "_type": "constructor",
+      },
+      "output": "",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 79,
+      "promptTokens": 120,
+      "totalTokens": 199,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions 2`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "Here's the current weather in each city:
+
+- In **San Francisco, CA**, the temperature is **72°F**.
+- In **Tokyo**, the temperature is **10°C**.
+- In **Paris**, the temperature is **22°C**.",
+        },
+        "_type": "constructor",
+      },
+      "output": "Here's the current weather in each city:
+
+- In **San Francisco, CA**, the temperature is **72°F**.
+- In **Tokyo**, the temperature is **10°C**.
+- In **Paris**, the temperature is **22°C**.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 52,
+      "promptTokens": 199,
+      "totalTokens": 251,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions 3`] = `
+{
+  "completionTokens": 52,
+  "promptTokens": 178,
+  "totalTokens": 230,
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions with vison 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "Sure, here is a list of the destinations shown on the flight information display along with their respective countries:
+
+- Edinburgh, United Kingdom
+- London, United Kingdom
+- Kütahya, Turkey
+- Bristol, United Kingdom
+- Dublin, Ireland
+- East Midlands, United Kingdom
+- Sofia, Bulgaria
+- London, United Kingdom
+- Newcastle, United Kingdom
+- St. Petersburg, Russia
+- London, United Kingdom
+- Manchester, United Kingdom
+
+Please note that some cities may share a name with other places around the world, and the specific airports are not indicated which could clarify the exact location. However, I've listed the most likely countries based on the common destinations from a major international airport.",
+        },
+        "_type": "constructor",
+      },
+      "output": "Sure, here is a list of the destinations shown on the flight information display along with their respective countries:
+
+- Edinburgh, United Kingdom
+- London, United Kingdom
+- Kütahya, Turkey
+- Bristol, United Kingdom
+- Dublin, Ireland
+- East Midlands, United Kingdom
+- Sofia, Bulgaria
+- London, United Kingdom
+- Newcastle, United Kingdom
+- St. Petersburg, Russia
+- London, United Kingdom
+- Manchester, United Kingdom
+
+Please note that some cities may share a name with other places around the world, and the specific airports are not indicated which could clarify the exact location. However, I've listed the most likely countries based on the common destinations from a major international airport.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 145,
+      "promptTokens": 279,
+      "totalTokens": 424,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions with vison 2`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "tool_calls",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{"location": "Edinburgh, United Kingdom", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_8mNQCwmsZN9lURS5KSKHfvus",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "London, United Kingdom", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_7WYzstNpmkhfymhl3VyXDRhT",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Kütahya, Turkey", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_z843Feml6Vk0mmrJdc8HPZCw",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Bristol, United Kingdom", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_ViH4k89exo9Ede1qClIKU50o",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Dublin, Ireland", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_2TTHtKYQmqzG7JPZDcp7DNRJ",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "East Midlands, United Kingdom", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_DlrWrc6ooNCGk8MOoj2L6TI6",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Sofia, Bulgaria", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_Frq85NIkzY0n5hqNlI7j1rNn",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "St. Petersburg, Russia", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_DUvrH59DfyDLso2oByugrEFX",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Newcastle, United Kingdom", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_BSuvS2eOeBMgmDLBM7hdtE9y",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Manchester, United Kingdom", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_H9xot38Kmi8zbO4NO7OKfVNy",
+                "type": "function",
+              },
+            ],
+          },
+          "content": "",
+        },
+        "_type": "constructor",
+      },
+      "output": "",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 253,
+      "promptTokens": 276,
+      "totalTokens": 529,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions with vison 3`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "Based on the current weather conditions, Sofia, Bulgaria, has the highest temperature at 11°C. Therefore, I suggest booking a flight to Sofia, Bulgaria, if you're looking for the warmest destination on your list.",
+        },
+        "_type": "constructor",
+      },
+      "output": "Based on the current weather conditions, Sofia, Bulgaria, has the highest temperature at 11°C. Therefore, I suggest booking a flight to Sofia, Bulgaria, if you're looking for the warmest destination on your list.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 45,
+      "promptTokens": 699,
+      "totalTokens": 744,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat triggering local functions with vison 4`] = `
+{
+  "completionTokens": 45,
+  "promptTokens": 675,
+  "totalTokens": 720,
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat using multiple tools 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "tool_calls",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{"location": "Glasgow, Scotland", "format": "celsius", "num_days": 5}",
+                  "name": "get_n_day_weather_forecast",
+                },
+                "id": "call_nzg8wtwDG1dfYz5mmf5i9G2i",
+                "type": "function",
+              },
+              {
+                "function": {
+                  "arguments": "{"location": "Glasgow, Scotland", "format": "celsius"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_DeTfXBEU7lIftv7Ho1eqpL2J",
+                "type": "function",
+              },
+            ],
+          },
+          "content": "",
+        },
+        "_type": "constructor",
+      },
+      "output": "",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 71,
+      "promptTokens": 297,
+      "totalTokens": 368,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat using multiple tools 2`] = `
+{
+  "completionTokens": 61,
+  "promptTokens": 289,
+  "totalTokens": 350,
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat using single tool 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "tool_calls",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {
+            "tool_calls": [
+              {
+                "function": {
+                  "arguments": "{"location":"San Francisco, CA","format":"fahrenheit"}",
+                  "name": "get_current_weather",
+                },
+                "id": "call_vOjkgUND159xsHrfydsTwDds",
+                "type": "function",
+              },
+            ],
+          },
+          "content": "",
+        },
+        "_type": "constructor",
+      },
+      "output": "",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 23,
+      "promptTokens": 200,
+      "totalTokens": 223,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat using single tool 2`] = `
+{
+  "completionTokens": 23,
+  "promptTokens": 207,
+  "totalTokens": 230,
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat vision 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "input",
+          "load",
+          "msgs",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "This image shows a flight information display board at an airport. The board is listing departure times, destinations, and flight codes for various flights. Destinations such as Moscow, London, Edinburgh, Dublin, and St. Petersburg can be seen, suggesting this is an international airport with flights to different countries. The exact status of the flights (e.g., on time, delayed, boarding, etc.) is not visible in the image.",
+        },
+        "_type": "constructor",
+      },
+      "output": "This image shows a flight information display board at an airport. The board is listing departure times, destinations, and flight codes for various flights. Destinations such as Moscow, London, Edinburgh, Dublin, and St. Petersburg can be seen, suggesting this is an international airport with flights to different countries. The exact status of the flights (e.g., on time, delayed, boarding, etc.) is not visible in the image.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 86,
+      "promptTokens": 269,
+      "totalTokens": 355,
+    },
+  },
+}
+`;
+
+exports[`OpenAIChat test OpenAIChat vision 2`] = `
+{
+  "completionTokens": 86,
+  "promptTokens": 269,
+  "totalTokens": 355,
+}
+`;

@@ -355,10 +355,10 @@ export const graphState = atom<NodeGraph>({
       //         },
       //       },
       {
-        id: '2',
+        id: 'vyopwbzpnsanaan',
         type: 'prompt',
         subType: 'string',
-        title: '2',
+        title: 'BotA Prompt',
         name: 'StringPrompt',
         aliases: {},
         secrets: {},
@@ -380,15 +380,9 @@ export const graphState = atom<NodeGraph>({
             height: 500,
           },
         },
-        inputs: {
-          a: ['string'],
-          b: ['string'],
-          c: ['string'],
-        },
+        inputs: {},
         outputs: {
-          a: ['string'],
-          b: ['string'],
-          c: ['string'],
+          prompt: ['string'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
@@ -397,23 +391,7 @@ export const graphState = atom<NodeGraph>({
           connections: NodeConnection[],
           nodes: Record<string, Node>,
         ): NodeInputPortDef[] {
-          return [
-            {
-              nodeId: '2',
-              name: 'a',
-              type: ['string'],
-            },
-            {
-              nodeId: '2',
-              name: 'b',
-              type: ['string'],
-            },
-            {
-              nodeId: '2',
-              name: 'c',
-              type: ['string'],
-            },
-          ];
+          return [];
         },
         getOutputPortDefs: (
           connections: NodeConnection[],
@@ -421,18 +399,8 @@ export const graphState = atom<NodeGraph>({
         ): NodeOutputPortDef[] => {
           return [
             {
-              nodeId: '2',
-              name: 'd',
-              type: ['string'],
-            },
-            {
-              nodeId: '2',
-              name: 'e',
-              type: ['string'],
-            },
-            {
-              nodeId: '2',
-              name: 'f',
+              nodeId: 'vyopwbzpnsanaan',
+              name: 'prompt',
               type: ['string'],
             },
           ];
@@ -440,33 +408,24 @@ export const graphState = atom<NodeGraph>({
         getBody: async (): Promise<NodeBody> => {
           return [
             {
-              type: 'code',
-              text: `attr1: "1"
-attr2: [2, 3]
-attr3: true
-attr4: [
-  {
-    "sub1": 1,
-    "sub2": "2"
-  },
-  {
-    "sub3": 3,
-    "sub4": "4"
-  }
-]
-attr6: `,
-              language: 'encre-code',
-              keywords: [
-                'attr1',
-                'attr2',
-                'attr3',
-                'attr4',
-                'attr5',
-                'attr6',
-                'attr7',
-                'attr8',
+              type: 'message',
+              content: [
+                {
+                  type: 'plain',
+                  text: "You are a friend, aiming to promote well-being, guided by the Theory of Planned Behavior, which suggests that an individual's behavior is directly influenced by their intention, shaped by their attitudes towards the behavior, the subjective norms surrounding it, and their perceived control over the behavior. Your approach involves providing emotional through a direct communication style, while maintaining a positive tone throughout the interaction.",
+                },
               ],
-              isHoldingValues: true,
+              kwargs: [
+                {
+                  type: 'code',
+                  text: '',
+                  language: 'encre-code',
+                  keywords: [],
+                  isHoldingValues: false,
+                },
+              ],
+              role: 'system',
+              name: undefined,
             },
           ];
         },
@@ -483,10 +442,10 @@ attr6: `,
         },
       },
       {
-        id: '3',
+        id: 'absdfoawbfaaoewp',
         type: 'prompt',
         subType: 'string',
-        title: '3',
+        title: 'BotB Prompt',
         name: 'StringPrompt',
         aliases: {},
         secrets: {},
@@ -508,15 +467,9 @@ attr6: `,
             height: 500,
           },
         },
-        inputs: {
-          a: ['string'],
-          b: ['string'],
-          c: ['string'],
-        },
+        inputs: {},
         outputs: {
-          a: ['string'],
-          b: ['string'],
-          c: ['string'],
+          prompt: ['string'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
@@ -525,23 +478,7 @@ attr6: `,
           connections: NodeConnection[],
           nodes: Record<string, Node>,
         ): NodeInputPortDef[] {
-          return [
-            {
-              nodeId: '3',
-              name: 'a',
-              type: ['string'],
-            },
-            {
-              nodeId: '3',
-              name: 'b',
-              type: ['string'],
-            },
-            {
-              nodeId: '3',
-              name: 'c',
-              type: ['string'],
-            },
-          ];
+          return [];
         },
         getOutputPortDefs: (
           connections: NodeConnection[],
@@ -549,18 +486,8 @@ attr6: `,
         ): NodeOutputPortDef[] => {
           return [
             {
-              nodeId: '3',
-              name: 'd',
-              type: ['string'],
-            },
-            {
-              nodeId: '3',
-              name: 'e',
-              type: ['string'],
-            },
-            {
-              nodeId: '3',
-              name: 'f',
+              nodeId: 'absdfoawbfaaoewp',
+              name: 'prompt',
               type: ['string'],
             },
           ];
@@ -568,33 +495,24 @@ attr6: `,
         getBody: async (): Promise<NodeBody> => {
           return [
             {
-              type: 'code',
-              text: `attr1: "1"
-attr2: [2, 3]
-attr3: true
-attr4: [
-  {
-    "sub1": 1,
-    "sub2": "2"
-  },
-  {
-    "sub3": 3,
-    "sub4": "4"
-  }
-]
-attr6: `,
-              language: 'encre-code',
-              keywords: [
-                'attr1',
-                'attr2',
-                'attr3',
-                'attr4',
-                'attr5',
-                'attr6',
-                'attr7',
-                'attr8',
+              type: 'message',
+              content: [
+                {
+                  type: 'plain',
+                  text: "You are a student who feels generally positive about life. Recently, you've been managing your academic and personal responsibilities well, feeling confident in your ability to handle challenges. You seek to maintain or slightly improve your current state of well-being. During a conversation with a well-being improvement agent, you express interest in strategies that could further enhance your productivity and overall happiness without indicating any significant distress or issues.",
+                },
               ],
-              isHoldingValues: true,
+              kwargs: [
+                {
+                  type: 'code',
+                  text: '',
+                  language: 'encre-code',
+                  keywords: [],
+                  isHoldingValues: false,
+                },
+              ],
+              role: 'system',
+              name: undefined,
             },
           ];
         },
@@ -611,11 +529,11 @@ attr6: `,
         },
       },
       {
-        id: '4',
-        type: 'prompt',
-        subType: 'string',
-        title: '4',
-        name: 'StringPrompt',
+        id: 'vbylbsauooanapw',
+        type: 'chatlm',
+        subType: 'openai',
+        title: 'OpenAIChat',
+        name: 'OpenAIChat',
         aliases: {},
         secrets: {},
         kwargs: {
@@ -637,14 +555,15 @@ attr6: `,
           },
         },
         inputs: {
-          a: ['string'],
-          b: ['string'],
-          c: ['string'],
+          prompt: ['string'],
         },
         outputs: {
-          a: ['string'],
-          b: ['string'],
-          c: ['string'],
+          output: 'string',
+          message: 'string',
+          info: ['object', 'unknown'],
+          completionTokens: ['number', 'unknown'],
+          promptTokens: ['number', 'unknown'],
+          totalTokens: ['number', 'unknown'],
         },
         setKwarg: function (key: string, value: unknown): void {
           throw new Error('Function not implemented.');
@@ -655,18 +574,8 @@ attr6: `,
         ): NodeInputPortDef[] {
           return [
             {
-              nodeId: '4',
-              name: 'a',
-              type: ['string'],
-            },
-            {
-              nodeId: '4',
-              name: 'b',
-              type: ['string'],
-            },
-            {
-              nodeId: '4',
-              name: 'c',
+              nodeId: 'vbylbsauooanapw',
+              name: 'prompt',
               type: ['string'],
             },
           ];
@@ -677,19 +586,34 @@ attr6: `,
         ): NodeOutputPortDef[] => {
           return [
             {
-              nodeId: '4',
-              name: 'd',
+              nodeId: 'vbylbsauooanapw',
+              name: 'output',
               type: ['string'],
             },
             {
-              nodeId: '4',
-              name: 'e',
+              nodeId: 'vbylbsauooanapw',
+              name: 'message',
               type: ['string'],
             },
             {
-              nodeId: '4',
-              name: 'f',
-              type: ['string'],
+              nodeId: 'vbylbsauooanapw',
+              name: 'info',
+              type: ['object', 'unknown'],
+            },
+            {
+              nodeId: 'vbylbsauooanapw',
+              name: 'completionTokens',
+              type: ['number', 'unknown'],
+            },
+            {
+              nodeId: 'vbylbsauooanapw',
+              name: 'promptTokens',
+              type: ['number', 'unknown'],
+            },
+            {
+              nodeId: 'vbylbsauooanapw',
+              name: 'totalTokens',
+              type: ['number', 'unknown'],
             },
           ];
         },
@@ -697,32 +621,32 @@ attr6: `,
           return [
             {
               type: 'code',
-              text: `attr1: "1"
-attr2: [2, 3]
-attr3: true
-attr4: [
-  {
-    "sub1": 1,
-    "sub2": "2"
-  },
-  {
-    "sub3": 3,
-    "sub4": "4"
-  }
-]
-attr6: `,
+              text: `modelName: 'gpt-4-turbo-preview'
+temperature: 1
+topP: 1
+frequencyPenalty: 0
+presencePenalty: 0
+maxTokens: 2048
+streaming: false`,
               language: 'encre-code',
               keywords: [
-                'attr1',
-                'attr2',
-                'attr3',
-                'attr4',
-                'attr5',
-                'attr6',
-                'attr7',
-                'attr8',
+                'verbose',
+                'callbacks',
+                'modelName',
+                'temperature',
+                'topP',
+                'frequencyPenalty',
+                'presencePenalty',
+                'maxTokens',
+                'streaming',
+                'stopWords',
+                'logitBias',
+                'responseFormatType',
+                'seed',
+                'user',
+                'timeout',
+                'additionalKwargs',
               ],
-              isHoldingValues: true,
             },
           ];
         },
@@ -740,6 +664,86 @@ attr6: `,
       },
     ],
     connections: [],
+    comments: [
+      {
+        id: 'hdafofndoiasn213nal',
+        visualInfo: {
+          position: {
+            x: 100,
+            y: 100,
+            zIndex: 1,
+          },
+          size: {
+            width: 500,
+            height: 500,
+          },
+          content: {
+            horitontal: 'start',
+            vertical: 'start',
+          },
+        },
+        title: 'Aggregating data with the Merge node',
+        description: 'Aggregating data with the Merge node',
+        type: 'code',
+        text: 'this is a comment content.',
+        language: 'javascript',
+      },
+      {
+        id: 'bdsfbsidubfouis',
+        visualInfo: {
+          position: {
+            x: 800,
+            y: 800,
+            zIndex: 1,
+          },
+          size: {
+            width: 200,
+            height: 200,
+          },
+          content: {
+            horitontal: 'start',
+            vertical: 'start',
+          },
+        },
+        // title: "Aggregating data with the Merge node",
+        // description: "Aggregating data with the Merge node",
+        type: 'code',
+        text: `/* Some example CSS */
+
+@import url("something.css");
+
+body {
+  margin: 0;
+  padding: 3em 6em;
+  font-family: tahoma, arial, sans-serif;
+  color: #000;
+}
+
+#navigation a {
+  font-weight: bold;
+  text-decoration: none !important;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 1.7em;
+}
+
+h1:before, h2:before {
+  content: "some contents";
+}
+
+code {
+  font-family: courier, monospace;
+  font-size: 80%;
+  color: #418A8A;
+}`,
+        language: 'text/css',
+      },
+    ],
   },
   effects: [persistAtom],
 });

@@ -27,6 +27,47 @@ export type VisualInfo = {
     width: number;
     height: number;
   };
+  content?: {
+    color?:
+      | 'red'
+      | 'orange'
+      | 'gold'
+      | 'yellow'
+      | 'palmera'
+      | 'green'
+      | 'meadow'
+      | 'cyan'
+      | 'blue'
+      | 'cornflower'
+      | 'purple'
+      | 'pink'
+      | 'razzmatazz'
+      | 'silver'
+      | 'dark';
+  };
+};
+
+export type CommentVisualInfo = VisualInfo & {
+  content?: {
+    horitontal?: 'center' | 'start' | 'end' | 'justify';
+    vertical?: 'center' | 'start' | 'end';
+    color?:
+      | 'red'
+      | 'orange'
+      | 'gold'
+      | 'yellow'
+      | 'palmera'
+      | 'green'
+      | 'meadow'
+      | 'cyan'
+      | 'blue'
+      | 'cornflower'
+      | 'purple'
+      | 'pink'
+      | 'razzmatazz'
+      | 'silver'
+      | 'dark';
+  };
 };
 
 export type NodeInputPortDef = {
@@ -49,11 +90,42 @@ export type NodePortFields = {
   [key: string]: DataType | Readonly<DataType[]>;
 };
 
+export interface BaseComment {
+  id: string;
+
+  visualInfo: CommentVisualInfo;
+
+  title?: string | undefined;
+
+  description?: string | undefined;
+}
+
+export interface PlainTextComment extends BaseComment {
+  type: 'plain';
+  text: string;
+}
+
+export interface MarkdownComment extends BaseComment {
+  type: 'markdown';
+  text: string;
+}
+
+export interface CodeComment extends BaseComment {
+  type: 'code';
+  text: string;
+
+  language?: string;
+  keywords?: string[];
+}
+
+export type GraphComment = PlainTextComment | MarkdownComment | CodeComment;
+
 // This is mocking NodeImpl
 export interface Node {
   id: string;
   type: string;
   subType: string;
+  registerArgs?: Record<string, unknown>;
   title: string;
   name: string;
   aliases: {

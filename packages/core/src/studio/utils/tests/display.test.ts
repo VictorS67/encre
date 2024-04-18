@@ -1,9 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import { Context } from '../../../events/input/load/docs/context.js';
-import {
-  BotMessage,
-  HumanMessage,
-} from '../../../events/input/load/msgs/base.js';
+import { BotMessage } from '../../../events/input/load/msgs/bot.js';
+import { HumanMessage } from '../../../events/input/load/msgs/human.js';
 import { SecretFields } from '../../../load/keymap.js';
 import { DataFields } from '../../data.js';
 import {

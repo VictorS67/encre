@@ -20,16 +20,21 @@ export function useContextMenuConfig(): ContextMenuConfig {
       contexts: entries(contexts)
         .map(([key, value]) => ({
           type: key,
-          data: value,
+          data: {},
+          groups: value,
         }))
         .reduce<{
           [key: string]: {
             type: string;
-            data: readonly ContextMenuConfigContext[];
+            data: unknown;
+            group: readonly ContextMenuConfigContext<unknown>[];
           };
-        }>((accumulator, dict) => {
-          accumulator[dict.type] = dict;
-          return accumulator;
+        }>((acc, dict) => {
+          acc[dict.type] = {
+            ...dict,
+            group: dict.groups.group,
+          };
+          return acc;
         }, {}),
       commands,
     }),

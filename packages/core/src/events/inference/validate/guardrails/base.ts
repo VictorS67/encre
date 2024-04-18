@@ -25,6 +25,7 @@ export abstract class BaseRule<T = any>
   _isSerializable = false;
 
   _namespace: string[] = [
+    'events',
     'inference',
     'validate',
     'guardrails',
@@ -65,9 +66,9 @@ export abstract class BaseRule<T = any>
     return CallableLambda.from(this.func);
   }
 
-  async validate(input: T): Promise<boolean> {
-    if (this.variables) {
-      return this.func(input, this.variables);
+  async validate(input: T, variables?: Record<string, unknown>): Promise<boolean> {
+    if (variables || this.variables) {
+      return this.func(input, variables ?? this.variables);
     } else {
       return this.func(input);
     }

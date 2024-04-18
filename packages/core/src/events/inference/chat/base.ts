@@ -16,10 +16,9 @@ import {
 import { BaseEvent, BaseEventParams } from '../../base.js';
 import {
   type BaseMessageLike,
-  convertMessageLikeToMessage,
   BaseMessage,
-  isMessageLike,
 } from '../../input/load/msgs/base.js';
+import { convertMessageLikeToMessage, isMessageLike } from '../../input/load/msgs/utils.js';
 import { BasePrompt } from '../../input/load/prompts/base.js';
 import { ChatPrompt } from '../../input/load/prompts/chat.js';
 import { StringPrompt } from '../../input/load/prompts/text.js';
@@ -139,18 +138,6 @@ export abstract class BaseLM<
   ): Promise<LLMResult>;
 
   /**
-   * Calculates the number of tokens in the given text.
-   * @param {string} text - The input text.
-   * @returns {Promise<number>} The number of tokens in the input text.
-   */
-  async getNumTokens(text: string): Promise<number> {
-    return getNumTokens(
-      text,
-      'modelName' in this ? getTiktokenModel(this.modelName as string) : 'gpt2'
-    );
-  }
-
-  /**
    * Converts a given {@link BaseLMInput} to a {@link BasePrompt}.
    * @param {BaseLMInput} input - The input for the language model.
    * @returns {BasePrompt} The corresponding prompt.
@@ -229,7 +216,9 @@ export abstract class BaseLLM<
   /**
    * A predefined namespace array to identify the type of language model and other related namespaces.
    */
-  _namespace: string[] = ['inference', 'chat', 'llms', this._llmType()];
+  _eventNamespace(): string[] {
+    return ['inference', 'chat', 'llms', this._llmType()];
+  }
 
   /**
    * Constructor for the BaseLLM class.
@@ -397,7 +386,9 @@ export abstract class BaseChatLM<
   /**
    * A predefined namespace array to identify the type of language model and other related namespaces.
    */
-  _namespace: string[] = ['inference', 'chat', 'llms', this._llmType()];
+  _eventNamespace(): string[] {
+    return ['inference', 'chat', 'chatlms', this._llmType()];
+  }
 
   constructor(fields: BaseChatLMParams) {
     super(fields);

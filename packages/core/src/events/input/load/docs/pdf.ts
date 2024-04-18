@@ -30,13 +30,16 @@ async function PDFLoaderImports() {
 export class PDFLoader<
   CallInput extends string | Blob = string | Blob,
 > extends BufferLoader<CallInput> {
-
   _isSerializable = true;
 
   private _pdfjs: typeof PDFLoaderImports;
 
   static _name(): string {
-    return 'pdf';    
+    return 'PDFLoader';
+  }
+
+  _docType(): string {
+    return 'pdf';
   }
 
   constructor(fields?: PDFLoaderParams, pdfjs?: typeof PDFLoaderImports) {
