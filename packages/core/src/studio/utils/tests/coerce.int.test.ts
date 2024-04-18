@@ -25,7 +25,7 @@ import {
     coerceToData,
     coerceTypeOptional,
     expectTypeOptional,
-} from '../coerce'; 
+} from '../coerce.js'; 
 
 test('coerceToData', () => {
     // undefined
