@@ -160,6 +160,17 @@ export async function expectTypeOptional<T extends DataType>(
     return [data.value] as ValueOf<T>['value'] | undefined;
   }
 
+  if (type === 'unknown') {
+    return data.value as ValueOf<T>['value'] | undefined;
+  }
+
+  if (
+    type === 'unknown[]' &&
+    isArrayData(data)
+  ) {
+    return data.value as ValueOf<T>['value'] | undefined;
+  }
+
   if (data.type !== type) {
     throw new Error(`Expect data of type ${type} but instead got ${data.type}`);
   }

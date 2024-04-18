@@ -1133,12 +1133,10 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(functionMessageD3, 'object[]')).toStrictEqual([functionMessage3]); 
 
     // convertMessageLikeToMessage do not have case for ['function', 'Hello!'] CORRECT!
-    // expect(await coerceTypeOptional(functionMessageD4, 'string')).rejects.toThrow(); // cannot handle this error
     expect(await coerceTypeOptional(functionMessageD4, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(functionMessageD4, 'boolean')).toBe(undefined);
     expect(await coerceTypeOptional(functionMessageD4, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(functionMessageD4, 'context')).toBe(undefined);
-    // expect(await coerceTypeOptional(functionMessageD4, 'chat-message')).rejects.toThrow(); // cannot handle this error
     expect(await coerceTypeOptional(functionMessageD4, 'object')).toStrictEqual(functionMessage4);
 
     // JSONObjectData
@@ -1258,7 +1256,7 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(emptyArrayD, 'unknown')).toStrictEqual([]); 
     expect(await coerceTypeOptional(emptyArrayD, 'string')).toBe(''); 
     expect(await coerceTypeOptional(emptyArrayD, 'number')).toBe(undefined); 
-    expect(await coerceTypeOptional(emptyArrayD, 'boolean')).toBe(true); // leave it ?????
+    expect(await coerceTypeOptional(emptyArrayD, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(emptyArrayD, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(emptyArrayD, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(emptyArrayD, 'chat-message')).toBe(undefined);
@@ -1411,8 +1409,8 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(booleanArrayD1, 'string')).toBe('true');
     expect(await coerceTypeOptional(booleanArrayD2, 'string')).toBe('false');
     expect(await coerceTypeOptional(booleanArrayD3, 'string')).toBe('true\nfalse\ntrue');
-    // expect(await coerceTypeOptional(booleanArrayD1, 'number')).toBe(1); // undefined
-    // expect(await coerceTypeOptional(booleanArrayD2, 'number')).toBe(0);
+    expect(await coerceTypeOptional(booleanArrayD1, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(booleanArrayD2, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(booleanArrayD1, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(booleanArrayD2, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(booleanArrayD3, 'boolean')).toBe(false);
@@ -1479,18 +1477,18 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(numberArrayD3, 'unknown')).toStrictEqual([0]);
     expect(await coerceTypeOptional(numberArrayD4, 'unknown')).toStrictEqual([6, 0]);
     expect(await coerceTypeOptional(numberArrayD1, 'string')).toBe('1');
-    // expect(await coerceTypeOptional(numberArrayD1, 'number')).toBe(1); // undefined
-    expect(await coerceTypeOptional(numberArrayD1, 'boolean')).toBe(true); // 
-    expect(await coerceTypeOptional(numberArrayD2, 'boolean')).toBe(true); // 
-    expect(await coerceTypeOptional(numberArrayD3, 'boolean')).toBe(false); // true for not 0
-    expect(await coerceTypeOptional(numberArrayD4, 'boolean')).toBe(false); // 有0给false
+    expect(await coerceTypeOptional(numberArrayD1, 'number')).toBe(undefined);
+    expect(await coerceTypeOptional(numberArrayD1, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(numberArrayD2, 'boolean')).toBe(true);
+    expect(await coerceTypeOptional(numberArrayD3, 'boolean')).toBe(false);
+    expect(await coerceTypeOptional(numberArrayD4, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(numberArrayD1, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(numberArrayD1, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(numberArrayD1, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(numberArrayD1, 'object')).toStrictEqual([1]);
     expect(await coerceTypeOptional(numberArrayD2, 'string')).toStrictEqual('3.4\n-1\n999');
     expect(await coerceTypeOptional(numberArrayD2, 'number')).toBe(undefined); 
-    expect(await coerceTypeOptional(numberArrayD2, 'boolean')).toBe(true); //
+    expect(await coerceTypeOptional(numberArrayD2, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(numberArrayD2, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(numberArrayD2, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(numberArrayD2, 'chat-message')).toBe(undefined);
@@ -1633,9 +1631,6 @@ test('coerceTypeOptional', async () => {
     expect(await coerceTypeOptional(contextArrayD2, 'object[]')).toStrictEqual([context2, context1, context3]);
 
     // chat-message array
-    // check if every message is empty or not
-    // function always undefined
-    // need to add more cases
     const chatMessageArray1: BaseMessage[] = [chatMessage1];
     const chatMessageArray2: BaseMessage[] = [humanMessage1];
     const chatMessageArray3: BaseMessage[] = [botMessage1];
@@ -1714,7 +1709,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD2, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD2, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD2, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(chatMessageArrayD2, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD2, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD2, 'chat-message')).toBe(undefined);
@@ -1740,7 +1735,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD3, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD3, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD3, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(chatMessageArrayD3, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD3, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD3, 'chat-message')).toBe(undefined);
@@ -1766,7 +1761,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD4, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD4, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD4, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(chatMessageArrayD4, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD4, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD4, 'chat-message')).toBe(undefined);
@@ -1792,7 +1787,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD5, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD5, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD5, 'boolean')).toBe(false); 
     expect(await coerceTypeOptional(chatMessageArrayD5, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD5, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD5, 'chat-message')).toBe(undefined);
@@ -1840,9 +1835,9 @@ test('coerceTypeOptional', async () => {
         )
     ];
     expect(await coerceTypeOptional(chatMessageArrayD6, 'unknown')).toStrictEqual(chatMessageArray6);    
-    expect(await coerceTypeOptional(chatMessageArrayD6, 'string')).toBe(messageStrings6.join('\n')); // *
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'string')).toBe(messageStrings6.join('\n'));
     expect(await coerceTypeOptional(chatMessageArrayD6, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD6, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD6, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(chatMessageArrayD6, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD6, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD6, 'chat-message')).toBe(undefined);
@@ -1894,7 +1889,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD8, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(chatMessageArrayD8, 'boolean')).toBe(false); 
+    expect(await coerceTypeOptional(chatMessageArrayD8, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(chatMessageArrayD8, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD8, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD8, 'chat-message')).toBe(undefined);
@@ -1920,7 +1915,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD9, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(chatMessageArrayD9, 'boolean')).toBe(false); 
+    expect(await coerceTypeOptional(chatMessageArrayD9, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(chatMessageArrayD9, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD9, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD9, 'chat-message')).toBe(undefined);
@@ -1946,7 +1941,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD10, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(chatMessageArrayD10, 'boolean')).toBe(false); 
+    expect(await coerceTypeOptional(chatMessageArrayD10, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(chatMessageArrayD10, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD10, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD10, 'chat-message')).toBe(undefined);
@@ -1972,7 +1967,7 @@ test('coerceTypeOptional', async () => {
         2
     ));
     expect(await coerceTypeOptional(chatMessageArrayD11, 'number')).toBe(undefined);
-    expect(await coerceTypeOptional(chatMessageArrayD11, 'boolean')).toBe(false); 
+    expect(await coerceTypeOptional(chatMessageArrayD11, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(chatMessageArrayD11, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD11, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD11, 'chat-message')).toBe(undefined);
@@ -2014,9 +2009,9 @@ test('coerceTypeOptional', async () => {
         )
     ];
     expect(await coerceTypeOptional(chatMessageArrayD12, 'unknown')).toStrictEqual(chatMessageArray12);    
-    expect(await coerceTypeOptional(chatMessageArrayD12, 'string')).toBe(messageStrings12.join('\n')); // *
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'string')).toBe(messageStrings12.join('\n'));
     expect(await coerceTypeOptional(chatMessageArrayD12, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD12, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD12, 'boolean')).toBe(false);
     expect(await coerceTypeOptional(chatMessageArrayD12, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD12, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD12, 'chat-message')).toBe(undefined);
@@ -2058,9 +2053,9 @@ test('coerceTypeOptional', async () => {
         )
     ];
     expect(await coerceTypeOptional(chatMessageArrayD13, 'unknown')).toStrictEqual(chatMessageArray13);    
-    expect(await coerceTypeOptional(chatMessageArrayD13, 'string')).toBe(messageStrings13.join('\n')); // *
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'string')).toBe(messageStrings13.join('\n'));
     expect(await coerceTypeOptional(chatMessageArrayD13, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(chatMessageArrayD13, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD13, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD13, 'chat-message')).toBe(undefined);
@@ -2113,7 +2108,7 @@ test('coerceTypeOptional', async () => {
     ));
     expect(await coerceTypeOptional(chatMessageArrayD15, 'number')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD15, 'boolean')).toBe(true);
-    expect(await coerceTypeOptional(chatMessageArrayD15, 'blob')).toBe(undefined); 
+    expect(await coerceTypeOptional(chatMessageArrayD15, 'blob')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD15, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD15, 'chat-message')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD15, 'object')).toStrictEqual([humanMessage4]);
@@ -2206,9 +2201,9 @@ test('coerceTypeOptional', async () => {
         )
     ];
     expect(await coerceTypeOptional(chatMessageArrayD18, 'unknown')).toStrictEqual(chatMessageArray18);    
-    expect(await coerceTypeOptional(chatMessageArrayD18, 'string')).toBe(messageStrings18.join('\n')); // *
+    expect(await coerceTypeOptional(chatMessageArrayD18, 'string')).toBe(messageStrings18.join('\n'));
     expect(await coerceTypeOptional(chatMessageArrayD18, 'number')).toBe(undefined);
-    // expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean')).toBe(false); // ****get false
+    expect(await coerceTypeOptional(chatMessageArrayD13, 'boolean')).toBe(true);
     expect(await coerceTypeOptional(chatMessageArrayD18, 'blob')).toBe(undefined); 
     expect(await coerceTypeOptional(chatMessageArrayD18, 'context')).toBe(undefined);
     expect(await coerceTypeOptional(chatMessageArrayD18, 'chat-message')).toBe(undefined);
@@ -2369,7 +2364,7 @@ test('expectTypeOptional', () => {
 
     // string
     const string1: StringData = { type: 'string', value: 'Hello!' };
-    expect(expectTypeOptional(string1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(string1, 'unknown')).resolves.toBe('Hello!');
     expect(expectTypeOptional(string1, 'string')).resolves.toBe('Hello!');
     expect(expectTypeOptional(string1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(string1, 'boolean')).rejects.toThrow();
@@ -2378,7 +2373,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(string1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(string1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(string1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(string1, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(string1, 'string[]')).resolves.toStrictEqual(['Hello!']);
     expect(expectTypeOptional(string1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(string1, 'boolean[]')).rejects.toThrow();
@@ -2389,7 +2384,7 @@ test('expectTypeOptional', () => {
 
     // number
     const number1: NumberData = { type: 'number', value: 66.6 };
-    expect(expectTypeOptional(number1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(number1, 'unknown')).resolves.toBe(66.6);
     expect(expectTypeOptional(number1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(number1, 'number')).resolves.toBe(66.6);
     expect(expectTypeOptional(number1, 'boolean')).rejects.toThrow();
@@ -2410,7 +2405,7 @@ test('expectTypeOptional', () => {
     // boolean
     const boolean1: BooleanData = { type: 'boolean', value: true };
     const boolean2: BooleanData = { type: 'boolean', value: false };
-    expect(expectTypeOptional(boolean1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(boolean1, 'unknown')).resolves.toBe(true);
     expect(expectTypeOptional(boolean1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(boolean1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(boolean1, 'boolean')).resolves.toBe(true);
@@ -2428,7 +2423,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(boolean1, 'chat-message[]')).rejects.toThrow();
     expect(expectTypeOptional(boolean1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(boolean2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(boolean2, 'unknown')).resolves.toBe(false);
     expect(expectTypeOptional(boolean2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(boolean2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(boolean2, 'boolean')).resolves.toBe(false);
@@ -2449,7 +2444,7 @@ test('expectTypeOptional', () => {
     // blob
     const blob1 = new Blob(['Hello, world!'], { type: 'text/plain' });
     const blobD: BlobData = { type: 'blob', value: blob1 };
-    expect(expectTypeOptional(blobD, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(blobD, 'unknown')).resolves.toBe(blob1);
     expect(expectTypeOptional(blobD, 'string')).rejects.toThrow();
     expect(expectTypeOptional(blobD, 'number')).rejects.toThrow();
     expect(expectTypeOptional(blobD, 'boolean')).rejects.toThrow();
@@ -2478,7 +2473,7 @@ test('expectTypeOptional', () => {
         metadata: metadata1,
     });
     const contextD: ContextData = { type: 'context', value: context1 }; 
-    expect(expectTypeOptional(contextD, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(contextD, 'unknown')).resolves.toBe(context1);
     expect(expectTypeOptional(contextD, 'string')).rejects.toThrow();
     expect(expectTypeOptional(contextD, 'number')).rejects.toThrow();
     expect(expectTypeOptional(contextD, 'boolean')).rejects.toThrow();
@@ -2509,7 +2504,7 @@ test('expectTypeOptional', () => {
     const chatD2: ChatMessageData = { type: 'chat-message', value: chatMessage2 };
     const chatD3: ChatMessageData = { type: 'chat-message', value: chatMessage3 }; 
     const chatD4: ChatMessageData = { type: 'chat-message', value: chatMessage4 }; 
-    expect(expectTypeOptional(chatD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(chatD1, 'unknown')).resolves.toBe(chatMessage1);
     expect(expectTypeOptional(chatD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(chatD1, 'boolean')).rejects.toThrow();
@@ -2527,7 +2522,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD1, 'chat-message[]')).resolves.toStrictEqual([chatMessage1]);
     expect(expectTypeOptional(chatD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(chatD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(chatD2, 'unknown')).resolves.toBe(chatMessage2);
     expect(expectTypeOptional(chatD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(chatD2, 'boolean')).rejects.toThrow();
@@ -2545,7 +2540,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD2, 'chat-message[]')).resolves.toStrictEqual([chatMessage2]);
     expect(expectTypeOptional(chatD2, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(chatD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(chatD3, 'unknown')).resolves.toBe(chatMessage3);
     expect(expectTypeOptional(chatD3, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatD3, 'number')).rejects.toThrow();
     expect(expectTypeOptional(chatD3, 'boolean')).rejects.toThrow();
@@ -2563,7 +2558,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatD3, 'chat-message[]')).resolves.toStrictEqual([chatMessage3]);
     expect(expectTypeOptional(chatD3, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(chatD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(chatD4, 'unknown')).resolves.toBe(chatMessage4);
     expect(expectTypeOptional(chatD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatD4, 'number')).rejects.toThrow();
     expect(expectTypeOptional(chatD4, 'boolean')).rejects.toThrow();
@@ -2593,7 +2588,7 @@ test('expectTypeOptional', () => {
     const humanMessageD2: ChatMessageData = { type: 'chat-message', value: humanMessage2 }; 
     const humanMessageD3: ChatMessageData = { type: 'chat-message', value: humanMessage3 }; 
     const humanMessageD4: ChatMessageData = { type: 'chat-message', value: humanMessage4 }; 
-    expect(expectTypeOptional(humanMessageD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD1, 'unknown')).resolves.toBe(humanMessage1);
     expect(expectTypeOptional(humanMessageD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD1, 'boolean')).rejects.toThrow();
@@ -2611,7 +2606,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD1, 'chat-message[]')).resolves.toStrictEqual([humanMessage1]);
     expect(expectTypeOptional(humanMessageD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(humanMessageD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD2, 'unknown')).resolves.toBe(humanMessage2);
     expect(expectTypeOptional(humanMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD2, 'boolean')).rejects.toThrow();
@@ -2629,7 +2624,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD2, 'chat-message[]')).resolves.toStrictEqual([humanMessage2]);
     expect(expectTypeOptional(humanMessageD2, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(humanMessageD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD3, 'unknown')).resolves.toBe(humanMessage3);
     expect(expectTypeOptional(humanMessageD3, 'string')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD3, 'number')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD3, 'boolean')).rejects.toThrow();
@@ -2647,7 +2642,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD3, 'chat-message[]')).resolves.toStrictEqual([humanMessage3]);
     expect(expectTypeOptional(humanMessageD3, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(humanMessageD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD4, 'unknown')).resolves.toBe(humanMessage4);
     expect(expectTypeOptional(humanMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD4, 'number')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD4, 'boolean')).rejects.toThrow();
@@ -2656,12 +2651,12 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(humanMessageD4, 'chat-message')).resolves.toBe(humanMessage4);
     expect(expectTypeOptional(humanMessageD4, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(humanMessageD4, 'unknown[]')).rejects.toThrow(); 
-    expect(expectTypeOptional(humanMessageD4, 'string[]')).rejects.toThrow(); 
-    expect(expectTypeOptional(humanMessageD4, 'number[]')).rejects.toThrow(); 
-    expect(expectTypeOptional(humanMessageD4, 'boolean[]')).rejects.toThrow(); 
-    expect(expectTypeOptional(humanMessageD4, 'blob[]')).rejects.toThrow(); 
-    expect(expectTypeOptional(humanMessageD4, 'context[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(humanMessageD4, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD4, 'string[]')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD4, 'number[]')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD4, 'boolean[]')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD4, 'blob[]')).rejects.toThrow();
+    expect(expectTypeOptional(humanMessageD4, 'context[]')).rejects.toThrow();
     expect(expectTypeOptional(humanMessageD4, 'chat-message[]')).resolves.toStrictEqual([humanMessage4]);
     expect(expectTypeOptional(humanMessageD4, 'object[]')).rejects.toThrow();
 
@@ -2677,7 +2672,7 @@ test('expectTypeOptional', () => {
     const botMessageD2: ChatMessageData = { type: 'chat-message', value: botMessage2 }; 
     const botMessageD3: ChatMessageData = { type: 'chat-message', value: botMessage3 }; 
     const botMessageD4: ChatMessageData = { type: 'chat-message', value: botMessage4 }; 
-    expect(expectTypeOptional(botMessageD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(botMessageD1, 'unknown')).resolves.toBe(botMessage1);
     expect(expectTypeOptional(botMessageD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD1, 'boolean')).rejects.toThrow();
@@ -2695,7 +2690,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD1, 'chat-message[]')).resolves.toStrictEqual([botMessage1]);
     expect(expectTypeOptional(botMessageD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(botMessageD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(botMessageD2, 'unknown')).resolves.toBe(botMessage2);
     expect(expectTypeOptional(botMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD2, 'boolean')).rejects.toThrow();
@@ -2704,7 +2699,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD2, 'chat-message')).resolves.toBe(botMessage2);
     expect(expectTypeOptional(botMessageD2, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(botMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD2, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD2, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(botMessageD2, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(botMessageD2, 'boolean[]')).rejects.toThrow(); 
@@ -2713,7 +2708,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD2, 'chat-message[]')).resolves.toStrictEqual([botMessage2]);
     expect(expectTypeOptional(botMessageD2, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(botMessageD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(botMessageD3, 'unknown')).resolves.toBe(botMessage3);
     expect(expectTypeOptional(botMessageD3, 'string')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD3, 'number')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD3, 'boolean')).rejects.toThrow();
@@ -2722,7 +2717,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD3, 'chat-message')).resolves.toBe(botMessage3);
     expect(expectTypeOptional(botMessageD3, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(botMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD3, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD3, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(botMessageD3, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(botMessageD3, 'boolean[]')).rejects.toThrow(); 
@@ -2731,7 +2726,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD3, 'chat-message[]')).resolves.toStrictEqual([botMessage3]);
     expect(expectTypeOptional(botMessageD3, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(botMessageD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(botMessageD4, 'unknown')).resolves.toBe(botMessage4);
     expect(expectTypeOptional(botMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD4, 'number')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD4, 'boolean')).rejects.toThrow();
@@ -2740,7 +2735,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(botMessageD4, 'chat-message')).resolves.toBe(botMessage4);
     expect(expectTypeOptional(botMessageD4, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(botMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(botMessageD4, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(botMessageD4, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(botMessageD4, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(botMessageD4, 'boolean[]')).rejects.toThrow(); 
@@ -2761,7 +2756,7 @@ test('expectTypeOptional', () => {
     const systemMessageD2: ChatMessageData = { type: 'chat-message', value: systemMessage2 }; 
     const systemMessageD3: ChatMessageData = { type: 'chat-message', value: systemMessage3 }; 
     const systemMessageD4: ChatMessageData = { type: 'chat-message', value: systemMessage4 }; 
-    expect(expectTypeOptional(systemMessageD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(systemMessageD1, 'unknown')).resolves.toBe(systemMessage1);
     expect(expectTypeOptional(systemMessageD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD1, 'boolean')).rejects.toThrow();
@@ -2770,7 +2765,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD1, 'chat-message')).resolves.toBe(systemMessage1);
     expect(expectTypeOptional(systemMessageD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD1, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD1, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD1, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD1, 'boolean[]')).rejects.toThrow(); 
@@ -2779,7 +2774,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD1, 'chat-message[]')).resolves.toStrictEqual([systemMessage1]);
     expect(expectTypeOptional(systemMessageD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(systemMessageD2, 'unknown')).resolves.toBe(systemMessage2);
     expect(expectTypeOptional(systemMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD2, 'boolean')).rejects.toThrow();
@@ -2788,7 +2783,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD2, 'chat-message')).resolves.toBe(systemMessage2);
     expect(expectTypeOptional(systemMessageD2, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD2, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD2, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD2, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD2, 'boolean[]')).rejects.toThrow(); 
@@ -2797,7 +2792,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD2, 'chat-message[]')).resolves.toStrictEqual([systemMessage2]);
     expect(expectTypeOptional(systemMessageD2, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(systemMessageD3, 'unknown')).resolves.toBe(systemMessage3);
     expect(expectTypeOptional(systemMessageD3, 'string')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD3, 'number')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD3, 'boolean')).rejects.toThrow();
@@ -2806,7 +2801,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD3, 'chat-message')).resolves.toBe(systemMessage3);
     expect(expectTypeOptional(systemMessageD3, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD3, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD3, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD3, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD3, 'boolean[]')).rejects.toThrow(); 
@@ -2815,7 +2810,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD3, 'chat-message[]')).resolves.toStrictEqual([systemMessage3]);
     expect(expectTypeOptional(systemMessageD3, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(systemMessageD4, 'unknown')).resolves.toBe(systemMessage4);
     expect(expectTypeOptional(systemMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD4, 'number')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD4, 'boolean')).rejects.toThrow();
@@ -2824,7 +2819,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(systemMessageD4, 'chat-message')).resolves.toBe(systemMessage4);
     expect(expectTypeOptional(systemMessageD4, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(systemMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(systemMessageD4, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(systemMessageD4, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD4, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(systemMessageD4, 'boolean[]')).rejects.toThrow(); 
@@ -2846,7 +2841,7 @@ test('expectTypeOptional', () => {
     const functionMessageD2: ChatMessageData = { type: 'chat-message', value: functionMessage2 }; 
     const functionMessageD3: ChatMessageData = { type: 'chat-message', value: functionMessage3 }; 
     const functionMessageD4: ChatMessageData = { type: 'chat-message', value: functionMessage4 }; 
-    expect(expectTypeOptional(functionMessageD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(functionMessageD1, 'unknown')).resolves.toBe(functionMessage1);
     expect(expectTypeOptional(functionMessageD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD1, 'boolean')).rejects.toThrow();
@@ -2855,7 +2850,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD1, 'chat-message')).resolves.toBe(functionMessage1);
     expect(expectTypeOptional(functionMessageD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD1, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD1, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD1, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD1, 'boolean[]')).rejects.toThrow(); 
@@ -2864,7 +2859,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD1, 'chat-message[]')).resolves.toStrictEqual([functionMessage1]);
     expect(expectTypeOptional(functionMessageD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(functionMessageD2, 'unknown')).resolves.toBe(functionMessage2);
     expect(expectTypeOptional(functionMessageD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD2, 'boolean')).rejects.toThrow();
@@ -2873,7 +2868,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD2, 'chat-message')).resolves.toBe(functionMessage2);
     expect(expectTypeOptional(functionMessageD2, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD2, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD2, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD2, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD2, 'boolean[]')).rejects.toThrow(); 
@@ -2882,7 +2877,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD2, 'chat-message[]')).resolves.toStrictEqual([functionMessage2]);
     expect(expectTypeOptional(functionMessageD2, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(functionMessageD3, 'unknown')).resolves.toBe(functionMessage3);
     expect(expectTypeOptional(functionMessageD3, 'string')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD3, 'number')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD3, 'boolean')).rejects.toThrow();
@@ -2891,7 +2886,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD3, 'chat-message')).resolves.toBe(functionMessage3);
     expect(expectTypeOptional(functionMessageD3, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD3, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD3, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD3, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD3, 'boolean[]')).rejects.toThrow(); 
@@ -2900,7 +2895,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD3, 'chat-message[]')).resolves.toStrictEqual([functionMessage3]);
     expect(expectTypeOptional(functionMessageD3, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(functionMessageD4, 'unknown')).resolves.toBe(functionMessage4);
     expect(expectTypeOptional(functionMessageD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD4, 'number')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD4, 'boolean')).rejects.toThrow();
@@ -2909,7 +2904,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(functionMessageD4, 'chat-message')).resolves.toBe(functionMessage4);
     expect(expectTypeOptional(functionMessageD4, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(functionMessageD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(functionMessageD4, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(functionMessageD4, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD4, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(functionMessageD4, 'boolean[]')).rejects.toThrow(); 
@@ -2927,7 +2922,7 @@ test('expectTypeOptional', () => {
     const objectD3: JSONObjectData = { type: 'object', value: object3 }; 
     const objectD4: JSONObjectData = { type: 'object', value: object4 };
 
-    expect(expectTypeOptional(objectD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD1, 'unknown')).resolves.toBe(object1);
     expect(expectTypeOptional(objectD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(objectD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(objectD1, 'boolean')).rejects.toThrow();
@@ -2936,7 +2931,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(objectD1, 'object')).resolves.toBe(object1);
 
-    expect(expectTypeOptional(objectD1, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD1, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(objectD1, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD1, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD1, 'boolean[]')).rejects.toThrow(); 
@@ -2945,7 +2940,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD1, 'chat-message[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD1, 'object[]')).resolves.toStrictEqual([object1]);
 
-    expect(expectTypeOptional(objectD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD2, 'unknown')).resolves.toBe(object2);
     expect(expectTypeOptional(objectD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(objectD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(objectD2, 'boolean')).rejects.toThrow();
@@ -2954,7 +2949,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD2, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(objectD2, 'object')).resolves.toBe(object2);
 
-    expect(expectTypeOptional(objectD2, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD2, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(objectD2, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD2, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD2, 'boolean[]')).rejects.toThrow(); 
@@ -2963,7 +2958,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD2, 'chat-message[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD2, 'object[]')).resolves.toStrictEqual([object2]);
 
-    expect(expectTypeOptional(objectD3, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD3, 'unknown')).resolves.toBe(object3);
     expect(expectTypeOptional(objectD3, 'string')).rejects.toThrow();
     expect(expectTypeOptional(objectD3, 'number')).rejects.toThrow();
     expect(expectTypeOptional(objectD3, 'boolean')).rejects.toThrow();
@@ -2972,7 +2967,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD3, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(objectD3, 'object')).resolves.toBe(object3);
 
-    expect(expectTypeOptional(objectD3, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD3, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(objectD3, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD3, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD3, 'boolean[]')).rejects.toThrow(); 
@@ -2981,7 +2976,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD3, 'chat-message[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD3, 'object[]')).resolves.toStrictEqual([object3]);
 
-    expect(expectTypeOptional(objectD4, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectD4, 'unknown')).resolves.toBe(object4);
     expect(expectTypeOptional(objectD4, 'string')).rejects.toThrow();
     expect(expectTypeOptional(objectD4, 'number')).rejects.toThrow();
     expect(expectTypeOptional(objectD4, 'boolean')).rejects.toThrow();
@@ -2990,7 +2985,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectD4, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(objectD4, 'object')).resolves.toBe(object4);
 
-    expect(expectTypeOptional(objectD4, 'unknown[]')).rejects.toThrow(); 
+    expect(expectTypeOptional(objectD4, 'unknown[]')).rejects.toThrow();
     expect(expectTypeOptional(objectD4, 'string[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD4, 'number[]')).rejects.toThrow(); 
     expect(expectTypeOptional(objectD4, 'boolean[]')).rejects.toThrow(); 
@@ -3005,7 +3000,7 @@ test('expectTypeOptional', () => {
     const undefinedArrayD1: ArrayData = { type: 'unknown[]', value: undefinedArray1 };
     const undefinedArrayD2: ArrayData = { type: 'unknown[]', value: undefinedArray2 };
 
-    expect(expectTypeOptional(undefinedArrayD1, 'unknown')).rejects.toThrow(); // ???????????????????
+    expect(expectTypeOptional(undefinedArrayD1, 'unknown')).resolves.toStrictEqual([undefined]);
     expect(expectTypeOptional(undefinedArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(undefinedArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(undefinedArrayD1, 'boolean')).rejects.toThrow();
@@ -3023,7 +3018,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(undefinedArrayD1, 'chat-message[]')).rejects.toThrow();
     expect(expectTypeOptional(undefinedArrayD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(undefinedArrayD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(undefinedArrayD2, 'unknown')).resolves.toStrictEqual([undefined, undefined, undefined]);
     expect(expectTypeOptional(undefinedArrayD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(undefinedArrayD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(undefinedArrayD2, 'boolean')).rejects.toThrow();
@@ -3046,7 +3041,7 @@ test('expectTypeOptional', () => {
     const nullArrayD1: ArrayData = { type: 'unknown[]', value: nullArray1 };
     const nullArrayD2: ArrayData = { type: 'unknown[]', value: nullArray2 };
 
-    expect(expectTypeOptional(nullArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD1, 'unknown')).resolves.toStrictEqual([null]);
     expect(expectTypeOptional(nullArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(nullArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(nullArrayD1, 'boolean')).rejects.toThrow();
@@ -3064,7 +3059,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(nullArrayD1, 'chat-message[]')).rejects.toThrow();
     expect(expectTypeOptional(nullArrayD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(nullArrayD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(nullArrayD2, 'unknown')).resolves.toStrictEqual([null, null, null]);
     expect(expectTypeOptional(nullArrayD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(nullArrayD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(nullArrayD2, 'boolean')).rejects.toThrow();
@@ -3087,7 +3082,7 @@ test('expectTypeOptional', () => {
     const stringArrayD1: ArrayData = { type: 'string[]', value: stringArray1 };
     const stringArrayD2: ArrayData = { type: 'string[]', value: stringArray2 };
 
-    expect(expectTypeOptional(stringArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'unknown')).resolves.toStrictEqual(['Hello!']);
     expect(expectTypeOptional(stringArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD1, 'boolean')).rejects.toThrow();
@@ -3096,7 +3091,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(stringArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(stringArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD1, 'unknown[]')).resolves.toStrictEqual(['Hello!']);
     expect(expectTypeOptional(stringArrayD1, 'string[]')).resolves.toStrictEqual(['Hello!']);
     expect(expectTypeOptional(stringArrayD1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD1, 'boolean[]')).rejects.toThrow();
@@ -3105,7 +3100,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(stringArrayD1, 'chat-message[]')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD1, 'object[]')).rejects.toThrow();
 
-    expect(expectTypeOptional(stringArrayD2, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'unknown')).resolves.toStrictEqual(['Hello!', 'Hi', 'yeah.']);
     expect(expectTypeOptional(stringArrayD2, 'string')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD2, 'number')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD2, 'boolean')).rejects.toThrow();
@@ -3114,7 +3109,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(stringArrayD2, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD2, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(stringArrayD2, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(stringArrayD2, 'unknown[]')).resolves.toStrictEqual(['Hello!', 'Hi', 'yeah.']);
     expect(expectTypeOptional(stringArrayD2, 'string[]')).resolves.toStrictEqual(['Hello!', 'Hi', 'yeah.']);
     expect(expectTypeOptional(stringArrayD2, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(stringArrayD2, 'boolean[]')).rejects.toThrow();
@@ -3125,7 +3120,7 @@ test('expectTypeOptional', () => {
 
     const booleanArray1: boolean[] = [true, false, true];
     const booleanArrayD1: ArrayData = { type: 'boolean[]', value: booleanArray1 };
-    expect(expectTypeOptional(booleanArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'unknown')).resolves.toStrictEqual([true, false, true]);
     expect(expectTypeOptional(booleanArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(booleanArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(booleanArrayD1, 'boolean')).rejects.toThrow();
@@ -3134,7 +3129,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(booleanArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(booleanArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(booleanArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(booleanArrayD1, 'unknown[]')).resolves.toStrictEqual([true, false, true]);
     expect(expectTypeOptional(booleanArrayD1, 'string[]')).rejects.toThrow();
     expect(expectTypeOptional(booleanArrayD1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(booleanArrayD1, 'boolean[]')).resolves.toStrictEqual([true, false, true]);
@@ -3145,7 +3140,7 @@ test('expectTypeOptional', () => {
 
     const numberArray1: number[] = [3.4, -1, 999];
     const numberArrayD1: ArrayData = { type: 'number[]', value: numberArray1 };
-    expect(expectTypeOptional(numberArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'unknown')).resolves.toStrictEqual([3.4, -1, 999]);
     expect(expectTypeOptional(numberArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(numberArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(numberArrayD1, 'boolean')).rejects.toThrow();
@@ -3154,7 +3149,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(numberArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(numberArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(numberArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(numberArrayD1, 'unknown[]')).resolves.toStrictEqual([3.4, -1, 999]);
     expect(expectTypeOptional(numberArrayD1, 'string[]')).rejects.toThrow();
     expect(expectTypeOptional(numberArrayD1, 'number[]')).resolves.toStrictEqual([3.4, -1, 999]);
     expect(expectTypeOptional(numberArrayD1, 'boolean[]')).rejects.toThrow();
@@ -3167,7 +3162,7 @@ test('expectTypeOptional', () => {
     const blob3 = new Blob(['hello', ' ', 'world'], { type: 'text/plain' });
     const blobArray1: Blob[] = [blob2, blob1, blob3];
     const blobArrayD1: ArrayData = { type: 'blob[]', value: blobArray1 };
-    expect(expectTypeOptional(blobArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'unknown')).resolves.toStrictEqual(blobArray1);
     expect(expectTypeOptional(blobArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(blobArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(blobArrayD1, 'boolean')).rejects.toThrow();
@@ -3176,7 +3171,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(blobArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(blobArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(blobArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(blobArrayD1, 'unknown[]')).resolves.toStrictEqual(blobArray1);
     expect(expectTypeOptional(blobArrayD1, 'string[]')).rejects.toThrow();
     expect(expectTypeOptional(blobArrayD1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(blobArrayD1, 'boolean[]')).rejects.toThrow();
@@ -3216,7 +3211,7 @@ test('expectTypeOptional', () => {
     });
     const contextArray1: Context[] = [context1, context2, context3, context4];
     const contextArrayD1: ArrayData = { type: 'context[]', value: contextArray1 };
-    expect(expectTypeOptional(contextArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'unknown')).resolves.toStrictEqual(contextArray1);
     expect(expectTypeOptional(contextArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(contextArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(contextArrayD1, 'boolean')).rejects.toThrow();
@@ -3225,7 +3220,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(contextArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(contextArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(contextArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(contextArrayD1, 'unknown[]')).resolves.toStrictEqual(contextArray1);
     expect(expectTypeOptional(contextArrayD1, 'string[]')).rejects.toThrow();
     expect(expectTypeOptional(contextArrayD1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(contextArrayD1, 'boolean[]')).rejects.toThrow();
@@ -3236,7 +3231,7 @@ test('expectTypeOptional', () => {
 
     const chatMessageArray1: BaseMessageLike[] = [chatMessage4, humanMessage1, botMessage3, systemMessage4, functionMessage2];
     const chatMessageArrayD1: ArrayData = { type: 'chat-message[]', value: chatMessageArray1 };
-    expect(expectTypeOptional(chatMessageArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'unknown')).resolves.toStrictEqual(chatMessageArray1);
     expect(expectTypeOptional(chatMessageArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(chatMessageArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(chatMessageArrayD1, 'boolean')).rejects.toThrow();
@@ -3245,7 +3240,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(chatMessageArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(chatMessageArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(chatMessageArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(chatMessageArrayD1, 'unknown[]')).resolves.toStrictEqual(chatMessageArray1);
     expect(expectTypeOptional(chatMessageArrayD1, 'string[]')).rejects.toThrow();
     expect(expectTypeOptional(chatMessageArrayD1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(chatMessageArrayD1, 'boolean[]')).rejects.toThrow();
@@ -3256,7 +3251,7 @@ test('expectTypeOptional', () => {
 
     const objectArray1: object[] = [object1, object2, object3, object4];
     const objectArrayD1: ArrayData = { type: 'object[]', value: objectArray1 };
-    expect(expectTypeOptional(objectArrayD1, 'unknown')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'unknown')).resolves.toStrictEqual(objectArray1);
     expect(expectTypeOptional(objectArrayD1, 'string')).rejects.toThrow();
     expect(expectTypeOptional(objectArrayD1, 'number')).rejects.toThrow();
     expect(expectTypeOptional(objectArrayD1, 'boolean')).rejects.toThrow();
@@ -3265,7 +3260,7 @@ test('expectTypeOptional', () => {
     expect(expectTypeOptional(objectArrayD1, 'chat-message')).rejects.toThrow();
     expect(expectTypeOptional(objectArrayD1, 'object')).rejects.toThrow();
 
-    expect(expectTypeOptional(objectArrayD1, 'unknown[]')).rejects.toThrow();
+    expect(expectTypeOptional(objectArrayD1, 'unknown[]')).resolves.toStrictEqual(objectArray1);
     expect(expectTypeOptional(objectArrayD1, 'string[]')).rejects.toThrow();
     expect(expectTypeOptional(objectArrayD1, 'number[]')).rejects.toThrow();
     expect(expectTypeOptional(objectArrayD1, 'boolean[]')).rejects.toThrow();
