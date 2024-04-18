@@ -35,6 +35,8 @@ const group_ip: { [key: RecordId]: number} = {};
 const group_scale: { [key: RecordId]: number } = {};
 let ip_list: number[] = [100,200,300,400,500,600];
 let node_info: { [key: number]: number } = {100: 10, 200: 10, 300: 10, 400: 10, 500: 10, 600: 10};
+const defaultID: RecordId = "default" as RecordId;
+const defaultLength: number = 0;
 
 
 function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<RecordId, number> {
@@ -75,10 +77,10 @@ function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<Re
     return inDegreeVec;
 }
 
-function findSet(node: RecordId, groupSet: Array<RecordId[]>): RecordId | undefined {
+function findSet(node: RecordId, groupSet: Array<RecordId[]>): RecordId[] | undefined {
     for (let group of groupSet) {
         if (group.includes(node)) {
-            return group[0];
+            return group;
         }
     }
     return undefined;
@@ -88,16 +90,20 @@ function findSet(node: RecordId, groupSet: Array<RecordId[]>): RecordId | undefi
 // type PredecessorVector = Map<string, [string, number]>; // [prev_name, length]
 
 function topo_search(workflow: SubGraph, inDegreeVec: Record<string, number>,
-    groupSet: Array<RecordId>[], Intenet_latency: boolean = false): [Record<RecordId, number>, Record<RecordId, RecordId>] {
-    const distVec: Record<RecordId, number> = {};
-    const prevVec: Record<RecordId, RecordId> = {};
+    groupSet: Array<RecordId>[], Intenet_latency: boolean = false): [Record<RecordId, number[]>, {[name: RecordId]: [RecordId, number]}] {
+    let distVec: Record<RecordId, number[]> = {};
+    let prevVec: {[name: RecordId]: [RecordId, number]} = {};
+
 
     const startPorts = workflow.graphInputNameMap; 
     const nodeConMap = workflow.nodeConnMap;
+    const nodeImplMap = workflow.nodeImplMap;
     const q: RecordId[] = [];
     const W: number = 10; // Temporay hardcoded network latency
     for (let input of Object.values(startPorts)) {
         q.push(input.nodeId)
+        distVec[input.nodeId] = [nodeImplMap[input.nodeId].runtime, 0];
+        prevVec[input.nodeId] = [defaultID, defaultLength];
     }
 
     while (q.length > 0) {
@@ -110,7 +116,26 @@ function topo_search(workflow: SubGraph, inDegreeVec: Record<string, number>,
         for(let connection of nodeConMap[node]){
             //need to clarify checking the from nodeId is necessary
             if(connection.fromNodeId == node){
+                let w =W;
                 const next_node = connection.toNodeId;
+                if(findSet(prev_id, groupSet)?.includes(next_node)){
+                    w = w / NETWORK_BAND;
+                }
+                if (!distVec[next_node] || distVec[next_node][0] < prev_dist[0] + nodeImplMap[next_node].runtime + w){
+                    distVec[next_node] = [prev_dist[0] + nodeImplMap[next_node].runtime + w, Math.max(prev_dist[1], w)];
+                    prevVec[next_node] = [prev_id, w];
+                }
+                else if (distVec[next_node][0] == prev_dist[0] + nodeImplMap[next_node].runtime + w){
+                    if (Math.max(prev_dist[1], w) > distVec[next_node][1]){
+                        distVec[next_node] = [prev_dist[0] + nodeImplMap[next_node].runtime + w, Math.max(prev_dist[1], w)];
+                        prevVec[next_node] = [prev_id, w];
+                    }
+                }
+                inDegreeVec[next_node]--;
+                if (inDegreeVec[next_node] == 0){
+                    q.push(next_node);
+                }
+
             }
         }
     }
