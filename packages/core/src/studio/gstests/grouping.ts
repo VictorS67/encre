@@ -115,7 +115,7 @@ function topo_search(workflow: SubGraph, inDegreeVec: Record<string, number>,
         const prev_id = node;
         for(let connection of nodeConMap[node]){
             //need to clarify checking the from nodeId is necessary
-            if(connection.fromNodeId == node){
+            if(connection.fromNodeId === node){
                 let w =W;
                 const next_node = connection.toNodeId;
                 if(findSet(prev_id, groupSet)?.includes(next_node)){
@@ -142,12 +142,25 @@ function topo_search(workflow: SubGraph, inDegreeVec: Record<string, number>,
    
     return [distVec, prevVec];
 }
-
+//Temporarily hardcoded the config
+const GOUP_LIMIT: number = 10;
 function mergeable(node1: RecordId, node2: RecordId, groupSet: Array<RecordId>[]): boolean {
-    const set1 = findSet(node1, groupSet);
-    const set2 = findSet(node2, groupSet);
-    if (set1 && set2) {
-        return set1 == set2;
+    const nodeSet1 = findSet(node1, groupSet);
+    if(!nodeSet1){
+        return true;
     }
+    if(nodeSet1?.includes(node2)){
+        return false;
+    }
+    const nodeSet2 = findSet(node2, groupSet);
+    if(!nodeSet2){
+        return true;
+    }
+    //check if the group limit is reached
+    if(nodeSet1.length + nodeSet2.length > GOUP_LIMIT){
+        return false;
+    }
+    //check scale limit
+    const new_node_info = {...node_info};
     return false;
 }
