@@ -24,6 +24,34 @@ export type UIContextContainerProps = {
   readonlyLabels: string[];
 };
 
+export type ConditionField = {
+  type: 'if' | 'else-if' | 'otherwise';
+  description?: string;
+  target?: string;
+};
+
+export type ConditionUIContextContainerProps = {
+  node: Node;
+  uiType: 'condition';
+  subject: string;
+  properties: string[];
+  when: ConditionField;
+  otherwiseWhen?: ConditionField[];
+  otherwise?: Omit<ConditionField, 'description'>;
+};
+
+export type ConditionUIContextItemProps = {
+  type: 'if' | 'else-if' | 'otherwise';
+  node: Node;
+  condition: ConditionField;
+  properties: string[];
+  index: number;
+  selectedIndex?: number;
+  showOtherwiseWhen?: boolean;
+  showOtherwise?: boolean;
+  onConditionClick?: (event: React.MouseEvent<HTMLElement>) => void;
+};
+
 export type UIContextContainerVisualContentData = {
   type: 'container';
   expandedContentName?: string;

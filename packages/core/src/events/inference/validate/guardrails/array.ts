@@ -42,7 +42,7 @@ export class ArrayRule<T extends unknown = Array<unknown>> extends BaseRule<T> {
 
   static doesNotExist() {
     return new ArrayRule<Array<unknown> | undefined>({
-      description: "doesn't exist",
+      description: "does not exist",
       func: async (input: Array<unknown> | undefined) => {
         return input === undefined;
       },
@@ -81,7 +81,7 @@ export class ArrayRule<T extends unknown = Array<unknown>> extends BaseRule<T> {
 
   static isNotStrictlyEqual(value: Array<unknown>) {
     return new ArrayRule<Array<unknown>>({
-      description: "isn't equal to {{value}}",
+      description: "is not equal to {{value}}",
       variables: { value },
       func: async (
         input: Array<unknown>,
@@ -121,7 +121,7 @@ export class ArrayRule<T extends unknown = Array<unknown>> extends BaseRule<T> {
 
   static doesNotContain(value: unknown) {
     return new ArrayRule<Array<unknown>>({
-      description: "doesn't contain {{value}}",
+      description: "does not contain {{value}}",
       variables: { value },
       func: async (input: Array<unknown>, variables: { value: unknown }) => {
         return !input.includes(variables.value);

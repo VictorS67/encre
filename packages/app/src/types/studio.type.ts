@@ -374,6 +374,8 @@ export type CodeUIContext = {
 
   language?: string;
   keywords?: string[];
+  properties?: string[];
+  variables?: string[];
   isHoldingValues?: boolean;
 };
 
@@ -424,6 +426,17 @@ export type FileUIContext = {
   data: Uint8Array;
 };
 
+export type ConditionUIContext = {
+  type: 'condition';
+  subject: string;
+  properties: string[];
+  conditions: {
+    type: 'if' | 'else-if' | 'otherwise';
+    description?: string;
+    target?: string;
+  }[];
+};
+
 export type UIContext = BaseUIContext &
   (
     | PlainUIContext
@@ -435,6 +448,7 @@ export type UIContext = BaseUIContext &
     | ImageUIContext
     | AudioUIContext
     | FileUIContext
+    | ConditionUIContext
   );
 
 export const UIDataTypesMap: Record<DataType, UIContext['type']> = {

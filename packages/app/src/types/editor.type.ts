@@ -69,8 +69,10 @@ export type CodeEditorProps = {
 
 export type SyntaxedTextProps = {
   text: string;
-  language: string;
-  keywords: string[];
+  language?: string;
+  keywords?: string[];
+  properties?: string[];
+  variables?: string[];
   theme?: string;
   style?: CSSProperties;
 };

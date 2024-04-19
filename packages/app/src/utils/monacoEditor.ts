@@ -6,8 +6,14 @@ export { monaco };
 
 monaco.languages.register({ id: 'encre-code' });
 
-export const defineTokens = (keywords: string[]) => {
+export const defineTokens = (
+  keywords: string[] = [],
+  properties: string[] = [],
+  variables: string[] = [],
+) => {
   return monaco.languages.setMonarchTokensProvider('encre-code', {
+    default: variables,
+    properties: properties,
     keywords: keywords,
     typeKeywords: dataTypes,
     operators: [
@@ -71,11 +77,12 @@ export const defineTokens = (keywords: string[]) => {
       root: [{ include: 'common' }],
       common: [
         [
-          /[a-z_$][\w$]*/,
+          /[a-zA-Z_$][\w$]*/,
           {
             cases: {
               '@typeKeywords': 'keyword',
               '@keywords': 'keyword',
+              '@properties': 'property',
               '@default': 'variable',
             },
           },
@@ -208,6 +215,7 @@ const defineTheme = (
     replacement: string;
     string: string;
     comment: string;
+    property: string;
   },
 ) => {
   monaco.editor.defineTheme(`encre-code-${theme}`, {
@@ -236,6 +244,11 @@ const defineTheme = (
         token: 'comment',
         foreground: colors.comment,
       },
+      {
+        token: 'property',
+        foreground: colors.property,
+        fontStyle: 'bold',
+      },
     ],
     colors: {
       'editor.foreground': colors.editor.foreground,
@@ -254,6 +267,7 @@ defineTheme('light', {
   replacement: '#005fb8',
   string: '#212121',
   comment: '#00A844',
+  property: '#01b2b2',
 });
 
 defineTheme('dark', {
@@ -266,4 +280,5 @@ defineTheme('dark', {
   replacement: '#146ba1',
   string: '#c2c2c2',
   comment: '#005800',
+  property: '#00beb5',
 });
