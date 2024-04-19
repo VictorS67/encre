@@ -3,14 +3,14 @@ import { Context } from '../../../events/input/load/docs/context.js';
 import {
     BaseMessageLike,
     BaseMessage,
-    ChatMessage,
-    HumanMessage,
-    BotMessage,
-    SystemMessage,
-    FunctionMessage,
-    convertMessageLikeToMessage,
-  } from '../../../events/input/load/msgs/base.js';
-  import {
+} from '../../../events/input/load/msgs/base.js';
+import { BotMessage } from '../../../events/input/load/msgs/bot.js';
+import { ChatMessage } from '../../../events/input/load/msgs/chat.js';
+import { FunctionMessage } from '../../../events/input/load/msgs/function.js';
+import { HumanMessage } from '../../../events/input/load/msgs/human.js';
+import { SystemMessage } from '../../../events/input/load/msgs/system.js';
+import { convertMessageLikeToMessage } from '../../../events/input/load/msgs/utils.js';
+import {
     StringData,
     NumberData,
     BooleanData,
@@ -20,7 +20,7 @@ import {
     ContextData,
     ChatMessageData,
     ArrayData,
-  } from '../../data.js';
+} from '../../data.js';
 import {
     coerceToData,
     coerceTypeOptional,
