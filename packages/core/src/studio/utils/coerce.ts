@@ -74,7 +74,7 @@ export function coerceToData(value: unknown): Data {
     }
 
     if (
-      value.every((item) => getScalarData(item) === getScalarData(value[0]))
+      value.every((item) => getScalarData(item)['type'] === getScalarData(value[0])['type'])
     ) {
       const scalarType: ScalarDataType = getScalarData(value[0])['type'];
 
@@ -93,8 +93,8 @@ export async function coerceTypeOptional<T extends DataType>(
 ): Promise<ValueOf<T>['value'] | undefined> {
   if (isArrayDataType(type) && !isArrayData(data)) {
     const coerced = await coerceTypeOptional(data, getScalarTypeOf(type));
-    if (coerced === undefined) {
-      return undefined;
+    if (coerced === undefined || coerced === null) {
+      return coerced as ValueOf<T>['value'] | undefined;
     }
 
     return [coerced] as ValueOf<T>['value'] | undefined;
@@ -120,6 +120,7 @@ export async function coerceTypeOptional<T extends DataType>(
     .with('string', () => coerceToString(data))
     .with('boolean', () => coerceToBoolean(data))
     .with('number', () => coerceToNumber(data))
+    .with('context', () => coerceToContext(data)) // message, 
     .with('chat-message', () => coerceToChatMessage(data))
     .with('object', () => coerceToJSONObject(data))
     .with('blob', () => coerceToBlob(data))
@@ -157,6 +158,17 @@ export async function expectTypeOptional<T extends DataType>(
     return [data.value] as ValueOf<T>['value'] | undefined;
   }
 
+  if (type === 'unknown') {
+    return data.value as ValueOf<T>['value'] | undefined;
+  }
+
+  if (
+    type === 'unknown[]' &&
+    isArrayData(data)
+  ) {
+    return data.value as ValueOf<T>['value'] | undefined;
+  }
+
   if (data.type !== type) {
     throw new Error(`Expect data of type ${type} but instead got ${data.type}`);
   }
@@ -167,7 +179,7 @@ export async function expectTypeOptional<T extends DataType>(
 async function coerceToString(
   data: Data | undefined
 ): Promise<string | undefined> {
-  if (!data) return '';
+  if (!data || data.value===undefined || data.value===null) return undefined;
 
   if (isArrayData(data)) {
     return Promise.all(
@@ -223,7 +235,7 @@ async function coerceToString(
 async function coerceToBoolean(
   data: Data | undefined
 ): Promise<boolean | undefined> {
-  if (!data || !data.value) return false;
+  if (!data || data.value===undefined || data.value===null) return undefined;
 
   if (isArrayData(data)) {
     return Promise.all(
@@ -249,12 +261,15 @@ async function coerceToBoolean(
 
   if (data.type === 'context') {
     return (
-      data.value.pageContent.length > 0 && data.value.pageContent !== 'false'
+      data.value.pageContent.length > 0 && data.value.pageContent.toLowerCase() !== 'false'
     );
   }
 
   if (data.type === 'chat-message') {
     if (Array.isArray(data.value)) {
+      if (data.value[0] === 'function') {
+        return undefined;
+      }
       return data.value[1].length > 0;
     }
 
@@ -262,7 +277,7 @@ async function coerceToBoolean(
       return data.value.length > 0;
     }
 
-    return data.value.hasEmptyContent();
+    return data.value.coerceToBoolean();
   }
 
   return !!data.value;
@@ -271,43 +286,100 @@ async function coerceToBoolean(
 async function coerceToNumber(
   data: Data | undefined
 ): Promise<number | undefined> {
-  if (!data || data.value === null) return undefined;
+  if (!data || data.value===undefined || data.value===null) return undefined;
 
   // Array of Data cannot be merged into one number Data.
   if (isArrayData(data)) {
     return undefined;
   }
 
-  if (data.type === 'string') return parseFloat(data.value);
+  function helpParseFloat(value) {
+    const fl = parseFloat(value);
+    if (Number.isNaN(fl)) {
+      return undefined;
+    }
+    return fl;
+  } 
+
+  if (data.type === 'string') return helpParseFloat(data.value);
 
   if (data.type === 'boolean') return data.value ? 1 : 0;
 
   if (data.type === 'number') return data.value;
 
-  if (data.type === 'blob') return parseFloat(await data.value.text());
+  if (data.type === 'blob') return helpParseFloat(await data.value.text());
 
-  if (data.type === 'context') return parseFloat(data.value.pageContent);
+  if (data.type === 'context') return helpParseFloat(data.value.pageContent);
 
   if (data.type === 'chat-message') {
     if (Array.isArray(data.value)) {
-      return parseFloat(data.value[1]);
+      return helpParseFloat(data.value[1]);
     }
 
     if (typeof data.value === 'string') {
-      return parseFloat(data.value);
+      return helpParseFloat(data.value);
     }
 
     if (typeof data.value.content === 'string') {
-      return parseFloat(data.value.content);
+      return helpParseFloat(data.value.content);
     }
 
     // Does not support for multiple contents in a BaseMessage.
     return undefined;
   }
 
-  if (data.type === 'unknown' || data.type === 'object') {
+  if (data.type === 'object') {
+    return undefined;
+  }
+
+  if (data.type === 'unknown') {
     const coerced: Data | undefined = await coerceToData(data.value);
     return coerceTypeOptional(coerced, 'number');
+  }
+
+  return undefined;
+}
+
+async function coerceToContext(
+  data: Data | undefined
+): Promise<Context | undefined> {
+  if (!data || data.value===undefined || data.value===null) return undefined;
+
+  // Array of Data cannot be merged into one context Data.
+  if (isArrayData(data)) {
+    return undefined;
+  } 
+
+  if (data.type === 'string') return new Context({ pageContent: data.value.toString() });
+
+  if (data.type === 'boolean') return new Context({ pageContent: data.value.toString() });
+
+  if (data.type === 'number') return new Context({ pageContent: data.value.toString() });
+
+  if (data.type === 'context') return data.value;
+
+  if (data.type === 'chat-message') return undefined;
+
+  if (
+    data.type === 'object' &&
+    'pageContent' in data.value && 
+    typeof data.value.pageContent==='string'
+  ) {
+    if (
+      'metadata' in data.value && 
+      typeof data.value.metadata==='object'
+    ) {
+      return new Context({ pageContent: data.value.pageContent, metadata: data.value.metadata as Record<string, unknown> });
+    } else if (
+      !('metadata' in data.value)
+    ) {
+      return new Context({ pageContent: data.value.pageContent });
+    }
+  } // if pageContent, metadata exist and pageContent is string and metadata(optional/json object)
+
+  if (data.type === 'unknown') {
+    const coerced: Data | undefined = await coerceToData(data.value);
+    return coerceTypeOptional(coerced, 'context');
   }
 
   return undefined;
@@ -316,7 +388,7 @@ async function coerceToNumber(
 async function coerceToChatMessage(
   data: Data | undefined
 ): Promise<BaseMessageLike | undefined> {
-  if (!data || data.value === null) return undefined;
+  if (!data || data.value===undefined || data.value===null) return undefined;
 
   // Array of Data cannot be merged into one chat-message Data.
   if (isArrayData(data)) {
@@ -331,7 +403,8 @@ async function coerceToChatMessage(
 
   if (data.type === 'context') return new HumanMessage(data.value.pageContent);
 
-  if (data.type === 'chat-message') return data.value;
+  // if (data.type === 'chat-message') return data.value;
+  if (data.type === 'chat-message') return convertMessageLikeToMessage(data.value);
 
   if (
     data.type === 'object' &&
@@ -391,7 +464,7 @@ async function coerceToBlob(data: Data | undefined): Promise<Blob | undefined> {
 
   if (data.type === 'context') {
     return new Blob([data.value.pageContent], {
-      type: (data.value.metadata.type as string) || 'text/plain',
+      type: (data.value.metadata.type as string) || 'text/plain', // how to test previous?
     });
   }
 
