@@ -13,7 +13,7 @@ export interface ContextInput<Metadata = Record<string, unknown>> {
 export class Context<Metadata = Record<string, unknown>>
   implements ContextInput<Metadata>
 {
-  pageContent: string;
+  pageContent = '';
 
   metadata: Metadata;
 

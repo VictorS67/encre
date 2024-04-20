@@ -28,4 +28,8 @@ export class FunctionMessage extends BaseMessage {
       name: this.name ?? '',
     });
   }
+
+  coerceToBoolean(): boolean | undefined {
+    return undefined;
+  }
 }
