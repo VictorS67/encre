@@ -7,14 +7,15 @@ import { UIContextDescriptor } from '../../types/uicontext.type';
 
 /* eslint-disable react/prop-types */
 export const MarkdownNodeContentBody: FC<
-  { node: Node } & Extract<UIContext, { type: 'markdown' }>
-> = memo(({ node, text }) => {
+  { node: Node; id: string } & Extract<UIContext, { type: 'markdown' }>
+> = memo(({ node, id, text }) => {
   const markdownBody = useMarkdown(text);
 
   return (
     <div
       className="pre-wrap"
-      style={{ userSelect: 'text' }}
+      style={{ userSelect: 'text', paddingLeft: 10 }}
+      data-label={'editor'}
       dangerouslySetInnerHTML={markdownBody}
     />
   );

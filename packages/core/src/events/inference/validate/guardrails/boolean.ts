@@ -44,7 +44,7 @@ export class BooleanRule<
 
   static doesNotExist() {
     return new BooleanRule<boolean | undefined>({
-      description: "doesn't exist",
+      description: "does not exist",
       func: async (input: boolean | undefined) => {
         return input === undefined;
       },
@@ -63,7 +63,7 @@ export class BooleanRule<
 
   static isNotEqual(value: boolean) {
     return new BooleanRule<boolean>({
-      description: "isn't equal to {{value}}",
+      description: "is not equal to {{value}}",
       variables: { value },
       func: async (input: boolean, variables: { value: boolean }) => {
         return input !== variables.value;

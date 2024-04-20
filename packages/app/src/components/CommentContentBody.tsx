@@ -127,27 +127,31 @@ export const CodeCommentContentBody: FC<
     UIContext,
     { type: 'code' }
   >
-> = memo(({ commentContent, text, language, keywords }) => {
-  const contentTextStyle = useMemo(() => {
-    const hAlign = commentContent?.horitontal ?? 'start';
+> = memo(
+  ({ commentContent, text, language, keywords, properties, variables }) => {
+    const contentTextStyle = useMemo(() => {
+      const hAlign = commentContent?.horitontal ?? 'start';
 
-    const styling: CSSProperties = {
-      textAlign: hAlign,
-    };
+      const styling: CSSProperties = {
+        textAlign: hAlign,
+      };
 
-    return styling;
-  }, [commentContent?.horitontal]);
+      return styling;
+    }, [commentContent?.horitontal]);
 
-  return (
-    <Suspense fallback={<div />}>
-      <LazySyntaxedText
-        text={text}
-        language={language ?? 'encre-code'}
-        keywords={keywords ?? []}
-        style={contentTextStyle}
-      />
-    </Suspense>
-  );
-});
+    return (
+      <Suspense fallback={<div />}>
+        <LazySyntaxedText
+          text={text}
+          language={language}
+          keywords={keywords}
+          properties={properties}
+          variables={variables}
+          style={contentTextStyle}
+        />
+      </Suspense>
+    );
+  },
+);
 
 CodeCommentContentBody.displayName = 'CodeCommentContentBody';
