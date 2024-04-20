@@ -46,7 +46,7 @@ const defaultLength: number = 0;
  * @returns A record containing the in-degree of each node.
  */
 function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<RecordId, number> {
-
+   
     const startPorts = workflow.graphInputNameMap; 
     const nodeConMap = workflow.nodeConnMap;
     const inDegreeVec: Record<RecordId, number> = {};
@@ -262,11 +262,12 @@ function mergePath(critVec:{[name: RecordId]: [RecordId, number]}, workflow: Sub
     for(let [key, value] of Object.entries(critVec)){
         const sourceNode = key as RecordId;
         const targetNode = value[0] as RecordId
-        if(!mergeable(sourceNode, targetNode, workflow, groupSet)){
+        if(mergeable(sourceNode, targetNode, workflow, groupSet)){
             return false;
         }
     }
-    return true;
+    // return true;
+    return false;
     
 }
 
@@ -297,7 +298,7 @@ function getLongestDist(workflow: SubGraph, distVec:Record<RecordId, number[]>):
  * @param nodeInfo - An object containing information about each node.
  * @returns An array containing the grouped nodes and the critical path function.
  */
-function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }): [RecordId[][],Set<RecordId>] {
+export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }): [RecordId[][],Set<RecordId>] {
     let groupSet: Array<RecordId[]> = [];
     let criticalPathFunction: Set<RecordId> = new Set<RecordId>();
     let inDegreeVec = init_graph(workflow, groupSet);
