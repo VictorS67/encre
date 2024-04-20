@@ -43,6 +43,7 @@
   "dependencies": {
     "@atlaskit/button": "^16.10.1",
     "@atlaskit/css-reset": "^6.5.4",
+    "@atlaskit/modal-dialog": "^12.11.0",
     "@atlaskit/tokens": "^1.25.2",
     "@dnd-kit/core": "^6.0.8",
     "@emotion/react": "^11.11.1",
@@ -84,7 +85,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.{ts,tsx} --quiet --fix",
-    "lint-fix": "eslint --fix src/**/*.{ts,tsx}",
+    "lint-fix": "eslint --fix src/**/*.{ts,tsx} src/**/**/*.{ts,tsx}",
     "electron-build": "tsc -p electron/tsconfig.json",
     "electron-start": "yarn electron-build && electron .",
     "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && yarn electron-start\""

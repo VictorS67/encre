@@ -3,7 +3,12 @@ import { FC } from 'react';
 import { Node, UIContext } from './studio.type';
 
 export type UIContextDescriptor<T extends UIContext['type']> = {
-  Body?: FC<{ node: Node } & Extract<UIContext, { type: T }>>;
+  Body?: FC<
+    { node: Node; id: string; onClick?: (node: Node) => void } & Extract<
+      UIContext,
+      { type: T }
+    >
+  >;
   PopUpWindow?: FC<
     { node: Node; onChange?: (node: Node) => void } & Extract<
       UIContext,

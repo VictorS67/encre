@@ -56,8 +56,8 @@ const Image = styled.div`
 
 /* eslint-disable react/prop-types */
 export const ImageNodeContentBody: FC<
-  { node: Node } & Extract<UIContext, { type: 'image' }>
-> = memo(({ node, mimeType, data }) => {
+  { node: Node; id: string } & Extract<UIContext, { type: 'image' }>
+> = memo(({ node, id, mimeType, data }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [svgContent, setSvgContent] = useState<string | undefined>(undefined);
 

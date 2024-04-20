@@ -4,10 +4,13 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import clsx from 'clsx';
+import { useSetRecoilState } from 'recoil';
 
 import { Icon } from './Icon';
 import { KnownNodeContentBody } from './NodeContentBody';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
+import { editingCodeIdState } from '../state/editor';
+import { editingNodeIdState } from '../state/node';
 import { UIContext } from '../types/studio.type';
 import {
   UIContextContainerProps,
@@ -149,6 +152,8 @@ export const UIContextContainer: FC<UIContextContainerProps> = memo(
     editableContents,
     readonlyLabels,
   }: UIContextContainerProps) => {
+    const setEditingNodeId = useSetRecoilState(editingNodeIdState);
+    const setEditingCodeId = useSetRecoilState(editingCodeIdState);
     const [selectedEditableContentName, setSelectedEditableContentName] =
       useState<string | undefined>();
 
@@ -157,6 +162,8 @@ export const UIContextContainer: FC<UIContextContainerProps> = memo(
       e.stopPropagation();
 
       const name = e.currentTarget.getAttribute('data-label');
+      // setEditingNodeId(undefined);
+      // setEditingCodeId(undefined);
 
       if (name !== null) {
         if (selectedEditableContentName === name) {

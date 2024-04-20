@@ -9,11 +9,14 @@ import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import { css } from '@mui/material';
 import clsx from 'clsx';
+import { useSetRecoilState } from 'recoil';
 
 import { DropdownButton } from './DropdownButton';
 import { Icon } from './Icon';
 import { KnownNodeContentBody } from './NodeContentBody';
 import { useStableCallback } from '../hooks/useStableCallback';
+import { editingCodeIdState } from '../state/editor';
+import { editingNodeIdState } from '../state/node';
 import { UIContext } from '../types/studio.type';
 import {
   ConditionUIContextContainerProps,
@@ -77,6 +80,7 @@ const ConditionUIContainer = styled.div`
     align-items: flex-start;
     gap: 5px;
     flex: 1;
+    overflow: hidden;
   }
 
   .ui-context-container-header {
@@ -94,7 +98,7 @@ const ConditionUIContainer = styled.div`
     display: flex;
     gap: 2px;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .spacer {
@@ -123,6 +127,8 @@ const ConditionUIContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    align-self: stretch;
+    overflow: visible;
 
     border-radius: 4px;
     background: var(--node-foreground-color);
@@ -233,6 +239,8 @@ export const ConditionUIContextContainer: FC<ConditionUIContextContainerProps> =
       otherwiseWhen,
       otherwise,
     }: ConditionUIContextContainerProps) => {
+      const setEditingNodeId = useSetRecoilState(editingNodeIdState);
+      const setEditingCodeId = useSetRecoilState(editingCodeIdState);
       const [
         selectedEditableConditionIndex,
         setSelectedEditableConditionIndex,
@@ -244,6 +252,8 @@ export const ConditionUIContextContainer: FC<ConditionUIContextContainerProps> =
           e.stopPropagation();
 
           const index = e.currentTarget.getAttribute('data-label');
+          // setEditingNodeId(undefined);
+          // setEditingCodeId(undefined);
 
           if (index !== null) {
             console.log(`onEditableConditionClick: index: ${+index}`);
@@ -347,6 +357,8 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
     }
   });
 
+  const onEditorClick = useStableCallback((n: Node, ui: UIContext) => {});
+
   useEffect(() => {
     setTarget(condition.target);
   }, [condition.target]);
@@ -433,27 +445,29 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
           </div>
         )}
 
-        <div
-          className={clsx(
-            'ui-context-container-header-part',
-            'ui-context-tooling',
-          )}
-        >
-          <Icon
-            icon={ClearRoundedIcon}
-            height={'15px'}
-            width={'15px'}
-            fontSize={'15px'}
-            additionalStyles={css`
-              align-self: center;
-              color: var(--error-color-1);
+        {type !== 'if' && (
+          <div
+            className={clsx(
+              'ui-context-container-header-part',
+              'ui-context-tooling',
+            )}
+          >
+            <Icon
+              icon={ClearRoundedIcon}
+              height={'15px'}
+              width={'15px'}
+              fontSize={'15px'}
+              additionalStyles={css`
+                align-self: center;
+                color: var(--error-color-1);
 
-              &:hover {
-                color: var(--error-color);
-              }
-            `}
-          />
-        </div>
+                &:hover {
+                  color: var(--error-color);
+                }
+              `}
+            />
+          </div>
+        )}
       </div>
 
       {selectedIndex !== undefined && selectedIndex === index ? (

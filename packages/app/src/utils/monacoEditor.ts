@@ -177,7 +177,11 @@ export const defineTokens = (
   });
 };
 
-export const defineSuggestions = (keywords: string[]) => {
+export const defineSuggestions = (
+  keywords: string[] = [],
+  properties: string[] = [],
+  variables: string[] = [],
+) => {
   return monaco.languages.registerCompletionItemProvider('encre-code', {
     provideCompletionItems: (model, position) => {
       const suggestions = [
@@ -187,6 +191,36 @@ export const defineSuggestions = (keywords: string[]) => {
           return {
             label: k,
             kind: monaco.languages.CompletionItemKind.Keyword,
+            insertText: k,
+            range: {
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+              startColumn: word.startColumn,
+              endColumn: word.endColumn,
+            },
+          };
+        }),
+        ...properties.map((k) => {
+          const word = model.getWordUntilPosition(position);
+
+          return {
+            label: k,
+            kind: monaco.languages.CompletionItemKind.Property,
+            insertText: k,
+            range: {
+              startLineNumber: position.lineNumber,
+              endLineNumber: position.lineNumber,
+              startColumn: word.startColumn,
+              endColumn: word.endColumn,
+            },
+          };
+        }),
+        ...variables.map((k) => {
+          const word = model.getWordUntilPosition(position);
+
+          return {
+            label: k,
+            kind: monaco.languages.CompletionItemKind.Variable,
             insertText: k,
             range: {
               startLineNumber: position.lineNumber,

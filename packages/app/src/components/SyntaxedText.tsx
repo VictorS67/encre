@@ -54,7 +54,9 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
     }
 
     if (!completionDisposable) {
-      setCompletionDisposable(defineSuggestions(keywords));
+      setCompletionDisposable(
+        defineSuggestions(keywords, properties, variables),
+      );
     }
 
     const colorMode = getColorMode();

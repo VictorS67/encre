@@ -87,8 +87,6 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
     const { contexts, commands } = useContextMenuConfig();
     const { type, data, group } = contexts[context['type']];
 
-    console.log(`contextMenu: type: ${type}, data: ${JSON.stringify(data)}`);
-
     useEffect(() => {
       update();
     }, [update, x, y]);

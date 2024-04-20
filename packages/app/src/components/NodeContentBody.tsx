@@ -4,14 +4,16 @@ import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';
 
+import { useStableCallback } from '../hooks/useStableCallback';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
 import {
   KnownNodeContentBodyProps,
   NodeContentBodyProps,
   UnknownNodeContentBodyProps,
 } from '../types/nodebody.type';
-import { NodeBody, UIContext } from '../types/studio.type';
+import { Node, NodeBody, UIContext } from '../types/studio.type';
 import { UIContextDescriptor } from '../types/uicontext.type';
+import { fakeId } from '../utils/fakeId';
 
 const NodeContentBodyWrapper = styled.div<{
   fontSize: number;
@@ -73,6 +75,7 @@ NodeContentBody.displayName = 'NodeContentBody';
 export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
   node,
   uiContexts,
+  onClick,
 }: KnownNodeContentBodyProps) => {
   const descriptors = useUIContextDescriptors(uiContexts);
 
@@ -96,8 +99,16 @@ export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
       style={{ height: '100%', flex: 1, flexDirection: 'column' }}
     >
       {renderedBodies.map(({ style, Body }, i) => {
+        const onBodyClick = onClick
+          ? useStableCallback((n: Node) => {
+              onClick?.(n, style);
+            })
+          : undefined;
+
+        const editingId: string = fakeId(14);
+
         const renderedBody = Body ? (
-          <Body node={node} {...style} />
+          <Body node={node} id={editingId} onClick={onBodyClick} {...style} />
         ) : (
           <UnknownNodeContentBody node={node} />
         );

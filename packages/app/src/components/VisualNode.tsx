@@ -523,7 +523,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     };
 
     const onResizeStart = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
@@ -535,7 +534,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     const onResizeMove = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       const mousePositionInCanvas = clientToCanvasPosition(
@@ -579,7 +577,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     const onResizeExpand = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
@@ -590,7 +587,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     const onResizeCollapse = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       if (minCardHeight !== Number.MAX_SAFE_INTEGER) {
