@@ -44,7 +44,7 @@ export class StringRule<
 
   static doesNotExist() {
     return new StringRule<string | undefined>({
-      description: "does not exist",
+      description: 'does not exist',
       func: async (input: string | undefined) => {
         return input === undefined;
       },
@@ -63,7 +63,7 @@ export class StringRule<
 
   static isNotEqual(value: string) {
     return new StringRule<string>({
-      description: "is not equal to {{value}}",
+      description: 'is not equal to {{value}}',
       variables: { value },
       func: async (input: string, variables: { value: string }) => {
         return input !== variables.value;
@@ -83,7 +83,7 @@ export class StringRule<
 
   static doesNotContain(value: string) {
     return new StringRule<string>({
-      description: "does not contain {{value}}",
+      description: 'does not contain {{value}}',
       variables: { value },
       func: async (input: string, variables: { value: string }) => {
         return !input.includes(variables.value);
@@ -103,7 +103,7 @@ export class StringRule<
 
   static doesNotStartWith(value: string) {
     return new StringRule<string>({
-      description: "does not start with {{value}}",
+      description: 'does not start with {{value}}',
       variables: { value },
       func: async (input: string, variables: { value: string }) => {
         return !input.startsWith(variables.value);
@@ -123,7 +123,7 @@ export class StringRule<
 
   static doesNotEndWith(value: string) {
     return new StringRule<string>({
-      description: "does not end with {{value}}",
+      description: 'does not end with {{value}}',
       variables: { value },
       func: async (input: string, variables: { value: string }) => {
         return !input.endsWith(variables.value);
@@ -143,7 +143,7 @@ export class StringRule<
 
   static doesNotMatchRegex(regex: RegExp) {
     return new StringRule<string>({
-      description: "does not match regex {{regex}}",
+      description: 'does not match regex {{regex}}',
       variables: { regex },
       func: async (input: string, variables: { regex: RegExp }) => {
         return input.match(variables.regex) === null;

@@ -128,7 +128,8 @@ export type SerializedCallableFields = {
     | Array<ReturnType<Serializable['getAttributes']>>
     | ReturnType<Callable['getAttributes']>
     | Record<string, ReturnType<Callable['getAttributes']>>
-    | Array<ReturnType<Callable['getAttributes']>>;
+    | Array<ReturnType<Callable['getAttributes']>>
+    | undefined;
 };
 
 /**
@@ -1672,18 +1673,21 @@ export class CallableIf<
 
   protected _actions: Record<string, Callable<CallInput>>;
 
+  protected _default?: Callable<CallInput>;
+
   /**
    * Initializes a new instance of `CallableIf` with the given rules and actions.
    * @param {Object} fields - The rules and actions for the instance.
-   * @param {Record<string, BaseRule>} fields.rules - A mapping of guardrail identifiers 
+   * @param {Record<string, BaseRule>} fields.rules - A mapping of guardrail identifiers
    * to `BaseRule` instances.
-   * @param {Record<string, CallableLike<CallInput>>} fields.actions - A mapping of action 
+   * @param {Record<string, CallableLike<CallInput>>} fields.actions - A mapping of action
    * identifiers to `CallableLike` instances.
    * @throws Will throw an error if an action does not have a corresponding rule.
    */
   constructor(fields: {
     rules: Record<string, BaseRule>;
     actions: Record<string, CallableLike<CallInput>>;
+    default?: CallableLike<CallInput>;
   }) {
     super(fields);
 
@@ -1697,25 +1701,35 @@ export class CallableIf<
 
       this._actions[k] = convertCallableLikeToCallable(v);
     }
+
+    this._default = fields.default
+      ? convertCallableLikeToCallable(fields.default)
+      : undefined;
   }
 
   /**
    * Creates a new `CallableIf` instance from the specified rules and actions.
    * @static
    * @param {Record<string, BaseRule>} rules - The rules for the callable instance.
-   * @param {Record<string, CallableLike<CallInput>>} actions - The actions for the 
+   * @param {Record<string, CallableLike<CallInput>>} actions - The actions for the
    * callable instance.
+   * @param {CallableLike<CallInput> | undefined} default
    * @returns {CallableIf<CallInput>} A new instance of `CallableIf`.
    */
   static from<CallInput>(
     rules: Record<string, BaseRule>,
-    actions: Record<string, CallableLike<CallInput>>
+    actions: Record<string, CallableLike<CallInput>>,
+    defaultCallable?: CallableLike<CallInput>
   ): CallableIf<CallInput> {
-    return new CallableIf<CallInput>({ rules, actions });
+    return new CallableIf<CallInput>({
+      rules,
+      actions,
+      default: defaultCallable,
+    });
   }
 
   /**
-   * Invokes the callable, evaluating each rule against the input and executing the 
+   * Invokes the callable, evaluating each rule against the input and executing the
    * corresponding action if the rule is true.
    * @async
    * @param {CallInput} input - The input to evaluate rules against and pass to actions.
@@ -1743,7 +1757,7 @@ export class CallableIf<
         Object.entries(this._actions).map(async ([k, callable]) => {
           output[k] = ruleResults[k]
             ? await callable.invoke(input, callOptions)
-            : undefined;
+            : await this._default?.invoke(input, callOptions);
         })
       );
     } catch (e) {
@@ -1766,6 +1780,7 @@ export class CallableIf<
         actions: Object.fromEntries(
           Object.entries(this._actions).map(([k, v]) => [k, v.getAttributes()])
         ),
+        default: this._default?.getAttributes(),
       },
     };
   }

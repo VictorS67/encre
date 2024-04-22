@@ -44,7 +44,7 @@ export class NumberRule<
 
   static doesNotExist() {
     return new NumberRule<number | undefined>({
-      description: "does not exist",
+      description: 'does not exist',
       func: async (input: number | undefined) => {
         return input === undefined;
       },
@@ -63,7 +63,7 @@ export class NumberRule<
 
   static isNotEqual(value: number) {
     return new NumberRule<number>({
-      description: "is not equal to {{value}}",
+      description: 'is not equal to {{value}}',
       variables: { value },
       func: async (input: number, variables: { value: number }) => {
         return input !== variables.value;

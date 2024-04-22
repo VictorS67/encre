@@ -44,7 +44,7 @@ export class JSONObjectRule<
 
   static doesNotExist() {
     return new JSONObjectRule<object | undefined>({
-      description: "does not exist",
+      description: 'does not exist',
       func: async (input: object | undefined) => {
         return input === undefined;
       },
@@ -62,7 +62,7 @@ export class JSONObjectRule<
 
   static isNotEmpty() {
     return new JSONObjectRule<object>({
-      description: "is not empty",
+      description: 'is not empty',
       func: async (input: object) => {
         return Object.keys(input).length !== 0;
       },
@@ -108,11 +108,11 @@ export class JSONObjectRule<
 
   static isNotStrictlyEqual(value: object) {
     return new JSONObjectRule<object>({
-      description: "is not equal to {{value}}",
+      description: 'is not equal to {{value}}',
       variables: { value },
       func: async (input: object, variables: { value: object }) => {
         const isObject = (obj: any): boolean => {
-          return obj != null && typeof obj === "object";
+          return obj != null && typeof obj === 'object';
         };
 
         const areObjectsStrictlyEqual = (obj1: any, obj2: any): boolean => {
