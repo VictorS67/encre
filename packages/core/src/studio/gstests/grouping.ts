@@ -33,7 +33,7 @@ let globalnode: number = 0;
 const groupIp:Map<Array<RecordId>, number> = new Map<Array<RecordId>, number>();
 const groupScale:Map<Array<RecordId>, number> = new Map<Array<RecordId>, number>();
 let ipList: number[] = [100,200,300,400,500,600];
-let nodeInfo: { [key: number]: number } = {100: 10, 200: 10, 300: 10, 400: 10, 500: 10, 600: 10};
+// let nodeInfo: { [key: number]: number } = {99: 10, 200: 10, 300: 10, 400: 10, 500: 10, 600: 10};
 const defaultID: RecordId = "default" as RecordId;
 const defaultLength: number = 0;
 
@@ -45,7 +45,7 @@ const defaultLength: number = 0;
  * @param group_set - An array of record IDs representing the group set.
  * @returns A record containing the in-degree of each node.
  */
-export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<RecordId, number> {
+export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>, nodeInfo:{ [key: number]: number }): Record<RecordId, number> {
    
     const startPorts = workflow.graphInputNameMap; 
     const nodeConMap = workflow.nodeConnMap;
@@ -179,7 +179,7 @@ const GOUP_LIMIT: number = 10;
  * @param groupSet - The array of group sets.
  * @returns A boolean indicating whether the nodes can be merged.
  */
-function mergeable(node1: RecordId, node2: RecordId, workflow:SubGraph,  groupSet: Array<RecordId>[]): boolean {
+function mergeable(node1: RecordId, node2: RecordId, workflow:SubGraph,  groupSet: Array<RecordId>[], nodeInfo: { [key: number]: number }): boolean {
     const nodeSet1 = findSet(node1, groupSet);
     if(!nodeSet1){
         return true;
@@ -264,7 +264,7 @@ function mergePath(critVec:{[name: RecordId]: [RecordId, number]}, workflow: Sub
     for(let [key, value] of Object.entries(critVec)){
         const sourceNode = key as RecordId;
         const targetNode = value[0] as RecordId
-        if(mergeable(sourceNode, targetNode, workflow, groupSet)){
+        if(mergeable(sourceNode, targetNode, workflow, groupSet, nodeInfo)){
             return false;
         }
     }
@@ -317,7 +317,7 @@ function isNodeIdInStartPorts(nodeId: RecordId, startPorts: Record<string, { nod
 export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }): [RecordId[][],Set<RecordId>] {
     let groupSet: Array<RecordId[]> = [];
     let criticalPathFunction: Set<RecordId> = new Set<RecordId>();
-    let inDegreeVec = init_graph(workflow, groupSet);
+    let inDegreeVec = init_graph(workflow, groupSet, nodeInfo);
     while (true){
         if (groupSet.length == 1){
             break;
