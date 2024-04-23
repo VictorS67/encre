@@ -45,7 +45,8 @@ const defaultLength: number = 0;
  * @param group_set - An array of record IDs representing the group set.
  * @returns A record containing the in-degree of each node.
  */
-function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<RecordId, number> {
+export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<RecordId, number> {
+    console.log("init_graph");
    
     const startPorts = workflow.graphInputNameMap; 
     const nodeConMap = workflow.nodeConnMap;
@@ -63,13 +64,15 @@ function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<Re
         }
         const connections = nodeConMap[node];
         for(let connection of connections) {
-            const toNode = connection.toNodeId;
-            q.push(toNode);
-            if (inDegreeVec[toNode]) {
-                inDegreeVec[toNode]++;
-            } else {
-                inDegreeVec[toNode] = 1;
-                group_set.push([toNode]);
+            if(connection.fromNodeId == node){
+                const toNode = connection.toNodeId;
+                q.push(toNode);
+                if (inDegreeVec[toNode]) {
+                    inDegreeVec[toNode]++;
+                } else {
+                    inDegreeVec[toNode] = 1;
+                    group_set.push([toNode]);
+                }
             }
         }
         
@@ -299,6 +302,7 @@ function getLongestDist(workflow: SubGraph, distVec:Record<RecordId, number[]>):
  * @returns An array containing the grouped nodes and the critical path function.
  */
 export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }): [RecordId[][],Set<RecordId>] {
+    console.log("grouping");
     let groupSet: Array<RecordId[]> = [];
     let criticalPathFunction: Set<RecordId> = new Set<RecordId>();
     let inDegreeVec = init_graph(workflow, groupSet);
@@ -309,6 +313,7 @@ export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }
         //topo dp: find each node's longest dis and its predecessor
         let [distVec, prevVec] = topo_search(workflow, inDegreeVec, groupSet);
         let [critLength, tmpNodeId] = getLongestDist(workflow, distVec);
+        console.log(critLength, tmpNodeId);
 
         // find the longest path, edge descent sorted
         criticalPathFunction.clear();
