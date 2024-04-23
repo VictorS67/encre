@@ -46,7 +46,6 @@ const defaultLength: number = 0;
  * @returns A record containing the in-degree of each node.
  */
 export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>): Record<RecordId, number> {
-    console.log("init_graph");
    
     const startPorts = workflow.graphInputNameMap; 
     const nodeConMap = workflow.nodeConnMap;
@@ -283,16 +282,30 @@ function mergePath(critVec:{[name: RecordId]: [RecordId, number]}, workflow: Sub
  */
 function getLongestDist(workflow: SubGraph, distVec:Record<RecordId, number[]>): [number, RecordId] {
     let dist: number = 0;
-    let nodeId: RecordId = "default" as RecordId;
+    let nodeId: string = "default" as RecordId;
+
     Object.entries(distVec).forEach(([key, numbers]) => {
         // Check if the current array's first value is greater than the current known max
         if (numbers.length > 0 && numbers[0] > dist) {
             dist = numbers[0];
-            nodeId= key as RecordId;
+            nodeId = key;
         }
     });
-    return [dist, nodeId];
+    return [dist, nodeId as RecordId];
 } 
+
+/**
+ * Checks if a given node ID is present in the start ports.
+ * @param nodeId - The ID of the node to check.
+ * @param startPorts - The start ports object containing node IDs and names.
+ * @returns A boolean indicating whether the node ID is present in the start ports.
+ */
+function isNodeIdInStartPorts(nodeId: RecordId, startPorts: Record<string, { nodeId: RecordId; name: string }>) {
+    // Extract all node IDs from startPorts
+    const nodeIds = Object.values(startPorts).map(port => port.nodeId);
+    // Check if nodeId is in the extracted list
+    return nodeIds.includes(nodeId);
+}
 
 /**
  * Groups the nodes in a workflow and finds the critical path function.
@@ -302,7 +315,6 @@ function getLongestDist(workflow: SubGraph, distVec:Record<RecordId, number[]>):
  * @returns An array containing the grouped nodes and the critical path function.
  */
 export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }): [RecordId[][],Set<RecordId>] {
-    console.log("grouping");
     let groupSet: Array<RecordId[]> = [];
     let criticalPathFunction: Set<RecordId> = new Set<RecordId>();
     let inDegreeVec = init_graph(workflow, groupSet);
@@ -313,13 +325,12 @@ export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }
         //topo dp: find each node's longest dis and its predecessor
         let [distVec, prevVec] = topo_search(workflow, inDegreeVec, groupSet);
         let [critLength, tmpNodeId] = getLongestDist(workflow, distVec);
-        console.log(critLength, tmpNodeId);
 
         // find the longest path, edge descent sorted
         criticalPathFunction.clear();
         let crit_vec: {[name: RecordId]: [RecordId, number]} = {};
         const startPorts = workflow.graphInputNameMap;
-        while(!(tmpNodeId in startPorts)){
+        while(!isNodeIdInStartPorts(tmpNodeId, startPorts)){
             crit_vec[tmpNodeId] = prevVec[tmpNodeId];
             tmpNodeId = prevVec[tmpNodeId][0];
         }
