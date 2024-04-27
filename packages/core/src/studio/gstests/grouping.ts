@@ -29,7 +29,7 @@ const flattenConns = graph.flattenConnections;// get connection from nodecnnmaps
 const NETWORK_BAND: number = 2; // temporary hardcoded network bandwidth
 let mem_usage: number = 0;
 let max_mem_usage: number = 0;
-let globalnode: number = 0;
+let hashKey: number = 0;
 const groupIp:Map<Array<RecordId>, number> = new Map<Array<RecordId>, number>();
 const groupScale:Map<Array<RecordId>, number> = new Map<Array<RecordId>, number>();
 let ipList: number[] = [100,200,300,400,500,600];
@@ -79,10 +79,12 @@ export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>, nod
 
     for (let s of group_set) {
         // group_ip[s] = ip_list[globalnode % 6];
-        groupIp.set(s, ipList[globalnode % 6]);
+        groupIp.set(s, ipList[hashKey % 6]);
+
         // group_scale[s[0]] = 1;
         groupScale.set(s, 1);
-        nodeInfo[ipList[globalnode % 6]] -= 1;
+        nodeInfo[ipList[hashKey % 6]] -= 1;
+        hashKey += 1;
     }
     return inDegreeVec;
 }
