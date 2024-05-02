@@ -20,5 +20,6 @@ export const optionalImportEndpoints = [
   'events/inference/chat/chatlms/openai',
   'events/inference/chat/llms/gemini',
   'events/inference/chat/chatlms/gemini',
-  'studio/graph'
+  'studio/graph',
+  'studio/condition'
 ] as string[];

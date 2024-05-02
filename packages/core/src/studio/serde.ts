@@ -1,9 +1,9 @@
 import { RecordId } from '../load/keymap.js';
-import { Serialized } from '../load/serializable';
+import { Serialized } from '../load/serializable.js';
 import { NodePortFields, NodePortSizes } from './nodes/index.js';
 
 export type SerializedGraph = {
-  _type: 'graph',
+  _type: 'graph';
   id: RecordId;
   title: string;
   description: string;
@@ -11,7 +11,7 @@ export type SerializedGraph = {
 };
 
 export type SerializedNode = {
-  _type: 'node',
+  _type: 'node';
   id: RecordId;
   type: string;
   subType: string;

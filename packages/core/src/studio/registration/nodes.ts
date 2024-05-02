@@ -236,7 +236,6 @@ export function registerBuiltInNodes(registry: NodeRegistration) {
     .register(GeminiNodeImpl)
     .register(OpenAIChatNodeImpl)
     .register(GeminiChatNodeImpl)
-    .register(SubGraphNodeImpl)
     .register(VariableValidatorNodeImpl);
 }
 

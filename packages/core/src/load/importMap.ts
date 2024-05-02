@@ -33,5 +33,6 @@ export * as studio_nodes_input_message from '../studio/nodes/input/message.node.
 export * as studio_nodes_input_prompt from '../studio/nodes/input/prompt.node.js';
 export * as studio_nodes_input_splitter from '../studio/nodes/input/splitter.node.js';
 export * as studio_nodes_utility_graph from '../studio/nodes/utility/graph.node.js';
+export * as studio_nodes_utility_if from '../studio/nodes/utility/if.node.js';
 export * as studio_utils_coerce from '../studio/utils/coerce.js';
 export * as utils_nanoid from '../utils/nanoid.js';

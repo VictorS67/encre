@@ -94,7 +94,10 @@ export type OtherwiseConditionUI = {
   source?: string;
 };
 
-export type ConditionUI = IfConditionUI | ElseIfConditionUI | OtherwiseConditionUI;
+export type ConditionUI =
+  | IfConditionUI
+  | ElseIfConditionUI
+  | OtherwiseConditionUI;
 
 export type ConditionUIContext = {
   type: 'condition';

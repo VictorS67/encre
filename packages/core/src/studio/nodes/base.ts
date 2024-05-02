@@ -4,7 +4,6 @@ import {
   SerializedFields,
   SerializedKeyAlias,
 } from '../../load/keymap.js';
-import { Serializable, Serialized } from '../../load/serializable.js';
 import { SerializedCallableFields } from '../../record/callable.js';
 import { isNotNull } from '../../utils/safeTypes.js';
 import { DataFields } from '../data.js';
