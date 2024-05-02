@@ -221,6 +221,7 @@ export const DropdownButton: FC<DropdownButtonProps> = ({
   showIcon,
   styling,
   onDropDownMenuClick,
+  additionalKwargs,
 }: DropdownButtonProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -269,7 +270,7 @@ export const DropdownButton: FC<DropdownButtonProps> = ({
     e.stopPropagation();
 
     setOpen(false);
-    onDropDownMenuClick?.(e as React.MouseEvent<HTMLElement>);
+    onDropDownMenuClick?.(e as React.MouseEvent<HTMLElement>, additionalKwargs);
   });
 
   return (

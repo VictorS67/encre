@@ -736,13 +736,235 @@ export const graphState = atom<NodeGraph>({
           return [
             {
               type: 'condition',
-              subject: 'D',
-              properties: ['A', 'B', 'C'],
+              target: 'D',
+              sources: ['A', 'B', 'C'],
               conditions: [
                 {
                   type: 'if',
                   description:
-                    "A exists AND (B is equal to 'bag' OR C contains 'bag')",
+                    '(A (exists AND is equal to 2) OR length greater than 2) AND B contains "Peter"',
+                  metadata: {
+                    _type: 'rule-collection',
+                    collection: {
+                      '0': {
+                        _type: 'rule-collection',
+                        collection: {
+                          A: {
+                            _ruleType: 'string',
+                            _type: 'rule',
+                            description:
+                              '(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}',
+                            func: `function anonymous(input,variables
+) {
+return (async function(input, variables) {
+
+  const leftFunc = async (input, variables) => {
+
+return (async function(input, variables) {
+
+  const leftFunc = async (input) => {
+
+return (async function(input) {
+                return input !== undefined;
+            }).apply(this, [input])
+
+};
+  const rightFunc = async (input, variables) => {
+
+return (async function(input, variables) {
+                return input === variables.value;
+            }).apply(this, [input, variables])
+
+};
+
+  const result1 = await leftFunc(input).catch(
+    (e) => false
+  );
+  const result2 = await rightFunc(input, variables.right).catch(
+    (e) => false
+  );
+
+  const results = await Promise.all([result1, result2]);
+
+  return results.every((result) => result === true);
+
+}).apply(this, [input, variables])
+
+};
+  const rightFunc = async (input, variables) => {
+
+return (async function(input, variables) {
+                return input.length > variables.value;
+            }).apply(this, [input, variables])
+
+};
+
+  const result1 = await leftFunc(input, variables.left).catch(
+    (e) => false
+  );
+  const result2 = await rightFunc(input, variables.right).catch(
+    (e) => false
+  );
+
+  const results = await Promise.all([result1, result2]);
+
+  return results.some((result) => result === true);
+
+}).apply(this, [input, variables])
+}`,
+                            metadata: {
+                              conjunction: 'or',
+                              left: {
+                                _ruleType: 'string',
+                                _type: 'rule',
+                                description:
+                                  'exists AND is equal to {{right.value}}',
+                                func: `function anonymous(input,variables
+) {
+return (async function(input, variables) {
+
+  const leftFunc = async (input) => {
+
+return (async function(input) {
+                return input !== undefined;
+            }).apply(this, [input])
+
+};
+  const rightFunc = async (input, variables) => {
+
+return (async function(input, variables) {
+                return input === variables.value;
+            }).apply(this, [input, variables])
+
+};
+
+  const result1 = await leftFunc(input).catch(
+    (e) => false
+  );
+  const result2 = await rightFunc(input, variables.right).catch(
+    (e) => false
+  );
+
+  const results = await Promise.all([result1, result2]);
+
+  return results.every((result) => result === true);
+
+}).apply(this, [input, variables])
+}`,
+                                metadata: {
+                                  conjunction: 'and',
+                                  left: {
+                                    _ruleType: 'string',
+                                    _type: 'rule',
+                                    description: 'exists',
+                                    func: `function anonymous(input
+) {
+return (async function(input) {
+                return input !== undefined;
+            }).apply(this, [input])
+}`,
+                                    metadata: undefined,
+                                    variables: undefined,
+                                  },
+                                  right: {
+                                    _ruleType: 'string',
+                                    _type: 'rule',
+                                    description: 'is equal to {{value}}',
+                                    func: `function anonymous(input,variables
+) {
+return (async function(input, variables) {
+                return input === variables.value;
+            }).apply(this, [input, variables])
+}`,
+                                    metadata: undefined,
+                                    variables: {
+                                      value: 'John',
+                                    },
+                                  },
+                                },
+                                variables: {
+                                  left: {},
+                                  right: {
+                                    value: 'John',
+                                  },
+                                },
+                              },
+                              right: {
+                                _ruleType: 'string',
+                                _type: 'rule',
+                                description: 'length greater than {{value}}',
+                                func: `function anonymous(input,variables
+) {
+return (async function(input, variables) {
+                return input.length > variables.value;
+            }).apply(this, [input, variables])
+}`,
+                                metadata: undefined,
+                                variables: {
+                                  value: 2,
+                                },
+                              },
+                            },
+                            variables: {
+                              left: {
+                                left: {},
+                                right: {
+                                  value: 'John',
+                                },
+                              },
+                              right: {
+                                value: 2,
+                              },
+                            },
+                          },
+                          B: {
+                            _ruleType: 'array',
+                            _type: 'rule',
+                            description: 'contains {{value}}',
+                            func: `function anonymous(input,variables
+) {
+return (async function(input, variables) {
+                return input.includes(variables.value);
+            }).apply(this, [input, variables])
+}`,
+                            metadata: undefined,
+                            variables: {
+                              value: 'Peter',
+                            },
+                          },
+                        },
+                        conjunction: 'and',
+                        description:
+                          '({{{A}}} <A>(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}</A>) AND {{{B}}} <B>contains {{value}}</B>',
+                      },
+                      '1': {
+                        _type: 'rule-collection',
+                        collection: {
+                          C: {
+                            _ruleType: 'string',
+                            _type: 'rule',
+                            description: 'length greater than {{value}}',
+                            func: `function anonymous(input,variables
+) {
+return (async function(input, variables) {
+                return input.length > variables.value;
+            }).apply(this, [input, variables])
+}`,
+                            metadata: undefined,
+                            variables: {
+                              value: 2,
+                            },
+                          },
+                        },
+                        conjunction: 'and',
+                        description:
+                          '{{{C}}} <C>length greater than {{value}}</C>',
+                      },
+                    },
+                    conjunction: 'or',
+                    description:
+                      '(<0>({{{A}}} <A>(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}</A>) AND {{{B}}} <B>contains {{value}}</B></0>) OR <1>{{{C}}} <C>length greater than {{value}}</C></1>',
+                  },
                 },
                 {
                   type: 'else-if',

@@ -1,5 +1,6 @@
 import { RecordId } from '../../../../load/keymap';
 import { Serializable } from '../../../../load/serializable';
+import { SerializedRuleCollection } from '../../../../studio/serde';
 import { BaseRule } from '../../../inference/validate/guardrails/base';
 
 export interface BaseRuleCollectionField {
@@ -35,10 +36,82 @@ export class BaseRuleCollection
         const isCollection: boolean = rule instanceof BaseRuleCollection;
 
         return isInvert
+          ? `(${
+              !isCollection ? `{{{${subject}}}} ` : ''
+            }<${subject}>${currDescription}</${subject}>)`
+          : `${
+              !isCollection ? `{{{${subject}}}} ` : ''
+            }<${subject}>${currDescription}</${subject}>`;
+      })
+      .join(` ${this.conjunction.toUpperCase()} `);
+  }
+
+  static async deserialize(
+    serialized: SerializedRuleCollection,
+    values: Record<string, unknown> = {}
+  ): Promise<BaseRuleCollection> {
+    if (serialized._type !== 'rule-collection') {
+      throw new Error(
+        `CANNOT deserialize this type in rule collection: ${serialized._type}`
+      );
+    }
+
+    const { BaseRule } = await import(
+      '../../../inference/validate/guardrails/base.js'
+    );
+
+    const ruleCollectionField: BaseRuleCollectionField = {
+      collection: Object.fromEntries(
+        await Promise.all(
+          Object.entries(serialized.collection).map(async ([subject, rule]) => [
+            subject,
+            rule._type === 'rule-collection'
+              ? await BaseRuleCollection.deserialize(
+                  rule,
+                  (values?.[subject] ?? {}) as Record<string, unknown>
+                )
+              : await BaseRule.deserialize(
+                  rule,
+                  (values?.[subject] ?? {}) as Record<string, unknown>
+                ),
+          ])
+        )
+      ),
+      conjunction: serialized.conjunction,
+    };
+
+    return new BaseRuleCollection(ruleCollectionField);
+  }
+
+  serialize(): SerializedRuleCollection {
+    return {
+      _type: 'rule-collection',
+      description: this.description,
+      collection: Object.fromEntries(
+        Object.entries(this.collection).map(([subject, rule]) => [
+          subject,
+          rule.serialize(),
+        ])
+      ),
+      conjunction: this.conjunction,
+    };
+  }
+
+  getCleanDescription(): string {
+    return Object.entries(this.collection)
+      .map(([subject, rule]) => {
+        const currDescription: string = rule.getCleanDescription();
+        const isInvert: boolean = this._isInvertLogic(
+          currDescription,
+          this.conjunction
+        );
+        const isCollection: boolean = rule instanceof BaseRuleCollection;
+
+        return isInvert
           ? `(${!isCollection ? `${subject} ` : ''}${currDescription})`
           : `${!isCollection ? `${subject} ` : ''}${currDescription}`;
       })
-      .join(` ${this.conjunction} `);
+      .join(` ${this.conjunction.toUpperCase()} `);
   }
 
   async validate(
@@ -46,7 +119,7 @@ export class BaseRuleCollection
       [key in string]: unknown;
     },
     variables?: {
-      [key in string]: Record<string, unknown>;
+      [key in string]?: Record<string, unknown>;
     }
   ): Promise<boolean> {
     if (
@@ -58,6 +131,10 @@ export class BaseRuleCollection
     }
 
     const recordHistory: Set<RecordId> = new Set([this._recordId]);
+
+    if (Object.keys(this.collection).length === 0) {
+      return false;
+    }
 
     if (this.conjunction === 'and') {
       return Object.entries(this.collection).every(async ([subject, rule]) => {
@@ -91,7 +168,7 @@ export class BaseRuleCollection
       [key in string]: unknown;
     },
     variables?: {
-      [key in string]: Record<string, unknown>;
+      [key in string]?: Record<string, unknown>;
     }
   ): Promise<boolean> {
     if (rule instanceof BaseRule) {

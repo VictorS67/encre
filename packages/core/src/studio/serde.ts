@@ -42,3 +42,25 @@ export type SerializedNode = {
     };
   };
 };
+
+export type SerializedRuleMetadata = {
+  left: SerializedRule;
+  right?: SerializedRule;
+  conjunction: 'and' | 'or';
+};
+
+export type SerializedRule = {
+  _type: 'rule';
+  _ruleType: string;
+  description: string;
+  func: string;
+  variables?: Record<string, unknown>;
+  metadata?: SerializedRuleMetadata;
+};
+
+export type SerializedRuleCollection = {
+  _type: 'rule-collection';
+  description: string;
+  collection: Record<string, SerializedRule | SerializedRuleCollection>;
+  conjunction: 'and' | 'or';
+};

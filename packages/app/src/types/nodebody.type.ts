@@ -7,7 +7,7 @@ export type NodeContentBodyProps = {
 export type KnownNodeContentBodyProps = {
   node: Node;
   uiContexts: UIContext[];
-  onClick?: (node: Node, uiContext: UIContext) => void;
+  onEditorClick?: (node: Node, uiContext: UIContext, editorId: string) => void;
 };
 
 export type UnknownNodeContentBodyProps = {

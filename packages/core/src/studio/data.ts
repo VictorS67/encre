@@ -43,6 +43,7 @@ export type Data = ScalarData | ArrayData;
 export type DataType = Data['type'];
 
 export type ValueOf<T extends DataType> = Extract<Data, { type: T }>;
+export type TypeOf<T extends Data> = T['type'];
 
 export type DataFields = {
   [key: string]: Data | undefined;

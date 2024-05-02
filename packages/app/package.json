@@ -41,10 +41,8 @@
     "wait-on": "^7.0.1"
   },
   "dependencies": {
-    "@atlaskit/button": "^16.10.1",
     "@atlaskit/css-reset": "^6.5.4",
-    "@atlaskit/modal-dialog": "^12.11.0",
-    "@atlaskit/tokens": "^1.25.2",
+    "@atlaskit/tokens": "^1.43.0",
     "@dnd-kit/core": "^6.0.8",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",

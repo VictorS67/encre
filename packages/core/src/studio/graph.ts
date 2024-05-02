@@ -12,8 +12,9 @@ import {
   NodePortFields,
   SerializableNode,
 } from './nodes/index.js';
-import { globalNodeRegistry, NodeRegistration } from './nodes/registration.js';
 import { GraphNode } from './nodes/utility/graph.node.js';
+import { GuardrailRegistration } from './registration/guardrails.js';
+import { globalNodeRegistry, NodeRegistration } from './registration/nodes.js';
 import { SerializedGraph, SerializedNode } from './serde.js';
 
 export interface NodeGraph {
@@ -71,11 +72,17 @@ export abstract class BaseGraph<
 
   // a lookup table with the key of the input port name and the value
   // of the corresponding node id and actual input port name in the node
-  readonly graphInputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+  readonly graphInputNameMap: Record<
+    string,
+    { nodeId: RecordId; name: string }
+  >;
 
   // a lookup table with the key of the output port name and the value
   // of the corresponding node id and actual output port name in the node
-  readonly graphOutputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+  readonly graphOutputNameMap: Record<
+    string,
+    { nodeId: RecordId; name: string }
+  >;
 
   // node-map: a lookup table with the key of the non-subgraph node id and
   // the value of the non-subgraph node
@@ -116,6 +123,11 @@ export abstract class BaseGraph<
 
     super(fields ?? {});
 
+    if (this._kwargs['registry']) {
+      registry = this._kwargs['registry'] as NodeRegistration;
+      delete this._kwargs['registry'];
+    }
+
     this.id = fields?.id ?? getRecordId();
     this.title = fields?.title ?? 'Untitled Graph';
     this.description = fields?.description ?? '';
@@ -134,18 +146,14 @@ export abstract class BaseGraph<
     // Flatten any subgraph in the nodes and connections, all nodes
     // should be a non-subgraph node, also get graph inputs and outputs
     // for the start nodes and end nodes
-    const { 
-      flattenNodes, 
-      flattenConnections, 
-      inputs, 
-      inputNameMap, 
-      outputs, 
-      outputNameMap 
-    } = BaseGraph.flattenGraph(
-      this.id,
-      this.nodes,
-      this.connections
-    );
+    const {
+      flattenNodes,
+      flattenConnections,
+      inputs,
+      inputNameMap,
+      outputs,
+      outputNameMap,
+    } = BaseGraph.flattenGraph(this.id, this.nodes, this.connections);
     this.flattenNodes = flattenNodes;
     this.flattenConnections = flattenConnections;
     this.graphInputs = inputs;
@@ -257,12 +265,14 @@ export abstract class BaseGraph<
     }
   }
 
+  abstract loadRegistry(registry: NodeRegistration | undefined): BaseGraph;
+
   /**
    * Flatten a graph by exploding the nodes and connections in any subgraph
    * node in the graph. Since the original connections use the subgraph node
    * id and port name, these will be replaced with the inner node id and port
    * name
-   * 
+   *
    * In addition, get graph ports for the start nodes and end nodes in the
    * flatten graph
    *
@@ -371,7 +381,14 @@ export abstract class BaseGraph<
       }
     }
 
-    return { flattenNodes, flattenConnections, inputs, inputNameMap, outputs, outputNameMap };
+    return {
+      flattenNodes,
+      flattenConnections,
+      inputs,
+      inputNameMap,
+      outputs,
+      outputNameMap,
+    };
   }
 
   /**
@@ -480,7 +497,10 @@ export abstract class BaseGraph<
   static async deserialize(
     serialized: SerializedGraph,
     values: Record<string, unknown> = {},
-    registry?: NodeRegistration
+    registry?: {
+      nodes?: NodeRegistration;
+      guardrails?: GuardrailRegistration;
+    }
   ): Promise<BaseGraph> {
     if (serialized._type !== 'graph') {
       throw new Error(
@@ -511,7 +531,7 @@ export abstract class BaseGraph<
       description,
       nodes,
       connections,
-      registry,
+      registry: registry?.nodes,
     });
   }
 
@@ -551,9 +571,28 @@ export abstract class BaseGraph<
 }
 
 export class SubGraph extends BaseGraph {
+  loadRegistry(registry: NodeRegistration | undefined): SubGraph {
+    if (!registry) {
+      return this;
+    }
+
+    const nodeGraphFields = {
+      id: this.id,
+      title: this.title,
+      description: this.description,
+      registry,
+      nodes: this.nodes,
+      connections: this.connections,
+      comments: this.comments,
+    };
+
+    return new SubGraph(nodeGraphFields);
+  }
+
   schedule(): Promise<SerializableNode<string, Serializable>[][]> {
     throw new Error('Method not implemented.');
   }
+
   invoke(
     input: GraphValues,
     options?: Partial<CallableConfig> | undefined

@@ -1,6 +1,7 @@
 import { MessageRole } from '../events/input/load/msgs/base.js';
 import { exhaustiveTuple } from '../utils/exhuastive.js';
 import { DataType } from './data.js';
+import { SerializedRuleCollection } from './serde.js';
 
 export type BaseUIContext = {
   fontSize?: number;
@@ -74,6 +75,34 @@ export type FileUIContext = {
   data: Uint8Array;
 };
 
+export type IfConditionUI = {
+  type: 'if';
+  description?: string;
+  metadata?: SerializedRuleCollection;
+  source?: string;
+};
+
+export type ElseIfConditionUI = {
+  type: 'else-if';
+  description?: string;
+  metadata?: SerializedRuleCollection;
+  source?: string;
+};
+
+export type OtherwiseConditionUI = {
+  type: 'otherwise';
+  source?: string;
+};
+
+export type ConditionUI = IfConditionUI | ElseIfConditionUI | OtherwiseConditionUI;
+
+export type ConditionUIContext = {
+  type: 'condition';
+  target: string;
+  sources: string[];
+  conditions: ConditionUI[];
+};
+
 export type UIContext = BaseUIContext &
   (
     | PlainUIContext
@@ -85,6 +114,7 @@ export type UIContext = BaseUIContext &
     | ImageUIContext
     | AudioUIContext
     | FileUIContext
+    | ConditionUIContext
   );
 
 export const imageTypes = exhaustiveTuple<ImageUIContext['mimeType']>()(

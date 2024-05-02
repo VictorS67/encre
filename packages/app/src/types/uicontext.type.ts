@@ -1,13 +1,21 @@
 import { FC } from 'react';
 
-import { Node, UIContext } from './studio.type';
+import {
+  ConditionUI,
+  ElseIfConditionUI,
+  IfConditionUI,
+  Node,
+  OtherwiseConditionUI,
+  UIContext,
+} from './studio.type';
 
 export type UIContextDescriptor<T extends UIContext['type']> = {
   Body?: FC<
-    { node: Node; id: string; onClick?: (node: Node) => void } & Extract<
-      UIContext,
-      { type: T }
-    >
+    {
+      node: Node;
+      id: string;
+      onEditClick?: (node: Node, editingId: string) => void;
+    } & Extract<UIContext, { type: T }>
   >;
   PopUpWindow?: FC<
     { node: Node; onChange?: (node: Node) => void } & Extract<
@@ -29,32 +37,31 @@ export type UIContextContainerProps = {
   readonlyLabels: string[];
 };
 
-export type ConditionField = {
-  type: 'if' | 'else-if' | 'otherwise';
-  description?: string;
-  target?: string;
-};
-
 export type ConditionUIContextContainerProps = {
   node: Node;
   uiType: 'condition';
-  subject: string;
-  properties: string[];
-  when: ConditionField;
-  otherwiseWhen?: ConditionField[];
-  otherwise?: Omit<ConditionField, 'description'>;
+  target: string;
+  sources: string[];
+  when: IfConditionUI;
+  otherwiseWhen?: ElseIfConditionUI[];
+  otherwise?: OtherwiseConditionUI;
 };
 
 export type ConditionUIContextItemProps = {
   type: 'if' | 'else-if' | 'otherwise';
   node: Node;
-  condition: ConditionField;
-  properties: string[];
+  condition: ConditionUI;
+  sources: string[];
   index: number;
   selectedIndex?: number;
   showOtherwiseWhen?: boolean;
   showOtherwise?: boolean;
   onConditionClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onConditionEditorClick?: (
+    node: Node,
+    uiContext: UIContext,
+    editingId: string,
+  ) => void;
 };
 
 export type UIContextContainerVisualContentData = {

@@ -1,26 +1,33 @@
 import React, { FC, memo, Suspense, useMemo } from 'react';
 
-import { Node, UIContext } from '../../types/studio.type';
 import {
-  ConditionField,
-  UIContextDescriptor,
-} from '../../types/uicontext.type';
+  ElseIfConditionUI,
+  IfConditionUI,
+  Node,
+  OtherwiseConditionUI,
+  UIContext,
+} from '../../types/studio.type';
+import { UIContextDescriptor } from '../../types/uicontext.type';
 import { ConditionUIContextContainer } from '../ConditionUIContextContainer';
 
 /* eslint-disable react/prop-types */
 export const ConditionNodeContentBody: FC<
   { node: Node; id: string } & Extract<UIContext, { type: 'condition' }>
-> = memo(({ node, id, subject, properties, conditions }) => {
+> = memo(({ node, id, target, sources, conditions }) => {
   const [when, otherwiseWhen, otherwise] = useMemo(() => {
     const first = conditions.filter((c) => c.type === 'if');
     const middle = conditions.filter((c) => c.type === 'else-if');
     const last = conditions.filter((c) => c.type === 'otherwise');
 
     if (first.length === 0) {
-      return [{} as ConditionField, undefined, undefined];
+      return [{ type: 'if' } as IfConditionUI, undefined, undefined];
     }
 
-    return [first[0], middle, last.length > 0 ? last[0] : undefined];
+    return [
+      first[0] as IfConditionUI,
+      middle as ElseIfConditionUI[],
+      last.length > 0 ? (last[0] as OtherwiseConditionUI) : undefined,
+    ];
   }, [conditions]);
 
   return (
@@ -29,8 +36,8 @@ export const ConditionNodeContentBody: FC<
         <ConditionUIContextContainer
           node={node}
           uiType="condition"
-          subject={subject}
-          properties={properties}
+          target={target}
+          sources={sources}
           when={when}
           otherwiseWhen={otherwiseWhen}
           otherwise={otherwise}

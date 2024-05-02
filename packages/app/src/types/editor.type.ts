@@ -1,5 +1,6 @@
 import React, { CSSProperties, FC, MutableRefObject } from 'react';
 
+import { ModalProps } from './modal.type';
 import { Node, UIContext } from './studio.type';
 import { type monaco } from '../utils/monacoEditor';
 
@@ -93,10 +94,4 @@ export type DefaultNodeEditorProps = {
   onClose?: () => void;
 };
 
-export type EditorModalProps = {
-  open: boolean;
-  Header?: FC;
-  Body?: FC;
-  Footer?: FC;
-  onClose?: () => void;
-};
+export type EditorModalProps = ModalProps;

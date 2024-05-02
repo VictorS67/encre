@@ -19,12 +19,22 @@ import { LazyCodeEditor, LazySyntaxedText } from '../LazyComponents';
 
 /* eslint-disable react/prop-types */
 export const CodeNodeContentBody: FC<
-  { node: Node; id: string; onClick?: (node: Node) => void } & Extract<
-    UIContext,
-    { type: 'code' }
-  >
+  {
+    node: Node;
+    id: string;
+    onEditClick?: (node: Node, editingId: string) => void;
+  } & Extract<UIContext, { type: 'code' }>
 > = memo(
-  ({ node, id, text, language, keywords, properties, variables, onClick }) => {
+  ({
+    node,
+    id,
+    text,
+    language,
+    keywords,
+    properties,
+    variables,
+    onEditClick,
+  }) => {
     const [editingNodeId, setEditingNodeId] =
       useRecoilState(editingNodeIdState);
     const [editingCodeId, setEditingCodeId] =
@@ -38,7 +48,7 @@ export const CodeNodeContentBody: FC<
         e.preventDefault();
         e.stopPropagation();
 
-        onClick?.(node);
+        onEditClick?.(node, id);
 
         setEditingNodeId(node.id);
         setEditingCodeId(id);
@@ -46,10 +56,10 @@ export const CodeNodeContentBody: FC<
       [setEditingNodeId, setEditingCodeId],
     );
 
-    useEffect(() => {
-      setEditingNodeId(undefined);
-      setEditingCodeId(undefined);
-    }, []);
+    // useEffect(() => {
+    //   setEditingNodeId(undefined);
+    //   setEditingCodeId(undefined);
+    // }, []);
 
     useEffect(() => {
       console.log(
@@ -70,7 +80,7 @@ export const CodeNodeContentBody: FC<
           onClick={onCodeContentClick}
           data-label={'editor'}
         >
-          {isEditing && !onClick && (
+          {isEditing && !onEditClick && (
             <LazyCodeEditor
               text={text}
               language={language}
@@ -79,7 +89,7 @@ export const CodeNodeContentBody: FC<
               variables={variables}
             />
           )}
-          {(!isEditing || onClick) && (
+          {(!isEditing || onEditClick) && (
             <div style={{ paddingLeft: 10 }}>
               <LazySyntaxedText
                 text={text}

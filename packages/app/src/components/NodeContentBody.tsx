@@ -75,7 +75,7 @@ NodeContentBody.displayName = 'NodeContentBody';
 export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
   node,
   uiContexts,
-  onClick,
+  onEditorClick,
 }: KnownNodeContentBodyProps) => {
   const descriptors = useUIContextDescriptors(uiContexts);
 
@@ -99,16 +99,21 @@ export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
       style={{ height: '100%', flex: 1, flexDirection: 'column' }}
     >
       {renderedBodies.map(({ style, Body }, i) => {
-        const onBodyClick = onClick
-          ? useStableCallback((n: Node) => {
-              onClick?.(n, style);
+        const editingId: string = fakeId(14);
+
+        const onBodyClick = onEditorClick
+          ? useStableCallback((n: Node, id: string) => {
+              onEditorClick?.(n, style, id);
             })
           : undefined;
 
-        const editingId: string = fakeId(14);
-
         const renderedBody = Body ? (
-          <Body node={node} id={editingId} onClick={onBodyClick} {...style} />
+          <Body
+            node={node}
+            id={editingId}
+            onEditClick={onBodyClick}
+            {...style}
+          />
         ) : (
           <UnknownNodeContentBody node={node} />
         );

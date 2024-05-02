@@ -1,16 +1,15 @@
+import { SerializedRule } from '../../../../studio/serde.js';
 import { BaseRule } from './base.js';
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-export class StringRule<
-  T extends unknown = string,
-> extends BaseRule<T> {
+export class StringRule<T extends unknown = string> extends BaseRule<T> {
   _isSerializable = true;
 
   static _name(): string {
     return 'StringRule';
   }
 
-  _ruleType(): string {
+  _ruleType(): 'string' {
     return 'string';
   }
 
@@ -21,16 +20,34 @@ export class StringRule<
         rule as BaseRule,
         conjunction
       ),
-      variables: StringRule._mergeVariables(
-        this as BaseRule,
-        rule as BaseRule
-      ),
+      variables: StringRule._mergeVariables(this as BaseRule, rule as BaseRule),
       func: StringRule._mergeFunc(
         this as BaseRule,
         rule as BaseRule,
         conjunction
       ),
+      metadata: StringRule._mergeMetadata(
+        this as BaseRule,
+        rule as BaseRule,
+        conjunction
+      ),
     });
+  }
+
+  static async deserialize(
+    serialized: SerializedRule,
+    values?: Record<string, unknown>
+  ): Promise<StringRule<string>> {
+    const stringRuleFields = {
+      description: serialized.description,
+      func: serialized.func,
+      variables: {
+        ...serialized.variables,
+        ...values,
+      },
+    };
+
+    return new StringRule(stringRuleFields);
   }
 
   static exists() {
@@ -51,7 +68,7 @@ export class StringRule<
     });
   }
 
-  static isEqual(value: string) {
+  static isEqual(value?: string) {
     return new StringRule<string>({
       description: 'is equal to {{value}}',
       variables: { value },
@@ -61,7 +78,7 @@ export class StringRule<
     });
   }
 
-  static isNotEqual(value: string) {
+  static isNotEqual(value?: string) {
     return new StringRule<string>({
       description: 'is not equal to {{value}}',
       variables: { value },
@@ -71,7 +88,7 @@ export class StringRule<
     });
   }
 
-  static contains(value: string) {
+  static contains(value?: string) {
     return new StringRule<string>({
       description: 'contains {{value}}',
       variables: { value },
@@ -81,7 +98,7 @@ export class StringRule<
     });
   }
 
-  static doesNotContain(value: string) {
+  static doesNotContain(value?: string) {
     return new StringRule<string>({
       description: 'does not contain {{value}}',
       variables: { value },
@@ -91,7 +108,7 @@ export class StringRule<
     });
   }
 
-  static startsWith(value: string) {
+  static startsWith(value?: string) {
     return new StringRule<string>({
       description: 'starts with {{value}}',
       variables: { value },
@@ -101,7 +118,7 @@ export class StringRule<
     });
   }
 
-  static doesNotStartWith(value: string) {
+  static doesNotStartWith(value?: string) {
     return new StringRule<string>({
       description: 'does not start with {{value}}',
       variables: { value },
@@ -111,7 +128,7 @@ export class StringRule<
     });
   }
 
-  static endsWith(value: string) {
+  static endsWith(value?: string) {
     return new StringRule<string>({
       description: 'ends with {{value}}',
       variables: { value },
@@ -121,7 +138,7 @@ export class StringRule<
     });
   }
 
-  static doesNotEndWith(value: string) {
+  static doesNotEndWith(value?: string) {
     return new StringRule<string>({
       description: 'does not end with {{value}}',
       variables: { value },
@@ -131,7 +148,7 @@ export class StringRule<
     });
   }
 
-  static matchesRegex(regex: RegExp) {
+  static matchesRegex(regex?: RegExp) {
     return new StringRule<string>({
       description: 'matches regex {{regex}}',
       variables: { regex },
@@ -141,7 +158,7 @@ export class StringRule<
     });
   }
 
-  static doesNotMatchRegex(regex: RegExp) {
+  static doesNotMatchRegex(regex?: RegExp) {
     return new StringRule<string>({
       description: 'does not match regex {{regex}}',
       variables: { regex },
@@ -151,7 +168,7 @@ export class StringRule<
     });
   }
 
-  static lengthEqual(value: number) {
+  static lengthEqual(value?: number) {
     return new StringRule<string>({
       description: 'length equal to {{value}}',
       variables: { value },
@@ -161,7 +178,7 @@ export class StringRule<
     });
   }
 
-  static lengthNotEqual(value: number) {
+  static lengthNotEqual(value?: number) {
     return new StringRule<string>({
       description: 'length not equal to {{value}}',
       variables: { value },
@@ -171,7 +188,7 @@ export class StringRule<
     });
   }
 
-  static lengthGreaterThan(value: number) {
+  static lengthGreaterThan(value?: number) {
     return new StringRule<string>({
       description: 'length greater than {{value}}',
       variables: { value },
@@ -181,7 +198,7 @@ export class StringRule<
     });
   }
 
-  static lengthLessThan(value: number) {
+  static lengthLessThan(value?: number) {
     return new StringRule<string>({
       description: 'length less than {{value}}',
       variables: { value },
@@ -191,7 +208,7 @@ export class StringRule<
     });
   }
 
-  static lengthGreaterThanOrEqual(value: number) {
+  static lengthGreaterThanOrEqual(value?: number) {
     return new StringRule<string>({
       description: 'length greater than or equal {{value}}',
       variables: { value },
@@ -201,7 +218,7 @@ export class StringRule<
     });
   }
 
-  static lengthLessThanOrEqual(value: number) {
+  static lengthLessThanOrEqual(value?: number) {
     return new StringRule<string>({
       description: 'length less than or equal {{value}}',
       variables: { value },

@@ -23,7 +23,11 @@ export type DropdownButtonProps = {
     activeBorderColor?: string;
     activeBackgroundColor?: string;
   };
-  onDropDownMenuClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  additionalKwargs?: any;
+  onDropDownMenuClick?: (
+    event: React.MouseEvent<HTMLElement>,
+    additionalKwargs?: any,
+  ) => void;
 };
 
 export type DropdownMenuItemProps = {

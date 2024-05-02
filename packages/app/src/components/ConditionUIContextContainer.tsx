@@ -1,28 +1,45 @@
-import React, { FC, memo, useEffect, useRef, useState } from 'react';
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { DN100, DN0, N0 } from '@atlaskit/theme/colors';
+import { DN100, DN0, N0, N10 } from '@atlaskit/theme/colors';
 import styled from '@emotion/styled';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import { css } from '@mui/material';
 import clsx from 'clsx';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { DropdownButton } from './DropdownButton';
+import { GuardrailHub } from './GuardrailHub';
 import { Icon } from './Icon';
+import { Modal } from './Modal';
 import { KnownNodeContentBody } from './NodeContentBody';
+import { RuleCollectionEditor } from './RuleCollectionEditor';
 import { useStableCallback } from '../hooks/useStableCallback';
-import { editingCodeIdState } from '../state/editor';
-import { editingNodeIdState } from '../state/node';
-import { UIContext } from '../types/studio.type';
+import {
+  registeredGuardrailsState,
+  selectingGuardrailIdsState,
+} from '../state/guardrail';
+import {
+  Guardrail,
+  Node,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+  SerializedRule,
+  SerializedRuleCollection,
+  UIContext,
+} from '../types/studio.type';
 import {
   ConditionUIContextContainerProps,
   ConditionUIContextItemProps,
 } from '../types/uicontext.type';
-import { hexToRgba } from '../utils/colorConverter';
+import { isNotNull } from '../utils/safeTypes';
 
 const ConditionUIContainer = styled.div`
   align-self: stretch;
@@ -228,23 +245,83 @@ const ConditionUIContainer = styled.div`
   }
 `;
 
+const GuardrailHubTags = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  gap: 5px;
+  user-select: none;
+
+  .guardrail-tag {
+    display: flex;
+    flex-shrink: 1;
+    gap: 3px;
+    border-radius: 4px;
+
+    align-items: center;
+
+    padding: 1px 2px;
+    border: 1px solid var(--text-color-2);
+
+    &:hover {
+      border: 1px solid var(--primary-color);
+      background: var(--primary-color-1);
+      color: ${N10};
+    }
+  }
+
+  .guardrail-tag-index {
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+    width: 14px;
+    height: 14px;
+    background: var(--node-background-color);
+    color: var(--text-color);
+    font-size: 11px;
+    font-weight: 700;
+    diaplay: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .guardrail-tag-type {
+    display: flex;
+    padding: 0 2px;
+    height: 14px;
+    font-size: 11px;
+    font-weight: 700;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 4px;
+    border: 1px solid var(--text-color-accent-4);
+    background: var(--node-background-color);
+    color: var(--text-color-accent-4);
+    text-transform: uppercase;
+    word-wrap: break-word;
+  }
+
+  .guardrail-tag-name {
+    font-size: 11px;
+  }
+`;
+
 export const ConditionUIContextContainer: FC<ConditionUIContextContainerProps> =
   memo(
     ({
       node,
       uiType,
-      subject,
-      properties,
+      target,
+      sources,
       when,
       otherwiseWhen,
       otherwise,
     }: ConditionUIContextContainerProps) => {
-      const setEditingNodeId = useSetRecoilState(editingNodeIdState);
-      const setEditingCodeId = useSetRecoilState(editingCodeIdState);
       const [
         selectedEditableConditionIndex,
         setSelectedEditableConditionIndex,
       ] = useState<number | undefined>();
+      const [openEditorModal, setOpenEditorModal] = useState<boolean>(false);
 
       const onEditableConditionClick = useStableCallback(
         (e: React.MouseEvent) => {
@@ -252,8 +329,6 @@ export const ConditionUIContextContainer: FC<ConditionUIContextContainerProps> =
           e.stopPropagation();
 
           const index = e.currentTarget.getAttribute('data-label');
-          // setEditingNodeId(undefined);
-          // setEditingCodeId(undefined);
 
           if (index !== null) {
             console.log(`onEditableConditionClick: index: ${+index}`);
@@ -267,54 +342,169 @@ export const ConditionUIContextContainer: FC<ConditionUIContextContainerProps> =
         },
       );
 
-      return (
-        <ConditionUIContainer>
-          <div className="ui-context-key">
-            <span className={clsx('output-port', 'port-label')}>{subject}</span>
-          </div>
-          <div className="ui-context-container">
-            <ConditionUIContextItem
-              key={`when-${0}`}
-              type={'if'}
-              node={node}
-              condition={when}
-              properties={properties}
-              index={0}
-              selectedIndex={selectedEditableConditionIndex}
-              showOtherwiseWhen
-              showOtherwise={otherwise === undefined}
-              onConditionClick={onEditableConditionClick}
-            />
+      const onConditionEditorClick = useCallback(
+        (n: Node, ui: UIContext, id: string) => {
+          setOpenEditorModal(true);
+          console.log(
+            `onConditionEditorClick: openEditorModal - ${openEditorModal}`,
+          );
+        },
+        [],
+      );
 
-            {otherwiseWhen?.map((ow, index) => (
+      const onDummyClick = useCallback(() => {
+        console.log('Opening modal');
+        setOpenEditorModal(true);
+      }, [setOpenEditorModal]);
+
+      const onDummyClose = useCallback(() => {
+        setOpenEditorModal(false);
+      }, [setOpenEditorModal]);
+
+      const registeredGuardrails = useRecoilValue(registeredGuardrailsState);
+      const [selectingGuardrailIds, setSelectingGuardrailIds] = useRecoilState(
+        selectingGuardrailIdsState,
+      );
+      const [selectingGuardDisplayData, setSelectingGuardDisplayData] =
+        useState<
+          Array<{
+            index: number;
+            type: string;
+            name: string;
+          }>
+        >([]);
+
+      useEffect(() => {
+        const guardrails: Guardrail[] = Object.values(registeredGuardrails);
+
+        setSelectingGuardDisplayData(
+          selectingGuardrailIds
+            .map((id, index) => {
+              const guardrail: Guardrail | undefined = guardrails.find(
+                (g) => g.id === id,
+              );
+
+              if (guardrail) {
+                return {
+                  index,
+                  type: guardrail.type,
+                  name: guardrail.name,
+                };
+              } else {
+                return null;
+              }
+            })
+            .filter(isNotNull),
+        );
+      }, [selectingGuardrailIds, registeredGuardrails]);
+
+      const updateIfNode = (
+        n: Node,
+        newRuleCollection: SerializedRule | SerializedRuleCollection,
+      ) => {
+        // TODO: Update the if node data based on the new rule collection
+      };
+
+      return (
+        <>
+          <ConditionUIContainer>
+            <div className="ui-context-key">
+              <span className={clsx('output-port', 'port-label')}>
+                {target}
+              </span>
+            </div>
+            <div className="ui-context-container">
               <ConditionUIContextItem
-                key={`when-${index + 1}`}
-                type={'else-if'}
+                key={`when-${0}`}
+                type={'if'}
                 node={node}
-                condition={ow}
-                properties={properties}
-                index={index + 1}
+                condition={when}
+                sources={sources}
+                index={0}
                 selectedIndex={selectedEditableConditionIndex}
                 showOtherwiseWhen
                 showOtherwise={otherwise === undefined}
                 onConditionClick={onEditableConditionClick}
+                onConditionEditorClick={onConditionEditorClick}
               />
-            ))}
 
-            {otherwise && (
-              <ConditionUIContextItem
-                key={`when-${otherwiseWhen ? otherwiseWhen.length + 1 : 1}`}
-                type={'otherwise'}
-                node={node}
-                condition={otherwise}
-                properties={properties}
-                index={otherwiseWhen ? otherwiseWhen.length + 1 : 1}
-                selectedIndex={selectedEditableConditionIndex}
-                onConditionClick={onEditableConditionClick}
-              />
-            )}
-          </div>
-        </ConditionUIContainer>
+              {otherwiseWhen?.map((ow, index) => (
+                <ConditionUIContextItem
+                  key={`when-${index + 1}`}
+                  type={'else-if'}
+                  node={node}
+                  condition={ow}
+                  sources={sources}
+                  index={index + 1}
+                  selectedIndex={selectedEditableConditionIndex}
+                  showOtherwiseWhen
+                  showOtherwise={otherwise === undefined}
+                  onConditionClick={onEditableConditionClick}
+                  onConditionEditorClick={onConditionEditorClick}
+                />
+              ))}
+
+              {otherwise && (
+                <ConditionUIContextItem
+                  key={`when-${otherwiseWhen ? otherwiseWhen.length + 1 : 1}`}
+                  type={'otherwise'}
+                  node={node}
+                  condition={otherwise}
+                  sources={sources}
+                  index={otherwiseWhen ? otherwiseWhen.length + 1 : 1}
+                  selectedIndex={selectedEditableConditionIndex}
+                  onConditionClick={onEditableConditionClick}
+                  onConditionEditorClick={onConditionEditorClick}
+                />
+              )}
+            </div>
+          </ConditionUIContainer>
+
+          <button onClick={onDummyClick}>Open Modal</button>
+
+          {/* <EditorModal open={openEditorModal} /> */}
+
+          <Modal
+            open={openEditorModal}
+            title={'If Condition Editor'}
+            showCloseIcon
+            disableEnforceFocus
+            disableAutoFocus
+            onClose={onDummyClose}
+          >
+            <>
+              {when.metadata !== undefined && (
+                <RuleCollectionEditor
+                  sources={sources}
+                  ruleCollection={when.metadata}
+                  onRuleCollectionUpdate={useStableCallback(
+                    (
+                      newRuleCollection:
+                        | SerializedRule
+                        | SerializedRuleCollection,
+                    ) => updateIfNode(node, newRuleCollection),
+                  )}
+                />
+              )}
+
+              <GuardrailHubTags>
+                {selectingGuardDisplayData.map((gData, idx) => (
+                  <div className="guardrail-tag" key={idx}>
+                    <div className="guardrail-tag-index">
+                      <code>{gData.index + 1}</code>
+                    </div>
+                    <div className="guardrail-tag-type">
+                      <pre className="pre-wrap">{gData.type.slice(0, 3)}</pre>
+                    </div>
+                    <div>{gData.name}</div>
+                  </div>
+                ))}
+              </GuardrailHubTags>
+
+              <GuardrailHub />
+            </>
+          </Modal>
+        </>
       );
     },
   );
@@ -325,21 +515,31 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
   type,
   node,
   condition,
-  properties,
+  sources,
   index,
   selectedIndex,
   showOtherwiseWhen,
   showOtherwise,
   onConditionClick,
+  onConditionEditorClick,
 }: ConditionUIContextItemProps) => {
-  const [target, setTarget] = useState<string | undefined>();
-  const uiContext: Extract<UIContext, { type: 'code' }> = {
-    type: 'code',
-    text: condition.description ?? '',
-    language: 'encre-code',
-    keywords: ['AND', 'OR'],
-    properties,
-  };
+  const [source, setSource] = useState<string | undefined>();
+  const uiContext: Extract<UIContext, { type: 'code' }> =
+    condition.type === 'otherwise'
+      ? {
+          type: 'code',
+          text: '',
+          language: 'encre-code',
+          keywords: ['AND', 'OR'],
+          properties: sources,
+        }
+      : {
+          type: 'code',
+          text: condition.description ?? '',
+          language: 'encre-code',
+          keywords: ['AND', 'OR'],
+          properties: sources,
+        };
 
   const onDropDownMenuClick = useStableCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -347,21 +547,19 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
 
     const idx = e.currentTarget.getAttribute('data-label');
 
-    if (idx !== null && +idx < properties.length) {
-      const property: string = properties[+idx];
+    if (idx !== null && +idx < sources.length) {
+      const property: string = sources[+idx];
 
       console.log(`property: ${property}`);
-      setTarget(property);
+      setSource(property);
 
       // TODO: update condition target
     }
   });
 
-  const onEditorClick = useStableCallback((n: Node, ui: UIContext) => {});
-
   useEffect(() => {
-    setTarget(condition.target);
-  }, [condition.target]);
+    setSource(condition.source);
+  }, [condition.source]);
 
   return (
     <>
@@ -391,8 +589,8 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
           </div>
 
           <DropdownButton
-            name={target ?? ''}
-            items={properties.map((p) => ({ name: p }))}
+            name={source ?? ''}
+            items={sources.map((p) => ({ name: p }))}
             showIcon={false}
             styling={{
               width: 30,
@@ -472,7 +670,11 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
 
       {selectedIndex !== undefined && selectedIndex === index ? (
         <div className="ui-context-editor">
-          <KnownNodeContentBody node={node} uiContexts={[uiContext]} />
+          <KnownNodeContentBody
+            node={node}
+            uiContexts={[uiContext]}
+            onEditorClick={onConditionEditorClick}
+          />
         </div>
       ) : null}
     </>
