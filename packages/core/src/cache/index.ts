@@ -19,7 +19,7 @@ export class MemoryCache<T = Generation[]> extends BaseCache<T> {
     this._cache.set(getCacheKey(keysStr), value);
   }
 
-  static global(): MemoryCache {
+  static global<T>(): MemoryCache<T> {
     return new MemoryCache(GLOBAL_MAP);
   }
 }
