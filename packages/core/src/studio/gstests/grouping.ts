@@ -3,6 +3,7 @@ import { RecordId } from '../../load/keymap';
 import { SubGraph } from '../graph';
 import { NodeConnection } from '../nodes';
 import { globalNodeRegistry } from '../registration/nodes';
+import { group } from 'console';
 
 
 const pdfLoaderNode = globalNodeRegistry.createDynamic('loader', 'pdf');
@@ -54,6 +55,7 @@ export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>, nod
 
     for (const input of Object.values(startPorts)) {
         q.push(input.nodeId);
+        group_set.push([input.nodeId]);
     }
 
     while (q.length > 0) {
@@ -64,13 +66,16 @@ export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>, nod
         const connections = nodeConMap[node];
         for(const connection of connections) {
             if(connection.fromNodeId == node){
+                console.log("connection.fromNodeId == node");
                 const toNode = connection.toNodeId;
                 q.push(toNode);
+                console.log("toNode is:", toNode);
                 if (inDegreeVec[toNode]) {
                     inDegreeVec[toNode]++;
                 } else {
                     inDegreeVec[toNode] = 1;
                     group_set.push([toNode]);
+                    // console.log("group_set is:", group_set);
                 }
             }
         }
@@ -97,6 +102,8 @@ export function init_graph(workflow: SubGraph, group_set: Array<RecordId[]>, nod
  * @returns The set that contains the node, or undefined if not found.
  */
 function findSet(node: RecordId, groupSet: Array<RecordId[]>): RecordId[] | undefined {
+    console.log("in findSet, node is:", node);
+    console.log("in findSet, groupSet is:", groupSet);
     for (const group of groupSet) {
         if (group.includes(node)) {
             return group;
@@ -181,22 +188,26 @@ const GOUP_LIMIT = 10;
  * @param groupSet - The array of group sets.
  * @returns A boolean indicating whether the nodes can be merged.
  */
-function mergeable(node1: RecordId, node2: RecordId, workflow:SubGraph,  groupSet: Array<RecordId>[], nodeInfo: { [key: number]: number }): boolean {
+function mergeable(node1: RecordId, node2: RecordId, workflow: SubGraph, groupSet: Array<RecordId[]>, nodeInfo: { [key: number]: number }): [boolean, Array<RecordId[]>]{
+    console.log("mergeable");
     const nodeSet1 = findSet(node1, groupSet);
     if(!nodeSet1){
-        return true;
+        console.log("node set 1 is not found");
+        return [false, groupSet];
     }
     if(nodeSet1?.includes(node2)){
-        return false;
+        console.log("node set 1 includes node 2");
+        return [false, groupSet];
     }
     const nodeSet2 = findSet(node2, groupSet);
     if(!nodeSet2){
-        return true;
+        console.log("node set 2 is not found");
+        return [false, groupSet];
     }
     //check if the group limit is reached
-    if(nodeSet1.length + nodeSet2.length > GOUP_LIMIT){
-        return false;
-    }
+    // if(nodeSet1.length + nodeSet2.length > GOUP_LIMIT){
+    //     return false;
+    // }
     //check scale limit
     const newNodeInfo = { ...nodeInfo };
     const nodeSet1Scale = groupScale.get(nodeSet1); 
@@ -218,14 +229,22 @@ function mergeable(node1: RecordId, node2: RecordId, workflow:SubGraph,  groupSe
         }
     }
     if(bestFitAddr == -1){
-        return false;
+        return [false, groupSet];
     }
     
     //check memroy limit: skip for now, because we are running locally
 
     //merge sets and apdate scale
+    console.log("node set 1 is:", nodeSet1);
+    console.log("node set 2 is:", nodeSet2);
+    
     const newGroupSet = [...nodeSet1, ...nodeSet2];
+    console.log("new group set to be added is:", newGroupSet);
+    console.log("before merge, the groupSet is:", groupSet);
+    groupSet = groupSet.filter(set => set !== nodeSet1);
+    groupSet = groupSet.filter(set => set !== nodeSet2);
     groupSet.push(newGroupSet);
+    console.log("after merge, the groupSet is:", groupSet);
     groupIp.set(newGroupSet, bestFitAddr);
     if(nodeSet1Scale){
         nodeInfo[bestFitAddr] -= nodeSet1Scale;
@@ -244,13 +263,13 @@ function mergeable(node1: RecordId, node2: RecordId, workflow:SubGraph,  groupSe
     if(nodeIdx2){  
         nodeInfo[nodeIdx2] += nodeSet2Scale? nodeSet2Scale : 0;
     }
-    groupSet = groupSet.filter(set => set !== nodeSet1);
-    groupSet = groupSet.filter(set => set !== nodeSet2);
+    // groupSet = groupSet.filter(set => set !== nodeSet1);
+    // groupSet = groupSet.filter(set => set !== nodeSet2);
     groupIp.delete(nodeSet1);
     groupIp.delete(nodeSet2);
     groupScale.delete(nodeSet1);
     groupScale.delete(nodeSet2);
-    return true;
+    return [true, groupSet];
 }
 
 /**
@@ -262,16 +281,18 @@ function mergeable(node1: RecordId, node2: RecordId, workflow:SubGraph,  groupSe
  * @param groupSet - The array of group sets.
  * @returns A boolean indicating whether the paths were successfully merged.
  */
-function mergePath(critVec:{[name: RecordId]: [RecordId, number]}, workflow: SubGraph, nodeInfo: { [key: number]: number }, groupSet: Array<RecordId[]>): boolean {
+function mergePath(critVec:{[name: RecordId]: [RecordId, number]}, workflow: SubGraph, nodeInfo: { [key: number]: number }, groupSet: Array<RecordId[]>): [boolean, Array<RecordId[]>] {
+    console.log("merge path");
     for(const [key, value] of Object.entries(critVec)){
         const sourceNode = key as RecordId;
         const targetNode = value[0] as RecordId;
-        if(mergeable(sourceNode, targetNode, workflow, groupSet, nodeInfo)){
-            return false;
+        const [ismergeable, newGroupSet] = mergeable(sourceNode, targetNode, workflow, groupSet, nodeInfo);
+        if(ismergeable){
+            console.log("mergeable");
+            return [true, newGroupSet];
         }
     }
-    // return true;
-    return false;
+    return [false, groupSet];
     
 }
 
@@ -317,10 +338,12 @@ function isNodeIdInStartPorts(nodeId: RecordId, startPorts: Record<string, { nod
  * @returns An array containing the grouped nodes and the critical path function.
  */
 export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }): [Array<Array<RecordId>>, Array<RecordId>] {
-    const groupSet: Array<Array<RecordId>> = [];
+    let groupSet: Array<Array<RecordId>> = [];
     let criticalPathFunction: RecordId[] = [];
+    console.log("grouping");
     const inDegreeVec = init_graph(workflow, groupSet, nodeInfo);
     for (;;) {
+        console.log("in grouping, groupset length is:", groupSet.length);
         if (groupSet.length == 1){
             break;
         }
@@ -352,9 +375,16 @@ export function grouping(workflow: SubGraph, nodeInfo: { [key: number]: number }
             criticalPathFunction.push(key as RecordId);
             criticalPathFunction.push(value[0] as RecordId);
         }
-        if(!mergePath(sortedCritVec, workflow, nodeInfo, groupSet)){
+        const [isMerged, newgroupSet] = mergePath(sortedCritVec, workflow, nodeInfo, groupSet);
+        if(isMerged){
+            groupSet = newgroupSet;
+        }else{
             break;
         }
+        // if(!mergePath(sortedCritVec, workflow, nodeInfo, groupSet)){
+        //     console.log("cannot merge");
+        //     break;
+        // }
     }
 
     return [groupSet, criticalPathFunction];
