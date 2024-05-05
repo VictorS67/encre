@@ -459,15 +459,15 @@ describe('information stored in serializable', () => {
     ).toBeTruthy();
 
     expect(
-      anotherCallableMap.getAttributes().metadata.callables?.steps['first']
+      anotherCallableMap.getAttributes().metadata.callables?.steps!['first']
     ).toStrictEqual(simpleCallable1.getAttributes());
 
     expect(
-      anotherCallableMap.getAttributes().metadata.callables?.steps['second']
+      anotherCallableMap.getAttributes().metadata.callables?.steps!['second']
     ).toStrictEqual(simpleCallable2.getAttributes());
 
     expect(
-      anotherCallableMap.getAttributes().metadata.callables?.steps['third']
+      anotherCallableMap.getAttributes().metadata.callables?.steps!['third']
     ).toStrictEqual(simpleCallable3.getAttributes());
   });
 
@@ -713,11 +713,11 @@ describe('information stored in serializable', () => {
     ).toStrictEqual(simpleCallable1.getAttributes());
 
     expect(
-      anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks[0]
+      anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks![0]
     ).toStrictEqual(fallbackCallable2.getAttributes());
 
     expect(
-      anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks[1]
+      anotherCallableWithFallbacks.getAttributes().metadata.callables?.fallbacks![1]
     ).toStrictEqual(fallbackCallable3.getAttributes());
   });
 
@@ -864,7 +864,7 @@ describe('information stored in serializable', () => {
     ).toStrictEqual(simpleCallable1.getAttributes());
 
     expect(
-      anotherCallableSequence.getAttributes().metadata.callables?.middle[0]
+      anotherCallableSequence.getAttributes().metadata.callables?.middle![0]
     ).toStrictEqual(simpleCallable2.getAttributes());
 
     expect(

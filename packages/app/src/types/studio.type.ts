@@ -174,6 +174,14 @@ export function getNodeTypes() {
   return ['loader', 'message', 'prompt', 'splitter', 'llm', 'chatlm'];
 }
 
+export interface Guardrail {
+  id: string;
+  name: string;
+  detail: string;
+  type: string;
+  dataType: DataType | Readonly<DataType[]>;
+}
+
 /**
  * Creates a tuple ensuring at least one instance of each specified string literal type.
  *
@@ -374,6 +382,8 @@ export type CodeUIContext = {
 
   language?: string;
   keywords?: string[];
+  properties?: string[];
+  variables?: string[];
   isHoldingValues?: boolean;
 };
 
@@ -424,6 +434,59 @@ export type FileUIContext = {
   data: Uint8Array;
 };
 
+export type SerializedRuleMetadata = {
+  left: SerializedRule;
+  right?: SerializedRule;
+  conjunction: 'and' | 'or';
+};
+
+export type SerializedRule = {
+  _type: 'rule';
+  _ruleType: string;
+  description: string;
+  func: string;
+  variables?: Record<string, unknown>;
+  metadata?: SerializedRuleMetadata;
+};
+
+export type SerializedRuleCollection = {
+  _type: 'rule-collection';
+  description: string;
+  collection: Record<string, SerializedRule | SerializedRuleCollection>;
+  conjunction: 'and' | 'or';
+};
+
+export type IfConditionUI = {
+  type: 'if';
+  description?: string;
+  metadata?: SerializedRuleCollection;
+  source?: string;
+};
+
+export type ElseIfConditionUI = {
+  type: 'else-if';
+  description?: string;
+  metadata?: SerializedRuleCollection;
+  source?: string;
+};
+
+export type OtherwiseConditionUI = {
+  type: 'otherwise';
+  source?: string;
+};
+
+export type ConditionUI =
+  | IfConditionUI
+  | ElseIfConditionUI
+  | OtherwiseConditionUI;
+
+export type ConditionUIContext = {
+  type: 'condition';
+  target: string;
+  sources: string[];
+  conditions: ConditionUI[];
+};
+
 export type UIContext = BaseUIContext &
   (
     | PlainUIContext
@@ -435,6 +498,7 @@ export type UIContext = BaseUIContext &
     | ImageUIContext
     | AudioUIContext
     | FileUIContext
+    | ConditionUIContext
   );
 
 export const UIDataTypesMap: Record<DataType, UIContext['type']> = {

@@ -2,6 +2,12 @@ import { match } from 'ts-pattern';
 import { ContentLike, MessageRole } from '../../events/input/load/msgs/base.js';
 import { SecretFields } from '../../load/keymap.js';
 import {
+  ConditionField,
+  ConditionFieldVariables,
+  ElseConditionField,
+  IfConditionField,
+} from '../condition.js';
+import {
   BlobData,
   BooleanData,
   ChatMessageData,
@@ -32,7 +38,46 @@ import {
   audioTypes,
   fileTypes,
   imageTypes,
+  ConditionUIContext,
+  ConditionUI,
 } from '../ui.js';
+
+export async function displayConditionUI(
+  sources: string[],
+  actions: {
+    [target: string]: [IfConditionField, ...ElseConditionField[]];
+  }
+): Promise<ConditionUIContext[]> {
+  const conditionGrp: [string, ConditionField[]][] = Object.entries(actions);
+
+  const uiContexts = [] as ConditionUIContext[];
+  for (const [target, conditionFields] of conditionGrp) {
+    const conditions: ConditionUI[] = [];
+    for (let i = 0; i < conditionFields.length; i++) { 
+      const cond: ConditionField = conditionFields[i];
+      const condUI: ConditionUI = cond.type === 'otherwise' ? {
+        type: cond.type,
+        source: cond.source,
+      } :{
+        type: cond.type,
+        description: cond.ruleCollection.getCleanDescription(),
+        metadata: cond.ruleCollection.serialize(),
+        source: cond.source,
+      };
+      
+      conditions.push(condUI);
+    }
+
+    uiContexts.push({
+      type: 'condition',
+      target,
+      sources,
+      conditions
+    });
+  }
+
+  return uiContexts;
+};
 
 export async function displayUIFromDataFields(
   dataFields: DataFields

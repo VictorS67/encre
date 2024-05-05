@@ -296,6 +296,11 @@
       "import": "./studio/graph.js",
       "require": "./studio/graph.cjs"
     },
+    "./studio/condition": {
+      "types": "./studio/condition.d.ts",
+      "import": "./studio/condition.js",
+      "require": "./studio/condition.cjs"
+    },
     "./studio/nodes": {
       "types": "./studio/nodes.d.ts",
       "import": "./studio/nodes.js",
@@ -340,6 +345,11 @@
       "types": "./studio/nodes/utility/graph.d.ts",
       "import": "./studio/nodes/utility/graph.js",
       "require": "./studio/nodes/utility/graph.cjs"
+    },
+    "./studio/nodes/utility/if": {
+      "types": "./studio/nodes/utility/if.d.ts",
+      "import": "./studio/nodes/utility/if.js",
+      "require": "./studio/nodes/utility/if.cjs"
     },
     "./studio/utils/coerce": {
       "types": "./studio/utils/coerce.d.ts",
@@ -490,6 +500,9 @@
     "studio/graph.cjs",
     "studio/graph.js",
     "studio/graph.d.ts",
+    "studio/condition.cjs",
+    "studio/condition.js",
+    "studio/condition.d.ts",
     "studio/nodes.cjs",
     "studio/nodes.js",
     "studio/nodes.d.ts",
@@ -517,6 +530,9 @@
     "studio/nodes/utility/graph.cjs",
     "studio/nodes/utility/graph.js",
     "studio/nodes/utility/graph.d.ts",
+    "studio/nodes/utility/if.cjs",
+    "studio/nodes/utility/if.js",
+    "studio/nodes/utility/if.d.ts",
     "studio/utils/coerce.cjs",
     "studio/utils/coerce.js",
     "studio/utils/coerce.d.ts",

@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
+import { useEditorClick } from '../hooks/useEditorClick';
 import { useGlobalHotkey } from '../hooks/useGlobalHotkey';
 import {
   isDraggingMultipleNodesState,
@@ -11,6 +12,7 @@ import {
   isDraggingCommentsOnlyState,
   isDraggingMultipleCommentsState,
 } from '../state/comment';
+import { editingCodeIdState } from '../state/editor';
 import { isSelectingMultiWiresState } from '../state/wire';
 
 export const MouseIcon: FC = () => {
@@ -27,17 +29,28 @@ export const MouseIcon: FC = () => {
   const setIsSelectingMultiWires = useSetRecoilState(
     isSelectingMultiWiresState,
   );
+  const editingCodeId = useRecoilValue(editingCodeIdState);
 
   useGlobalHotkey(
     'Space',
-    (e: KeyboardEvent) => {
-      e.preventDefault();
-      setIsOnlyDraggingCanvas(true);
-    },
-    (e: KeyboardEvent) => {
-      e.preventDefault();
-      setIsOnlyDraggingCanvas(false);
-    },
+    useCallback(
+      (e: KeyboardEvent) => {
+        if (!editingCodeId) {
+          e.preventDefault();
+          setIsOnlyDraggingCanvas(true);
+        }
+      },
+      [editingCodeId],
+    ),
+    useCallback(
+      (e: KeyboardEvent) => {
+        if (!editingCodeId) {
+          e.preventDefault();
+          setIsOnlyDraggingCanvas(false);
+        }
+      },
+      [editingCodeId],
+    ),
   );
 
   useGlobalHotkey(

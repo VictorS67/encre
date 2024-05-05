@@ -1,32 +1,42 @@
-import { NodeImpl, NodeImplConstructor } from './base.js';
+import { NodeImpl } from '../nodes/base.js';
+import { SerializableNode } from '../nodes/index.js';
 import {
   GeminiChatNodeImpl,
   OpenAIChatNodeImpl,
-} from './inference/chat/chatlm.node.js';
-import { GeminiNodeImpl, OpenAINodeImpl } from './inference/chat/llm.node.js';
-import { PDFLoaderNodeImpl } from './input/loader.node.js';
+} from '../nodes/inference/chat/chatlm.node.js';
+import {
+  GeminiNodeImpl,
+  OpenAINodeImpl,
+} from '../nodes/inference/chat/llm.node.js';
+import { VariableValidatorNodeImpl } from '../nodes/inference/validate/validator.node.js';
+import { PDFLoaderNodeImpl } from '../nodes/input/loader.node.js';
 import {
   BotMessageNodeImpl,
   ChatMessageNodeImpl,
   FunctionMessageNodeImpl,
   HumanMessageNodeImpl,
   SystemMessageNodeImpl,
-} from './input/message.node.js';
+} from '../nodes/input/message.node.js';
 import {
   ChatPromptNodeImpl,
   StringPromptNodeImpl,
-} from './input/prompt.node.js';
+} from '../nodes/input/prompt.node.js';
 import {
   LanguageTextSplitterNodeImpl,
   RecursiveTextSplitterNodeImpl,
   TextSplitterNodeImpl,
   TokenTextSplitterNodeImpl,
-} from './input/splitter.node.js';
-import { SerializableNode } from './index.js';
+} from '../nodes/input/splitter.node.js';
+import { SubGraphNodeImpl } from '../nodes/utility/graph.node.js';
 
 type ExtractType<T> = T extends `${infer U}-${any}` ? U : never;
 
 type ExtractSubType<T> = T extends `${any}-${infer U}` ? U : never;
+
+export interface NodeImplConstructor<T extends SerializableNode> {
+  new (node: T): NodeImpl<T>;
+  create(args?: Record<string, unknown>): T;
+}
 
 export class NodeRegistration<
   NodeTypes extends string = never,
@@ -49,7 +59,7 @@ export class NodeRegistration<
 
   implsMap = {} as Record<
     string,
-    { impl: NodeImplConstructor<SerializableNode> }
+    { impl: NodeImplConstructor<SerializableNode>; init: SerializableNode }
   >;
 
   readonly nodeTypes = new Set<NodeTypes>();
@@ -97,6 +107,7 @@ export class NodeRegistration<
 
     newRegistration.implsMap[key] = {
       impl: impl as any,
+      init: node,
     };
 
     newRegistration.nodeTypes.add(type);
@@ -224,7 +235,8 @@ export function registerBuiltInNodes(registry: NodeRegistration) {
     .register(OpenAINodeImpl)
     .register(GeminiNodeImpl)
     .register(OpenAIChatNodeImpl)
-    .register(GeminiChatNodeImpl);
+    .register(GeminiChatNodeImpl)
+    .register(VariableValidatorNodeImpl);
 }
 
 let globalNodeRegistry = registerBuiltInNodes(new NodeRegistration());

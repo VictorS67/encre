@@ -81,6 +81,7 @@
       "src/studio/data.ts",
       "src/studio/processor.ts",
       "src/studio/graph.ts",
+      "src/studio/condition.ts",
       "src/studio/nodes/index.ts",
       "src/studio/nodes/base.ts",
       "src/studio/nodes/inference/chat/chatlm.node.ts",
@@ -90,6 +91,7 @@
       "src/studio/nodes/input/prompt.node.ts",
       "src/studio/nodes/input/splitter.node.ts",
       "src/studio/nodes/utility/graph.node.ts",
+      "src/studio/nodes/utility/if.node.ts",
       "src/studio/utils/coerce.ts",
       "src/utils/nanoid.ts"
     ]

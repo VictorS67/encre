@@ -11,10 +11,11 @@ import {
   ProcessInputMap,
   ProcessOutputMap,
 } from '../../processor.js';
+import { GuardrailRegistration } from '../../registration/guardrails.js';
+import { NodeRegistration } from '../../registration/nodes.js';
 import { SerializedNode } from '../../serde.js';
 import { CallableNodeImpl } from '../base.js';
 import { CallableNode, NodeConnection, SerializableNode } from '../index.js';
-import { NodeRegistration } from '../registration.js';
 
 export type GraphNode = CallableNode<'graph', BaseGraph>;
 
@@ -42,7 +43,10 @@ export abstract class GraphNodeImpl extends CallableNodeImpl<GraphNode> {
   static async deserialize(
     serialized: SerializedNode,
     values: Record<string, unknown> = {},
-    registry?: NodeRegistration
+    registry?: {
+      nodes?: NodeRegistration;
+      guardrails?: GuardrailRegistration;
+    }
   ): Promise<GraphNode> {
     const {
       id,
@@ -62,7 +66,7 @@ export abstract class GraphNodeImpl extends CallableNodeImpl<GraphNode> {
       throw new Error(`CANNOT deserialize this type in graph node: ${type}`);
     }
 
-    (data as SerializedConstructor)._kwargs['registry'] = registry;
+    (data as SerializedConstructor)._kwargs['registry'] = registry?.nodes;
     const subGraphStr = JSON.stringify(data);
     const subGraph = await load<SubGraph>(
       subGraphStr,
