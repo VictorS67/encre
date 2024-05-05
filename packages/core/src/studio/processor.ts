@@ -1,4 +1,5 @@
 import type { Opaque } from 'type-fest';
+import { RecordId } from '../load/keymap.js';
 
 import { Data, DataType } from './data.js';
 
@@ -21,6 +22,9 @@ export type ProcessContext = {
   graphInputs: Record<string, Data>;
 
   graphOutputs: Record<string, Data>;
+
+  // In the memory, we store callable options for CallableNodes
+  memory: Record<RecordId, unknown>;
 };
 
 /**
@@ -41,23 +45,32 @@ export function validateProcessDataFromPorts(
     const processValue: Data | undefined = processData[keyword];
     const portType: DataType | Readonly<DataType[]> = portFields[keyword];
 
-    // Check if this keyword can support multiple types of data
-    if (Array.isArray(portType)) {
-      // Return true if the process data value and the type are both empty.
-      if (!processValue) {
-        return portType.length === 0 || portType.some((t: DataType) => t === 'unknown');
-      }
+    return validateProcessData(processValue, portType);
+  });
+}
 
-      // Return true if there is some type in the type array that can be valid.
-      // TODO: think about if coerceTypeOptional can apply here
-      return portType.some((t: DataType) => processValue['type'] === t);
+export function validateProcessData(
+  processData: Data | undefined,
+  dataType: DataType | Readonly<DataType[]>
+): boolean {
+  // Check if this keyword can support multiple types of data
+  if (Array.isArray(dataType)) {
+    // Return true if the process data value and the type are both empty.
+    if (!processData) {
+      return (
+        dataType.length === 0 || dataType.some((t: DataType) => t === 'unknown')
+      );
     }
 
-    // Return false if the process data value is empty and the type is non-empty.
-    if (!processValue) return portType === 'unknown';
-
-    // Validate the types
+    // Return true if there is some type in the type array that can be valid.
     // TODO: think about if coerceTypeOptional can apply here
-    return processValue['type'] === portType;
-  });
+    return dataType.some((t: DataType) => processData['type'] === t);
+  }
+
+  // Return false if the process data value is empty and the type is non-empty.
+  if (!processData) return dataType === 'unknown';
+
+  // Validate the types
+  // TODO: think about if coerceTypeOptional can apply here
+  return processData['type'] === dataType;
 }

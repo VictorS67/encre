@@ -1,16 +1,15 @@
+import { SerializedRule } from '../../../../studio/serde.js';
 import { BaseRule } from './base.js';
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-export class NumberRule<
-  T extends unknown = number,
-> extends BaseRule<T> {
+export class NumberRule<T extends unknown = number> extends BaseRule<T> {
   _isSerializable = true;
 
   static _name(): string {
     return 'NumberRule';
   }
 
-  _ruleType(): string {
+  _ruleType(): 'number' {
     return 'number';
   }
 
@@ -21,16 +20,34 @@ export class NumberRule<
         rule as BaseRule,
         conjunction
       ),
-      variables: NumberRule._mergeVariables(
-        this as BaseRule,
-        rule as BaseRule
-      ),
+      variables: NumberRule._mergeVariables(this as BaseRule, rule as BaseRule),
       func: NumberRule._mergeFunc(
         this as BaseRule,
         rule as BaseRule,
         conjunction
       ),
+      metadata: NumberRule._mergeMetadata(
+        this as BaseRule,
+        rule as BaseRule,
+        conjunction
+      ),
     });
+  }
+
+  static async deserialize(
+    serialized: SerializedRule,
+    values?: Record<string, unknown>
+  ): Promise<NumberRule<number>> {
+    const numberRuleFields = {
+      description: serialized.description,
+      func: serialized.func,
+      variables: {
+        ...serialized.variables,
+        ...values,
+      },
+    };
+
+    return new NumberRule(numberRuleFields);
   }
 
   static exists() {
@@ -44,14 +61,14 @@ export class NumberRule<
 
   static doesNotExist() {
     return new NumberRule<number | undefined>({
-      description: "doesn't exist",
+      description: 'does not exist',
       func: async (input: number | undefined) => {
         return input === undefined;
       },
     });
   }
 
-  static isEqual(value: number) {
+  static isEqual(value?: number) {
     return new NumberRule<number>({
       description: 'is equal to {{value}}',
       variables: { value },
@@ -61,9 +78,9 @@ export class NumberRule<
     });
   }
 
-  static isNotEqual(value: number) {
+  static isNotEqual(value?: number) {
     return new NumberRule<number>({
-      description: "isn't equal to {{value}}",
+      description: 'is not equal to {{value}}',
       variables: { value },
       func: async (input: number, variables: { value: number }) => {
         return input !== variables.value;
@@ -71,7 +88,7 @@ export class NumberRule<
     });
   }
 
-  static isGreaterThan(value: number) {
+  static isGreaterThan(value?: number) {
     return new NumberRule<number>({
       description: 'is greater than {{value}}',
       variables: { value },
@@ -81,7 +98,7 @@ export class NumberRule<
     });
   }
 
-  static isLessThan(value: number) {
+  static isLessThan(value?: number) {
     return new NumberRule<number>({
       description: 'is less than {{value}}',
       variables: { value },
@@ -91,7 +108,7 @@ export class NumberRule<
     });
   }
 
-  static isGreaterThanOrEqual(value: number) {
+  static isGreaterThanOrEqual(value?: number) {
     return new NumberRule<number>({
       description: 'is greater than or equal {{value}}',
       variables: { value },
@@ -101,7 +118,7 @@ export class NumberRule<
     });
   }
 
-  static isLessThanOrEqual(value: number) {
+  static isLessThanOrEqual(value?: number) {
     return new NumberRule<number>({
       description: 'is less than or equal {{value}}',
       variables: { value },

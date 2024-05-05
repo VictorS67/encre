@@ -89,6 +89,7 @@ const entrypoints = {
   "studio/data": "studio/data",
   "studio/processor": "studio/processor",
   "studio/graph": "studio/graph",
+  "studio/condition": "studio/condition",
   // studio/nodes
   "studio/nodes": "studio/nodes/index",
   "studio/nodes/base": "studio/nodes/base",
@@ -103,6 +104,7 @@ const entrypoints = {
   "studio/nodes/input/splitter": "studio/nodes/input/splitter.node",
   // studio/nodes/utility
   "studio/nodes/utility/graph": "studio/nodes/utility/graph.node",
+  "studio/nodes/utility/if": "studio/nodes/utility/if.node",
   // studio/utils
   "studio/utils/coerce": "studio/utils/coerce",
   // utils
@@ -141,6 +143,7 @@ const reuqiresOptionalDependency = [,
   "events/inference/chat/chatlms/gemini",
   // studio
   "studio/graph",
+  "studio/condition",
 ];
 
 // const testExports = [

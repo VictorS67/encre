@@ -53,8 +53,8 @@ const File = styled.div`
 
 /* eslint-disable react/prop-types */
 export const FileNodeContentBody: FC<
-  { node: Node } & Extract<UIContext, { type: 'file' }>
-> = memo(({ node, mimeType, data }) => {
+  { node: Node; id: string } & Extract<UIContext, { type: 'file' }>
+> = memo(({ node, id, mimeType, data }) => {
   const FileIcon: SVGIcon = match(mimeType)
     .with('text/plain', () => AbcRoundedIcon)
     .with('text/html', () => HtmlIcon)

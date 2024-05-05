@@ -4,7 +4,6 @@ import {
   SerializedFields,
   SerializedKeyAlias,
 } from '../../load/keymap.js';
-import { Serializable, Serialized } from '../../load/serializable.js';
 import { SerializedCallableFields } from '../../record/callable.js';
 import { isNotNull } from '../../utils/safeTypes.js';
 import { DataFields } from '../data.js';
@@ -14,6 +13,8 @@ import {
   ProcessOutputMap,
   validateProcessDataFromPorts,
 } from '../processor.js';
+import { GuardrailRegistration } from '../registration/guardrails.js';
+import { NodeRegistration } from '../registration/nodes.js';
 import { SerializedNode } from '../serde.js';
 import { UIContext } from '../ui.js';
 import { coerceToData } from '../utils/coerce.js';
@@ -21,7 +22,6 @@ import {
   displayUIFromDataFields,
   displayUIFromSecretFields,
 } from '../utils/display.js';
-import { NodeRegistration } from './registration.js';
 import {
   CallableNode,
   NodeBody,
@@ -33,11 +33,6 @@ import {
   NodePortSizes,
   SerializableNode,
 } from './index.js';
-
-export interface NodeImplConstructor<T extends SerializableNode> {
-  new (node: T): NodeImpl<T>;
-  create(args?: Record<string, unknown>): T;
-}
 
 export abstract class NodeImpl<
   T extends SerializableNode,
@@ -231,7 +226,10 @@ export abstract class NodeImpl<
   static async deserialize(
     serialized: SerializedNode,
     values: Record<string, unknown> = {},
-    registry?: NodeRegistration
+    registry?: {
+      nodes?: NodeRegistration;
+      guardrails?: GuardrailRegistration;
+    }
   ): Promise<SerializableNode> {
     if (serialized._type !== 'node') {
       throw new Error(
@@ -243,6 +241,10 @@ export abstract class NodeImpl<
       case 'graph': {
         const { GraphNodeImpl } = await import('./utility/graph.node.js');
         return GraphNodeImpl.deserialize(serialized, values, registry);
+      }
+      case 'if': {
+        const { IfNodeImpl } = await import('./utility/if.node.js');
+        return IfNodeImpl.deserialize(serialized, values, registry);
       }
       case 'splitter': {
         const { SplitterNodeImpl } = await import('./input/splitter.node.js');

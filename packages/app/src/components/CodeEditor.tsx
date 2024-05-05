@@ -1,9 +1,11 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 import { debounce } from '@mui/material';
-import { useLatest } from 'ahooks';
+import { useLatest, useThrottleFn } from 'ahooks';
 import { useRecoilValue } from 'recoil';
 
+import { useStableCallback } from '../hooks/useStableCallback';
+import { editingCodeIdState } from '../state/editor';
 import { themeState } from '../state/settings';
 import { CodeEditorProps } from '../types/editor.type';
 import { getColorMode } from '../utils/colorMode';
@@ -11,19 +13,22 @@ import { defineSuggestions, defineTokens, monaco } from '../utils/monacoEditor';
 
 export const CodeEditor: FC<CodeEditorProps> = ({
   text,
-  language,
-  keywords,
+  language = 'encre-code',
+  keywords = [],
+  properties = [],
+  variables = [],
   fontSize,
   fontFamily,
   isReadOnly,
   autoFocus,
   showLineNumbers,
-  scrollBeyondLastLine,
+  scrollBeyondLastLine = false,
   theme,
   editorRef,
   onChange,
   onKeyDown,
 }: CodeEditorProps) => {
+  // const editingCodeId = useRecoilValue(editingCodeIdState);
   const editorContainer = useRef<HTMLDivElement>(null);
   const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
 
@@ -35,8 +40,6 @@ export const CodeEditor: FC<CodeEditorProps> = ({
   const [completionDisposable, setCompletionDisposable] =
     useState<monaco.IDisposable>();
 
-  const _keywords = keywords ?? [];
-
   useEffect(() => {
     return () => {
       if (
@@ -44,6 +47,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
         typeof tokenDisposable.dispose === 'function'
       ) {
         tokenDisposable.dispose();
+        setTokenDisposable(undefined);
       }
     };
   }, [tokenDisposable]);
@@ -55,6 +59,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
         typeof completionDisposable.dispose === 'function'
       ) {
         completionDisposable.dispose();
+        setCompletionDisposable(undefined);
       }
     };
   }, [completionDisposable]);
@@ -63,11 +68,13 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     if (!editorContainer.current) return;
 
     if (!tokenDisposable) {
-      setTokenDisposable(defineTokens(_keywords));
+      setTokenDisposable(defineTokens(keywords, properties, variables));
     }
 
     if (!completionDisposable) {
-      setCompletionDisposable(defineSuggestions(_keywords));
+      setCompletionDisposable(
+        defineSuggestions(keywords, properties, variables),
+      );
     }
 
     const colorMode: string | null = getColorMode();
@@ -79,6 +86,11 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     const editor = monaco.editor.create(editorContainer.current, {
       theme: actualTheme,
       lineNumbers: showLineNumbers ? 'on' : 'off',
+      suggestOnTriggerCharacters: true,
+      quickSuggestions: true,
+      parameterHints: {
+        enabled: true,
+      },
       automaticLayout: true,
       glyphMargin: false,
       folding: false,
@@ -99,6 +111,10 @@ export const CodeEditor: FC<CodeEditorProps> = ({
         horizontal: 'hidden',
         handleMouseWheel: false,
       },
+      padding: {
+        top: 0,
+        bottom: 0,
+      },
     });
 
     const onResize = () => {
@@ -111,6 +127,8 @@ export const CodeEditor: FC<CodeEditorProps> = ({
       });
     };
 
+    const contentHeight = editor.getContentHeight();
+    editorContainer.current.style.height = `${contentHeight}px`;
     editor.layout();
 
     const onResizeDebounced = debounce(onResize, 300);
@@ -118,6 +136,11 @@ export const CodeEditor: FC<CodeEditorProps> = ({
 
     editor.onDidChangeModelContent(() => {
       onChangeLatest.current?.(editor.getValue());
+      if (editorContainer.current) {
+        editorContainer.current.style.height = `${editor.getContentHeight()}px`;
+      }
+
+      editor.layout();
     });
 
     editorInstance.current = editor;
@@ -168,7 +191,14 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     <div
       ref={editorContainer}
       className="editor-container"
-      style={{ height: '100%' }}
+      style={{
+        minWidth: 0,
+        minHeight: 0,
+        display: 'flex',
+        flex: 1,
+        height: '100%',
+        width: '100%',
+      }}
     />
   );
 };

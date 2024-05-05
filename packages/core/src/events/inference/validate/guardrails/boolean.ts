@@ -1,16 +1,15 @@
+import { SerializedRule } from '../../../../studio/serde.js';
 import { BaseRule } from './base.js';
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-export class BooleanRule<
-  T extends unknown = boolean,
-> extends BaseRule<T> {
+export class BooleanRule<T extends unknown = boolean> extends BaseRule<T> {
   _isSerializable = true;
 
   static _name(): string {
     return 'BooleanRule';
   }
 
-  _ruleType(): string {
+  _ruleType(): 'boolean' {
     return 'boolean';
   }
 
@@ -30,7 +29,28 @@ export class BooleanRule<
         rule as BaseRule,
         conjunction
       ),
+      metadata: BooleanRule._mergeMetadata(
+        this as BaseRule,
+        rule as BaseRule,
+        conjunction
+      ),
     });
+  }
+
+  static async deserialize(
+    serialized: SerializedRule,
+    values?: Record<string, unknown>
+  ): Promise<BooleanRule<boolean>> {
+    const booleanRuleFields = {
+      description: serialized.description,
+      func: serialized.func,
+      variables: {
+        ...serialized.variables,
+        ...values,
+      },
+    };
+
+    return new BooleanRule(booleanRuleFields);
   }
 
   static exists() {
@@ -44,14 +64,14 @@ export class BooleanRule<
 
   static doesNotExist() {
     return new BooleanRule<boolean | undefined>({
-      description: "doesn't exist",
+      description: 'does not exist',
       func: async (input: boolean | undefined) => {
         return input === undefined;
       },
     });
   }
 
-  static isEqual(value: boolean) {
+  static isEqual(value?: boolean) {
     return new BooleanRule<boolean>({
       description: 'is equal to {{value}}',
       variables: { value },
@@ -61,9 +81,9 @@ export class BooleanRule<
     });
   }
 
-  static isNotEqual(value: boolean) {
+  static isNotEqual(value?: boolean) {
     return new BooleanRule<boolean>({
-      description: "isn't equal to {{value}}",
+      description: 'is not equal to {{value}}',
       variables: { value },
       func: async (input: boolean, variables: { value: boolean }) => {
         return input !== variables.value;

@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { NodeCanvas } from './NodeCanvas';
 import { useContextMenuNodeGraphHandler } from '../hooks/useContextMenuNodeGraphHandler';
+import { useEditorClick } from '../hooks/useEditorClick';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { commentsState, selectingCommentIdsState } from '../state/comment';
 import { nodesState, selectingNodeIdsState } from '../state/node';

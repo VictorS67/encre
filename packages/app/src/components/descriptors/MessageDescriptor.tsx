@@ -7,8 +7,8 @@ import { UIContextContainer } from '../UIContextContainer';
 
 /* eslint-disable react/prop-types */
 export const MessageNodeContentBody: FC<
-  { node: Node } & Extract<UIContext, { type: 'message' }>
-> = memo(({ node, content, kwargs, role, name }) => {
+  { node: Node; id: string } & Extract<UIContext, { type: 'message' }>
+> = memo(({ node, id, content, kwargs, role, name }) => {
   const editableLabels: Record<string, string> | null = useMemo(() => {
     return { name: name ?? '' };
   }, [name]);

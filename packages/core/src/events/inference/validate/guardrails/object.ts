@@ -1,16 +1,15 @@
-import { BaseRule } from './base';
+import { SerializedRule } from '../../../../studio/serde.js';
+import { BaseRule } from './base.js';
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-export class JSONObjectRule<
-  T extends unknown = object,
-> extends BaseRule<T> {
+export class JSONObjectRule<T extends unknown = object> extends BaseRule<T> {
   _isSerializable = true;
 
   static _name(): string {
     return 'JSONObjectRule';
   }
 
-  _ruleType(): string {
+  _ruleType(): 'object' {
     return 'object';
   }
 
@@ -30,7 +29,28 @@ export class JSONObjectRule<
         rule as BaseRule,
         conjunction
       ),
+      metadata: JSONObjectRule._mergeMetadata(
+        this as BaseRule,
+        rule as BaseRule,
+        conjunction
+      ),
     });
+  }
+
+  static async deserialize(
+    serialized: SerializedRule,
+    values?: Record<string, unknown>
+  ): Promise<JSONObjectRule<object>> {
+    const objectRuleFields = {
+      description: serialized.description,
+      func: serialized.func,
+      variables: {
+        ...serialized.variables,
+        ...values,
+      },
+    };
+
+    return new JSONObjectRule(objectRuleFields);
   }
 
   static exists() {
@@ -44,7 +64,7 @@ export class JSONObjectRule<
 
   static doesNotExist() {
     return new JSONObjectRule<object | undefined>({
-      description: "doesn't exist",
+      description: 'does not exist',
       func: async (input: object | undefined) => {
         return input === undefined;
       },
@@ -62,14 +82,14 @@ export class JSONObjectRule<
 
   static isNotEmpty() {
     return new JSONObjectRule<object>({
-      description: "isn't empty",
+      description: 'is not empty',
       func: async (input: object) => {
         return Object.keys(input).length !== 0;
       },
     });
   }
 
-  static isStrictlyEqual(value: object) {
+  static isStrictlyEqual(value?: object) {
     return new JSONObjectRule<object>({
       description: 'is equal to {{value}}',
       variables: { value },
@@ -106,9 +126,9 @@ export class JSONObjectRule<
     });
   }
 
-  static isNotStrictlyEqual(value: object) {
+  static isNotStrictlyEqual(value?: object) {
     return new JSONObjectRule<object>({
-      description: "isn't equal to {{value}}",
+      description: 'is not equal to {{value}}',
       variables: { value },
       func: async (input: object, variables: { value: object }) => {
         const isObject = (obj: any): boolean => {

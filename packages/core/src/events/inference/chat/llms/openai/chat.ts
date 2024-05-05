@@ -149,7 +149,7 @@ export class OpenAIChat<
 
     this.modelName = fields?.modelName ?? this.modelName;
 
-    if (!checkModelForOpenAIChat(this.modelName)) {
+    if (!fields.configuration && !checkModelForOpenAIChat(this.modelName)) {
       throw new Error(
         'model is not valid for OpenAIChat, please check openai model lists for chat completions'
       );

@@ -9,8 +9,10 @@ import { defineSuggestions, defineTokens, monaco } from '../utils/monacoEditor';
 
 export const SyntaxedText: FC<SyntaxedTextProps> = ({
   text,
-  language,
-  keywords,
+  language = 'encre-code',
+  keywords = [],
+  properties = [],
+  variables = [],
   theme,
   style,
 }) => {
@@ -46,13 +48,15 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
     };
   }, [completionDisposable]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!tokenDisposable) {
-      setTokenDisposable(defineTokens(keywords));
+      setTokenDisposable(defineTokens(keywords, properties, variables));
     }
 
     if (!completionDisposable) {
-      setCompletionDisposable(defineSuggestions(keywords));
+      setCompletionDisposable(
+        defineSuggestions(keywords, properties, variables),
+      );
     }
 
     const colorMode = getColorMode();

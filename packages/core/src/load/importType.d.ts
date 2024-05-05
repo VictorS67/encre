@@ -61,6 +61,9 @@ export interface OptionalImportMap {
   'studio/graph'?:
     | typeof import('./studio/graph.js')
     | Promise<typeof import('./studio/graph.js')>;
+  'studio/condition'?:
+    | typeof import('./studio/condition.js')
+    | Promise<typeof import('./studio/condition.js')>;
 }
 
 export interface SecretMap {

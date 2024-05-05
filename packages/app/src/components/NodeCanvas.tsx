@@ -40,6 +40,7 @@ import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingComment } from '../hooks/useDraggingComment';
 import { useDraggingNode } from '../hooks/useDraggingNode';
 import { useDraggingWire } from '../hooks/useDraggingWire';
+import { useEditorClick } from '../hooks/useEditorClick';
 import { useNodePortPositions } from '../hooks/usePortPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
@@ -257,6 +258,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     setContextMenu,
     handleContextMenu,
   } = useContextMenu();
+
+  useEditorClick();
 
   const nodesToDrag = useMemo(() => {
     return [...new Set([...draggingNodes, ...draggingNodesInComments])];
