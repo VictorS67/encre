@@ -1,16 +1,16 @@
 import {
   OpenAI as OpenAIClient,
   ClientOptions as OpenAIClientOptions,
-} from "openai";
-import type { RequestOptions as OpenAIClientRequestOptions } from "openai/core";
+} from 'openai';
+import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
+import { SecretFields, SerializedFields } from '../../load/keymap.js';
+import { getEnvironmentVariables } from '../../utils/environment.js';
+import { EmbedResult } from '../output/provide/embedresult.js';
 import {
   BaseEmbeddings,
   BaseEmbeddingsCallOptions,
   BaseEmbeddingsParams,
-} from "./base.js";
-import { EmbedResult } from "../output/provide/embedresult.js";
-import { SecretFields, SerializedFields } from "../../load/keymap.js";
-import { getEnvironmentVariables } from "../../utils/environment.js";
+} from './base.js';
 
 export interface OpenAIEmbeddingsParams extends BaseEmbeddingsParams {
   /**
@@ -44,7 +44,7 @@ export interface OpenAIEmbeddingsParams extends BaseEmbeddingsParams {
 }
 
 export interface OpenAIEmbeddingsCallOptions extends BaseEmbeddingsCallOptions {
-  encondingFormat?: "float" | "base64";
+  encondingFormat?: 'float' | 'base64';
 
   /**
    * Additional options to pass to the underlying axios request.
@@ -59,27 +59,27 @@ export class OpenAIEmbeddings<
   extends BaseEmbeddings<CallOptions>
   implements OpenAIEmbeddingsParams
 {
-  _isSerializable: boolean = true;
+  _isSerializable = true;
 
   get _secrets(): SecretFields | undefined {
     return {
-      openAIApiKey: "OPENAI_API_KEY",
-      organization: "OPENAI_ORGANIZATION",
+      openAIApiKey: 'OPENAI_API_KEY',
+      organization: 'OPENAI_ORGANIZATION',
     };
   }
 
   get _aliases(): SerializedFields | undefined {
     return {
-      modelName: "model",
-      openAIApiKey: "openai_api_key",
+      modelName: 'model',
+      openAIApiKey: 'openai_api_key',
     };
   }
 
   static _name(): string {
-    return "OpenAI";
+    return 'OpenAI';
   }
 
-  modelName: string = "text-embedding-ada-002";
+  modelName = 'text-embedding-ada-002';
 
   dimensions?: number | undefined;
 
@@ -105,7 +105,7 @@ export class OpenAIEmbeddings<
     }
   ) {
     fields = {
-      modelName: fields?.modelName ?? "text-embedding-ada-002",
+      modelName: fields?.modelName ?? 'text-embedding-ada-002',
       maxConcurrency: fields?.maxConcurrency ?? 2,
       maxRetries: fields?.maxRetries,
       dimensions: fields?.dimensions,
@@ -117,10 +117,10 @@ export class OpenAIEmbeddings<
     super(fields);
 
     this.openAIApiKey =
-      fields?.openAIApiKey ?? getEnvironmentVariables("OPENAI_API_KEY");
+      fields?.openAIApiKey ?? getEnvironmentVariables('OPENAI_API_KEY');
 
     if (!this.openAIApiKey) {
-      throw new Error("OpenAI API Key not found");
+      throw new Error('OpenAI API Key not found');
     }
 
     this.modelName = fields?.modelName ?? this.modelName;
@@ -133,7 +133,7 @@ export class OpenAIEmbeddings<
 
     this.organization =
       fields?.configuration?.organization ??
-      getEnvironmentVariables("OPENAI_ORGANIZATION");
+      getEnvironmentVariables('OPENAI_ORGANIZATION');
 
     this._clientOptions = {
       apiKey: this.openAIApiKey,
@@ -147,8 +147,8 @@ export class OpenAIEmbeddings<
   }
 
   getParams(
-    options?: this["SerializedCallOptions"]
-  ): Omit<OpenAIClient.EmbeddingCreateParams, "input"> {
+    options?: this['SerializedCallOptions']
+  ): Omit<OpenAIClient.EmbeddingCreateParams, 'input'> {
     return {
       model: this.modelName,
       dimensions: this.dimensions,
@@ -157,7 +157,7 @@ export class OpenAIEmbeddings<
     };
   }
 
-  _identifyParams(): Omit<OpenAIClient.EmbeddingCreateParams, "input"> & {
+  _identifyParams(): Omit<OpenAIClient.EmbeddingCreateParams, 'input'> & {
     model_name: string;
   } & OpenAIClientOptions {
     return {
@@ -169,7 +169,7 @@ export class OpenAIEmbeddings<
 
   async _embed(
     document: string,
-    options: this["SerializedCallOptions"]
+    options: this['SerializedCallOptions']
   ): Promise<EmbedResult> {
     const params = this.getParams(options);
 
@@ -185,7 +185,7 @@ export class OpenAIEmbeddings<
     );
 
     return {
-      embeddings: response.data[0].embedding,
+      embedding: response.data[0].embedding,
       embedOutput: {
         tokenUsage: {
           promptTokens: response.usage.prompt_tokens,

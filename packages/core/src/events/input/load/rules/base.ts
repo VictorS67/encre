@@ -12,6 +12,8 @@ export class BaseRuleCollection
   extends Serializable
   implements BaseRuleCollectionField
 {
+  _isSerializable = true;
+
   _namespace: string[] = ['events', 'input', 'load', 'rules'];
 
   collection: Record<string, BaseRule | BaseRuleCollection>;

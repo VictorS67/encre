@@ -1,12 +1,12 @@
-import { BaseCache } from "../../cache/base.js";
-import { MemoryCache } from "../../cache/index.js";
-import { CallableConfig } from "../../record/callable.js";
+import { BaseCache } from '../../cache/base.js';
+import { MemoryCache } from '../../cache/index.js';
+import { CallableConfig } from '../../record/callable.js';
 import {
   AsyncCaller,
   type AsyncCallerParams,
-} from "../../utils/asyncCaller.js";
-import { BaseEvent, BaseEventParams } from "../base.js";
-import { EmbedResult } from "../output/provide/embedresult.js";
+} from '../../utils/asyncCaller.js';
+import { BaseEvent, BaseEventParams } from '../base.js';
+import { EmbedResult } from '../output/provide/embedresult.js';
 
 export interface BaseEmbeddingsCallOptions extends BaseEventParams {
   /**
@@ -45,13 +45,13 @@ export abstract class BaseEmbeddings<
   cache?: BaseCache<number[]>;
 
   _eventNamespace(): string[] {
-    return ["embeddings"];
+    return ['embeddings'];
   }
 
   constructor({ callbacks, ...params }: BaseEmbeddingsParams) {
     super({ callbacks, ...params });
 
-    if (typeof params.cache === "object") {
+    if (typeof params.cache === 'object') {
       this.cache = params.cache;
     } else if (params.cache) {
       this.cache = MemoryCache.global<number[]>();
@@ -91,7 +91,7 @@ export abstract class BaseEmbeddings<
     options?: CallOptions,
     callbacks?: any
   ): Promise<EmbedResult> {
-    if (Array.isArray(document) || !(typeof document === "string")) {
+    if (Array.isArray(document) || !(typeof document === 'string')) {
       throw new Error("Argument 'document' must be string");
     }
 
@@ -103,24 +103,24 @@ export abstract class BaseEmbeddings<
       serializedCallOptions as CallOptions
     );
 
-    let embeddings: number[] | null | undefined = await this.cache?.lookup([
+    let embedding: number[] | null | undefined = await this.cache?.lookup([
       document,
       llmStrKey,
     ]);
 
     let embedOutput = {};
-    if (embeddings === null || embeddings === undefined) {
+    if (embedding === null || embedding === undefined) {
       const embedResult: EmbedResult = await this._embedUncached(
         document,
         serializedCallOptions
       );
-      await this.cache?.update([document, llmStrKey], embedResult.embeddings);
+      await this.cache?.update([document, llmStrKey], embedResult.embedding);
 
-      embeddings = embedResult.embeddings;
+      embedding = embedResult.embedding;
       embedOutput = embedResult.embedOutput ?? {};
     }
 
-    return { embeddings, embedOutput };
+    return { embedding, embedOutput };
   }
 
   /**
@@ -132,7 +132,7 @@ export abstract class BaseEmbeddings<
    */
   abstract _embed(
     document: string,
-    options: this["SerializedCallOptions"]
+    options: this['SerializedCallOptions']
   ): Promise<EmbedResult>;
 
   /**
@@ -143,7 +143,7 @@ export abstract class BaseEmbeddings<
    */
   protected async _embedUncached(
     document: string,
-    serializedCallOptions: this["SerializedCallOptions"]
+    serializedCallOptions: this['SerializedCallOptions']
   ): Promise<EmbedResult> {
     let output: EmbedResult;
 
@@ -158,12 +158,12 @@ export abstract class BaseEmbeddings<
   }
 
   abstract getParams(
-    options?: this["SerializedCallOptions"]
+    options?: this['SerializedCallOptions']
   ): Record<string, unknown>;
 
   protected _splitCallableOptionsFromCallOptions(
     options: Partial<CallOptions> = {}
-  ): [CallableConfig, this["SerializedCallOptions"]] {
+  ): [CallableConfig, this['SerializedCallOptions']] {
     const callableOptions: CallableConfig = {
       name: options.name,
       tags: options.tags,
@@ -177,7 +177,7 @@ export abstract class BaseEmbeddings<
     delete callOptionsCopy.metadata;
     delete callOptionsCopy.callbacks;
 
-    return [callableOptions, callOptionsCopy as this["SerializedCallOptions"]];
+    return [callableOptions, callOptionsCopy as this['SerializedCallOptions']];
   }
 
   /**
@@ -206,7 +206,7 @@ export abstract class BaseEmbeddings<
     const llmStrKey: string = nonEmptyParams
       .map(([k, v]) => `${k}:${JSON.stringify(v)}`)
       .sort()
-      .join(",");
+      .join(',');
 
     return llmStrKey;
   }
