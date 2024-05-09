@@ -1,11 +1,11 @@
-import { SecretFields } from "../../../../../load/keymap.js";
+import { SecretFields } from '../../../../../load/keymap.js';
 import {
   AsyncCaller,
   AsyncCallerParams,
-} from "../../../../../utils/asyncCaller.js";
-import { Context } from "../../../../input/load/docs/context.js";
-import { BaseTextRetriever, BaseTextRetrieverParams } from "../../base.js";
-import { RemoteRetrieverAuth, RemoteRetrieverValues } from "./index.js";
+} from '../../../../../utils/asyncCaller.js';
+import { Context } from '../../../../input/load/docs/context.js';
+import { BaseTextRetriever, BaseTextRetrieverParams } from '../../base.js';
+import { RemoteRetrieverAuth, RemoteRetrieverValues } from './index.js';
 
 export interface RemoteRetrieverParams
   extends AsyncCallerParams,
@@ -21,7 +21,7 @@ export abstract class RemoteRetriever
 {
   get _secrets(): SecretFields | undefined {
     return {
-      "auth.bearer": "REMOTE_RETRIEVER_AUTH_BEARER",
+      'auth.bearer': 'REMOTE_RETRIEVER_AUTH_BEARER',
     };
   }
 
@@ -45,8 +45,8 @@ export abstract class RemoteRetriever
     this.url = url;
     this.auth = auth;
     this.headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
       ...(this.auth && this.auth.bearer
         ? { Authorization: `Bearer ${this.auth.bearer}` }
         : {}),
@@ -61,13 +61,13 @@ export abstract class RemoteRetriever
 
   async _retrieve(
     query: string,
-    options: this["SerializedCallOptions"]
+    options: this['SerializedCallOptions']
   ): Promise<Context[]> {
     const body = this.createJSONBody(query);
 
     const response = await this.caller.call(() =>
       fetch(this.url, {
-        method: "POST",
+        method: 'POST',
         headers: this.headers,
         body: JSON.stringify(body),
       })

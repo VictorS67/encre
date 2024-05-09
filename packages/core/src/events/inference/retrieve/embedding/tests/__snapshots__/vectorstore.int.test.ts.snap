@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VectorStoreRetriever mmr search 1`] = `
+[
+  Context {
+    "metadata": {},
+    "pageContent": "I like pizza",
+  },
+  Context {
+    "metadata": {},
+    "pageContent": "I don't like dogs",
+  },
+]
+`;
+
+exports[`VectorStoreRetriever similarity search 1`] = `
+[
+  Context {
+    "metadata": {},
+    "pageContent": "I like pizza",
+  },
+  Context {
+    "metadata": {},
+    "pageContent": "I don't like dogs",
+  },
+]
+`;
