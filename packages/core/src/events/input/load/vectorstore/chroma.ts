@@ -3,12 +3,13 @@ import {
   Collection as ChromaCollection,
   CollectionMetadata as ChromaCollectionMetadata,
   Metadata as ChromaMetadata,
+  IncludeEnum,
   QueryResponse,
   Where,
 } from 'chromadb';
+import { v4 as uuid } from 'uuid';
 
 import { maximalMarginalRelevance } from '../../../../utils/math.js';
-import { getRecordId } from '../../../../utils/nanoid.js';
 import { Context } from '../docs/context.js';
 import { BaseVectorStore, BaseVectorStoreField } from './base.js';
 
@@ -105,11 +106,11 @@ export class ChromaVectorStore
 
       const paddingArray = Array.from(
         { length: embeddings.length - ids.length },
-        () => getRecordId()
+        () => uuid()
       );
       ids = ids.concat(paddingArray);
     } else if (ids.length === 0) {
-      ids = Array.from({ length: embeddings.length }, () => getRecordId());
+      ids = Array.from({ length: embeddings.length }, () => uuid());
     }
 
     const collection: ChromaCollection = await this._getCollection();
@@ -183,7 +184,7 @@ export class ChromaVectorStore
       });
     } else {
       throw new Error(
-        'Chroma deleteVectors: must provide either \'ids\' or \'filter\''
+        "Chroma deleteVectors: must provide either 'ids' or 'filter'"
       );
     }
   }
@@ -196,6 +197,12 @@ export class ChromaVectorStore
     const _filter: this['FilterType'] | undefined = filter ?? this.filter;
 
     const collection: ChromaCollection = await this._getCollection();
+    const include: IncludeEnum[] = [
+      IncludeEnum.Documents,
+      IncludeEnum.Embeddings,
+      IncludeEnum.Distances,
+      IncludeEnum.Metadatas,
+    ];
 
     let result: QueryResponse;
     if (_filter?.where) {
@@ -203,11 +210,13 @@ export class ChromaVectorStore
         queryEmbeddings: query,
         nResults: topK,
         where: { ..._filter.where },
+        include
       });
     } else {
       result = await collection.query({
         queryEmbeddings: query,
         nResults: topK,
+        include
       });
     }
 
@@ -294,7 +303,7 @@ export class ChromaVectorStore
     });
   }
 
-  private async _getCollection(): Promise<ChromaCollection> {
+  async _getCollection(): Promise<ChromaCollection> {
     if (!this._client) {
       this._client = new ChromaClient({
         path: this.url,
@@ -316,7 +325,7 @@ export class ChromaVectorStore
 
   private _getCollectionName(): string {
     if (!this.collectionName) {
-      return `encre-chroma-${getRecordId()}`;
+      return `encre-chroma-${uuid()}`;
     }
 
     return this.collectionName;
