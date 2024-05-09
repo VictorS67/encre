@@ -53,6 +53,7 @@
     "@types/object-hash": "^3.0.5",
     "@types/pdf-parse": "^1.1.2",
     "camelcase": "^8.0.0",
+    "chromadb": "^1.8.1",
     "decamelize": "^6.0.0",
     "google-auth-library": "^9.4.1",
     "js-tiktoken": "^1.0.7",
