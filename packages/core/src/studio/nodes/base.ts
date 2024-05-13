@@ -6,7 +6,7 @@ import {
 } from '../../load/keymap.js';
 import { SerializedCallableFields } from '../../record/callable.js';
 import { isNotNull } from '../../utils/safeTypes.js';
-import { DataFields } from '../data.js';
+import { DataFields, DataType } from '../data.js';
 import {
   ProcessContext,
   ProcessInputMap,
@@ -137,7 +137,19 @@ export abstract class NodeImpl<
     connections: NodeConnection[],
     nodeMap: Record<RecordId, SerializableNode>
   ): NodeInputPortDef[] {
-    return this._initPorts(this.inputs);
+    // If there is a IfNode connected to the current node, then the 
+    // connected corresponding ports can be coerced to optional (i.e. unknown)
+    const portNamesCoerceToOptional: string[] = connections
+      .filter((conn) => {
+        const node = nodeMap[conn.fromNodeId];
+
+        return (
+          conn.toNodeId === this.id && isNotNull(node) && node.type === 'if'
+        );
+      })
+      .map((conn) => conn.toPortName);
+
+    return this._initPorts(this.inputs, portNamesCoerceToOptional);
   }
 
   getOutputPortDefs(
@@ -145,56 +157,6 @@ export abstract class NodeImpl<
     nodeMap: Record<RecordId, SerializableNode>
   ): NodeOutputPortDef[] {
     return this._initPorts(this.outputs);
-  }
-
-  /**
-   * Get all from-node ids from the current workflow.
-   *
-   * @param connections connections in the current workflow
-   * @param nodeMap nodeMap in the current workflow
-   * @returns all from-node ids of the node
-   */
-  getFromNodeIds(
-    connections: NodeConnection[],
-    nodeMap: Record<RecordId, SerializableNode>
-  ): RecordId[] {
-    return connections
-      .filter((c) => {
-        const inputPorts: string[] = Object.keys(this.inputs ?? {});
-
-        if (inputPorts.length === 0) {
-          return c.toNodeId === this.id;
-        }
-
-        return c.toNodeId === this.id && inputPorts.includes(c.toPortName);
-      })
-      .map((c) => c.fromNodeId)
-      .filter((nId) => isNotNull(nodeMap[nId]));
-  }
-
-  /**
-   * Get all to-node ids from the current workflow.
-   *
-   * @param connections connections in the current workflow
-   * @param nodeMap nodeMap in the current workflow
-   * @returns all to-node ids of the node
-   */
-  getToNodeIds(
-    connections: NodeConnection[],
-    nodeMap: Record<RecordId, SerializableNode>
-  ): RecordId[] {
-    return connections
-      .filter((c) => {
-        const outputPorts: string[] = Object.keys(this.outputs ?? {});
-
-        if (outputPorts.length === 0) {
-          return c.fromNodeId === this.id;
-        }
-
-        return c.fromNodeId === this.id && outputPorts.includes(c.fromPortName);
-      })
-      .map((c) => c.toNodeId)
-      .filter((nId) => isNotNull(nodeMap[nId]));
   }
 
   validateInputs(inputs?: ProcessInputMap): boolean {
@@ -312,12 +274,26 @@ export abstract class NodeImpl<
     );
   }
 
-  private _initPorts(ports: NodePortFields | undefined): NodePortDef[] {
-    return Object.keys(ports ?? {}).map((key: string) => ({
-      nodeId: this.id,
-      name: key,
-      type: ports ? ports[key] : 'unknown',
-    }));
+  private _initPorts(
+    ports: NodePortFields | undefined,
+    portNamesCoerceToOptional: string[] = []
+  ): NodePortDef[] {
+    return Object.entries(ports ?? {}).map(([key, type]) => {
+      const types: DataType[] = Array.isArray(type) ? type : [type];
+      if (
+        portNamesCoerceToOptional.includes(key) &&
+        !types.includes('unknown')
+      ) {
+        types.push('unknown');
+      }
+
+      return {
+        nodeId: this.id,
+        name: key,
+        type: types,
+        required: types.includes('unknown'),
+      };
+    });
   }
 }
 

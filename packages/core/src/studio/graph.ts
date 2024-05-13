@@ -2,6 +2,7 @@ import { RecordId } from '../load/keymap.js';
 import { Serializable } from '../load/serializable.js';
 import { Callable, CallableConfig } from '../record/callable.js';
 import { getRecordId } from '../utils/nanoid.js';
+import { isNotNull } from '../utils/safeTypes.js';
 import { GraphComment } from './comments/index.js';
 import { DataType } from './data.js';
 import { NodeImpl } from './nodes/base.js';
@@ -266,6 +267,58 @@ export abstract class BaseGraph<
   }
 
   abstract loadRegistry(registry: NodeRegistration | undefined): BaseGraph;
+
+  /**
+   * Get all nodes that push data toward the current node.
+   *
+   * @param node the current node
+   * @returns all nodes that push data toward the current node
+   */
+  getFromNodes(node: SerializableNode): SerializableNode[] {
+    const connections: NodeConnection[] = this.nodeConnMap[node.id] ?? [];
+
+    const incomingConnections = connections
+      .filter((conn) => conn.toNodeId === node.id);
+
+    const inputDefs = this.nodePortDefMap[node.id]?.inputs ?? [];
+
+    return incomingConnections
+      .filter((conn) => {
+        const connectionDef = inputDefs.find(
+          (def) => def.nodeId === node.id && def.name === conn.toPortName
+        );
+
+        return !!connectionDef;
+      })
+      .map((conn) => this.nodeMap[conn.fromNodeId])
+      .filter(isNotNull);
+  }
+
+  /**
+   * Get all nodes that receive data from the current node.
+   *
+   * @param node the current node
+   * @returns all nodes that receive data from the current node
+   */
+  getToNodes(node: SerializableNode): SerializableNode[] {
+    const connections: NodeConnection[] = this.nodeConnMap[node.id] ?? [];
+
+    const outgoingConnections = connections
+      .filter((conn) => conn.fromNodeId === node.id);
+
+    const outputDefs = this.nodePortDefMap[node.id]?.outputs ?? [];
+
+    return outgoingConnections
+      .filter((conn) => {
+        const connectionDef = outputDefs.find(
+          (def) => def.nodeId === node.id && def.name === conn.fromPortName
+        );
+
+        return !!connectionDef;
+      })
+      .map((conn) => this.nodeMap[conn.fromNodeId])
+      .filter(isNotNull);
+  }
 
   /**
    * Flatten a graph by exploding the nodes and connections in any subgraph
@@ -562,7 +615,7 @@ export abstract class BaseGraph<
     };
   }
 
-  abstract schedule(): Promise<SerializableNode<string, Serializable>[][]>;
+  abstract schedule(): SerializableNode<string, Serializable>[][];
 
   abstract invoke(
     input: CallInput,
@@ -589,7 +642,7 @@ export class SubGraph extends BaseGraph {
     return new SubGraph(nodeGraphFields);
   }
 
-  schedule(): Promise<SerializableNode<string, Serializable>[][]> {
+  schedule(): SerializableNode<string, Serializable>[][] {
     throw new Error('Method not implemented.');
   }
 
