@@ -58,9 +58,7 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
         output: coerceToData(output),
         message: coerceToData(message),
         info: coerceToData(info),
-        completionTokens: coerceToData(undefined),
-        promptTokens: coerceToData(undefined),
-        totalTokens: coerceToData(undefined),
+        tokenUsage: coerceToData(undefined),
       };
     }
 
@@ -68,9 +66,7 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
       output: coerceToData(output),
       message: coerceToData(message),
       info: coerceToData(info),
-      completionTokens: coerceToData(llmOutput['completionTokens']),
-      promptTokens: coerceToData(llmOutput['promptTokens']),
-      totalTokens: coerceToData(llmOutput['totalTokens']),
+      tokenUsage: coerceToData(llmOutput['tokenUsage']),
     };
   }
 
@@ -92,7 +88,6 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
   static create(): ChatLMNode {
     const openaiChat = new OpenAIChat({
       modelName: 'gpt-3.5-turbo',
-      openAIApiKey: 'openai-secret-placeholder',
       maxTokens: 2048,
     });
 
@@ -118,9 +113,7 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
         output: 'string',
         message: 'chat-message',
         info: ['object', 'unknown'],
-        completionTokens: ['number', 'unknown'],
-        promptTokens: ['number', 'unknown'],
-        totalTokens: ['number', 'unknown'],
+        tokenUsage: ['object', 'unknown'],
       },
     };
 

@@ -1,6 +1,5 @@
 import { RecordId } from '../load/keymap.js';
 import { Serializable } from '../load/serializable.js';
-import { Callable, CallableConfig } from '../record/callable.js';
 import { getRecordId } from '../utils/nanoid.js';
 import { isNotNull } from '../utils/safeTypes.js';
 import { GraphComment } from './comments/index.js';
@@ -30,14 +29,11 @@ export interface NodeGraph {
   comments?: GraphComment[];
 }
 
-/** The input and output values from a graph */
-export type GraphValues = Record<RecordId, Record<string, unknown>>;
+// /** The input and output values from a graph */
+// export type GraphValues = Record<RecordId, Record<string, unknown>>;
 
-export abstract class BaseGraph<
-    CallInput extends GraphValues = GraphValues,
-    CallOutput extends GraphValues = GraphValues,
-  >
-  extends Callable<CallInput, CallOutput>
+export abstract class BaseGraph
+  extends Serializable
   implements NodeGraph
 {
   _isSerializable = true;
@@ -277,8 +273,9 @@ export abstract class BaseGraph<
   getFromNodes(node: SerializableNode): SerializableNode[] {
     const connections: NodeConnection[] = this.nodeConnMap[node.id] ?? [];
 
-    const incomingConnections = connections
-      .filter((conn) => conn.toNodeId === node.id);
+    const incomingConnections = connections.filter(
+      (conn) => conn.toNodeId === node.id
+    );
 
     const inputDefs = this.nodePortDefMap[node.id]?.inputs ?? [];
 
@@ -303,8 +300,9 @@ export abstract class BaseGraph<
   getToNodes(node: SerializableNode): SerializableNode[] {
     const connections: NodeConnection[] = this.nodeConnMap[node.id] ?? [];
 
-    const outgoingConnections = connections
-      .filter((conn) => conn.fromNodeId === node.id);
+    const outgoingConnections = connections.filter(
+      (conn) => conn.fromNodeId === node.id
+    );
 
     const outputDefs = this.nodePortDefMap[node.id]?.outputs ?? [];
 
@@ -536,8 +534,6 @@ export abstract class BaseGraph<
             count += 1;
           }
 
-          console.log(`outputName: ${outputName}`);
-
           outputs[outputName] = nodeOutputs[o];
           outputNameMap[outputName] = { nodeId, name: o };
         }
@@ -615,12 +611,7 @@ export abstract class BaseGraph<
     };
   }
 
-  abstract schedule(): SerializableNode<string, Serializable>[][];
-
-  abstract invoke(
-    input: CallInput,
-    options?: Partial<CallableConfig> | undefined
-  ): Promise<CallOutput>;
+  abstract schedule(): Array<[string, RecordId[]]>;
 }
 
 export class SubGraph extends BaseGraph {
@@ -642,14 +633,7 @@ export class SubGraph extends BaseGraph {
     return new SubGraph(nodeGraphFields);
   }
 
-  schedule(): SerializableNode<string, Serializable>[][] {
-    throw new Error('Method not implemented.');
-  }
-
-  invoke(
-    input: GraphValues,
-    options?: Partial<CallableConfig> | undefined
-  ): Promise<GraphValues> {
-    throw new Error('Method not implemented.');
+  schedule(): Array<[string, RecordId[]]> {
+    return [[getRecordId(), this.flattenNodes.map((n) => n.id)]];
   }
 }

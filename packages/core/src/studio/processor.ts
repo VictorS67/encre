@@ -36,27 +36,22 @@ export type GraphOutputs = Record<RecordId, ProcessOutputMap>;
 // };
 
 export type ProcessContext = {
-  processId: ProcessId;
+  processId?: ProcessId;
 
-  signal: AbortSignal;
+  signal?: AbortSignal;
 
-  contextData: Record<string, Data>;
+  contextData?: Record<string, Data>;
 
-  graphInputs: GraphInputs;
+  graphInputs?: GraphInputs;
 
-  graphOutputs: GraphOutputs;
+  graphOutputs?: GraphOutputs;
 
-  node: SerializableNode;
+  node?: SerializableNode;
 
   // In the memory, we store callable options for CallableNodes
-  memory: Record<RecordId, unknown>;
+  memory?: Record<RecordId, unknown>;
 
-  createSubProcessor: (
-    subNodeIds: RecordId[],
-    options?: { signal?: AbortSignal }
-  ) => GraphProcessor;
-
-  abortGraph: (error?: Error | string) => void;
+  abortGraph?: (error?: Error | string) => void;
 };
 
 export type ProcessEvents = {
@@ -67,23 +62,26 @@ export type ProcessEvents = {
     contextValues: Record<string, Data>;
   };
 
+  /** TODO: processing process a node, adding the node to the processing queue */
+  processInQueue: SerializableNode;
+
   /** processing pause */
-  pause: void;
+  pause: { processorId: string };
 
   /** processing resume */
-  resume: void;
+  resume: { processorId: string };
 
   /** processing finish */
-  finish: void;
+  finish: { processorId: string };
 
   /** processing complete with results */
   done: { results: GraphOutputs };
 
   /** processing abort */
-  abort: { success: boolean; error?: string | Error };
+  abort: { processorId: string; success: boolean; error?: string | Error };
 
   /** processing error */
-  error: { error: string | Error };
+  error: { processorId: string; error: string | Error };
 
   /** graph/subgraph start */
   graphStart: { graph: BaseGraph; inputs: GraphInputs };
@@ -130,7 +128,7 @@ export class GraphProcessor {
 
   readonly #emitter: Emittery<ProcessEvents> = new Emittery();
 
-  #subNodeGrps: SerializableNode[][];
+  #processorId: string;
 
   #graphInputs: GraphInputs = undefined!;
 
@@ -183,7 +181,7 @@ export class GraphProcessor {
 
   #abortError: Error | string | undefined = undefined;
 
-  private _initNodeIds: RecordId[];
+  #nodeIdsToRun: RecordId[];
 
   get isRunning() {
     return this.#isRunning;
@@ -195,7 +193,7 @@ export class GraphProcessor {
     this.#nodeResults = new Map();
     this.#executionCache ??= new Map();
     this.#nodeErrorMap = new Map();
-    this.#remainingNodeIds = new Set(this._initNodeIds);
+    this.#remainingNodeIds = new Set(this.#nodeIdsToRun);
     this.#queuedNodeIds = new Set();
     this.#ignoreNodeIds = new Set();
     this.#visitedNodeIds = new Set();
@@ -206,12 +204,7 @@ export class GraphProcessor {
     this.#graphOutputs = {};
     this.#children = new Set();
     if (!this.#isSubProcessor) {
-      this.#subNodeGrps = this.#graph.schedule();
-      this.#subNodeGrps.map((grp) =>
-        this.createSubProcessor(grp.map((n) => n.id))
-      );
-
-      this._initNodeIds = this.#graph.flattenNodes.map((n) => n.id);
+      this._distributeNodesToWorkers(this.#graph.schedule());
     }
 
     this.#isAborted = false;
@@ -222,6 +215,8 @@ export class GraphProcessor {
       this.#isAborted = true;
     });
     this.#nodeAbortControllers = new Map();
+
+    this.subscribe();
   }
 
   initAbortController() {
@@ -231,7 +226,10 @@ export class GraphProcessor {
     return controller;
   }
 
-  constructor(graph: BaseGraph, subNodeIds?: RecordId[]) {
+  constructor(
+    graph: BaseGraph,
+    subProcessor?: { processorId: string; nodeIds: RecordId[] }
+  ) {
     this.#graph = graph;
 
     this.#emitter.bindMethods(this as any, [
@@ -242,18 +240,20 @@ export class GraphProcessor {
       'offAny',
     ]);
 
-    this.#isSubProcessor = !!subNodeIds && subNodeIds.length > 0;
+    this.#isSubProcessor = !!subProcessor;
 
-    if (!this.#isSubProcessor) {
-      this.#subNodeGrps = graph.schedule();
-      this.#subNodeGrps.map((grp) =>
-        this.createSubProcessor(grp.map((n) => n.id))
-      );
-
-      this._initNodeIds = this.#graph.flattenNodes.map((n) => n.id);
-    } else {
-      this._initNodeIds = subNodeIds!;
+    if (subProcessor) {
+      this.#processorId = subProcessor.processorId;
+      this.#nodeIdsToRun = subProcessor.nodeIds;
     }
+  }
+
+  subscribe() {
+    this.#emitter.on('processInQueue', async (node: SerializableNode) => {
+      this.#processingQueue.add(async () => {
+        await this.fetchNodeDataAndProcessNode(node);
+      });
+    });
   }
 
   on = undefined! as Emittery<ProcessEvents>['on'];
@@ -271,11 +271,19 @@ export class GraphProcessor {
     this.#isAbortedSuccess = success;
     this.#abortError = error;
 
-    this.#emitter.emit('graphAbort', { graph: this.#graph, success, error });
-
     if (!this.#isSubProcessor) {
-      this.#emitter.emit('abort', { success, error });
+      this.#parent!.#emitter.emit('graphAbort', {
+        graph: this.#graph,
+        success,
+        error,
+      });
     }
+
+    this.#emitter.emit('abort', {
+      processorId: this.#processorId,
+      success,
+      error,
+    });
 
     await this.#processingQueue.onIdle();
   }
@@ -283,14 +291,14 @@ export class GraphProcessor {
   pause() {
     if (!this.#isPaused) {
       this.#isPaused = true;
-      this.#emitter.emit('pause', void 0);
+      this.#emitter.emit('pause', { processorId: this.#processorId });
     }
   }
 
   resume() {
     if (this.#isPaused) {
       this.#isPaused = false;
-      this.#emitter.emit('resume', void 0);
+      this.#emitter.emit('resume', { processorId: this.#processorId });
     }
   }
 
@@ -313,22 +321,28 @@ export class GraphProcessor {
   }
 
   createSubProcessor(
+    processorId: string,
     subNodeIds: RecordId[],
     { signal }: { signal?: AbortSignal } = {}
   ): GraphProcessor {
-    const processor = new GraphProcessor(this.#graph, subNodeIds);
+    const processor = new GraphProcessor(this.#graph, {
+      processorId,
+      nodeIds: subNodeIds,
+    });
 
     processor.#isSubProcessor = true;
     processor.#executionCache = this.#executionCache;
     processor.#contextValues = this.#contextValues;
     processor.#parent = this;
 
+    // TODO: the processor should handle process emit
+
     processor.on('graphStart', (e) => this.#emitter.emit('graphStart', e));
     processor.on('graphError', (e) => this.#emitter.emit('graphError', e));
     processor.on('graphFinish', (e) => this.#emitter.emit('graphFinish', e));
     processor.on('graphAbort', (e) => this.#emitter.emit('graphAbort', e));
 
-    processor.on('nodeStart', (e) => this.#emitter.emit('nodeStart', e));
+    processor.on('nodeStart', async (e) => this.#emitter.emit('nodeStart', e));
     processor.on('nodeError', (e) => this.#emitter.emit('nodeError', e));
     processor.on('nodeFinish', (e) => this.#emitter.emit('nodeFinish', e));
     processor.on('nodeExcluded', (e) => this.#emitter.emit('nodeExcluded', e));
@@ -344,6 +358,8 @@ export class GraphProcessor {
         this.resume();
       }
     });
+
+    processor.subscribe();
 
     this.#children.add(processor);
 
@@ -374,39 +390,9 @@ export class GraphProcessor {
   //   return nodeData;
   // }
 
-  getProcessInputForNode(node: SerializableNode): ProcessInputMap {
-    const connections: NodeConnection[] = this.#graph.nodeConnMap[node.id];
-
-    return this.#graph.nodePortDefMap[node.id]!.inputs.reduce(
-      (values, input) => {
-        if (!connections) {
-          return values;
-        }
-
-        const connection: NodeConnection | undefined = connections.find(
-          (conn) => conn.toNodeId === node.id && conn.toPortName === input.name
-        );
-
-        if (connection) {
-          const outputNodeId: RecordId =
-            this.#graph.nodeMap[connection.fromNodeId]!.id;
-          const outputNodeOutputs: ProcessOutputMap | undefined =
-            this.#nodeResults.get(outputNodeId);
-          const outputResult: Data | undefined =
-            outputNodeOutputs?.[connection.fromPortName];
-
-          values[input.name] = outputResult;
-        }
-
-        return values;
-      },
-      {} as Record<string, Data | undefined>
-    );
-  }
-
   async processGraph(
-    context: ProcessContext,
     inputs: GraphInputs = {},
+    context: ProcessContext = {},
     contextValues: Record<string, Data> = {}
   ): Promise<GraphOutputs> {
     try {
@@ -414,28 +400,34 @@ export class GraphProcessor {
         throw new Error('CANNOT process graph while already processing');
       }
 
+      if (this.#isSubProcessor) {
+        throw new Error('CANNOT process graph in sub-processor');
+      }
+
       this.initProcessState();
 
       this.#context = context;
-      this.#graphInputs = inputs;
       this.#contextValues ??= contextValues;
 
-      if (!this.#isSubProcessor) {
-        this.#emitter.emit('start', {
-          graph: this.#graph,
-          inputs: this.#graphInputs,
-          contextValues: this.#contextValues,
-        });
+      this.#graphInputs = inputs;
+      for (const child of this.#children) {
+        child.#graphInputs = inputs;
       }
+
+      this.#emitter.emit('start', {
+        graph: this.#graph,
+        inputs: this.#graphInputs,
+        contextValues: this.#contextValues,
+      });
 
       this.#emitter.emit('graphStart', {
         graph: this.#graph,
         inputs: this.#graphInputs,
       });
 
-      const startNodes = this.#graph.flattenNodes.filter((n) =>
-        Object.keys(inputs).includes(n.id)
-      );
+      const startNodes: SerializableNode[] = Object.values(
+        this.#graph.graphInputNameMap
+      ).map(({ nodeId }) => this.#graph.nodeMap[nodeId]);
 
       await this.waitUntilUnpaused();
 
@@ -447,25 +439,48 @@ export class GraphProcessor {
 
       await this.#processingQueue.onIdle();
 
-      const erroredNodes = [...this.#nodeErrorMap.entries()];
-      if (erroredNodes.length && !this.#isAbortedSuccess) {
-        const error =
-          this.#abortError ??
-          new Error(
-            `Graph ${this.#graph.title} (${
-              this.#graph.id
-            }) failed to process due to errors in nodes:\n\t${erroredNodes
-              .map(([nodeId, error]) => `${nodeId}: ${error}`)
-              .join('\n\t')}`
-          );
+      let erroredNodes: Array<[RecordId, string]> = [];
+      let abortError: string | Error | undefined = undefined;
+      let isAbortedSucess = true;
 
-        this.#emitter.emit('graphError', { graph: this.#graph, error });
+      const errors: Array<string | Error> = [];
+      for (const worker of [this, ...this.#children]) {
+        erroredNodes = [...worker.#nodeErrorMap.entries()];
+        isAbortedSucess = worker.#isAbortedSuccess;
+        abortError = worker.#abortError;
 
-        if (!this.#isSubProcessor) {
-          this.#emitter.emit('error', { error });
+        if (erroredNodes.length && !isAbortedSucess) {
+          const error =
+            abortError ??
+            new Error(
+              `[${worker.#isSubProcessor ? 'SUB' : 'MASTER'}] ${
+                worker.#processorId
+              }: Failed to process due to errors in nodes:\n\t${erroredNodes
+                .map(([nodeId, error]) => `${nodeId}: ${error}`)
+                .join('\n\t')}`
+            );
+
+          this.#emitter.emit('error', {
+            processorId: worker.#processorId,
+            error,
+          });
+
+          errors.push(error);
         }
+      }
 
-        throw error;
+      if (errors.length > 0) {
+        const graphError = new Error(
+          `Graph ${this.#graph.title} (${
+            this.#graph.id
+          }) processing failed because:\n${errors
+            .map((e) => e.toString())
+            .join('\n')}`
+        );
+        this.#emitter.emit('graphError', {
+          graph: this.#graph,
+          error: graphError,
+        });
       }
 
       const outputValues = this.#graphOutputs;
@@ -477,153 +492,182 @@ export class GraphProcessor {
         outputs: outputValues,
       });
 
-      if (!this.#isSubProcessor) {
-        this.#emitter.emit('done', { results: outputValues });
-        this.#emitter.emit('finish', undefined);
+      for (const worker of [this, ...this.#children]) {
+        this.#emitter.emit('finish', { processorId: worker.#processorId });
       }
+
+      this.#emitter.emit('done', {
+        results: outputValues,
+      });
 
       return outputValues;
     } finally {
       this.#isRunning = false;
 
-      if (!this.#isSubProcessor) {
-        this.#emitter.emit('finish', undefined);
-      }
+      this.#emitter.emit('finish', { processorId: this.#processorId });
     }
   }
 
   async fetchNodeDataAndProcessNode(node: SerializableNode): Promise<void> {
-    if (
-      this.#currProcessingNodeIds.has(node.id) ||
-      this.#queuedNodeIds.has(node.id)
-    ) {
-      return;
-    }
-
-    if (this.#nodeResults.has(node.id) || this.#nodeErrorMap.has(node.id)) {
-      return;
-    }
-
-    const inputNodes = this.#graph.getFromNodes(node);
-
-    // check if all input nodes are free of errors
-    for (const inputNode of inputNodes) {
-      if (this.#nodeErrorMap.has(inputNode.id)) {
+    try {
+      // Check if the node should be processed in the current processor
+      const processorToRun: GraphProcessor = this._getProcessorForNode(node);
+      if (processorToRun.#processorId !== this.#processorId) {
+        processorToRun.#emitter.emit('processInQueue', node);
         return;
       }
-    }
 
-    // check if all required inputs have connections and if the connected output nodes have been visited
-    const connections = this.#graph.nodeConnMap[node.id] ?? [];
-    const inputsReady = this.#graph.nodePortDefMap[node.id]!.inputs.every(
-      (input) => {
-        const hasIncomingConn = connections?.find(
-          (conn) => conn.toPortName === input.name && conn.toNodeId === node.id
-        );
-
-        return hasIncomingConn || !input.required;
+      // Check if the current processor is processing the node
+      // Check if the node is queued
+      if (
+        this.#currProcessingNodeIds.has(node.id) ||
+        this.#queuedNodeIds.has(node.id)
+      ) {
+        return;
       }
-    );
 
-    if (!inputsReady) {
-      return;
+      // Check if the node already has result
+      // Check if the node is errored
+      if (this.#nodeResults.has(node.id) || this.#nodeErrorMap.has(node.id)) {
+        return;
+      }
+
+      // Check if all input nodes are free of errors
+      const inputNodes = this.#graph.getFromNodes(node);
+      for (const inputNode of inputNodes) {
+        const processorToRunInput: GraphProcessor =
+          this._getProcessorForNode(inputNode);
+        if (processorToRunInput.#nodeErrorMap.has(inputNode.id)) {
+          return;
+        }
+      }
+
+      // Check if all required inputs have connections and if the connected output nodes have been visited
+      const connections = this.#graph.nodeConnMap[node.id] ?? [];
+      const inputsReady = this.#graph.nodePortDefMap[node.id]!.inputs.every(
+        (input) => {
+          const hasIncomingConn = connections?.find(
+            (conn) =>
+              conn.toPortName === input.name && conn.toNodeId === node.id
+          );
+
+          return hasIncomingConn || !input.required;
+        }
+      );
+
+      if (!inputsReady) {
+        return;
+      }
+
+      // const attachedData: AttachedNodeData = this.getAttachedData(node);
+
+      this.#queuedNodeIds.add(node.id);
+
+      this.#processingQueue.addAll(
+        inputNodes.map((inputNode) => {
+          return async () => {
+            await this.fetchNodeDataAndProcessNode(inputNode);
+          };
+        })
+      );
+
+      await this.processNodeIfAllInputsAvailable(node);
+    } catch (error) {
+      await this.abort(false, error as Error);
     }
-
-    // const attachedData: AttachedNodeData = this.getAttachedData(node);
-
-    this.#queuedNodeIds.add(node.id);
-
-    this.#processingQueue.addAll(
-      inputNodes.map((inputNode) => {
-        return async () => {
-          await this.fetchNodeDataAndProcessNode(inputNode);
-        };
-      })
-    );
-
-    await this.processNodeIfAllInputsAvailable(node);
   }
 
   async processNodeIfAllInputsAvailable(node: SerializableNode): Promise<void> {
-    const builtInNode = node as BuiltInNodes;
-
-    if (this.#ignoreNodeIds.has(node.id)) {
-      return;
-    }
-
-    if (this.#currProcessingNodeIds.has(node.id)) {
-      return;
-    }
-
-    if (this.#visitedNodeIds.has(node.id)) {
-      return;
-    }
-
-    if (this.#nodeErrorMap.has(node.id)) {
-      return;
-    }
-
-    const inputNodes = this.#graph.getFromNodes(node);
-
-    // check if all input nodes are free of errors
-    for (const inputNode of inputNodes) {
-      if (this.#nodeErrorMap.has(inputNode.id)) {
+    try {
+      // Check if the current node should be ignored
+      if (this.#ignoreNodeIds.has(node.id)) {
         return;
       }
-    }
 
-    // check if all required inputs have connections and if the connected output nodes have been visited
-    const connections = this.#graph.nodeConnMap[node.id] ?? [];
-    const inputsReady = this.#graph.nodePortDefMap[node.id]!.inputs.every(
-      (input) => {
-        const hasIncomingConn = connections?.find(
-          (conn) => conn.toPortName === input.name && conn.toNodeId === node.id
-        );
-
-        return hasIncomingConn || !input.required;
+      // Check if the current processor is processing the node
+      if (this.#currProcessingNodeIds.has(node.id)) {
+        return;
       }
-    );
 
-    if (!inputsReady) {
-      return;
+      // Check if the current node is visited
+      if (this.#visitedNodeIds.has(node.id)) {
+        return;
+      }
+
+      // Check if the current node is errored
+      if (this.#nodeErrorMap.has(node.id)) {
+        return;
+      }
+
+      // Check if all input nodes are free of errors
+      const inputNodes = this.#graph.getFromNodes(node);
+      for (const inputNode of inputNodes) {
+        const processorToRunInput: GraphProcessor =
+          this._getProcessorForNode(inputNode);
+        if (processorToRunInput.#nodeErrorMap.has(inputNode.id)) {
+          return;
+        }
+      }
+
+      // Check if all required inputs have connections and if the connected output nodes have been visited
+      const connections = this.#graph.nodeConnMap[node.id] ?? [];
+      const inputsReady = this.#graph.nodePortDefMap[node.id]!.inputs.every(
+        (input) => {
+          const hasIncomingConn = connections?.find(
+            (conn) =>
+              conn.toPortName === input.name && conn.toNodeId === node.id
+          );
+
+          return hasIncomingConn || !input.required;
+        }
+      );
+
+      if (!inputsReady) {
+        return;
+      }
+
+      this.#currProcessingNodeIds.add(node.id);
+
+      const processId = await this.processNode(node);
+
+      this.#visitedNodeIds.add(node.id);
+      this.#currProcessingNodeIds.delete(node.id);
+      this.#remainingNodeIds.delete(node.id);
+
+      const outputNodes = this.#graph.getToNodes(node);
+
+      this.#processingQueue.addAll(
+        outputNodes.map((outputNode) => async () => {
+          await this.processNodeIfAllInputsAvailable(outputNode);
+        })
+      );
+    } catch (error) {
+      await this.abort(false, error as Error);
     }
-
-    this.#currProcessingNodeIds.add(node.id);
-
-    const processId = await this.processNode(node);
-
-    this.#visitedNodeIds.add(node.id);
-    this.#currProcessingNodeIds.delete(node.id);
-    this.#remainingNodeIds.delete(node.id);
-
-    const outputNodes = this.#graph.getToNodes(node);
-
-    this.#processingQueue.addAll(
-      outputNodes.map((outputNode) => async () => {
-        await this.processNodeIfAllInputsAvailable(outputNode);
-      })
-    );
   }
 
   async processNode(node: SerializableNode): Promise<ProcessId> {
     const processId = getRecordId() as string as ProcessId;
 
+    // Check if user is aborted
     if (this.#abortController.signal.aborted) {
       this.throwProcessError(node, new Error('Processing aborted'), processId);
       return processId;
     }
 
+    // Check if all input nodes are free of errors
     const inputNodes = this.#graph.getFromNodes(node);
-    const erroredInputNodes = inputNodes.filter((n) =>
-      this.#nodeErrorMap.has(n.id)
-    );
+    const erroredInputNodes = inputNodes.filter((n) => {
+      const processorToRunInput: GraphProcessor = this._getProcessorForNode(n);
+      return processorToRunInput.#nodeErrorMap.has(n.id);
+    });
     if (erroredInputNodes.length > 0) {
       const error = new Error(
         `CANNOT Process node ${
           node.id
-        } because it depends on error nodes:\n\t${erroredInputNodes
+        } because it depends on error nodes: ${erroredInputNodes
           .map((n) => n.id)
-          .join('\n\t')}`
+          .join(', ')}`
       );
 
       this.throwProcessError(node, error, processId);
@@ -640,20 +684,21 @@ export class GraphProcessor {
 
     this.#emitter.emit('nodeStart', { node, inputs: inputValues, processId });
 
-    const outputValues: ProcessOutputMap = await this.processNodeWithInputData(
-      node,
-      inputValues,
-      processId
-    );
+    try {
+      const outputValues: ProcessOutputMap =
+        await this.processNodeWithInputData(node, inputValues, processId);
 
-    this.#nodeResults.set(node.id, outputValues);
-    this.#visitedNodeIds.add(node.id);
+      this.#nodeResults.set(node.id, outputValues);
+      this.#visitedNodeIds.add(node.id);
 
-    this.#emitter.emit('nodeFinish', {
-      node,
-      outputs: outputValues,
-      processId,
-    });
+      this.#emitter.emit('nodeFinish', {
+        node,
+        outputs: outputValues,
+        processId,
+      });
+    } catch (error) {
+      this.throwProcessError(node, error as Error, processId);
+    }
   }
 
   async processNodeWithInputData(
@@ -681,7 +726,6 @@ export class GraphProcessor {
       graphOutputs: this.#graphOutputs,
       contextData: this.#contextValues,
       signal: nodeAbortController.signal,
-      createSubProcessor: this.createSubProcessor,
       abortGraph: (error) => {
         this.abort(error === undefined, error);
       },
@@ -702,6 +746,39 @@ export class GraphProcessor {
     return results;
   }
 
+  getProcessInputForNode(node: SerializableNode): ProcessInputMap {
+    const connections: NodeConnection[] = this.#graph.nodeConnMap[node.id];
+
+    return this.#graph.nodePortDefMap[node.id]!.inputs.reduce(
+      (values, input) => {
+        if (!connections) {
+          return values;
+        }
+
+        const connection: NodeConnection | undefined = connections.find(
+          (conn) => conn.toNodeId === node.id && conn.toPortName === input.name
+        );
+
+        if (connection) {
+          const outputNode: SerializableNode =
+            this.#graph.nodeMap[connection.fromNodeId]!;
+          const processorToRun: GraphProcessor =
+            this._getProcessorForNode(outputNode);
+          const outputNodeId: RecordId = outputNode.id;
+          const outputNodeOutputs: ProcessOutputMap | undefined =
+            processorToRun.#nodeResults.get(outputNodeId);
+          const outputResult: Data | undefined =
+            outputNodeOutputs?.[connection.fromPortName];
+
+          values[input.name] = outputResult;
+        }
+
+        return values;
+      },
+      {} as Record<string, Data | undefined>
+    );
+  }
+
   throwProcessError(
     node: SerializableNode,
     error: Error,
@@ -709,6 +786,58 @@ export class GraphProcessor {
   ) {
     this.#emitter.emit('nodeError', { node, error, processId });
     this.#nodeErrorMap.set(node.id, error.toString());
+  }
+
+  private _distributeNodesToWorkers(group: Array<[string, RecordId[]]>) {
+    // The master processor runs the first group of nodes
+    const firstNodeGroup: [string, RecordId[]] | undefined = group.shift();
+
+    if (!firstNodeGroup) {
+      return;
+    }
+
+    const [masterProcessorId, masterNodeIds] = firstNodeGroup;
+
+    this.#processorId = masterProcessorId;
+
+    this.#nodeIdsToRun = masterNodeIds;
+
+    this.#parent = undefined;
+
+    // Distribute the following groups of nodes to workers
+    group.map(([subProcessorId, subNodeIds]) => {
+      this.createSubProcessor(subProcessorId, subNodeIds);
+    });
+  }
+
+  private _getProcessorForNode(node: SerializableNode): GraphProcessor {
+    const isRunNodeInCurrProcessor: boolean = this.#nodeIdsToRun.includes(
+      node.id
+    );
+
+    if (isRunNodeInCurrProcessor) {
+      return this;
+    }
+
+    if (this.#isSubProcessor) {
+      if (!this.#parent) {
+        throw new Error(`CANNOT find parent in child: ${this.#processorId}`);
+      }
+
+      return this.#parent;
+    }
+
+    for (const child of this.#children) {
+      const isRunNodeInSubProcessor: boolean = child.#nodeIdsToRun.includes(
+        node.id
+      );
+
+      if (isRunNodeInSubProcessor) {
+        return child;
+      }
+    }
+
+    throw new Error(`CANNOT find child in parent: ${this.#processorId}`);
   }
 }
 

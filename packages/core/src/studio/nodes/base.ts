@@ -134,8 +134,8 @@ export abstract class NodeImpl<
   }
 
   getInputPortDefs(
-    connections: NodeConnection[],
-    nodeMap: Record<RecordId, SerializableNode>
+    connections: NodeConnection[] = [],
+    nodeMap: Record<RecordId, SerializableNode> = {}
   ): NodeInputPortDef[] {
     // If there is a IfNode connected to the current node, then the 
     // connected corresponding ports can be coerced to optional (i.e. unknown)
@@ -153,8 +153,8 @@ export abstract class NodeImpl<
   }
 
   getOutputPortDefs(
-    connections: NodeConnection[],
-    nodeMap: Record<RecordId, SerializableNode>
+    connections: NodeConnection[] = [],
+    nodeMap: Record<RecordId, SerializableNode> = {}
   ): NodeOutputPortDef[] {
     return this._initPorts(this.outputs);
   }
@@ -291,7 +291,7 @@ export abstract class NodeImpl<
         nodeId: this.id,
         name: key,
         type: types,
-        required: types.includes('unknown'),
+        required: !types.includes('unknown'),
       };
     });
   }

@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GraphProcessor test simple node in graph 1`] = `
+[
+  {
+    "name": "prompt",
+    "nodeId": "_5dKqr4rtbQtTHYuh",
+    "required": true,
+    "type": [
+      "string",
+      "chat-message[]",
+    ],
+  },
+]
+`;
+
+exports[`GraphProcessor test simple node in graph 2`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "msgs",
+          "assistant",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "I am an AI assistant created to help answer questions and provide information to the best of my abilities. How can I assist you today?",
+        },
+        "_type": "constructor",
+      },
+      "output": "I am an AI assistant created to help answer questions and provide information to the best of my abilities. How can I assist you today?",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 27,
+      "promptTokens": 11,
+      "totalTokens": 38,
+    },
+  },
+}
+`;
+
+exports[`GraphProcessor test simple node in graph 3`] = `
+{
+  "info": {
+    "type": "object",
+    "value": {
+      "finishReason": "stop",
+    },
+  },
+  "message": {
+    "type": "chat-message",
+    "value": {
+      "_grp": 1,
+      "_id": [
+        "events",
+        "input",
+        "load",
+        "msgs",
+        "assistant",
+        "BotMessage",
+      ],
+      "_kwargs": {
+        "additional_kwargs": {},
+        "content": "I am an AI-powered virtual assistant designed to help and provide information to users. How can I assist you today?",
+      },
+      "_type": "constructor",
+    },
+  },
+  "output": {
+    "type": "string",
+    "value": "I am an AI-powered virtual assistant designed to help and provide information to users. How can I assist you today?",
+  },
+  "tokenUsage": {
+    "type": "object",
+    "value": {
+      "completionTokens": 23,
+      "promptTokens": 11,
+      "totalTokens": 34,
+    },
+  },
+}
+`;
+
+exports[`GraphProcessor test simple node in graph 4`] = `{}`;
