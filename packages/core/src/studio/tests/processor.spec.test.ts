@@ -1,7 +1,13 @@
+import { setMaxListeners } from 'node:events';
 import { beforeAll, describe, expect, test } from '@jest/globals';
 import { SubGraph } from '../graph';
 import { CallableNodeImpl } from '../nodes/base';
-import { GraphInputs, GraphProcessor, ProcessInputMap } from '../processor';
+import {
+  GraphInputs,
+  GraphProcessor,
+  ProcessEvent,
+  ProcessInputMap,
+} from '../processor';
 import { globalNodeRegistry } from '../registration/nodes';
 
 describe('GraphProcessor', () => {
@@ -22,20 +28,32 @@ describe('GraphProcessor', () => {
     const graphInputs: GraphInputs = {};
     graphInputs[OpenAINode.id] = processInput;
 
-    expect(
-      graph.nodeImplMap[OpenAINode.id].getInputPortDefs()
-    ).toMatchSnapshot();
+    // expect(
+    //   graph.nodeImplMap[OpenAINode.id].getInputPortDefs()
+    // ).toMatchSnapshot();
 
-    expect(
-      await (graph.nodeImplMap[OpenAINode.id] as CallableNodeImpl<any>).invoke(
-        'Who are you?'
-      )
-    ).toMatchSnapshot();
+    // expect(
+    //   await (graph.nodeImplMap[OpenAINode.id] as CallableNodeImpl<any>).invoke(
+    //     "Who are you?"
+    //   )
+    // ).toMatchSnapshot();
 
-    expect(
-      await graph.nodeImplMap[OpenAINode.id].process(processInput, {})
-    ).toMatchSnapshot();
+    // expect(
+    //   await graph.nodeImplMap[OpenAINode.id].process(processInput, {})
+    // ).toMatchSnapshot();
 
-    expect(await processor.processGraph(graphInputs)).toMatchSnapshot();
+    processor.on('newAbortController', (fields: { controller: AbortController }) => {
+      setMaxListeners(100, fields.controller.signal);
+    });
+
+    processor.processGraph(graphInputs);
+
+    const pEvents: ProcessEvent[] = [];
+    for await (const event of processor.events()) {
+      console.log(event);
+      pEvents.push(event);
+    }
+
+    expect(pEvents).toMatchSnapshot();
   });
 });
