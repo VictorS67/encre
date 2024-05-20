@@ -76,23 +76,24 @@ export abstract class GraphNodeImpl extends NodeImpl<GraphNode> {
 }
 
 export class SubGraphNodeImpl extends GraphNodeImpl {
-  static create(fields: {
-    nodes: SerializableNode[];
-    connections: NodeConnection[];
-  }): GraphNode {
-    const subGraph = new SubGraph(fields);
-
+  static nodeFrom(
+    serializable: SubGraph,
+    registerArgs: {
+      nodes: SerializableNode[];
+      connections: NodeConnection[];
+    }
+  ): GraphNode {
     const { inputs, outputs } = BaseGraph.getGraphPorts(
-      fields.nodes,
-      fields.connections
+      registerArgs.nodes,
+      registerArgs.connections
     );
 
-    const node: GraphNode = {
+    return {
       id: getRecordId(),
       type: 'graph',
       subType: 'subgraph',
-      registerArgs: fields,
-      data: subGraph,
+      registerArgs: registerArgs,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -106,6 +107,15 @@ export class SubGraphNodeImpl extends GraphNodeImpl {
       inputs,
       outputs,
     };
+  }
+
+  static create(fields: {
+    nodes: SerializableNode[];
+    connections: NodeConnection[];
+  }): GraphNode {
+    const subGraph = new SubGraph(fields);
+
+    const node: GraphNode = SubGraphNodeImpl.nodeFrom(subGraph, fields);
 
     return node;
   }

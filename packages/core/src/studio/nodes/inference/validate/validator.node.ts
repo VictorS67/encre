@@ -19,17 +19,12 @@ export type VariableValidatorNode = CallableNode<
 >;
 
 export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidatorNode> {
-  static create(): VariableValidatorNode {
-    const variableValidator = new VariableValidator({
-      variables: [],
-      rules: {},
-    });
-
-    const node: VariableValidatorNode = {
+  static nodeFrom(callable: VariableValidator): VariableValidatorNode {
+    return {
       id: getRecordId(),
       type: 'variable-validator',
       subType: 'variable',
-      data: variableValidator,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -48,6 +43,16 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
         errorMessage: ['string', 'unknown'],
       },
     };
+  }
+
+  static create(): VariableValidatorNode {
+    const variableValidator = new VariableValidator({
+      variables: [],
+      rules: {},
+    });
+
+    const node: VariableValidatorNode =
+      VariableValidatorNodeImpl.nodeFrom(variableValidator);
 
     return node;
   }

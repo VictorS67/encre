@@ -85,17 +85,12 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
 }
 
 export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
-  static create(): ChatLMNode {
-    const openaiChat = new OpenAIChat({
-      modelName: 'gpt-3.5-turbo',
-      maxTokens: 2048,
-    });
-
-    const node: ChatLMNode = {
+  static nodeFrom(callable: OpenAIChat): ChatLMNode {
+    return {
       id: getRecordId(),
       type: 'chatlm',
       subType: 'openai',
-      data: openaiChat,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -116,6 +111,15 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
         tokenUsage: ['object', 'unknown'],
       },
     };
+  }
+
+  static create(): ChatLMNode {
+    const openaiChat = new OpenAIChat({
+      modelName: 'gpt-3.5-turbo',
+      maxTokens: 2048,
+    });
+
+    const node: ChatLMNode = OpenAIChatNodeImpl.nodeFrom(openaiChat);
 
     return node;
   }
@@ -141,18 +145,12 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
 }
 
 export class GeminiChatNodeImpl extends ChatLMNodeImpl {
-  static create(): ChatLMNode {
-    const geminiChat = new GeminiChat({
-      modelName: 'gemini-pro-vision',
-      googleApiKey: 'google-secret-placeholder',
-      maxOutputTokens: 2048,
-    });
-
-    const node: ChatLMNode = {
+  static nodeFrom(callable: GeminiChat): ChatLMNode {
+    return {
       id: getRecordId(),
       type: 'chatlm',
       subType: 'gemini',
-      data: geminiChat,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -170,11 +168,19 @@ export class GeminiChatNodeImpl extends ChatLMNodeImpl {
         output: 'string',
         message: 'chat-message',
         info: ['object', 'unknown'],
-        completionTokens: ['number', 'unknown'],
-        promptTokens: ['number', 'unknown'],
-        totalTokens: ['number', 'unknown'],
+        tokenUsage: ['object', 'unknown'],
       },
     };
+  }
+
+  static create(): ChatLMNode {
+    const geminiChat = new GeminiChat({
+      modelName: 'gemini-pro-vision',
+      googleApiKey: 'google-secret-placeholder',
+      maxOutputTokens: 2048,
+    });
+
+    const node: ChatLMNode = GeminiChatNodeImpl.nodeFrom(geminiChat);
 
     return node;
   }

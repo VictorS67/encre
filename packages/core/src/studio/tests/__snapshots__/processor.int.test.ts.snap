@@ -1,0 +1,1881 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GraphProcessor test simple chain with one worker in graph 1`] = `
+[
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "JjpR_3SOsjTH6FmVH",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "nodeStart",
+    "inputs": {},
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "JjpR_3SOsjTH6FmVH",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processId": "v4SbXfB8eFQWj_mLP",
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "nodeFinish",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "JjpR_3SOsjTH6FmVH",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "outputs": {
+      "prompt": {
+        "type": "chat-message[]",
+        "value": [
+          {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "human",
+              "HumanMessage",
+            ],
+            "_kwargs": {
+              "content": "Who are you?",
+            },
+            "_type": "constructor",
+          },
+        ],
+      },
+    },
+    "processId": "v4SbXfB8eFQWj_mLP",
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "ihebx1w@Gu1PmfVpx",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "JjpR_3SOsjTH6FmVH",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "nodeStart",
+    "inputs": {
+      "prompt": {
+        "type": "chat-message[]",
+        "value": [
+          {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "human",
+              "HumanMessage",
+            ],
+            "_kwargs": {
+              "content": "Who are you?",
+            },
+            "_type": "constructor",
+          },
+        ],
+      },
+    },
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "ihebx1w@Gu1PmfVpx",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processId": "sap4LKIdVZh@Fp3ap",
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "nodeFinish",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "ihebx1w@Gu1PmfVpx",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "outputs": {
+      "info": {
+        "type": "object",
+        "value": {
+          "finishReason": "stop",
+        },
+      },
+      "message": {
+        "type": "chat-message",
+        "value": {
+          "_grp": 1,
+          "_id": [
+            "events",
+            "input",
+            "load",
+            "msgs",
+            "assistant",
+            "BotMessage",
+          ],
+          "_kwargs": {
+            "additional_kwargs": {},
+            "content": "I am a language model AI created by OpenAI. How can I assist you today?",
+          },
+          "_type": "constructor",
+        },
+      },
+      "output": {
+        "type": "string",
+        "value": "I am a language model AI created by OpenAI. How can I assist you today?",
+      },
+      "tokenUsage": {
+        "type": "object",
+        "value": {
+          "completionTokens": 18,
+          "promptTokens": 11,
+          "totalTokens": 29,
+        },
+      },
+    },
+    "processId": "sap4LKIdVZh@Fp3ap",
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "graphFinish",
+    "graph": {
+      "_grp": 1,
+      "_id": [
+        "studio",
+        "graph",
+        "MockSingleWorkerGraph",
+      ],
+      "_kwargs": {
+        "connections": [
+          {
+            "fromNodeId": "JjpR_3SOsjTH6FmVH",
+            "fromPortName": "prompt",
+            "toNodeId": "ihebx1w@Gu1PmfVpx",
+            "toPortName": "prompt",
+          },
+        ],
+        "nodes": [
+          {
+            "data": {
+              "_grp": 1,
+              "_id": [
+                "events",
+                "input",
+                "load",
+                "prompts",
+                "text",
+                "StringPrompt",
+              ],
+              "_kwargs": {
+                "value": "Who are you?",
+              },
+              "_type": "constructor",
+            },
+            "id": "JjpR_3SOsjTH6FmVH",
+            "inputs": {},
+            "outputs": {
+              "prompt": [
+                "string",
+                "chat-message[]",
+              ],
+            },
+            "subType": "string",
+            "type": "prompt",
+            "visualInfo": {
+              "position": {
+                "x": 0,
+                "y": 0,
+              },
+              "size": {
+                "height": 500,
+                "width": 300,
+              },
+            },
+          },
+          {
+            "data": {
+              "_grp": 1,
+              "_id": [
+                "events",
+                "inference",
+                "chat",
+                "chatlms",
+                "openai",
+                "OpenAIChat",
+              ],
+              "_kwargs": {
+                "additional_kwargs": {},
+                "callbacks": undefined,
+                "frequency_penalty": 0,
+                "logit_bias": undefined,
+                "max_tokens": 2048,
+                "model": "gpt-3.5-turbo",
+                "openai_api_key": {
+                  "_grp": 1,
+                  "_id": [
+                    "OPENAI_API_KEY",
+                  ],
+                  "_type": "secret",
+                },
+                "presence_penalty": 0,
+                "response_format_type": undefined,
+                "seed": undefined,
+                "stop_words": undefined,
+                "stream": false,
+                "temperature": 1,
+                "timeout": undefined,
+                "top_p": 1,
+                "user": undefined,
+                "verbose": undefined,
+              },
+              "_type": "constructor",
+            },
+            "id": "ihebx1w@Gu1PmfVpx",
+            "inputs": {
+              "prompt": [
+                "string",
+                "chat-message[]",
+              ],
+            },
+            "outputs": {
+              "info": [
+                "object",
+                "unknown",
+              ],
+              "message": "chat-message",
+              "output": "string",
+              "tokenUsage": [
+                "object",
+                "unknown",
+              ],
+            },
+            "subType": "openai",
+            "type": "chatlm",
+            "visualInfo": {
+              "position": {
+                "x": 0,
+                "y": 0,
+              },
+              "size": {
+                "height": 500,
+                "width": 300,
+              },
+            },
+          },
+        ],
+      },
+      "_type": "constructor",
+    },
+    "isSubProcessor": false,
+    "outputs": {
+      "ihebx1w@Gu1PmfVpx": {
+        "info": {
+          "type": "object",
+          "value": {
+            "finishReason": "stop",
+          },
+        },
+        "message": {
+          "type": "chat-message",
+          "value": {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "assistant",
+              "BotMessage",
+            ],
+            "_kwargs": {
+              "additional_kwargs": {},
+              "content": "I am a language model AI created by OpenAI. How can I assist you today?",
+            },
+            "_type": "constructor",
+          },
+        },
+        "output": {
+          "type": "string",
+          "value": "I am a language model AI created by OpenAI. How can I assist you today?",
+        },
+        "tokenUsage": {
+          "type": "object",
+          "value": {
+            "completionTokens": 18,
+            "promptTokens": 11,
+            "totalTokens": 29,
+          },
+        },
+      },
+    },
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+  {
+    "#type": "done",
+    "isSubProcessor": false,
+    "processorId": "qNRMv6OPeTSFTGc9v",
+    "results": {
+      "ihebx1w@Gu1PmfVpx": {
+        "info": {
+          "type": "object",
+          "value": {
+            "finishReason": "stop",
+          },
+        },
+        "message": {
+          "type": "chat-message",
+          "value": {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "assistant",
+              "BotMessage",
+            ],
+            "_kwargs": {
+              "additional_kwargs": {},
+              "content": "I am a language model AI created by OpenAI. How can I assist you today?",
+            },
+            "_type": "constructor",
+          },
+        },
+        "output": {
+          "type": "string",
+          "value": "I am a language model AI created by OpenAI. How can I assist you today?",
+        },
+        "tokenUsage": {
+          "type": "object",
+          "value": {
+            "completionTokens": 18,
+            "promptTokens": 11,
+            "totalTokens": 29,
+          },
+        },
+      },
+    },
+  },
+  {
+    "#type": "finish",
+    "isSubProcessor": false,
+    "processorId": "qNRMv6OPeTSFTGc9v",
+  },
+]
+`;
+
+exports[`GraphProcessor test simple chain with two worker in graph 1`] = `
+[
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "qQkXPIWftltEXX7Yo",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+  {
+    "#type": "nodeStart",
+    "inputs": {},
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "qQkXPIWftltEXX7Yo",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processId": "054P1OPH@zjFXC_UX",
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+  {
+    "#type": "nodeFinish",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "qQkXPIWftltEXX7Yo",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "outputs": {
+      "prompt": {
+        "type": "chat-message[]",
+        "value": [
+          {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "human",
+              "HumanMessage",
+            ],
+            "_kwargs": {
+              "content": "Who are you?",
+            },
+            "_type": "constructor",
+          },
+        ],
+      },
+    },
+    "processId": "054P1OPH@zjFXC_UX",
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "L0iFt5mBxGAP90C6F",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "prompts",
+          "text",
+          "StringPrompt",
+        ],
+        "_kwargs": {
+          "value": "Who are you?",
+        },
+        "_type": "constructor",
+      },
+      "id": "qQkXPIWftltEXX7Yo",
+      "inputs": {},
+      "outputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "subType": "string",
+      "type": "prompt",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+  {
+    "#type": "nodeStart",
+    "inputs": {
+      "prompt": {
+        "type": "chat-message[]",
+        "value": [
+          {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "human",
+              "HumanMessage",
+            ],
+            "_kwargs": {
+              "content": "Who are you?",
+            },
+            "_type": "constructor",
+          },
+        ],
+      },
+    },
+    "isSubProcessor": true,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "L0iFt5mBxGAP90C6F",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processId": "SKZAwfcYCvilHV9UD",
+    "processorId": "m89b2hPhFE6CZdwWo",
+  },
+  {
+    "#type": "nodeFinish",
+    "isSubProcessor": true,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "L0iFt5mBxGAP90C6F",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "outputs": {
+      "info": {
+        "type": "object",
+        "value": {
+          "finishReason": "stop",
+        },
+      },
+      "message": {
+        "type": "chat-message",
+        "value": {
+          "_grp": 1,
+          "_id": [
+            "events",
+            "input",
+            "load",
+            "msgs",
+            "assistant",
+            "BotMessage",
+          ],
+          "_kwargs": {
+            "additional_kwargs": {},
+            "content": "I am an AI digital assistant designed to help answer questions and assist with tasks. How can I assist you today?",
+          },
+          "_type": "constructor",
+        },
+      },
+      "output": {
+        "type": "string",
+        "value": "I am an AI digital assistant designed to help answer questions and assist with tasks. How can I assist you today?",
+      },
+      "tokenUsage": {
+        "type": "object",
+        "value": {
+          "completionTokens": 23,
+          "promptTokens": 11,
+          "totalTokens": 34,
+        },
+      },
+    },
+    "processId": "SKZAwfcYCvilHV9UD",
+    "processorId": "m89b2hPhFE6CZdwWo",
+  },
+  {
+    "#type": "graphFinish",
+    "graph": {
+      "_grp": 1,
+      "_id": [
+        "studio",
+        "graph",
+        "MockTwoWorkersGraph",
+      ],
+      "_kwargs": {
+        "connections": [
+          {
+            "fromNodeId": "qQkXPIWftltEXX7Yo",
+            "fromPortName": "prompt",
+            "toNodeId": "L0iFt5mBxGAP90C6F",
+            "toPortName": "prompt",
+          },
+        ],
+        "nodes": [
+          {
+            "data": {
+              "_grp": 1,
+              "_id": [
+                "events",
+                "input",
+                "load",
+                "prompts",
+                "text",
+                "StringPrompt",
+              ],
+              "_kwargs": {
+                "value": "Who are you?",
+              },
+              "_type": "constructor",
+            },
+            "id": "qQkXPIWftltEXX7Yo",
+            "inputs": {},
+            "outputs": {
+              "prompt": [
+                "string",
+                "chat-message[]",
+              ],
+            },
+            "subType": "string",
+            "type": "prompt",
+            "visualInfo": {
+              "position": {
+                "x": 0,
+                "y": 0,
+              },
+              "size": {
+                "height": 500,
+                "width": 300,
+              },
+            },
+          },
+          {
+            "data": {
+              "_grp": 1,
+              "_id": [
+                "events",
+                "inference",
+                "chat",
+                "chatlms",
+                "openai",
+                "OpenAIChat",
+              ],
+              "_kwargs": {
+                "additional_kwargs": {},
+                "callbacks": undefined,
+                "frequency_penalty": 0,
+                "logit_bias": undefined,
+                "max_tokens": 2048,
+                "model": "gpt-3.5-turbo",
+                "openai_api_key": {
+                  "_grp": 1,
+                  "_id": [
+                    "OPENAI_API_KEY",
+                  ],
+                  "_type": "secret",
+                },
+                "presence_penalty": 0,
+                "response_format_type": undefined,
+                "seed": undefined,
+                "stop_words": undefined,
+                "stream": false,
+                "temperature": 1,
+                "timeout": undefined,
+                "top_p": 1,
+                "user": undefined,
+                "verbose": undefined,
+              },
+              "_type": "constructor",
+            },
+            "id": "L0iFt5mBxGAP90C6F",
+            "inputs": {
+              "prompt": [
+                "string",
+                "chat-message[]",
+              ],
+            },
+            "outputs": {
+              "info": [
+                "object",
+                "unknown",
+              ],
+              "message": "chat-message",
+              "output": "string",
+              "tokenUsage": [
+                "object",
+                "unknown",
+              ],
+            },
+            "subType": "openai",
+            "type": "chatlm",
+            "visualInfo": {
+              "position": {
+                "x": 0,
+                "y": 0,
+              },
+              "size": {
+                "height": 500,
+                "width": 300,
+              },
+            },
+          },
+        ],
+      },
+      "_type": "constructor",
+    },
+    "isSubProcessor": false,
+    "outputs": {
+      "L0iFt5mBxGAP90C6F": {
+        "info": {
+          "type": "object",
+          "value": {
+            "finishReason": "stop",
+          },
+        },
+        "message": {
+          "type": "chat-message",
+          "value": {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "assistant",
+              "BotMessage",
+            ],
+            "_kwargs": {
+              "additional_kwargs": {},
+              "content": "I am an AI digital assistant designed to help answer questions and assist with tasks. How can I assist you today?",
+            },
+            "_type": "constructor",
+          },
+        },
+        "output": {
+          "type": "string",
+          "value": "I am an AI digital assistant designed to help answer questions and assist with tasks. How can I assist you today?",
+        },
+        "tokenUsage": {
+          "type": "object",
+          "value": {
+            "completionTokens": 23,
+            "promptTokens": 11,
+            "totalTokens": 34,
+          },
+        },
+      },
+    },
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+  {
+    "#type": "done",
+    "isSubProcessor": false,
+    "processorId": "qKjhxasRO9VhwOICZ",
+    "results": {
+      "L0iFt5mBxGAP90C6F": {
+        "info": {
+          "type": "object",
+          "value": {
+            "finishReason": "stop",
+          },
+        },
+        "message": {
+          "type": "chat-message",
+          "value": {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "assistant",
+              "BotMessage",
+            ],
+            "_kwargs": {
+              "additional_kwargs": {},
+              "content": "I am an AI digital assistant designed to help answer questions and assist with tasks. How can I assist you today?",
+            },
+            "_type": "constructor",
+          },
+        },
+        "output": {
+          "type": "string",
+          "value": "I am an AI digital assistant designed to help answer questions and assist with tasks. How can I assist you today?",
+        },
+        "tokenUsage": {
+          "type": "object",
+          "value": {
+            "completionTokens": 23,
+            "promptTokens": 11,
+            "totalTokens": 34,
+          },
+        },
+      },
+    },
+  },
+  {
+    "#type": "finish",
+    "isSubProcessor": false,
+    "processorId": "qKjhxasRO9VhwOICZ",
+  },
+]
+`;
+
+exports[`GraphProcessor test simple node in graph 1`] = `
+[
+  {
+    "#type": "processInQueue",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "7LumEr7fEVl2nZ@L3",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processorId": "Q54@j0xwHwXizLoAW",
+  },
+  {
+    "#type": "nodeStart",
+    "inputs": {
+      "prompt": {
+        "type": "string",
+        "value": "Who are you?",
+      },
+    },
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "7LumEr7fEVl2nZ@L3",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "processId": "lEsdQUR_56eZL3cAb",
+    "processorId": "Q54@j0xwHwXizLoAW",
+  },
+  {
+    "#type": "nodeFinish",
+    "isSubProcessor": false,
+    "node": {
+      "data": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "inference",
+          "chat",
+          "chatlms",
+          "openai",
+          "OpenAIChat",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "callbacks": undefined,
+          "frequency_penalty": 0,
+          "logit_bias": undefined,
+          "max_tokens": 2048,
+          "model": "gpt-3.5-turbo",
+          "openai_api_key": {
+            "_grp": 1,
+            "_id": [
+              "OPENAI_API_KEY",
+            ],
+            "_type": "secret",
+          },
+          "presence_penalty": 0,
+          "response_format_type": undefined,
+          "seed": undefined,
+          "stop_words": undefined,
+          "stream": false,
+          "temperature": 1,
+          "timeout": undefined,
+          "top_p": 1,
+          "user": undefined,
+          "verbose": undefined,
+        },
+        "_type": "constructor",
+      },
+      "id": "7LumEr7fEVl2nZ@L3",
+      "inputs": {
+        "prompt": [
+          "string",
+          "chat-message[]",
+        ],
+      },
+      "outputs": {
+        "info": [
+          "object",
+          "unknown",
+        ],
+        "message": "chat-message",
+        "output": "string",
+        "tokenUsage": [
+          "object",
+          "unknown",
+        ],
+      },
+      "subType": "openai",
+      "type": "chatlm",
+      "visualInfo": {
+        "position": {
+          "x": 0,
+          "y": 0,
+        },
+        "size": {
+          "height": 500,
+          "width": 300,
+        },
+      },
+    },
+    "outputs": {
+      "info": {
+        "type": "object",
+        "value": {
+          "finishReason": "stop",
+        },
+      },
+      "message": {
+        "type": "chat-message",
+        "value": {
+          "_grp": 1,
+          "_id": [
+            "events",
+            "input",
+            "load",
+            "msgs",
+            "assistant",
+            "BotMessage",
+          ],
+          "_kwargs": {
+            "additional_kwargs": {},
+            "content": "I am a language model AI assistant here to help and provide information to the best of my abilities. How can I assist you today?",
+          },
+          "_type": "constructor",
+        },
+      },
+      "output": {
+        "type": "string",
+        "value": "I am a language model AI assistant here to help and provide information to the best of my abilities. How can I assist you today?",
+      },
+      "tokenUsage": {
+        "type": "object",
+        "value": {
+          "completionTokens": 27,
+          "promptTokens": 11,
+          "totalTokens": 38,
+        },
+      },
+    },
+    "processId": "lEsdQUR_56eZL3cAb",
+    "processorId": "Q54@j0xwHwXizLoAW",
+  },
+  {
+    "#type": "graphFinish",
+    "graph": {
+      "_grp": 1,
+      "_id": [
+        "studio",
+        "graph",
+        "MockSingleWorkerGraph",
+      ],
+      "_kwargs": {
+        "connections": [],
+        "nodes": [
+          {
+            "data": {
+              "_grp": 1,
+              "_id": [
+                "events",
+                "inference",
+                "chat",
+                "chatlms",
+                "openai",
+                "OpenAIChat",
+              ],
+              "_kwargs": {
+                "additional_kwargs": {},
+                "callbacks": undefined,
+                "frequency_penalty": 0,
+                "logit_bias": undefined,
+                "max_tokens": 2048,
+                "model": "gpt-3.5-turbo",
+                "openai_api_key": {
+                  "_grp": 1,
+                  "_id": [
+                    "OPENAI_API_KEY",
+                  ],
+                  "_type": "secret",
+                },
+                "presence_penalty": 0,
+                "response_format_type": undefined,
+                "seed": undefined,
+                "stop_words": undefined,
+                "stream": false,
+                "temperature": 1,
+                "timeout": undefined,
+                "top_p": 1,
+                "user": undefined,
+                "verbose": undefined,
+              },
+              "_type": "constructor",
+            },
+            "id": "7LumEr7fEVl2nZ@L3",
+            "inputs": {
+              "prompt": [
+                "string",
+                "chat-message[]",
+              ],
+            },
+            "outputs": {
+              "info": [
+                "object",
+                "unknown",
+              ],
+              "message": "chat-message",
+              "output": "string",
+              "tokenUsage": [
+                "object",
+                "unknown",
+              ],
+            },
+            "subType": "openai",
+            "type": "chatlm",
+            "visualInfo": {
+              "position": {
+                "x": 0,
+                "y": 0,
+              },
+              "size": {
+                "height": 500,
+                "width": 300,
+              },
+            },
+          },
+        ],
+      },
+      "_type": "constructor",
+    },
+    "isSubProcessor": false,
+    "outputs": {
+      "7LumEr7fEVl2nZ@L3": {
+        "info": {
+          "type": "object",
+          "value": {
+            "finishReason": "stop",
+          },
+        },
+        "message": {
+          "type": "chat-message",
+          "value": {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "assistant",
+              "BotMessage",
+            ],
+            "_kwargs": {
+              "additional_kwargs": {},
+              "content": "I am a language model AI assistant here to help and provide information to the best of my abilities. How can I assist you today?",
+            },
+            "_type": "constructor",
+          },
+        },
+        "output": {
+          "type": "string",
+          "value": "I am a language model AI assistant here to help and provide information to the best of my abilities. How can I assist you today?",
+        },
+        "tokenUsage": {
+          "type": "object",
+          "value": {
+            "completionTokens": 27,
+            "promptTokens": 11,
+            "totalTokens": 38,
+          },
+        },
+      },
+    },
+    "processorId": "Q54@j0xwHwXizLoAW",
+  },
+  {
+    "#type": "done",
+    "isSubProcessor": false,
+    "processorId": "Q54@j0xwHwXizLoAW",
+    "results": {
+      "7LumEr7fEVl2nZ@L3": {
+        "info": {
+          "type": "object",
+          "value": {
+            "finishReason": "stop",
+          },
+        },
+        "message": {
+          "type": "chat-message",
+          "value": {
+            "_grp": 1,
+            "_id": [
+              "events",
+              "input",
+              "load",
+              "msgs",
+              "assistant",
+              "BotMessage",
+            ],
+            "_kwargs": {
+              "additional_kwargs": {},
+              "content": "I am a language model AI assistant here to help and provide information to the best of my abilities. How can I assist you today?",
+            },
+            "_type": "constructor",
+          },
+        },
+        "output": {
+          "type": "string",
+          "value": "I am a language model AI assistant here to help and provide information to the best of my abilities. How can I assist you today?",
+        },
+        "tokenUsage": {
+          "type": "object",
+          "value": {
+            "completionTokens": 27,
+            "promptTokens": 11,
+            "totalTokens": 38,
+          },
+        },
+      },
+    },
+  },
+  {
+    "#type": "finish",
+    "isSubProcessor": false,
+    "processorId": "Q54@j0xwHwXizLoAW",
+  },
+]
+`;

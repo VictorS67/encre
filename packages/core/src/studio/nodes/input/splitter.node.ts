@@ -90,14 +90,12 @@ export abstract class SplitterNodeImpl extends CallableNodeImpl<SplitterNode> {
 }
 
 export class TextSplitterNodeImpl extends SplitterNodeImpl {
-  static create(): SplitterNode {
-    const textSplitter = new TextSplitter(scalarDefaults['object']);
-
-    const node: SplitterNode = {
+  static nodeFrom(callable: TextSplitter): SplitterNode {
+    return {
       id: getRecordId(),
       type: 'splitter',
       subType: 'text',
-      data: textSplitter,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -115,20 +113,28 @@ export class TextSplitterNodeImpl extends SplitterNodeImpl {
         contexts: 'context[]',
       },
     };
+  }
+
+  static create(): SplitterNode {
+    const textSplitter = new TextSplitter(scalarDefaults['object']);
+
+    const node: SplitterNode = TextSplitterNodeImpl.nodeFrom(textSplitter);
 
     return node;
   }
 }
 
 export class RecursiveTextSplitterNodeImpl extends SplitterNodeImpl {
-  static create(): SplitterNode {
-    const textSplitter = new RecursiveTextSplitter(scalarDefaults['object']);
-
-    const node: SplitterNode = {
+  static nodeFrom(
+    callable: RecursiveTextSplitter,
+    registerArgs?: { language: SupportedLanguageForSplit }
+  ): SplitterNode {
+    return {
       id: getRecordId(),
       type: 'splitter',
-      subType: 'paragraph',
-      data: textSplitter,
+      subType: registerArgs ? registerArgs.language : 'paragraph',
+      registerArgs,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -146,21 +152,29 @@ export class RecursiveTextSplitterNodeImpl extends SplitterNodeImpl {
         contexts: 'context[]',
       },
     };
+  }
+
+  static create(): SplitterNode {
+    const textSplitter = new RecursiveTextSplitter(scalarDefaults['object']);
+
+    const node: SplitterNode =
+      RecursiveTextSplitterNodeImpl.nodeFrom(textSplitter);
 
     return node;
   }
 }
 
 export class LanguageTextSplitterNodeImpl extends SplitterNodeImpl {
-  static create(fields: { language: SupportedLanguageForSplit }): SplitterNode {
-    const textSplitter = RecursiveTextSplitter.fromLanguage(fields.language);
-
-    const node: SplitterNode = {
+  static nodeFrom(
+    callable: RecursiveTextSplitter,
+    registerArgs: { language: SupportedLanguageForSplit }
+  ): SplitterNode {
+    return {
       id: getRecordId(),
       type: 'splitter',
-      subType: fields.language,
-      registerArgs: fields,
-      data: textSplitter,
+      subType: registerArgs.language,
+      registerArgs,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -178,20 +192,27 @@ export class LanguageTextSplitterNodeImpl extends SplitterNodeImpl {
         contexts: 'context[]',
       },
     };
+  }
+
+  static create(fields: { language: SupportedLanguageForSplit }): SplitterNode {
+    const textSplitter = RecursiveTextSplitter.fromLanguage(fields.language);
+
+    const node: SplitterNode = LanguageTextSplitterNodeImpl.nodeFrom(
+      textSplitter,
+      fields
+    );
 
     return node;
   }
 }
 
 export class TokenTextSplitterNodeImpl extends SplitterNodeImpl {
-  static create(): SplitterNode {
-    const tokenSplitter = new TokenTextSplitter(scalarDefaults['object']);
-
-    const node: SplitterNode = {
+  static nodeFrom(callable: TokenTextSplitter): SplitterNode {
+    return {
       id: getRecordId(),
       type: 'splitter',
       subType: 'token',
-      data: tokenSplitter,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -209,6 +230,13 @@ export class TokenTextSplitterNodeImpl extends SplitterNodeImpl {
         contexts: 'context[]',
       },
     };
+  }
+
+  static create(): SplitterNode {
+    const tokenSplitter = new TokenTextSplitter(scalarDefaults['object']);
+
+    const node: SplitterNode =
+      TokenTextSplitterNodeImpl.nodeFrom(tokenSplitter);
 
     return node;
   }

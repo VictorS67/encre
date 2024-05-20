@@ -32,10 +32,7 @@ export interface NodeGraph {
 // /** The input and output values from a graph */
 // export type GraphValues = Record<RecordId, Record<string, unknown>>;
 
-export abstract class BaseGraph
-  extends Serializable
-  implements NodeGraph
-{
+export abstract class BaseGraph extends Serializable implements NodeGraph {
   _isSerializable = true;
 
   _namespace: string[] = ['studio', 'graph'];
@@ -74,12 +71,16 @@ export abstract class BaseGraph
     { nodeId: RecordId; name: string }
   >;
 
+  readonly graphStartNodeIds: RecordId[];
+
   // a lookup table with the key of the output port name and the value
   // of the corresponding node id and actual output port name in the node
   readonly graphOutputNameMap: Record<
     string,
     { nodeId: RecordId; name: string }
   >;
+
+  readonly graphEndNodeIds: RecordId[];
 
   // node-map: a lookup table with the key of the non-subgraph node id and
   // the value of the non-subgraph node
@@ -148,15 +149,19 @@ export abstract class BaseGraph
       flattenConnections,
       inputs,
       inputNameMap,
+      startNodeIds,
       outputs,
       outputNameMap,
+      endNodeIds
     } = BaseGraph.flattenGraph(this.id, this.nodes, this.connections);
     this.flattenNodes = flattenNodes;
     this.flattenConnections = flattenConnections;
     this.graphInputs = inputs;
     this.graphInputNameMap = inputNameMap;
+    this.graphStartNodeIds = startNodeIds;
     this.graphOutputs = outputs;
     this.graphOutputNameMap = outputNameMap;
+    this.graphEndNodeIds = endNodeIds;
 
     // Create nodeImpl-map and node-map for future lookup
     for (const node of this.flattenNodes) {
@@ -285,7 +290,7 @@ export abstract class BaseGraph
           (def) => def.nodeId === node.id && def.name === conn.toPortName
         );
 
-        return !!connectionDef;
+        return connectionDef !== undefined;
       })
       .map((conn) => this.nodeMap[conn.fromNodeId])
       .filter(isNotNull);
@@ -312,9 +317,9 @@ export abstract class BaseGraph
           (def) => def.nodeId === node.id && def.name === conn.fromPortName
         );
 
-        return !!connectionDef;
+        return connectionDef !== undefined;
       })
-      .map((conn) => this.nodeMap[conn.fromNodeId])
+      .map((conn) => this.nodeMap[conn.toNodeId])
       .filter(isNotNull);
   }
 
@@ -327,7 +332,7 @@ export abstract class BaseGraph
    * In addition, get graph ports for the start nodes and end nodes in the
    * flatten graph
    *
-   * @param nodeId graph id
+   * @param graphId graph id
    * @param nodes all of the nodes in the graph, this allows subgraph nodes
    * @param connections all of the connections in the graph, this allows the
    * connection with subgraph nodes
@@ -339,7 +344,7 @@ export abstract class BaseGraph
    * port name for reversing the name to the original.
    */
   static flattenGraph(
-    nodeId: RecordId,
+    graphId: RecordId,
     nodes: SerializableNode[],
     connections: NodeConnection[]
   ): {
@@ -347,15 +352,23 @@ export abstract class BaseGraph
     flattenConnections: NodeConnection[];
     inputs: Record<string, DataType | Readonly<DataType[]>>;
     inputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    startNodeIds: RecordId[];
     outputs: Record<string, DataType | Readonly<DataType[]>>;
     outputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    endNodeIds: RecordId[];
   } {
     let flattenNodes: SerializableNode[] = [];
     let flattenConnections: NodeConnection[] = [];
 
     // Get all of the input ports and output ports of the graph
-    const { inputs, inputNameMap, outputs, outputNameMap } =
-      BaseGraph.getGraphPorts(nodes, connections);
+    const {
+      inputs,
+      inputNameMap,
+      startNodeIds,
+      outputs,
+      outputNameMap,
+      endNodeIds,
+    } = BaseGraph.getGraphPorts(nodes, connections);
 
     for (const node of nodes) {
       if (node.type === 'graph' && node.subType === 'subgraph') {
@@ -379,21 +392,21 @@ export abstract class BaseGraph
     const inputPortNames: string[] = Object.keys(inputs);
     const outputPortNames: string[] = Object.keys(outputs);
     for (const conn of connections) {
-      if (conn.toNodeId === nodeId) {
+      if (conn.toNodeId === graphId) {
         // To GraphNode's input ports
         const inputPortName: string | undefined = inputPortNames.find(
           (ipn) => ipn === conn.toPortName
         );
         if (!inputPortName) {
           throw new Error(
-            `Graph ${nodeId} cannot find an input port name that matches to the connection to-port name: ${conn.toPortName}`
+            `Graph ${graphId} cannot find an input port name that matches to the connection to-port name: ${conn.toPortName}`
           );
         }
 
         const nameMap = inputNameMap[inputPortName];
         if (!nameMap) {
           throw new Error(
-            `Graph ${nodeId} cannot find an node id that has input port that matches to the connection to-port name: ${conn.toPortName}`
+            `Graph ${graphId} cannot find an node id that has input port that matches to the connection to-port name: ${conn.toPortName}`
           );
         }
 
@@ -403,21 +416,21 @@ export abstract class BaseGraph
           toNodeId: nameMap.nodeId,
           toPortName: nameMap.name,
         });
-      } else if (conn.fromNodeId === nodeId) {
+      } else if (conn.fromNodeId === graphId) {
         // From GraphNode's output ports
         const outputPortName: string | undefined = outputPortNames.find(
           (opn) => opn === conn.fromPortName
         );
         if (!outputPortName) {
           throw new Error(
-            `Graph ${nodeId} cannot find an output port name that matches to the connection from-port name: ${conn.fromPortName}`
+            `Graph ${graphId} cannot find an output port name that matches to the connection from-port name: ${conn.fromPortName}`
           );
         }
 
         const nameMap = outputNameMap[outputPortName];
         if (!nameMap) {
           throw new Error(
-            `Graph ${nodeId} cannot find an node id that has output port that matches to the connection from-port name: ${conn.fromPortName}`
+            `Graph ${graphId} cannot find an node id that has output port that matches to the connection from-port name: ${conn.fromPortName}`
           );
         }
 
@@ -437,8 +450,10 @@ export abstract class BaseGraph
       flattenConnections,
       inputs,
       inputNameMap,
+      startNodeIds,
       outputs,
       outputNameMap,
+      endNodeIds
     };
   }
 
@@ -466,8 +481,10 @@ export abstract class BaseGraph
   ): {
     inputs: Record<string, DataType | Readonly<DataType[]>>;
     inputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    startNodeIds: RecordId[];
     outputs: Record<string, DataType | Readonly<DataType[]>>;
     outputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    endNodeIds: RecordId[];
   } {
     const incomingConnections: {
       [key in RecordId]: {
@@ -497,9 +514,11 @@ export abstract class BaseGraph
 
     const inputs: Record<string, DataType | Readonly<DataType[]>> = {};
     const inputNameMap: Record<string, { nodeId: RecordId; name: string }> = {};
+    const startNodeIds: RecordId[] = [];
     const outputs: Record<string, DataType | Readonly<DataType[]>> = {};
     const outputNameMap: Record<string, { nodeId: RecordId; name: string }> =
       {};
+    const endNodeIds: RecordId[] = [];
     for (const node of nodes) {
       const nodeId: RecordId = node.id;
       const nodeTitle: string =
@@ -507,40 +526,63 @@ export abstract class BaseGraph
       const nodeInputs: NodePortFields = node.inputs ?? {};
       const nodeOutputs: NodePortFields = node.outputs ?? {};
 
-      Object.keys(nodeInputs).forEach((i) => {
-        if (!(incomingConnections[nodeId] && incomingConnections[nodeId][i])) {
-          let inputName: string = i;
-          let count = 1;
-          while (inputNameMap[inputName]) {
-            inputName = `${nodeTitle} ${
-              count > 1 ? `${count} ` : ''
-            }${inputName}`;
-            count += 1;
+      if (Object.keys(nodeInputs).length > 0) {
+        Object.keys(nodeInputs).forEach((i) => {
+          if (
+            !(incomingConnections[nodeId] && incomingConnections[nodeId][i])
+          ) {
+            let inputName: string = i;
+            let count = 1;
+            while (inputNameMap[inputName]) {
+              inputName = `${nodeTitle} ${
+                count > 1 ? `${count} ` : ''
+              }${inputName}`;
+              count += 1;
+            }
+
+            inputs[inputName] = nodeInputs[i];
+            inputNameMap[inputName] = { nodeId, name: i };
+
+            startNodeIds.push(nodeId);
           }
+        });
+      } else {
+        startNodeIds.push(nodeId);
+      }
 
-          inputs[inputName] = nodeInputs[i];
-          inputNameMap[inputName] = { nodeId, name: i };
-        }
-      });
+      if (Object.keys(nodeOutputs).length > 0) {
+        Object.keys(nodeOutputs).forEach((o) => {
+          if (
+            !(outgoingConnections[nodeId] && outgoingConnections[nodeId][o])
+          ) {
+            let outputName: string = o;
+            let count = 1;
+            while (outputNameMap[outputName]) {
+              outputName = `${nodeTitle} ${
+                count > 1 ? `${count} ` : ''
+              }${outputName}`;
+              count += 1;
+            }
 
-      Object.keys(nodeOutputs).forEach((o) => {
-        if (!(outgoingConnections[nodeId] && outgoingConnections[nodeId][o])) {
-          let outputName: string = o;
-          let count = 1;
-          while (outputNameMap[outputName]) {
-            outputName = `${nodeTitle} ${
-              count > 1 ? `${count} ` : ''
-            }${outputName}`;
-            count += 1;
+            outputs[outputName] = nodeOutputs[o];
+            outputNameMap[outputName] = { nodeId, name: o };
+
+            endNodeIds.push(nodeId);
           }
-
-          outputs[outputName] = nodeOutputs[o];
-          outputNameMap[outputName] = { nodeId, name: o };
-        }
-      });
+        });
+      } else {
+        endNodeIds.push(nodeId);
+      }
     }
 
-    return { inputs, inputNameMap, outputs, outputNameMap };
+    return {
+      inputs,
+      inputNameMap,
+      startNodeIds: [...new Set(startNodeIds)],
+      outputs,
+      outputNameMap,
+      endNodeIds: [...new Set(endNodeIds)],
+    };
   }
 
   static async deserialize(
