@@ -216,12 +216,12 @@ describe('GraphProcessor', () => {
         type: 'processInQueue',
         isSubProcessor: false,
       },
-      // [MASTER] subprocessor check if stringPromptNode already processed or not
+      // [MASTER] processor check if stringPromptNode already processed or not
       {
         type: 'processInQueue',
         isSubProcessor: false,
       },
-      // [MASTER] stringPromptNode processing
+      // [MASTER] openAINode processing
       {
         type: 'nodeStart',
         isSubProcessor: false,
@@ -346,7 +346,7 @@ describe('GraphProcessor', () => {
         type: 'processInQueue',
         isSubProcessor: false,
       },
-      // [SUB] stringPromptNode processing
+      // [SUB] openAINode processing
       {
         type: 'nodeStart',
         isSubProcessor: true,

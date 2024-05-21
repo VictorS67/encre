@@ -245,6 +245,8 @@ export class GraphProcessor {
 
   #nodeIdsToRun: RecordId[];
 
+  #nodeIdToProcessorIdMap: Map<RecordId, string> = undefined!;
+
   get isRunning() {
     return this.#isRunning;
   }
@@ -420,7 +422,7 @@ export class GraphProcessor {
       });
     }
 
-    await this.#processingQueue.onIdle();
+    await this.#processingQueue.onEmpty();
   }
 
   pause() {
@@ -1045,7 +1047,9 @@ export class GraphProcessor {
       this.#emitter.emit('trace', {
         processorId: this.#processorId,
         isSubProcessor: this.#isSubProcessor,
-        log: `node ${node.id} has output nodes: ${outputNodes.map((n) => n.id)}`,
+        log: `node ${node.id} has output nodes: ${outputNodes.map(
+          (n) => n.id
+        )}`,
       });
 
       for (const outputNode of outputNodes) {
@@ -1266,40 +1270,50 @@ export class GraphProcessor {
 
     this.#parent = undefined;
 
+    this.#nodeIdToProcessorIdMap = new Map();
+    masterNodeIds.forEach((nId) => {
+      this.#nodeIdToProcessorIdMap.set(nId, masterProcessorId);
+    });
+
     // Distribute the following groups of nodes to workers
-    group.map(([subProcessorId, subNodeIds]) => {
+    group.forEach(([subProcessorId, subNodeIds]) => {
+      for (const nId of subNodeIds) {
+        this.#nodeIdToProcessorIdMap.set(nId, subProcessorId);
+      }
+
       this.createSubProcessor(subProcessorId, subNodeIds);
     });
   }
 
   private _getProcessorForNode(node: SerializableNode): GraphProcessor {
-    const isRunNodeInCurrProcessor: boolean = this.#nodeIdsToRun.includes(
-      node.id
-    );
-
-    if (isRunNodeInCurrProcessor) {
-      return this;
-    }
-
+    let nodeIdToProcessorIdMap: Map<RecordId, string>;
     if (this.#isSubProcessor) {
       if (!this.#parent) {
-        throw new Error(`CANNOT find parent in child: ${this.#processorId}`);
+        throw new Error('CANNOT find parent in child');
       }
 
-      return this.#parent;
+      nodeIdToProcessorIdMap = this.#parent.#nodeIdToProcessorIdMap;
+    } else {
+      nodeIdToProcessorIdMap = this.#nodeIdToProcessorIdMap;
     }
 
-    for (const child of this.#children) {
-      const isRunNodeInSubProcessor: boolean = child.#nodeIdsToRun.includes(
-        node.id
-      );
+    if (!nodeIdToProcessorIdMap?.has(node.id)) {
+      throw new Error(`CANNOT find node ${node.id} in the processor`);
+    }
 
-      if (isRunNodeInSubProcessor) {
-        return child;
+    for (const worker of [this, this.#parent, ...this.#children]) {
+      if (!worker) {
+        continue;
       }
+
+      if (worker.#processorId !== nodeIdToProcessorIdMap.get(node.id)) {
+        continue;
+      }
+
+      return worker;
     }
 
-    throw new Error(`CANNOT find child in parent: ${this.#processorId}`);
+    throw new Error('CANNOT find child in parent');
   }
 }
 
