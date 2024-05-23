@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GraphScheduler test scheduler set-up 1`] = `
+[
+  "Lbgg63du@u1u4ShTm",
+  "JDUN549hKYpWH0CFU",
+  "3iotftjQc5AMZf3SL",
+  "QVO1Dwpi0hOdHS6Hw",
+]
+`;
+
+exports[`GraphScheduler test scheduler set-up 2`] = `
+[
+  [
+    [
+      "Lbgg63du@u1u4ShTm",
+      "3iotftjQc5AMZf3SL",
+      "QVO1Dwpi0hOdHS6Hw",
+      "JDUN549hKYpWH0CFU",
+    ],
+  ],
+  Set {
+    "JDUN549hKYpWH0CFU",
+    "Lbgg63du@u1u4ShTm",
+  },
+]
+`;
