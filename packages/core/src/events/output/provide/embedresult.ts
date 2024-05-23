@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai';
-
 /**
  * Contains all relevant information returned by an LLM Embeddings.
  */
