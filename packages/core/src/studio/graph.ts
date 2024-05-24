@@ -15,6 +15,7 @@ import {
 import { GraphNode } from './nodes/utility/graph.node.js';
 import { GuardrailRegistration } from './registration/guardrails.js';
 import { globalNodeRegistry, NodeRegistration } from './registration/nodes.js';
+import { GraphScheduler } from './scheduler.js';
 import { SerializedGraph, SerializedNode } from './serde.js';
 
 export interface NodeGraph {
@@ -152,7 +153,7 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
       startNodeIds,
       outputs,
       outputNameMap,
-      endNodeIds
+      endNodeIds,
     } = BaseGraph.flattenGraph(this.id, this.nodes, this.connections);
     this.flattenNodes = flattenNodes;
     this.flattenConnections = flattenConnections;
@@ -453,7 +454,7 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
       startNodeIds,
       outputs,
       outputNameMap,
-      endNodeIds
+      endNodeIds,
     };
   }
 
@@ -676,6 +677,8 @@ export class SubGraph extends BaseGraph {
   }
 
   schedule(): Array<[string, RecordId[]]> {
-    return [[getRecordId(), this.flattenNodes.map((n) => n.id)]];
+    const graphScheduler = new GraphScheduler(this);
+
+    return graphScheduler.schedule();
   }
 }

@@ -59,6 +59,6 @@ describe('GraphScheduler', () => {
     const scheduler = new GraphScheduler(graph);
 
     expect(graph.flattenNodes.map((n) => n.id)).toMatchSnapshot();
-    expect(scheduler.grouping()).toMatchSnapshot();
+    expect(scheduler.schedule()).toMatchSnapshot();
   });
 });

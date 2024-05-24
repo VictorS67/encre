@@ -266,7 +266,7 @@ export class GraphProcessor {
     this.#isAborted = false;
     this.#isAbortedSuccess = false;
     this.#abortError = undefined;
-    this.#abortController = this.initAbortController();
+    this.#abortController = this.#initAbortController();
     this.#abortController.signal.addEventListener('abort', () => {
       this.#isAborted = true;
     });
@@ -280,7 +280,7 @@ export class GraphProcessor {
     this.#graphOutputs = {};
   }
 
-  initAbortController() {
+  #initAbortController() {
     const controller = new AbortController();
     this.#emitter.emit('newAbortController', {
       processorId: this.#processorId,
@@ -312,10 +312,10 @@ export class GraphProcessor {
       this.#nodeIdsToRun = subProcessor!.nodeIds;
     }
 
-    this.subscribe();
+    this.#subscribe();
   }
 
-  subscribe() {
+  #subscribe() {
     this.#emitter.on(
       'processInQueue',
       async (eventData: {
@@ -340,7 +340,7 @@ export class GraphProcessor {
         }
 
         this.#processingQueue?.add(async () => {
-          await this.fetchNodeDataAndProcessNode(eventData.node);
+          await this.#fetchNodeDataAndProcessNode(eventData.node);
         });
       }
     );
@@ -459,7 +459,7 @@ export class GraphProcessor {
     }
   }
 
-  async waitUntilUnpaused(): Promise<void> {
+  async #waitUntilUnpaused(): Promise<void> {
     if (!this.#isPaused) {
       return;
     }
@@ -617,7 +617,7 @@ export class GraphProcessor {
 
       const endNodeIds: RecordId[] = this.#graph.graphEndNodeIds;
 
-      await this.waitUntilUnpaused();
+      await this.#waitUntilUnpaused();
 
       this.#emitter.emit('trace', {
         processorId: this.#processorId,
@@ -774,7 +774,7 @@ export class GraphProcessor {
     }
   }
 
-  async fetchNodeDataAndProcessNode(node: SerializableNode): Promise<void> {
+  async #fetchNodeDataAndProcessNode(node: SerializableNode): Promise<void> {
     try {
       // Check if the node should be processed in the current processor
       const processorToRun: GraphProcessor = this._getProcessorForNode(node);
@@ -912,13 +912,13 @@ export class GraphProcessor {
         });
       }
 
-      await this.processNodeIfAllInputsAvailable(node);
+      await this.#processNodeIfAllInputsAvailable(node);
     } catch (error) {
       await this.abort(false, error as Error);
     }
   }
 
-  async processNodeIfAllInputsAvailable(node: SerializableNode): Promise<void> {
+  async #processNodeIfAllInputsAvailable(node: SerializableNode): Promise<void> {
     try {
       // Check if the current node should be ignored
       if (this.#ignoreNodeIds.has(node.id)) {
@@ -955,11 +955,12 @@ export class GraphProcessor {
 
       // Check if the current node is errored
       if (this.#nodeErrorMap.has(node.id)) {
-        console.log(
-          `[${this.#isSubProcessor ? 'SUB' : 'MASTER'}] ${
-            this.#processorId
-          }: node ${node.id} is errored`
-        );
+        this.#emitter.emit('trace', {
+          processorId: this.#processorId,
+          isSubProcessor: this.#isSubProcessor,
+          log: `node ${node.id} is errored`,
+        });
+
         return;
       }
 
@@ -1036,7 +1037,7 @@ export class GraphProcessor {
 
       this.#currProcessingNodeIds.add(node.id);
 
-      const processId = await this.processNode(node);
+      const processId = await this.#processNode(node);
 
       this.#visitedNodeIds.add(node.id);
       this.#currProcessingNodeIds.delete(node.id);
@@ -1064,12 +1065,12 @@ export class GraphProcessor {
     }
   }
 
-  async processNode(node: SerializableNode): Promise<ProcessId> {
+  async #processNode(node: SerializableNode): Promise<ProcessId> {
     const processId = getRecordId() as string as ProcessId;
 
     // Check if user is aborted
     if (this.#abortController.signal.aborted) {
-      this.throwProcessError(node, new Error('Processing aborted'), processId);
+      this.#throwProcessError(node, new Error('Processing aborted'), processId);
       return processId;
     }
 
@@ -1088,17 +1089,17 @@ export class GraphProcessor {
           .join(', ')}`
       );
 
-      this.throwProcessError(node, error, processId);
+      this.#throwProcessError(node, error, processId);
       return processId;
     }
 
-    await this.processNormalNode(node, processId);
+    await this.#processNormalNode(node, processId);
 
     return processId;
   }
 
-  async processNormalNode(node: SerializableNode, processId: ProcessId) {
-    const inputValues: ProcessInputMap = this.getProcessInputForNode(node);
+  async #processNormalNode(node: SerializableNode, processId: ProcessId) {
+    const inputValues: ProcessInputMap = this.#getProcessInputForNode(node);
 
     this.#emitter.emit('trace', {
       processorId: this.#processorId,
@@ -1116,7 +1117,7 @@ export class GraphProcessor {
 
     try {
       const outputValues: ProcessOutputMap =
-        await this.processNodeWithInputData(node, inputValues, processId);
+        await this.#processNodeWithInputData(node, inputValues, processId);
 
       this.#nodeResults.set(node.id, outputValues);
       this.#visitedNodeIds.add(node.id);
@@ -1135,18 +1136,18 @@ export class GraphProcessor {
         processId,
       });
     } catch (error) {
-      this.throwProcessError(node, error as Error, processId);
+      this.#throwProcessError(node, error as Error, processId);
     }
   }
 
-  async processNodeWithInputData(
+  async #processNodeWithInputData(
     node: SerializableNode,
     inputs: ProcessInputMap,
     processId: ProcessId
   ): Promise<ProcessOutputMap> {
     const nodeImpl = this.#graph.nodeImplMap[node.id]!;
 
-    const nodeAbortController: AbortController = this.initAbortController();
+    const nodeAbortController: AbortController = this.#initAbortController();
     const abortListener = () => {
       nodeAbortController.abort();
     };
@@ -1169,7 +1170,7 @@ export class GraphProcessor {
       },
     };
 
-    await this.waitUntilUnpaused();
+    await this.#waitUntilUnpaused();
 
     // Processing a single node
     const results = await nodeImpl.process(inputs, context);
@@ -1190,7 +1191,7 @@ export class GraphProcessor {
     return results;
   }
 
-  getProcessInputForNode(node: SerializableNode): ProcessInputMap {
+  #getProcessInputForNode(node: SerializableNode): ProcessInputMap {
     const connections: NodeConnection[] | undefined =
       this.#graph.nodeConnMap[node.id];
     return this.#graph.nodePortDefMap[node.id]!.inputs.reduce(
@@ -1233,7 +1234,7 @@ export class GraphProcessor {
     );
   }
 
-  throwProcessError(
+  #throwProcessError(
     node: SerializableNode,
     error: Error,
     processId: ProcessId
