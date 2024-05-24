@@ -33,6 +33,11 @@ export interface NodeGraph {
 // /** The input and output values from a graph */
 // export type GraphValues = Record<RecordId, Record<string, unknown>>;
 
+export type NodeProcessInfo = {
+  runtime: number;
+  memory: number;
+};
+
 export abstract class BaseGraph extends Serializable implements NodeGraph {
   _isSerializable = true;
 
@@ -106,6 +111,11 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
   // where the node are registered, in default we use globalNodeRegistry
   readonly registry: NodeRegistration;
 
+  // node-process-info-map: a lookup table with the key of the non-subgraph
+  // node id and the value of node process info. This map is updated once
+  // per processing.
+  nodeProcessInfoMap: Record<RecordId, NodeProcessInfo>;
+
   get _attributes() {
     return {
       nodes: [],
@@ -134,6 +144,8 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     this.nodes = fields?.nodes ?? [];
     this.connections = fields?.connections ?? [];
     this.comments = fields?.comments ?? [];
+
+    this.nodeProcessInfoMap = {};
 
     this.registry =
       registry ?? (globalNodeRegistry as unknown as NodeRegistration);
@@ -642,7 +654,33 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
         continue;
       }
 
-      serializedNodes.push(await nodeImpl.serialize(nodeConnections));
+      let processInfo: NodeProcessInfo | undefined =
+        this.nodeProcessInfoMap[node.id];
+      if (node.type === 'graph') {
+        const subGraphProcessInfoMap: Record<RecordId, NodeProcessInfo> = (
+          node.data as BaseGraph
+        ).nodeProcessInfoMap;
+
+        const subGraphNodes: SerializableNode[] = (node.data as BaseGraph)
+          .flattenNodes;
+
+        let subGraphRuntime = 0;
+        let subGraphMemory = 0;
+        for (const subGraphNode of subGraphNodes) {
+          const subGraphNodeProcessInfo: NodeProcessInfo | undefined =
+            this.nodeProcessInfoMap[subGraphNode.id] ??
+            subGraphProcessInfoMap[subGraphNode.id];
+
+          subGraphRuntime += subGraphNodeProcessInfo?.runtime ?? 0;
+          subGraphMemory += subGraphNodeProcessInfo?.memory ?? 0;
+        }
+
+        processInfo = { runtime: subGraphRuntime, memory: subGraphMemory };
+      }
+
+      serializedNodes.push(
+        await nodeImpl.serialize(nodeConnections, processInfo)
+      );
     }
 
     return {

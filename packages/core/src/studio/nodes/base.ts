@@ -7,6 +7,7 @@ import {
 import { SerializedCallableFields } from '../../record/callable.js';
 import { isNotNull } from '../../utils/safeTypes.js';
 import { DataFields, DataType } from '../data.js';
+import { NodeProcessInfo } from '../graph.js';
 import {
   ProcessContext,
   ProcessInputMap,
@@ -137,7 +138,7 @@ export abstract class NodeImpl<
     connections: NodeConnection[] = [],
     nodeMap: Record<RecordId, SerializableNode> = {}
   ): NodeInputPortDef[] {
-    // If there is a IfNode connected to the current node, then the 
+    // If there is a IfNode connected to the current node, then the
     // connected corresponding ports can be coerced to optional (i.e. unknown)
     const portNamesCoerceToOptional: string[] = connections
       .filter((conn) => {
@@ -239,7 +240,10 @@ export abstract class NodeImpl<
     }
   }
 
-  async serialize(connections: NodeConnection[]): Promise<SerializedNode> {
+  async serialize(
+    connections: NodeConnection[],
+    processInfo?: NodeProcessInfo
+  ): Promise<SerializedNode> {
     const outgoingConnections: {
       [key in string]: { toNodeId: RecordId; toPortName: string };
     } = {};
@@ -257,8 +261,8 @@ export abstract class NodeImpl<
       registerArgs: this.registerArgs,
       title: this.title,
       description: this.description,
-      runtime: this.runtime,
-      memory: this.memory,
+      runtime: processInfo?.runtime ?? this.runtime,
+      memory: processInfo?.memory ?? this.memory,
       data: JSON.parse(JSON.stringify(this.data)),
       visualInfo: this.visualInfo,
       inputs: this.inputs,

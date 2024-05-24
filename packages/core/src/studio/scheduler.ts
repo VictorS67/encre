@@ -1,7 +1,8 @@
 import { RecordId } from '../load/keymap.js';
 import { Queue } from '../utils/algorithm.js';
 import { getRecordId } from '../utils/nanoid.js';
-import { BaseGraph } from './graph.js';
+import { BaseGraph, NodeProcessInfo } from './graph.js';
+import { NodeImpl } from './nodes/base.js';
 import { SerializableNode } from './nodes/index.js';
 
 /**
@@ -150,7 +151,7 @@ export class GraphScheduler {
 
       queue.enqueue(node);
       distVecMap[nodeId] = {
-        distance: node.runtime ?? 0,
+        distance: this.#getNodeRunTime(nodeId),
         maxEdgeWeight: 0,
       };
       prevVecMap[nodeId] = undefined;
@@ -166,7 +167,7 @@ export class GraphScheduler {
       for (let i = 0; i < toNodes.length; i++) {
         const toNode: SerializableNode = toNodes[i];
         const toNodeId: RecordId = toNode.id;
-        const toNodeRunTime: number = toNode.runtime ?? 0;
+        const toNodeRunTime: number = this.#getNodeRunTime(toNode.id);
 
         // w is the edge weight, this is related to cost in
         // sending/receiving the data between nodes
@@ -290,5 +291,39 @@ export class GraphScheduler {
     }
 
     throw new Error(`CANNOT find node ${nodeId} in the group set`);
+  }
+
+  #getNodeRunTime(nodeId: RecordId): number {
+    const node: SerializableNode | undefined = this.#graph.nodeMap[nodeId];
+
+    if (!node) {
+      throw new Error(`CANNOT find node: ${node} in graph`);
+    }
+
+    let processInfo: NodeProcessInfo | undefined =
+      this.#graph.nodeProcessInfoMap[node.id];
+    if (node.type === 'graph') {
+      const subGraphProcessInfoMap: Record<RecordId, NodeProcessInfo> = (
+        node.data as BaseGraph
+      ).nodeProcessInfoMap;
+
+      const subGraphNodes: SerializableNode[] = (node.data as BaseGraph)
+        .flattenNodes;
+
+      let subGraphRuntime = 0;
+      let subGraphMemory = 0;
+      for (const subGraphNode of subGraphNodes) {
+        const subGraphNodeProcessInfo: NodeProcessInfo | undefined =
+          this.#graph.nodeProcessInfoMap[subGraphNode.id] ??
+          subGraphProcessInfoMap[subGraphNode.id];
+
+        subGraphRuntime += subGraphNodeProcessInfo?.runtime ?? 0;
+        subGraphMemory += subGraphNodeProcessInfo?.memory ?? 0;
+      }
+
+      processInfo = { runtime: subGraphRuntime, memory: subGraphMemory };
+    }
+
+    return processInfo ? processInfo.runtime : node.runtime ?? 0;
   }
 }

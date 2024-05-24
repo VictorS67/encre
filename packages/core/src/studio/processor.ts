@@ -1,4 +1,4 @@
-import { error } from 'node:console';
+import { performance } from 'perf_hooks';
 import Emittery from 'emittery';
 import PQueue from 'p-queue';
 import type { Opaque } from 'type-fest';
@@ -918,7 +918,9 @@ export class GraphProcessor {
     }
   }
 
-  async #processNodeIfAllInputsAvailable(node: SerializableNode): Promise<void> {
+  async #processNodeIfAllInputsAvailable(
+    node: SerializableNode
+  ): Promise<void> {
     try {
       // Check if the current node should be ignored
       if (this.#ignoreNodeIds.has(node.id)) {
@@ -1172,13 +1174,26 @@ export class GraphProcessor {
 
     await this.#waitUntilUnpaused();
 
+    const start: number = performance.now();
+
     // Processing a single node
-    const results = await nodeImpl.process(inputs, context);
+    const results: ProcessOutputMap = await nodeImpl.process(inputs, context);
+
+    const end: number = performance.now();
+
+    // runtime in seconds
+    const runtime: number = (end - start) / 1000;
+
+    // memory in megabytes
+    const memory: number =
+      Buffer.byteLength(JSON.stringify(results), 'utf8') / (1024 * 1024);
+
+    this.#graph.nodeProcessInfoMap[node.id] = { runtime, memory };
 
     this.#emitter.emit('trace', {
       processorId: this.#processorId,
       isSubProcessor: this.#isSubProcessor,
-      log: `node ${node.id} received processing result`,
+      log: `node ${node.id} received processing result in ${runtime} seconds`,
     });
 
     this.#nodeAbortControllers.delete(`${node.id}-${processId}`);

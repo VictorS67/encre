@@ -1,4 +1,5 @@
 import { setMaxListeners } from 'node:events';
+import { performance } from 'node:perf_hooks';
 import { describe, expect, test } from '@jest/globals';
 import { OpenAIChat } from '../../events/inference/chat/llms/openai/chat.js';
 import { StringPrompt } from '../../events/input/load/prompts/text.js';
@@ -369,5 +370,122 @@ describe('GraphProcessor', () => {
         isSubProcessor: false,
       },
     ]);
+  });
+
+  test('test adaptive scheduling based on node runtime', async () => {
+    const stringPromptNode = globalNodeRegistry.createDynamicRaw(
+      new StringPrompt('Who are you?')
+    );
+
+    const openAINode = globalNodeRegistry.createDynamicRaw(
+      new OpenAIChat({ modelName: 'gpt-3.5-turbo' })
+    );
+
+    const openAINode2 = globalNodeRegistry.createDynamicRaw(
+      new OpenAIChat({ modelName: 'gpt-4-turbo' })
+    );
+
+    const graph = new SubGraph({
+      nodes: [stringPromptNode, openAINode, openAINode2],
+      connections: [
+        {
+          fromNodeId: stringPromptNode.id,
+          fromPortName: 'prompt',
+          toNodeId: openAINode.id,
+          toPortName: 'prompt',
+        },
+        {
+          fromNodeId: stringPromptNode.id,
+          fromPortName: 'prompt',
+          toNodeId: openAINode2.id,
+          toPortName: 'prompt',
+        },
+      ],
+    });
+
+    expect(graph.graphStartNodeIds).toStrictEqual([stringPromptNode.id]);
+    expect(graph.graphEndNodeIds).toStrictEqual([
+      openAINode.id,
+      openAINode2.id,
+    ]);
+
+    expect(graph.schedule()).toMatchSnapshot();
+
+    const processor = new GraphProcessor(graph);
+
+    const graphInputs: GraphInputs = {};
+
+    processor.on(
+      'newAbortController',
+      (fields: { controller: AbortController }) => {
+        setMaxListeners(100, fields.controller.signal);
+      }
+    );
+
+    const start1 = performance.now();
+
+    processor.processGraph(graphInputs);
+
+    let pEvents: ProcessEvent[] = [];
+    let pEventTypes: {
+      type: ProcessEvent['#type'];
+      isSubProcessor: ProcessEvent['isSubProcessor'];
+    }[] = [];
+
+    const pEventToIgnore: Array<ProcessEvent['#type']> = [
+      'trace',
+      'error',
+      'newAbortController',
+      'graphError',
+      'nodeError',
+    ];
+
+    for await (const event of processor.events()) {
+      if (!pEventToIgnore.includes(event['#type'])) {
+        pEvents.push(event);
+
+        pEventTypes.push({
+          type: event['#type'],
+          isSubProcessor: event['isSubProcessor'],
+        });
+      }
+    }
+
+    const end1 = performance.now();
+
+    expect(pEvents).toMatchSnapshot();
+
+    expect(end1 - start1).toMatchSnapshot();
+
+    expect(graph.nodeProcessInfoMap).toMatchSnapshot();
+    expect(graph.schedule()).toMatchSnapshot();
+
+    const start2 = performance.now();
+
+    processor.processGraph(graphInputs);
+
+    pEvents = [];
+    pEventTypes = [];
+
+    for await (const event of processor.events()) {
+      if (!pEventToIgnore.includes(event['#type'])) {
+        pEvents.push(event);
+
+        pEventTypes.push({
+          type: event['#type'],
+          isSubProcessor: event['isSubProcessor'],
+        });
+      }
+    }
+
+    const end2 = performance.now();
+
+    expect(pEvents).toMatchSnapshot();
+
+    expect(end2 - start2).toMatchSnapshot();
+
+    expect(graph.nodeProcessInfoMap).toMatchSnapshot();
+
+    expect(graph.schedule()).toMatchSnapshot();
   });
 });
