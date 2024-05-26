@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MemoryVectorStore mmr search 1`] = `
+[
+  [
+    Context {
+      "metadata": {},
+      "pageContent": "I like pizza",
+    },
+    0.833390357575667,
+  ],
+  [
+    Context {
+      "metadata": {},
+      "pageContent": "I don't like dogs",
+    },
+    -0.014507155088069712,
+  ],
+]
+`;
+
+exports[`MemoryVectorStore similarity search 1`] = `
+[
+  [
+    Context {
+      "metadata": {},
+      "pageContent": "I like pizza",
+    },
+    0.833390357575667,
+  ],
+  [
+    Context {
+      "metadata": {},
+      "pageContent": "I don't like dogs",
+    },
+    0.7779635310571812,
+  ],
+]
+`;
