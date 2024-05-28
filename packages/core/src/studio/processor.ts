@@ -12,6 +12,7 @@ import {
   NodePortFields,
   SerializableNode,
 } from './nodes/index.js';
+import { InputNode, InputNodeImpl } from './nodes/utility/input.node.js';
 import { BuiltInNodes } from './registration/nodes.js';
 
 export type ProcessId = Opaque<string, 'ProcessId'>;
@@ -173,6 +174,19 @@ export type ProcessEvents = {
     controller: AbortController;
   };
 
+  /** InputNode requires user input */
+  requireInput: {
+    processorId: string;
+    isSubProcessor: boolean;
+    node: InputNode;
+    // context provided to user to prompt for answers
+    promptContext: ProcessOutputMap;
+    // callback to handle user inputs, this is identical
+    // to `userInput` method in GraphProcessor
+    callback: (userInputs: ProcessInputMap) => void;
+    processId: ProcessId;
+  };
+
   /** trace logging */
   trace: {
     processorId: string;
@@ -247,6 +261,14 @@ export class GraphProcessor {
 
   #nodeIdToProcessorIdMap: Map<RecordId, string> = undefined!;
 
+  #pendingUserInputsNodeIds: Record<
+    RecordId,
+    {
+      resolve: (inputs: ProcessInputMap) => void;
+      reject: (error: unknown) => void;
+    }
+  > = undefined!;
+
   get isRunning() {
     return this.#isRunning;
   }
@@ -278,6 +300,7 @@ export class GraphProcessor {
     }
 
     this.#graphOutputs = {};
+    this.#pendingUserInputsNodeIds = {};
   }
 
   #initAbortController() {
@@ -459,6 +482,27 @@ export class GraphProcessor {
     }
   }
 
+  userInput(nodeId: RecordId, inputs: ProcessInputMap): void {
+    const node: SerializableNode = this.#graph.nodeMap[nodeId];
+    const processorToRun: GraphProcessor = this._getProcessorForNode(node);
+
+    if (processorToRun.#processorId !== this.#processorId) {
+      processorToRun.userInput(nodeId, inputs);
+    } else {
+      const pending = this.#pendingUserInputsNodeIds?.[nodeId];
+      if (pending) {
+        this.#emitter.emit('trace', {
+          processorId: this.#processorId,
+          isSubProcessor: this.#isSubProcessor,
+          log: `node ${node.id} is receiving user's inputs`,
+        });
+
+        pending.resolve(inputs);
+        delete this.#pendingUserInputsNodeIds[nodeId];
+      }
+    }
+  }
+
   async #waitUntilUnpaused(): Promise<void> {
     if (!this.#isPaused) {
       return;
@@ -501,6 +545,8 @@ export class GraphProcessor {
     processor.on('nodeError', (e) => this.#emitter.emit('nodeError', e));
     processor.on('nodeFinish', (e) => this.#emitter.emit('nodeFinish', e));
     processor.on('nodeExcluded', (e) => this.#emitter.emit('nodeExcluded', e));
+
+    processor.on('requireInput', (e) => this.#emitter.emit('requireInput', e));
 
     processor.on('trace', (e) => this.#emitter.emit('trace', e));
 
@@ -1095,9 +1141,92 @@ export class GraphProcessor {
       return processId;
     }
 
-    await this.#processNormalNode(node, processId);
+    if (node.type === 'input') {
+      await this.#processInputNode(node as InputNode, processId);
+    } else {
+      await this.#processNormalNode(node, processId);
+    }
 
     return processId;
+  }
+
+  async #processInputNode(node: InputNode, processId: ProcessId) {
+    const inputValues = this.#getProcessInputForNode(node);
+
+    this.#emitter.emit('trace', {
+      processorId: this.#processorId,
+      isSubProcessor: this.#isSubProcessor,
+      log: `node ${node.id} start processing`,
+    });
+
+    this.#emitter.emit('nodeStart', {
+      processorId: this.#processorId,
+      isSubProcessor: this.#isSubProcessor,
+      node,
+      inputs: inputValues,
+      processId,
+    });
+
+    try {
+      const results = await new Promise<ProcessInputMap>((resolve, reject) => {
+        this.#pendingUserInputsNodeIds[node.id] = {
+          resolve,
+          reject,
+        };
+
+        this.#abortController.signal.addEventListener('abort', () => {
+          delete this.#pendingUserInputsNodeIds[node.id];
+          reject(new Error('Processing aborted'));
+        });
+
+        this.#emitter.emit('trace', {
+          processorId: this.#processorId,
+          isSubProcessor: this.#isSubProcessor,
+          log: `node ${node.id} is waiting for user's inputs`,
+        });
+
+        this.#emitter.emit('requireInput', {
+          processorId: this.#processorId,
+          isSubProcessor: this.#isSubProcessor,
+          node,
+          promptContext: inputValues,
+          callback: (userInputs: ProcessInputMap) => {
+            resolve(userInputs);
+
+            this.#emitter.emit('trace', {
+              processorId: this.#processorId,
+              isSubProcessor: this.#isSubProcessor,
+              log: `node ${node.id} is receiving user's inputs`,
+            });
+
+            delete this.#pendingUserInputsNodeIds[node.id];
+          },
+          processId,
+        });
+      });
+
+      const outputValues: ProcessOutputMap =
+        await this.#processNodeWithInputData(node, results, processId);
+
+      this.#nodeResults.set(node.id, outputValues);
+      this.#visitedNodeIds.add(node.id);
+
+      this.#emitter.emit('trace', {
+        processorId: this.#processorId,
+        isSubProcessor: this.#isSubProcessor,
+        log: `node ${node.id} finish processing`,
+      });
+
+      this.#emitter.emit('nodeFinish', {
+        processorId: this.#processorId,
+        isSubProcessor: this.#isSubProcessor,
+        node,
+        outputs: outputValues,
+        processId,
+      });
+    } catch (error) {
+      this.#throwProcessError(node, error as Error, processId);
+    }
   }
 
   async #processNormalNode(node: SerializableNode, processId: ProcessId) {
