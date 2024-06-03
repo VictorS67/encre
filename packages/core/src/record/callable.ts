@@ -24,50 +24,55 @@ import {
 } from './utils.js';
 
 /**
- * Type for defining fields in a callable configuration.
+ * Defines a callable configuration.
  */
 export type CallableConfigFields = {
   [key: string]: unknown;
 };
 
 /**
- * Represents the configuration for a callable.
- * Includes properties such as name, tags, metadata, and callbacks.
+ * Represents the configuration for a callable object, containing options like name, tags, metadata,
+ * and callbacks.
  */
 export type CallableConfig = {
   /**
-   * Name of the callable class.
+   * The name of the callable, used for identification or logging. not-implemented yet
    */
   name?: string;
 
   /**
-   * Tags for this call and any sub-calls.
+   * An array of strings used for categorizing or filtering callables. not-implemented yet
    */
   tags?: string[];
 
   /**
-   * Metadata for this call and any sub-calls.
+   * A dictionary containing metadata related to the callable, defined as {@link CallableConfigFields}.
    */
   metadata?: CallableConfigFields;
 
   /**
-   * Callbacks for this calls and any sub-calls.
-   * TODO: Add callbacks.
+   * not-implemented yet
    */
   callbacks?: any;
 };
 
 /**
- * Extends `CallableConfig` with an optional `variables` record for additional configuration.
- * @property `variables` - Additional variables for guardrail rule validation.
+ * Extends {@link CallableConfig} to include additional 'variables' used specifically for guardrail
+ * rule validation in conditional callable scenarios.
  */
 export type CallableIfConfig = CallableConfig & {
+  /**
+   * Additional variables that may be used to enhance or modify the behavior of the callable based on dynamic contexts.
+   */
   variables?: Record<string, unknown>;
 };
 
 /**
- * Type definition for a callable-like structure. It can be a Callable instance,
- * a Callable function, or an object with callable-like properties.
+ * A type union that defines various forms a callable can take: either as a {@link Callable} instance,
+ * a function conforming to {@link CallableFunc}, or an object containing callable-like properties.
+ *
+ * @template CallInput The expected input type of the callable.
+ * @template CallOutput The expected output type of the callable.
  */
 export type CallableLike<CallInput = unknown, CallOutput = unknown> =
   | Callable<CallInput, CallOutput>
@@ -75,7 +80,11 @@ export type CallableLike<CallInput = unknown, CallOutput = unknown> =
   | { [key: string]: CallableLike<CallInput, CallOutput> };
 
 /**
- * Type definition for a function that behaves like a callable.
+ * Represents a function type that acts like a callable, taking an input and optionally returning a
+ * promise that resolves to an output.
+ *
+ * @template CallInput The type of input the function accepts.
+ * @template CallOutput The type of output the function returns, which may be wrapped in a Promise.
  */
 export type CallableFunc<CallInput, CallOutput> = (
   input: CallInput
@@ -89,8 +98,19 @@ export type CallableBindArgs<
   CallOutput,
   CallOptions extends CallableConfig,
 > = {
+  /**
+   * The underlying callable to which this bind configuration will apply.
+   */
   bound: Callable<CallInput, CallOutput, CallOptions>;
+
+  /**
+   * Keyword arguments for modifying the callable's configuration dynamically.
+   */
   kwargs: Partial<CallOptions>;
+
+  /**
+   * Additional configuration applied to the callable.
+   */
   config: CallableConfig;
 };
 
@@ -102,6 +122,9 @@ export type CallableEachArgs<
   CallOutput,
   CallOptions extends CallableConfig,
 > = {
+  /**
+   * The callable bound to each item in the input array.
+   */
   bound: Callable<CallInput, CallOutput, CallOptions>;
 };
 
@@ -109,7 +132,14 @@ export type CallableEachArgs<
  * Type for defining the argument structure for callable with fallbacks.
  */
 export type CallableWithFallbacksArg<CallInput, CallOutput> = {
+  /**
+   * The primary callable to be invoked initially.
+   */
   callable: Callable<CallInput, CallOutput>;
+
+  /**
+   * An array of fallback callables to be invoked in order if the primary callable fails.
+   */
   fallbacks: Callable<CallInput, CallOutput>[];
 };
 
@@ -117,7 +147,14 @@ export type CallableWithFallbacksArg<CallInput, CallOutput> = {
  * Options for batch processing in a callable.
  */
 export type CallableBatchOptions = {
+  /**
+   * The maximum concurrency for running callables in batch
+   */
   maxConcurrency?: number;
+
+  /**
+   * Whether to return errors rather than throwing on the first error.
+   */
   returnExceptions?: boolean;
 };
 
@@ -133,30 +170,39 @@ export type SerializedCallableFields = {
 };
 
 /**
- * Abstract class representing a callable. A callable is an object that can be
- * "called" or invoked with an input to produce an output, potentially asynchronously.
+ * Abstract base class for creating callable objects. A callable is an object that can be invoked
+ * with an input to produce an output, resembling a function.
+ *
+ * @template CallInput Type of the input passed to the callable.
+ * @template CallOutput Type of the output returned by the callable.
+ * @template CallOptions Configuration options for the callable, extending {@link CallableConfig}.
  */
 export abstract class Callable<
   CallInput = unknown,
   CallOutput = unknown,
   CallOptions extends CallableConfig = CallableConfig,
 > extends Serializable {
+  /**
+   * Indicates if the instance is callable. If false, then the callable cannot be invoked.
+   */
   _isCallable = true;
 
   /**
-   * Static method to check if a given object is an instance of Callable.
+   * Checks if a given object is an instance of Callable.
+   *
+   * @param anything Object to be checked.
+   * @returns True if the object is an instance of Callable, false otherwise.
    */
   static isCallable(anything: any): anything is Callable {
     return anything ? anything._isCallable : false;
   }
 
   /**
-   * Abstract method that must be implemented by subclasses.
-   * Invokes the callable with the given input and options.
+   * Abstract method to invoke the callable.
    *
-   * @param input The input for the callable.
-   * @param options (optional) Partial configuration options for the call.
-   * @returns A promise that resolves to the output of the callable.
+   * @param input The input required to invoke the callable.
+   * @param options Optional partial configuration for the callable.
+   * @returns A promise resolving to the callable's output.
    */
   abstract invoke(
     input: CallInput,
@@ -171,6 +217,8 @@ export abstract class Callable<
    * @param input The input to pass to the function.
    * @param options (optional) Partial configuration options for the function call.
    * @returns A promise that resolves to the output of the function.
+   * @hidden
+   * @internal
    */
   protected async _callWithConfig<T extends CallInput>(
     func: (input: T) => Promise<CallOutput>,
@@ -198,6 +246,8 @@ export abstract class Callable<
    * @param options (optional) Configuration options for each function call in the batch.
    * @param batchOptions (optional) Options for batch execution such as concurrency limits.
    * @returns A promise that resolves to an array of results (or errors, if specified).
+   * @hidden
+   * @internal
    */
   protected async _batchWithConfig<T extends CallInput>(
     func: (
@@ -232,6 +282,8 @@ export abstract class Callable<
    * @param repeatTimes (optional) The number of times to repeat the single option if provided.
    * @returns An array of partial call options.
    * @throws Error if the options array length does not match the inputs length.
+   * @hidden
+   * @internal
    */
   protected _getOptionsList(
     options?: Partial<CallOptions> | Partial<CallOptions>[],
@@ -306,7 +358,7 @@ export abstract class Callable<
 
   /**
    * Batch calls invoke N times, where N is the length of inputs.
-   * Subclasses would override this method with different arguments and returns.
+   *
    * @param inputs Array of inputs in each call in a batch.
    * @param options Either a single call options to apply to each call or an array of options for each call.
    * @param batchOptions.maxConcurrency Max number of calls to run at once.
@@ -372,6 +424,7 @@ export abstract class Callable<
    * @param input The input for the callable.
    * @param options Optional additional options for the callable.
    * @returns An async generator yielding callable outputs.
+   * @internal
    */
   async *_streamIterator(
     input: CallInput,
@@ -413,6 +466,7 @@ export abstract class Callable<
     });
   }
 
+  /** @hidden */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -422,6 +476,7 @@ export abstract class Callable<
     };
   }
 
+  /** @hidden */
   protected _removeCallable(
     root: SerializedFields,
     callablesMap: SerializedCallableFields
@@ -476,6 +531,10 @@ export abstract class Callable<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toRecord(
     outputs: CallOutput,
     parent?: RecordId | undefined
@@ -489,6 +548,8 @@ export abstract class Callable<
    *
    * @param options Combined callable and call options.
    * @returns Tuple of separated callable options and call options.
+   * @hidden
+   * @internal
    */
   protected _splitCallableOptionsFromCallOptions(
     options: Partial<CallOptions> = {}
@@ -511,15 +572,12 @@ export abstract class Callable<
 }
 
 /**
- * {@link CallableBind} class extends the functionality of the {@link Callable} class.
- * It represents a callable entity that can be bound with additional
- * configurations and arguments. This class is used to create callable
- * objects with specific bindings and configurations.
+ * Represents a bindable callable that can have configuration and arguments bound to it for future invocations.
+ * This class allows for pre-configuring certain aspects of a callable's behavior before its actual invocation.
  *
- * Generics:
- * - `CallInput`: Type of input the callable will accept.
- * - `CallOutput`: Type of output the callable will produce.
- * - `CallOptions`: Type of options/configurations the callable will use.
+ * @template CallInput Type of input accepted by the callable.
+ * @template CallOutput Type of output produced by the callable.
+ * @template CallOptions Configuration options extending {@link CallableConfig}.
  */
 export class CallableBind<
   CallInput,
@@ -537,20 +595,24 @@ export class CallableBind<
   }
 
   /**
-   * The bound callable instance.
+   * The underlying callable to which this bind configuration will apply.
    */
   bound: Callable<CallInput, CallOutput, CallOptions>;
 
   /**
-   * Configuration for the callable.
+   * Additional configuration applied to the callable.
    */
   config: CallableConfig;
 
   /**
-   * Keyword arguments for additional configuration.
+   * Keyword arguments for modifying the callable's configuration dynamically.
    */
   protected kwargs: Partial<CallOptions>;
 
+  /**
+   * Constructs an instance of CallableBind.
+   * @param fields Configuration for creating a bound callable, including the base callable and any additional options.
+   */
   constructor(fields: CallableBindArgs<CallInput, CallOutput, CallOptions>) {
     super(fields);
     this.bound = fields.bound;
@@ -560,10 +622,11 @@ export class CallableBind<
 
   /**
    * Merges the given configuration with the existing configuration.
-   * This method is protected and not intended for external use.
    *
    * @param config An optional {@link CallableConfig} object to be merged with the current configuration.
    * @returns A merged configuration object as `Partial<CallOptions>`.
+   * @hidden
+   * @internal
    */
   protected _mergeConfig(config?: CallableConfig): Partial<CallOptions> {
     const configCopy: CallableConfig = { ...this.config };
@@ -618,11 +681,10 @@ export class CallableBind<
   }
 
   /**
-   * Invokes the bound callable with the provided input and options.
-   * Merges the provided options with the current keyword arguments and configuration.
+   * Invokes the underlying callable with merged configuration and input options.
    *
    * @param input The input for the callable.
-   * @param options Optional keyword arguments for this specific invocation.
+   * @param options Optional additional configuration for this specific invocation.
    * @returns A promise that resolves to the output of the callable.
    */
   async invoke(
@@ -695,6 +757,10 @@ export class CallableBind<
     );
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -707,6 +773,10 @@ export class CallableBind<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toInputRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -727,6 +797,10 @@ export class CallableBind<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toEventRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -804,12 +878,13 @@ export class CallableBind<
 }
 
 /**
- * {@link CallableLambda} class extends the {@link Callable} class, allowing the use of lambda functions.
- * It's a specialized version of {@link Callable} that uses JavaScript lambda functions for its logic.
+ * Represents a Callable that utilizes a lambda function for its logic.
+ * This specialized Callable allows for concise and direct execution of a function provided either as a string
+ * representation or a function object.
+ * It is particularly useful when a compact, stateless operation is needed inline.
  *
- * Generics:
- * - `CallInput`: Type of input the lambda function will accept.
- * - `CallOutput`: Type of output the lambda function will produce.
+ * @template CallInput Type of input the lambda function will accept.
+ * @template CallOutput Type of output the lambda function will produce.
  */
 export class CallableLambda<CallInput, CallOutput> extends Callable<
   CallInput,
@@ -826,10 +901,16 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Holds the string representation of the lambda function.
+   * The lambda function as a string, which will be converted to a callable function during execution.
    */
   protected func: string;
 
+  /**
+   * Constructs a new instance of CallableLambda.
+   *
+   * @param fields Contains either a lambda function or its string representation, which will be used to handle invocations.
+   * @throws Error if the provided function string is not a valid lambda function.
+   */
   constructor(fields: { func: CallableFunc<CallInput, CallOutput> | string }) {
     let funcStr: string | undefined;
 
@@ -849,9 +930,9 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Converts the stored function string back into a callable function.
-   *
-   * @returns A callable function derived from the stored string.
+   * Converts the string representation of the lambda function back into a callable function.
+   * @returns A function converted from the stored string, ready to be invoked.
+   * @internal
    */
   private _func(): CallableFunc<CallInput, CallOutput> {
     return convertLambdaFuncFromStr(this.func) as CallableFunc<
@@ -861,10 +942,11 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Static method to create a {@link CallableLambda} instance from a lambda function.
+   * Static factory method to create a CallableLambda instance from a lambda function.
+   * This method simplifies the instantiation process when directly passing a lambda function.
    *
    * @param func A lambda function.
-   * @returns A new {@link CallableLambda} instance created from the provided lambda function.
+   * @returns A new CallableLambda instance created using the provided lambda function.
    */
   static from<CallInput, CallOutput>(
     func: CallableFunc<CallInput, CallOutput>
@@ -873,12 +955,12 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Internal method to invoke the lambda function with error handling.
+   * Internal method to handle the actual invocation of the lambda function, applying any specified options.
    *
    * @param input The input for the lambda function.
    * @param options Optional callable configuration options.
    * @returns A promise that resolves to the output of the lambda function.
-   * @throws An error if the lambda function is not valid or fails during execution.
+   * @throws An error if the lambda function execution fails.
    */
   async _invoke(
     input: CallInput,
@@ -899,10 +981,11 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Public method to invoke the lambda function. It uses `_callWithConfig` to apply callable configurations.
+   * Invokes the lambda function with the provided input and returns the result.
+   * This method ensures that the function is called with the correct context and handled properly.
    *
-   * @param input The input for the lambda function.
-   * @param options Optional callable configuration options.
+   * @param input The input to pass to the lambda function.
+   * @param options Optional callable configuration options, which may influence how the function executes.
    * @returns A promise that resolves to the output of the lambda function.
    */
   async invoke(
@@ -923,11 +1006,11 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
 }
 
 /**
- * {@link CallableMap} class extends the {@link Callable} class for mapping multiple Callable instances.
- * It allows the execution of multiple callables in parallel and aggregates their results.
+ * A Callable that manages a collection of other Callables, each associated with a specific key.
+ * It allows simultaneous invocation of multiple Callables and aggregates their results into a
+ * single record.
  *
- * Generics:
- * - `CallInput`: Type of input each callable in the map will accept.
+ * @template CallInput Type of input that each callable within the map will accept.
  */
 export class CallableMap<CallInput> extends Callable<
   CallInput,
@@ -944,11 +1027,15 @@ export class CallableMap<CallInput> extends Callable<
   }
 
   /**
-   * Holds the mapping of steps where each step is a callable.
-   * The steps are a record with string keys and `Callable<CallInput>` values.
+   * A mapping of keys to callable instances. Each key corresponds to a callable that will be
+   * invoked with the same input.
    */
   protected steps: Record<string, Callable<CallInput>>;
 
+  /**
+   * Constructs a new CallableMap instance.
+   * @param fields An object containing the initial mapping of callables.
+   */
   constructor(fields: { steps: Record<string, CallableLike<CallInput>> }) {
     super(fields);
 
@@ -998,6 +1085,10 @@ export class CallableMap<CallInput> extends Callable<
     return output;
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -1014,13 +1105,12 @@ export class CallableMap<CallInput> extends Callable<
 }
 
 /**
- * The {@link CallableEach} class extends {@link Callable} to handle batch operations by applying
- * a single Callable instance to each item in an input array.
+ * A Callable extension that applies a given callable to each item in a collection of inputs.
+ * This class is especially useful for batch operations where the same processing needs to be applied to each element in a list.
  *
- * Generics:
- * - `CallInputItem`: Type of each input item the callable will accept.
- * - `CallOutputItem`: Type of each output item the callable will produce.
- * - `CallOptions`: Type of options/configurations the callable will use, extending CallableConfig.
+ * @template CallInputItem Type of each individual input item that the callable will accept.
+ * @template CallOutputItem Type of each individual output item that the callable will produce.
+ * @template CallOptions Configuration options extending {@link CallableConfig}, applicable to each individual call.
  */
 export class CallableEach<
   CallInputItem,
@@ -1038,10 +1128,14 @@ export class CallableEach<
   }
 
   /**
-   * The bound Callable instance to which each input item is passed.
+   * The callable bound to each item in the input array.
    */
   bound: Callable<CallInputItem, CallOutputItem, CallOptions>;
 
+  /**
+   * Constructor for creating an instance of CallableEach.
+   * @param fields Contains the bound callable, which is applied to each item in the input array.
+   */
   constructor(
     fields: CallableEachArgs<CallInputItem, CallOutputItem, CallOptions>
   ) {
@@ -1062,11 +1156,12 @@ export class CallableEach<
   }
 
   /**
-   * Invokes the callable for each item in the input array.
+   * Invokes the callable for each item in the provided array of inputs.
+   * Each invocation is independent, and this method aggregates the results into an array.
    *
-   * @param inputs An array of input items.
-   * @param options Optional callable configuration options.
-   * @returns A promise that resolves to an array of output items, one for each input.
+   * @param inputs Array of input items, each will be passed individually to the bound callable.
+   * @param options Optional configuration options applicable to each invocation.
+   * @returns A promise that resolves to an array of results, where each result corresponds to an item in the input array.
    */
   async invoke(
     inputs: CallInputItem[],
@@ -1075,6 +1170,10 @@ export class CallableEach<
     return this._callWithConfig(this._invoke, inputs, options);
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toRecord(
     outputs: CallOutputItem[],
     parent?: RecordId | undefined
@@ -1082,6 +1181,7 @@ export class CallableEach<
     return super.toRecord(outputs, parent);
   }
 
+  /** @internal */
   protected async _invoke(
     inputs: CallInputItem[],
     options?: Partial<CallOptions>
@@ -1089,6 +1189,10 @@ export class CallableEach<
     return this.bound.batch(inputs, options);
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -1101,6 +1205,10 @@ export class CallableEach<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toInputRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -1121,6 +1229,10 @@ export class CallableEach<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toEventRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -1180,37 +1292,41 @@ export class CallableEach<
 }
 
 /**
- * {@link CallableWithFallbacks} class extends Callable to provide fallback mechanisms.
- * It allows the execution of a primary callable and fallbacks in case of failure.
+ * A Callable extension that manages a primary callable along with a list of fallback callables.
+ * This structure is used to attempt an operation with the primary callable first and then sequentially
+ * try the fallback callables until one succeeds or all fail.
  *
- * Generics:
- * - `CallInput`: Type of input the callable and its fallbacks will accept.
- * - `CallOutput`: Type of output the callable and its fallbacks will produce.
+ * @template CallInput Type of input the callable and its fallbacks will accept.
+ * @template CallOutput Type of output the callable and its fallbacks will produce.
  */
 export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   CallInput,
   CallOutput
 > {
-  _namespace: string[] = ['record', 'callable'];
-
   _isCallable = true;
 
   _isSerializable = true;
+
+  _namespace: string[] = ['record', 'callable'];
 
   static _name(): string {
     return 'CallableWithFallbacks';
   }
 
   /**
-   * The primary callable to be invoked.
+   * The primary callable to be invoked initially.
    */
   protected callable: Callable<CallInput, CallOutput>;
 
   /**
-   * An array of fallback callables to be invoked if the primary callable fails.
+   * An array of fallback callables to be invoked in order if the primary callable fails.
    */
   protected fallbacks: Callable<CallInput, CallOutput>[];
 
+  /**
+   * Constructs a new instance of CallableWithFallbacks with specified primary callable and fallbacks.
+   * @param fields An object specifying the primary callable and a list of fallback callables.
+   */
   constructor(fields: CallableWithFallbacksArg<CallInput, CallOutput>) {
     super(fields);
     this.callable = fields.callable;
@@ -1230,13 +1346,13 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Invokes the primary callable and falls back to the fallbacks in case of an error.
-   * If all callables fail, rethrows the first error encountered.
+   * Invokes the primary callable with the given input, and on failure, tries each fallback callable in sequence.
+   * If all callables fail, it rethrows the first encountered error.
    *
    * @param input The input for the callables.
-   * @param options Optional callable configuration options.
-   * @returns A promise that resolves to the output of the first successful callable.
-   * @throws An error if all callables fail, throwing the first error encountered.
+   * @param options Optional callable configuration options, which may influence execution.
+   * @returns A promise that resolves to the output of the first successful callable or rejects if all fail.
+   * @throws Error if all callables fail, with the first error encountered being propagated.
    */
   async invoke(
     input: CallInput,
@@ -1264,13 +1380,13 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
   }
 
   /**
-   * Batch calls invoke N times, where N is the length of inputs.
-   * Subclasses would override this method with different arguments and returns.
-   * @param inputs Array of inputs in each call in a batch.
-   * @param options Either a single call options to apply to each call or an array of options for each call.
-   * @param batchOptions.maxConcurrency Max number of calls to run at once.
-   * @param batchOptions.returnExceptions Whether to return errors rather than throwing on the first error.
-   * @returns An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions is true).
+   * Batch processes the input array by invoking the primary callable and fallbacks for each input.
+   * This method applies the same fallback mechanism to each individual input in parallel.
+   *
+   * @param inputs Array of inputs to process.
+   * @param options Optional configuration for each invocation or a single configuration for all.
+   * @param batchOptions Optional settings for batch execution, such as concurrency limits and error handling strategies.
+   * @returns A promise that resolves to an array of results or errors, based on the execution and batch options.
    */
   async batch(
     inputs: CallInput[],
@@ -1321,6 +1437,10 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     throw firstError;
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -1334,6 +1454,10 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toInputRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -1354,6 +1478,10 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     };
   }
 
+  /**
+   * @hidden
+   * @deprecated
+   */
   async toEventRecord(
     aliases: SerializedKeyAlias,
     secrets: SecretFields,
@@ -1423,12 +1551,11 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
 }
 
 /**
- * {@link CallableSequence} class extends {@link Callable} to create a sequence of callable operations.
- * It allows chaining multiple callables, where the output of one is the input to the next.
+ * Manages a sequence of Callables where the output of one callable serves as the input to the next.
+ * This class facilitates creating pipelines of operations that process data in a sequential manner.
  *
- * Generics:
- * - `CallInput`: Type of input the first callable in the sequence will accept.
- * - `CallOutput`: Type of output the last callable in the sequence will produce.
+ * @template CallInput Type of the initial input accepted by the sequence.
+ * @template CallOutput Type of the final output produced by the sequence.
  */
 export class CallableSequence<
   CallInput = unknown,
@@ -1450,7 +1577,7 @@ export class CallableSequence<
   protected first: Callable<CallInput>;
 
   /**
-   * An array of callables that form the middle of the sequence.
+   * An array of intermediate callables that process data between the first and the last callable.
    */
   protected middle: Callable[] = [];
 
@@ -1459,6 +1586,10 @@ export class CallableSequence<
    */
   protected last: Callable<unknown, CallOutput>;
 
+  /**
+   * Constructs a new CallableSequence.
+   * @param fields An object specifying the first, middle, and last callables in the sequence.
+   */
   constructor(fields: {
     first: Callable<CallInput>;
     middle?: Callable[];
@@ -1543,6 +1674,7 @@ export class CallableSequence<
   /**
    * Batch calls invoke N times, where N is the length of inputs.
    * Subclasses would override this method with different arguments and returns.
+   *
    * @param inputs Array of inputs in each call in a batch.
    * @param options Either a single call options to apply to each call or an array of options for each call.
    * @param batchOptions.maxConcurrency Max number of calls to run at once.
@@ -1625,6 +1757,10 @@ export class CallableSequence<
     });
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -1641,22 +1777,19 @@ export class CallableSequence<
 }
 
 /**
- * {@link CallableIf} class extends {@link Callable} class for mapping multiple Callable
- * instances based on a set of rules.
- * It allows the execution of multiple callables in parallel and aggregates their results.
- * If the rule validation does not pass for a certain callable, then the callable will not
- * be executed and returns `undefined` as the result.
+ * Represents a conditional callable that decides which specific callable to execute based on a set of predefined rules.
+ * This class facilitates the execution of different callables depending on the input and associated conditions, enhancing flexibility and control over logic flow.
  *
- * Generics:
- * - `CallInput`: The input type for the callable.
- * - `CallOutput`: The output type for the callable, defaults to a record.
- * - `CallOptions`: The options type for the callable, extends `CallableIfConfig`.
+ * @template CallInput Type of input the callable will accept.
+ * @template CallOutput Type of output the callable will produce, typically a record mapping keys to outputs of individual callables.
+ * @template CallOptions Extends {@link CallableIfConfig} to include additional configuration specific to conditional execution.
  */
 export class CallableIf<
   CallInput,
   CallOutput extends Record<string, unknown> = Record<string, unknown>,
   CallOptions extends CallableIfConfig = CallableIfConfig,
 > extends Callable<CallInput, CallOutput, CallOptions> {
+  /** @hidden */
   declare CallIfOptions: Omit<CallOptions, keyof CallableConfig>;
 
   _isCallable = true;
@@ -1669,20 +1802,26 @@ export class CallableIf<
     return 'CallableIf';
   }
 
+  /**
+   * A mapping of rules that determine whether the associated callable actions should be executed.
+   */
   protected _rules: Record<string, BaseRule>;
 
+  /**
+   * A mapping of callables to be potentially executed, each associated with a specific rule.
+   */
   protected _actions: Record<string, Callable<CallInput>>;
 
+  /**
+   * An optional default callable to be executed if no rules are satisfied.
+   */
   protected _default?: Callable<CallInput>;
 
   /**
-   * Initializes a new instance of `CallableIf` with the given rules and actions.
-   * @param {Object} fields - The rules and actions for the instance.
-   * @param {Record<string, BaseRule>} fields.rules - A mapping of guardrail identifiers
-   * to `BaseRule` instances.
-   * @param {Record<string, CallableLike<CallInput>>} fields.actions - A mapping of action
-   * identifiers to `CallableLike` instances.
-   * @throws Will throw an error if an action does not have a corresponding rule.
+   * Constructs a new instance of CallableIf with specified rules, actions, and an optional default callable.
+   *
+   * @param fields An object containing the rules, actions, and optionally a default callable.
+   * @throws Error if an action does not have a corresponding rule.
    */
   constructor(fields: {
     rules: Record<string, BaseRule>;
@@ -1709,7 +1848,7 @@ export class CallableIf<
 
   /**
    * Creates a new `CallableIf` instance from the specified rules and actions.
-   * @static
+   *
    * @param {Record<string, BaseRule>} rules - The rules for the callable instance.
    * @param {Record<string, CallableLike<CallInput>>} actions - The actions for the
    * callable instance.
@@ -1729,12 +1868,12 @@ export class CallableIf<
   }
 
   /**
-   * Invokes the callable, evaluating each rule against the input and executing the
-   * corresponding action if the rule is true.
-   * @async
-   * @param {CallInput} input - The input to evaluate rules against and pass to actions.
-   * @param {Partial<CallOptions>} [options] - Optional configuration for the invocation.
-   * @returns {Promise<CallOutput>} The result of the action executions.
+   * Evaluates the rules with the given input and executes the associated callable if the rule is true.
+   * If no rules are satisfied, the default callable is executed if it is defined.
+   *
+   * @param input The input for the callable.
+   * @param options Optional additional options influencing the callable execution.
+   * @returns A promise that resolves to the output of the executed callable, or the default output if no callable is executed.
    */
   async invoke(
     input: CallInput,
@@ -1767,6 +1906,10 @@ export class CallableIf<
     return output as CallOutput;
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   protected _getCallableMetadata(): {
     type: string;
     callables?: SerializedCallableFields;
@@ -1785,6 +1928,10 @@ export class CallableIf<
     };
   }
 
+  /**
+   * @hidden
+   * @internal
+   */
   private _splitCallIfOptionsFromConfig(
     options: Partial<CallOptions> = {}
   ): [CallableConfig, this['CallIfOptions']] {

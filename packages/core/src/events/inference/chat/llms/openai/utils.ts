@@ -7,6 +7,19 @@ import {
 } from '../../../../input/load/msgs/base.js';
 import { ChatMessage } from '../../../../input/load/msgs/chat.js';
 
+/**
+ * Determines if a message requires multi-modal handling based on its content. Multi-modal
+ * models do not support function/tool calls.
+ *
+ * @param message - The message to check for modality requirements.
+ * @returns A boolean indicating if multi-modal processing is needed for the message.
+ * @example
+ * ```typescript
+ * const message = new HumanMessage({ content: "Hello" });
+ * const isMultiModalNeeded = isModalityRequiredInMessage(message);
+ * console.log(isMultiModalNeeded); // Output: false
+ * ```
+ */
 export function isModalityRequiredInMessage(message: BaseMessage): boolean {
   // Multi-modal model does not suport any function/tools
   if (message._role() === 'function') {
@@ -26,6 +39,13 @@ export function isModalityRequiredInMessage(message: BaseMessage): boolean {
   );
 }
 
+/**
+ * Checks if a part of a message matches the expected structure of a chat completion content
+ * part in OpenAI's API.
+ *
+ * @param partLike - The object to check.
+ * @returns A boolean indicating if the object is a valid chat completion content part.
+ */
 export function isChatCompletionContentPart(
   partLike: any
 ): partLike is OpenAIClient.ChatCompletionContentPart {
@@ -36,6 +56,13 @@ export function isChatCompletionContentPart(
   );
 }
 
+/**
+ * Determines if a content part is specifically an image, based on OpenAI's chat completion
+ * content structure.
+ *
+ * @param partLike - The object to check.
+ * @returns A boolean indicating if the part is an image content part.
+ */
 export function isChatCompletionContentPartImage(
   partLike: any
 ): partLike is OpenAIClient.ChatCompletionContentPartImage {
@@ -48,6 +75,13 @@ export function isChatCompletionContentPartImage(
   );
 }
 
+/**
+ * Validates whether an object is structured as an OpenAI chat image URL, including checking
+ * detail levels.
+ *
+ * @param imageUrlLike - The object to validate.
+ * @returns A boolean indicating if the object is a valid OpenAI chat image URL.
+ */
 export function isOpenAIChatImageURL(
   imageUrlLike: any
 ): imageUrlLike is OpenAIClient.ChatCompletionContentPartImage.ImageURL {
@@ -63,6 +97,13 @@ export function isOpenAIChatImageURL(
   return 'url' in imageUrlLike && typeof imageUrlLike['url'] === 'string';
 }
 
+/**
+ * Verifies if a part of a message is structured as a text part, according to the OpenAI chat
+ * API's expectations.
+ *
+ * @param partLike - The object to check.
+ * @returns A boolean indicating if the part is a text content part.
+ */
 export function isChatCompletionContentPartText(
   partLike: any
 ): partLike is OpenAIClient.ChatCompletionContentPartText {
@@ -75,6 +116,13 @@ export function isChatCompletionContentPartText(
   );
 }
 
+/**
+ * Checks if an object represents a tool call within a chat message, matching the structure
+ * expected by the OpenAI API.
+ *
+ * @param toolLike - The object to check.
+ * @returns A boolean indicating if the object is a valid tool call.
+ */
 export function isChatCompletionMessageToolCall(
   toolLike: any
 ): toolLike is OpenAIClient.ChatCompletionMessageToolCall {
@@ -89,6 +137,13 @@ export function isChatCompletionMessageToolCall(
   );
 }
 
+/**
+ * Validates whether an object is structured as a function call for OpenAI's chat API,
+ * including argument validation.
+ *
+ * @param functionLike - The object to validate.
+ * @returns A boolean indicating if the object is a valid function structure.
+ */
 export function isOpenAIFunction(
   functionLike: any
 ): functionLike is OpenAIClient.ChatCompletionMessageToolCall.Function {
@@ -114,6 +169,19 @@ export function isOpenAIFunction(
   );
 }
 
+/**
+ * Converts a BaseMessage into a format suitable for OpenAI's Chat API, handling different
+ * roles such as system, human, and assistant.
+ *
+ * @param message - The message to convert.
+ * @returns An ChatCompletionMessageParam object representing the converted message.
+ * @example
+ * ```
+ * const message = new HumanMessage({ content: "Example content });
+ * const contentParam = getContentFromMessage(message);
+ * console.log(contentParam);
+ * ```
+ */
 export function getContentFromMessage(
   message: BaseMessage
 ): OpenAIClient.Chat.ChatCompletionMessageParam {
@@ -170,6 +238,12 @@ export function getContentFromMessage(
   return getContentWithRole(generalMessage, 'human');
 }
 
+/**
+ * Checks if a string content is in valid JSON format.
+ *
+ * @param content - The content string to check.
+ * @returns A boolean indicating if the content is valid JSON.
+ */
 export function isJSONInContent(content: string): boolean {
   try {
     JSON.parse(content);
@@ -181,6 +255,12 @@ export function isJSONInContent(content: string): boolean {
   return false;
 }
 
+/**
+ * Attempts to parse and reformat a JSON string into a more structured JSON object.
+ *
+ * @param content - The JSON string to parse and format.
+ * @returns A JSON object if parsing is successful, or null if an error occurs.
+ */
 export function formatJSONInContent(
   content: string
 ): Record<string, unknown> | null {
@@ -193,6 +273,12 @@ export function formatJSONInContent(
   return null;
 }
 
+/**
+ * Attempts to reformat a JSON string for better readability or further processing.
+ *
+ * @param content - The JSON string to format.
+ * @returns A formatted JSON string.
+ */
 export function formatJSONStringInContent(content: string): string {
   try {
     JSON.parse(content);
@@ -204,6 +290,29 @@ export function formatJSONStringInContent(content: string): string {
   return content;
 }
 
+/**
+ * Formats a JSON string representing arguments into a more readable and properly indented string format.
+ * This function is useful when you need to display or log the structured arguments in a human-readable 
+ * form, especially for debugging or presentation purposes.
+ *
+ * The function parses the JSON string to an object, iterates over its properties, and constructs a 
+ * formatted string with each property on a new line and indented for clarity.
+ *
+ * @param args - A JSON string representing the arguments that need formatting.
+ * @returns A string that represents the formatted arguments in a structured, pretty-printed format.
+ * @example
+ * ```typescript
+ * const args = '{"name":"John Doe","age":30,"skills":["JavaScript", "TypeScript"]}';
+ * const formatted = formatArguments(args);
+ * console.log(formatted);
+ * // Output:
+ * // {
+ * //   "name":"John Doe",
+ * //   "age":30,
+ * //   "skills":["JavaScript","TypeScript"]
+ * // }
+ * ```
+ */
 export function formatArguments(args: string): string {
   const lines: string[] = [];
 

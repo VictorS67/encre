@@ -7,6 +7,20 @@ import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
 
 import { BaseLMCallOptions } from '../../base.js';
 
+/**
+ * Represents a call to a function as part of an OpenAI tool usage.
+ * @example
+ * ```typescript
+ * const toolCall: OpenAIChatToolCall = {
+ *   id: 'tool-id-from-api',
+ *   type: 'function',
+ *   function: {
+ *     name: 'get_current_weather',
+ *     arguments: "{\n\"location\": \"Boston, MA\"\n}"
+ *   }
+ * };
+ * ```
+ */
 export interface OpenAIChatToolCall {
   /**
    * The ID of the tool call.
@@ -40,6 +54,15 @@ export interface OpenAIChatToolCall {
 /**
  * Specifies a tool the model should use. Use to force the model to call a specific
  * function.
+ * @example
+ * ```typescript
+ * const toolChoice: OpenAIChatToolChoice = {
+ *   type: 'function',
+ *   function: {
+ *     name: 'get_current_weather'
+ *   }
+ * };
+ * ```
  */
 export interface OpenAIChatToolChoice {
   /**
@@ -55,6 +78,32 @@ export interface OpenAIChatToolChoice {
   };
 }
 
+/**
+ * Represents a tool available for the model to use during processing.
+ * @example
+ * ```typescript
+ * const tool: OpenAIChatTool = {
+ *   type: 'function',
+ *   function: {
+ *     name: 'get_current_weather',
+ *     description: 'get weather in a given location',
+ *     parameters: {
+ *       type: 'object',
+ *       properties: {
+ *         location: {
+ *           type: 'string'
+ *         },
+ *         unit: {
+ *           type: 'string',
+ *           enum: ['celsius', 'fahrenheit'],
+ *         }
+ *       },
+ *       required: ['location']
+ *     }
+ *   }
+ * };
+ * ```
+ */
 export interface OpenAIChatTool {
   /**
    * The type of the tool. Currently, only `function` is supported.
@@ -64,6 +113,29 @@ export interface OpenAIChatTool {
   function: OpenAIFunctionDef;
 }
 
+/**
+ * Details of a function that can be called by the model.
+ * @example
+ * ```typescript
+ * const functionDef: OpenAIFunctionDef = {
+ *   name: 'get_current_weather',
+ *   description: 'get weather in a given location',
+ *   parameters: {
+ *     type: 'object',
+ *     properties: {
+ *       location: {
+ *         type: 'string'
+ *       },
+ *       unit: {
+ *         type: 'string',
+ *         enum: ['celsius', 'fahrenheit'],
+ *       }
+ *     },
+ *     required: ['location']
+ *   }
+ * };
+ * ```
+ */
 export interface OpenAIFunctionDef {
   /**
    * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
@@ -89,6 +161,9 @@ export interface OpenAIFunctionDef {
   parameters?: Record<string, unknown>;
 }
 
+/**
+ * Enhanced options for OpenAI chat-related API calls.
+ */
 export interface OpenAIChatCallOptions extends OpenAICallOptions {
   /**
    * Whether to return log probabilities of the output tokens or not. If true,
@@ -125,6 +200,9 @@ export interface OpenAIChatCallOptions extends OpenAICallOptions {
   tools?: Array<OpenAIChatTool>;
 }
 
+/**
+ * Options specific to text-based API calls.
+ */
 export interface OpenAITextCallOptions extends OpenAICallOptions {
   /**
    * The suffix that comes after a completion of inserted text.
@@ -134,6 +212,9 @@ export interface OpenAITextCallOptions extends OpenAICallOptions {
   suffix?: string;
 }
 
+/**
+ * Base options for any OpenAI API call.
+ */
 export interface OpenAICallOptions extends BaseLMCallOptions {
   /**
    * Additional options to pass to the underlying axios request.
@@ -141,6 +222,9 @@ export interface OpenAICallOptions extends BaseLMCallOptions {
   options?: OpenAIClientRequestOptions;
 }
 
+/**
+ * Core settings for interacting with OpenAI API.
+ */
 export interface OpenAIBaseInput {
   /**
    * ID of the model to use. You can use the [List models]({@link https://platform.openai.com/docs/api-reference/models/list})
@@ -216,7 +300,7 @@ export interface OpenAIBaseInput {
    * decrease or increase likelihood of selection; values like -100 or 100 should
    * result in a ban or exclusive selection of the relevant token.
    *
-   * As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token
+   * As an example, you can pass `{"50256": -100}` to prevent the end-of-text token
    * from being generated.
    */
   logitBias?: Record<string, number>;
@@ -275,6 +359,10 @@ export interface OpenAIBaseInput {
   openAIApiKey?: string;
 }
 
+
+/**
+ * Configuration for standard OpenAI API input parameters.
+ */
 export interface OpenAIInput extends OpenAIBaseInput {
   /**
    * Generates `bestOf` completions server-side and returns the "best" (the one with
@@ -305,6 +393,9 @@ export interface OpenAIInput extends OpenAIBaseInput {
   echo?: boolean;
 }
 
+/**
+ * Configuration for chat-specific input settings in OpenAI API calls.
+ */
 export interface OpenAIChatInput extends OpenAIBaseInput {
   /**
    * An object specifying the format that the model must output. Compatible with
@@ -328,6 +419,11 @@ export interface OpenAIChatInput extends OpenAIBaseInput {
   chatMessages?: OpenAIClient.Chat.ChatCompletionMessageParam[];
 }
 
+/**
+ * Checks if a model name is suitable for OpenAI chat functions.
+ * @param modelName The model name to check.
+ * @returns True if the model is compatible with chat functions.
+ */
 export function checkModelForOpenAIChat(modelName?: string): boolean {
   return (
     modelName !== undefined &&
@@ -336,6 +432,11 @@ export function checkModelForOpenAIChat(modelName?: string): boolean {
   );
 }
 
+/**
+ * Checks if a model name is suitable for OpenAI vision-related tasks.
+ * @param modelName The model name to check.
+ * @returns True if the model is suitable for vision tasks.
+ */
 export function checkModelForOpenAIVision(modelName?: string): boolean {
   return (
     modelName !== undefined &&
@@ -344,6 +445,11 @@ export function checkModelForOpenAIVision(modelName?: string): boolean {
   );
 }
 
+/**
+ * Wraps errors from the OpenAI client to standardize error handling.
+ * @param e The original error thrown by the OpenAI client.
+ * @returns A standardized error object.
+ */
 export function wrapOpenAIClientError(e: Error): Error {
   let error: Error;
   if (e.constructor.name === APIConnectionTimeoutError.name) {

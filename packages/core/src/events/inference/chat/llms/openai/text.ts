@@ -24,7 +24,26 @@ import {
   wrapOpenAIClientError,
 } from './index.js';
 
-export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOptions>
+/**
+ * Class providing functionality to interact with OpenAI's API, extending generic large language model functionalities.
+ * It handles API communication, manages API keys, and prepares parameters for API requests.
+ *
+ * @template CallOptions - Customizable options for OpenAI API calls, extends {@link OpenAITextCallOptions}.
+ *
+ * @example
+ * ```typescript
+ * const openAI = new OpenAI({
+ *   modelName: 'text-davinci-003',
+ *   openAIApiKey: 'your-api-key',
+ * });
+ * const prompt = "Hello, world!";
+ * const response = await openAI.invoke(prompt);
+ * console.log(response);
+ * ```
+ */
+export class OpenAI<
+    CallOptions extends OpenAITextCallOptions = OpenAITextCallOptions,
+  >
   extends BaseLLM<CallOptions>
   implements OpenAIInput
 {
@@ -41,7 +60,7 @@ export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOp
     return {
       modelName: 'model',
       openAIApiKey: 'openai_api_key',
-      streaming: 'stream'
+      streaming: 'stream',
     };
   }
 
@@ -49,52 +68,191 @@ export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOp
     return 'OpenAI';
   }
 
+  /**
+   * ID of the model to use. You can use the [List models]({@link https://platform.openai.com/docs/api-reference/models/list})
+   * API to see all of your available models, or see [Model overview]({@link https://platform.openai.com/docs/models/overview})
+   * for descriptions of them.
+   */
   modelName = 'text-davinci-003';
 
+  /**
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will
+   * make the output more random, while lower values like 0.2 will make it more
+   * focused and deterministic.
+   *
+   * We generally recommend altering this or `topP` but not both.
+   */
   temperature = 1;
 
+  /**
+   * The maximum number of [tokens]({@link https://platform.openai.com/tokenizer})
+   * to generate in the completion.
+   *
+   * The token count of your prompt plus `maxTokens` cannot exceed the model's
+   * context length.
+   *
+   * [Example Python code]({@link https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken}) f
+   * or counting tokens.
+   */
   maxTokens = 2048;
 
+  /**
+   * An alternative to sampling with temperature, called nucleus sampling, where the
+   * model considers the results of the tokens with temperature probability mass. So 0.1
+   * means only the tokens comprising the top 10% probability mass are considered.
+   *
+   * We generally recommend altering this or `temperature` but not both.
+   */
   topP = 1;
 
+  /**
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on their
+   * existing frequency in the text so far, decreasing the model's likelihood to
+   * repeat the same line verbatim.
+   *
+   * [See more information about frequency and presence panalties]({@link https://platform.openai.com/docs/guides/text-generation/parameter-details})
+   */
   frequencyPenalty = 0;
 
+  /**
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+   * whether they appear in the text so far, increasing the model's likelihood to
+   * talk about new topics.
+   *
+   * [See more information about frequency and presence penalties]({@link https://platform.openai.com/docs/guides/text-generation/parameter-details})
+   */
   presencePenalty = 0;
 
+  /**
+   * How many completions to generate for each prompt.
+   *
+   * **Note:** Because this parameter generates many completions, it can quickly
+   * consume your token quota. Use carefully and ensure that you have reasonable
+   * settings for `maxTokens` and `stopWords`.
+   */
   n = 1;
 
+  /**
+   * Whether to stream back partial progress. If set, tokens will be sent as
+   * data-only [server-sent events]({@link https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format})
+   * as they become available, with the stream terminated by a `data: [DONE]`
+   * message.
+   *
+   * [Example Python code]({@link https://cookbook.openai.com/examples/how_to_stream_completions})
+   */
   streaming = false;
 
+  /**
+   * Generates `bestOf` completions server-side and returns the "best" (the one with
+   * the highest log probability per token). Results cannot be streamed.
+   *
+   * When used with `n`, `bestOf` controls the number of candidate completions and
+   * `n` specifies how many to return – `bestOf` must be greater than `n`.
+   *
+   * **Note:** Because this parameter generates many completions, it can quickly
+   * consume your token quota. Use carefully and ensure that you have reasonable
+   * settings for `maxToken` and `stopWords`.
+   */
   bestOf?: number | undefined;
 
+  /**
+   * Echo back the prompt in addition to the completion
+   */
   echo?: boolean;
 
+  /**
+   * Holds any additional parameters that are valid to pass to
+   * [OpenAI API Reference]({@link https://platform.openai.com/docs/api-reference/introduction})
+   * that are not explicitly specified on this class.
+   */
   additionalKwargs?: OpenAIInput['additionalKwargs'];
 
+  /**
+   * Modify the likelihood of specified tokens appearing in the completion.
+   *
+   * Accepts a json object that maps tokens (specified by their token ID in the GPT
+   * tokenizer) to an associated bias value from -100 to 100. You can use this
+   * [tokenizer tool]({@link https://platform.openai.com/tokenizer?view=bpe})
+   * (which works for both GPT-2 and GPT-3) to convert text to token IDs. Mathematically,
+   * the bias is added to the logits generated by the model prior to sampling.
+   * The exact effect will vary per model, but values between -1 and 1 should
+   * decrease or increase likelihood of selection; values like -100 or 100 should
+   * result in a ban or exclusive selection of the relevant token.
+   *
+   * As an example, you can pass `{"50256": -100}` to prevent the end-of-text token
+   * from being generated.
+   */
   logitBias?: Record<string, number>;
 
+  /**
+   * Include the log probabilities on the `logprobs` most likely tokens, as well the
+   * chosen tokens. For example, if `logprobs` is 5, the API will return a list of
+   * the 5 most likely tokens. The API will always return the `logprob` of the
+   * sampled token, so there may be up to `logprobs+1` elements in the response.
+   *
+   * The maximum value for `logprobs` is 5.
+   */
   logprobs?: number;
 
+  /**
+   * This feature is in Beta. If specified, our system will make a best effort to
+   * sample deterministically, such that repeated requests with the same `seed` and
+   * parameters should return the same result. Determinism is not guaranteed, and you
+   * should refer to the `system_fingerprint` response parameter to monitor changes
+   * in the backend.
+   */
   seed?: number;
 
+  /**
+   * A unique identifier representing your end-user, which can help OpenAI to monitor
+   * and detect abuse.
+   *
+   * [Learn more]({@link https://platform.openai.com/docs/guides/safety-best-practices})
+   */
   user?: string | undefined;
 
+  /**
+   * Up to 4 sequences where the API will stop generating further tokens. The
+   * returned text will not contain the stop sequence.
+   */
   stopWords?: string[];
 
+  /**
+   * Timeout to use when making requests to OpenAI.
+   */
   timeout?: number;
 
+  /**
+   * API key to use when making requests to OpenAI. Defaults to the value of
+   * `OPENAI_API_KEY` environment variable.
+   */
   openAIApiKey?: string;
 
+  /**
+   * Identifier for organization sometimes used in API requests。
+   */
   organization?: string;
 
+  /**
+   * OpenAI API Client.
+   * @internal
+   */
   private _client: OpenAIClient;
 
+  /**
+   * OpenAI API request options.
+   * @internal
+   */
   private _clientOptions: OpenAIClientOptions;
 
   _llmType(): string {
     return 'openai';
   }
 
+  /**
+   * Constructs an instance of the OpenAI class.
+   * @param fields Initialization options that include model configurations and API client options.
+   */
   constructor(
     fields?: Partial<OpenAIInput> &
       BaseLLMParams & {
@@ -216,6 +374,24 @@ export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOp
     };
   }
 
+  /**
+   * Provides the main functionality to communicate with OpenAI's API to retrieve completions.
+   * Handles both streaming and non-streaming responses based on configuration.
+   * @param prompt The input string for which to generate completions.
+   * @param options Configuration options for the API call.
+   * @returns A promise resolving to the language model result.
+   * @internal
+   * @example
+   * ```typescript
+   * const openAI = new OpenAI({
+   *   modelName: 'text-davinci-003',
+   *   openAIApiKey: 'your-api-key',
+   * });
+   * const prompt = "Hello, world!";
+   * const response = await openAI._provide(prompt, { streaming: false });
+   * console.log(response);
+   * ```
+   */
   async _provide(
     prompt: string,
     options: this['SerializedCallOptions']
@@ -279,11 +455,23 @@ export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOp
   }
 
   /**
-   * Attempts to get a completion from the OpenAIClient and retries if an error occurs.
-   *
-   * @param {CompletionCreateParamsStreaming | CompletionCreateParamsNonStreaming} request
-   *        The request parameters which can be either for streaming or non-streaming completions.
-   * @param {OpenAIClientRequestOptions} [options] Optional client request configurations.
+   * Handles retry logic for API calls, adapting for either streaming or regular completion requests.
+   * @param request API request parameters.
+   * @param options Optional additional request configurations.
+   * @returns Either a stream of completion responses or a single completion response.
+   * @example
+   * ```typescript
+   * const openAI = new OpenAI({
+   *   modelName: 'text-davinci-003',
+   *   openAIApiKey: 'your-api-key',
+   * });
+   * try {
+   *   const response = await openAI.completionWithRetry({ model: 'text-davinci-003', prompt: "Hello, world!", stream: false });
+   *   console.log(response);
+   * } catch (error) {
+   *   console.error("Failed to fetch response:", error);
+   * }
+   * ```
    */
   async completionWithRetry(
     request: CompletionCreateParamsStreaming,
@@ -312,6 +500,14 @@ export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOp
     });
   }
 
+  /**
+   * Generates and handles streaming responses for OpenAI completions.
+   * @param params API call parameters excluding the prompt.
+   * @param prompt The input prompt for completion.
+   * @param options Call options potentially modifying the request.
+   * @returns A promise resolving to a structured completion response.
+   * @internal
+   */
   private async _completionWithStream(
     params: Omit<OpenAIClient.CompletionCreateParams, 'prompt'>,
     prompt: string,
@@ -359,6 +555,13 @@ export class OpenAI<CallOptions extends OpenAITextCallOptions = OpenAITextCallOp
     return { ...res, choices };
   }
 
+  /**
+   * Builds request options for the API call, merging default client options with
+   * method-specific options.
+   * @param options Optional additional request configurations.
+   * @returns The combined request options.
+   * @internal
+   */
   private _getRequestOptions(
     options?: OpenAIClientRequestOptions
   ): OpenAIClientRequestOptions {

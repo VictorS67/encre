@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target": "ESNEXT",
     "module": "ESNext",
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "declaration": true,
@@ -15,23 +17,33 @@
     "strictPropertyInitialization": false,
     "noImplicitThis": false,
     "moduleResolution": "node",
-    "types": ["reflect-metadata", "node"],
+    "types": [
+      "reflect-metadata",
+      "node"
+    ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "inlineSourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": ["src/**/*", "jest.global.env.ts"],
-  "exclude": ["node_modules", "build"],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ],
   "typedocOptions": {
-    "entrypoints": [
+    "entryPoints": [
       "src/load/index.ts",
       "src/load/serializable.ts",
       "src/record/callable.ts",
       "src/cache/index.ts",
       "src/cache/base.ts",
       "src/events/base.ts",
+      "src/events/embeddings/base.ts",
+      "src/events/embeddings/openai.ts",
       "src/events/input/load/docs/base.ts",
       "src/events/input/load/docs/buffer.ts",
       "src/events/input/load/docs/context.ts",
@@ -45,8 +57,13 @@
       "src/events/input/load/prompts/base.ts",
       "src/events/input/load/prompts/text.ts",
       "src/events/input/load/prompts/chat.ts",
+      "src/events/input/load/rules/base.ts",
+      "src/events/input/load/vectorstore/base.ts",
+      "src/events/input/load/vectorstore/chroma.ts",
+      "src/events/input/load/vectorstore/memory.ts",
       "src/events/input/transform/splitter.ts",
       "src/events/output/provide/base.ts",
+      "src/events/output/provide/embedresult.ts",
       "src/events/output/provide/file.ts",
       "src/events/output/provide/generation.ts",
       "src/events/output/provide/llmresult.ts",
@@ -68,10 +85,27 @@
       "src/events/inference/chat/llms/vertexai/gemini/text.ts",
       "src/events/inference/chat/llms/vertexai/gemini/chat.ts",
       "src/events/inference/chat/llms/vertexai/gemini/utils.ts",
-      "src/studio/data.ts",
-      "src/studio/processor.ts",
-      "src/studio/graph.ts",
+      "src/events/inference/retrieve/base.ts",
+      "src/events/inference/retrieve/text/remote/base.ts",
+      "src/events/inference/retrieve/text/remote/index.ts",
+      "src/events/inference/retrieve/embedding/vectorstore.ts",
+      "src/events/inference/retrieve/embedding/index.ts",
       "src/studio/condition.ts",
+      "src/studio/data.ts",
+      "src/studio/graph.ts",
+      "src/studio/input.ts",
+      "src/studio/processor.ts",
+      "src/studio/scheduler.ts",
+      "src/studio/serde.ts",
+      "src/studio/ui.ts",
+      "src/studio/comments/index.ts",
+      "src/studio/guardrails/base.ts",
+      "src/studio/guardrails/index.ts",
+      "src/studio/guardrails/data/array.guard.ts",
+      "src/studio/guardrails/data/boolean.guard.ts",
+      "src/studio/guardrails/data/number.guard.ts",
+      "src/studio/guardrails/data/object.guard.ts",
+      "src/studio/guardrails/data/string.guard.ts",
       "src/studio/nodes/index.ts",
       "src/studio/nodes/base.ts",
       "src/studio/nodes/inference/chat/chatlm.node.ts",
@@ -82,7 +116,12 @@
       "src/studio/nodes/input/splitter.node.ts",
       "src/studio/nodes/utility/graph.node.ts",
       "src/studio/nodes/utility/if.node.ts",
+      "src/studio/nodes/utility/input.node.ts",
+      "src/studio/registration/guardrails.ts",
+      "src/studio/registration/nodes.ts",
       "src/studio/utils/coerce.ts",
+      "src/studio/utils/display.ts",
+      "src/studio/utils/load.ts",
       "src/utils/nanoid.ts"
     ]
   }

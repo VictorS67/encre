@@ -12,13 +12,8 @@ import {
   FunctionDef,
   formatFunctionDefs,
 } from '../../../../../utils/openaiFunctionFormat.js';
-import {
-  getNumTokens,
-  getTiktokenModel,
-} from '../../../../../utils/tokenizer.js';
-import {
-  BaseMessage,
-} from '../../../../input/load/msgs/base.js';
+import { getNumTokens } from '../../../../../utils/tokenizer.js';
+import { BaseMessage } from '../../../../input/load/msgs/base.js';
 import { BotMessage } from '../../../../input/load/msgs/bot.js';
 import { ChatMessage } from '../../../../input/load/msgs/chat.js';
 import { FunctionMessage } from '../../../../input/load/msgs/function.js';
@@ -29,7 +24,6 @@ import { ChatGenerationChunk } from '../../../../output/provide/message.js';
 import { BaseChatLM, BaseLLMParams } from '../../base.js';
 import { TokenUsage } from '../../index.js';
 import {
-  formatArguments,
   formatJSONInContent,
   formatJSONStringInContent,
   getContentFromMessage,
@@ -43,8 +37,29 @@ import {
   wrapOpenAIClientError,
 } from './index.js';
 
+/**
+ * Represents the role of a message within the chat, distinguishing between system-generated
+ * and user-generated content, among other types.
+ */
 export type OpenAIMessageRole = 'system' | 'user' | 'assistant' | 'tool';
 
+/**
+ * Class for handling interactions with the OpenAI API, specifically designed to manage chat
+ * functionalities.
+ *
+ * @template CallOptions - Extends OpenAIChatCallOptions for detailed API call configurations.
+ *
+ * @example
+ * ```typescript
+ * const openAI = new OpenAIChat({
+ *   modelName: 'gpt-3.5-turbo',
+ *   openAIApiKey: 'your-api-key',
+ * });
+ * const message = new HumanMessage("Hello, world!");
+ * const response = await openAI.invoke([message]);
+ * console.log(response);
+ * ```
+ */
 export class OpenAIChat<
     CallOptions extends OpenAIChatCallOptions = OpenAIChatCallOptions,
   >
@@ -72,48 +87,188 @@ export class OpenAIChat<
     return 'OpenAIChat';
   }
 
+  /**
+   * ID of the model to use. You can use the [List models]({@link https://platform.openai.com/docs/api-reference/models/list})
+   * API to see all of your available models, or see [Model overview]({@link https://platform.openai.com/docs/models/overview})
+   * for descriptions of them.
+   */
   modelName = 'gpt-3.5-turbo';
 
+  /**
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on their
+   * existing frequency in the text so far, decreasing the model's likelihood to
+   * repeat the same line verbatim.
+   *
+   * [See more information about frequency and presence panalties]({@link https://platform.openai.com/docs/guides/text-generation/parameter-details})
+   */
   frequencyPenalty = 0;
 
+  /**
+   * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+   * whether they appear in the text so far, increasing the model's likelihood to
+   * talk about new topics.
+   *
+   * [See more information about frequency and presence penalties]({@link https://platform.openai.com/docs/guides/text-generation/parameter-details})
+   */
   presencePenalty = 0;
 
+  /**
+   * Whether to stream back partial progress. If set, tokens will be sent as
+   * data-only [server-sent events]({@link https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format})
+   * as they become available, with the stream terminated by a `data: [DONE]`
+   * message.
+   *
+   * [Example Python code]({@link https://cookbook.openai.com/examples/how_to_stream_completions})
+   */
   streaming = false;
 
+  /**
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will
+   * make the output more random, while lower values like 0.2 will make it more
+   * focused and deterministic.
+   *
+   * We generally recommend altering this or `topP` but not both.
+   */
   temperature = 1;
 
+  /**
+   * The maximum number of [tokens]({@link https://platform.openai.com/tokenizer})
+   * to generate in the completion.
+   *
+   * The token count of your prompt plus `maxTokens` cannot exceed the model's
+   * context length.
+   *
+   * [Example Python code]({@link https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken}) f
+   * or counting tokens.
+   */
   maxTokens = 2048;
 
+  /**
+   * An alternative to sampling with temperature, called nucleus sampling, where the
+   * model considers the results of the tokens with temperature probability mass. So 0.1
+   * means only the tokens comprising the top 10% probability mass are considered.
+   *
+   * We generally recommend altering this or `temperature` but not both.
+   */
   topP = 1;
 
+  /**
+   * How many completions to generate for each prompt.
+   *
+   * **Note:** Because this parameter generates many completions, it can quickly
+   * consume your token quota. Use carefully and ensure that you have reasonable
+   * settings for `maxTokens` and `stopWords`.
+   */
   n = 1;
 
+  /**
+   * An object specifying the format that the model must output. Compatible with
+   * [GPT-4 Turbo](https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo) and
+   * all GPT-3.5 Turbo models newer than `gpt-3.5-turbo-1106`.
+   *
+   * Setting to `"json"` enables JSON mode, which guarantees the message the model
+   * generates is valid JSON.
+   *
+   * **Important:** when using JSON mode, you **must** also instruct the model to
+   * produce JSON yourself via a system or user message. Without this, the model may
+   * generate an unending stream of whitespace until the generation reaches the token
+   * limit, resulting in a long-running and seemingly "stuck" request. Also note that
+   * the message content may be partially cut off if `finish_reason="length"`, which
+   * indicates the generation exceeded `maxTokens` or the conversation exceeded the
+   * max context length.
+   */
   responseFormatType?: 'json' | 'text';
 
+  /**
+   * Modify the likelihood of specified tokens appearing in the completion.
+   *
+   * Accepts a json object that maps tokens (specified by their token ID in the GPT
+   * tokenizer) to an associated bias value from -100 to 100. You can use this
+   * [tokenizer tool]({@link https://platform.openai.com/tokenizer?view=bpe})
+   * (which works for both GPT-2 and GPT-3) to convert text to token IDs. Mathematically,
+   * the bias is added to the logits generated by the model prior to sampling.
+   * The exact effect will vary per model, but values between -1 and 1 should
+   * decrease or increase likelihood of selection; values like -100 or 100 should
+   * result in a ban or exclusive selection of the relevant token.
+   *
+   * As an example, you can pass `{"50256": -100}` to prevent the end-of-text token
+   * from being generated.
+   */
   logitBias?: Record<string, number>;
 
+  /**
+   * This feature is in Beta. If specified, our system will make a best effort to
+   * sample deterministically, such that repeated requests with the same `seed` and
+   * parameters should return the same result. Determinism is not guaranteed, and you
+   * should refer to the `system_fingerprint` response parameter to monitor changes
+   * in the backend.
+   */
   seed?: number;
 
+  /**
+   * Up to 4 sequences where the API will stop generating further tokens. The
+   * returned text will not contain the stop sequence.
+   */
   stopWords?: string[];
 
+  /**
+   * A unique identifier representing your end-user, which can help OpenAI to monitor
+   * and detect abuse.
+   *
+   * [Learn more]({@link https://platform.openai.com/docs/guides/safety-best-practices})
+   */
   user?: string;
 
+  /**
+   * Holds any additional parameters that are valid to pass to
+   * [OpenAI API Reference]({@link https://platform.openai.com/docs/api-reference/introduction})
+   * that are not explicitly specified on this class.
+   */
   additionalKwargs?: Record<string, unknown>;
 
+  /**
+   * Timeout to use when making requests to OpenAI.
+   */
   timeout?: number;
 
+  /**
+   * API key to use when making requests to OpenAI. Defaults to the value of
+   * `OPENAI_API_KEY` environment variable.
+   */
   openAIApiKey?: string;
 
+  /** ChatGPT messages to pass as a prefix to the prompt */
   chatMessages?: OpenAIClient.Chat.ChatCompletionMessageParam[];
 
+  /**
+   * Identifier for organization sometimes used in API requests。
+   */
   organization?: string;
 
+  /**
+   * OpenAI API Client.
+   * @internal
+   */
   private _client: OpenAIClient;
 
+  /**
+   * OpenAI API request options.
+   * @internal
+   */
   private _clientOptions: OpenAIClientOptions;
 
+  /**
+   * Whether the model supports vision (i.e. multimodal)
+   * @internal
+   */
   private _isMultimodal = false;
 
+  /**
+   * Constructs an instance of the OpenAIChat class with options to configure the OpenAI
+   * client.
+   *
+   * @param fields Configuration options for the OpenAI client and chat behavior.
+   */
   constructor(
     fields?: Partial<OpenAIChatInput> &
       BaseLLMParams & {
@@ -239,6 +394,26 @@ export class OpenAIChat<
     };
   }
 
+  /**
+   * Provides the implementation for fetching chat completions from OpenAI based on the
+   * provided messages and options.
+   * This method can handle both multimodal responses and standard text, adjusting parameters
+   * based on model capabilities.
+   *
+   * @param messages Array of messages to be processed in the chat.
+   * @param options Configuration options for the chat completion.
+   * @returns A promise resolving to the language model result with chat completions.
+   * @example
+   * ```typescript
+   * const openaiChat = new OpenAIChat({
+   *   modelName: 'gpt-3.5-turbo',
+   *   openAIApiKey: 'your-api-key',
+   * });
+   * const messages = [new HumanMessage({ content: "Hello, world!" })];
+   * const result = await openaiChat._provide(messages);
+   * console.log(result);
+   * ```
+   */
   async _provide(
     messages: BaseMessage[],
     options: this['SerializedCallOptions']
@@ -389,6 +564,16 @@ export class OpenAIChat<
     }
   }
 
+  /**
+   * Handles streaming completions from OpenAI's Chat API. This method initiates a streaming
+   * API call and processes the incoming data chunks to form a complete chat response.
+   *
+   * @param params - Parameters for the streaming completion, excluding the 'messages' parameter.
+   * @param messages - The chat messages formatted for the OpenAI API.
+   * @param options - Additional call options that may include signal handling for abort operations.
+   * @returns An async generator that yields chat generation chunks as they arrive from the API.
+   * @internal
+   */
   private async *_completionWithStream(
     params: Omit<OpenAIClient.Chat.ChatCompletionCreateParams, 'messages'>,
     messages: OpenAIClient.Chat.ChatCompletionMessageParam[],
@@ -441,10 +626,34 @@ export class OpenAIChat<
 
   /**
    * Attempts to get a chat completion from the OpenAIClient and retries if an error occurs.
+   * This method supports both streaming and non-streaming requests.
    *
-   * @param {OpenAIClient.Chat.ChatCompletionCreateParamsStreaming | OpenAIClient.Chat.ChatCompletionCreateParamsNonStreaming} request
-   *        The request parameters which can be either for streaming or non-streaming chat completions.
-   * @param {OpenAIClientRequestOptions} [options] Optional client request configurations.
+   * @param request - The request parameters, which can be for streaming or non-streaming chat completions.
+   * @param options - Optional client request configurations.
+   * @returns Depending on the request type, either a stream of chat completion chunks or a single chat completion.
+   * @example
+   * ```typescript
+   * const openAIChat = new OpenAIChat({
+   *   modelName: 'gpt-3.5-turbo',
+   *   openAIApiKey: 'your-api-key',
+   * });
+   *
+   * const message = {
+   *   role: 'user',
+   *   content: [
+   *     { text: "Hello, world!" }
+   *   ]
+   * };
+   *
+   * try {
+   *   const response = await openAIChat.completionWithRetry(
+   *     { messages: [message], stream: false }
+   *   );
+   *   console.log(response);
+   * } catch (error) {
+   *   console.error("Completion failed:", error);
+   * }
+   * ```
    */
   async completionWithRetry(
     request: OpenAIClient.Chat.ChatCompletionCreateParamsStreaming,
@@ -477,9 +686,26 @@ export class OpenAIChat<
   }
 
   /**
-   * Estimate token used in messages with OpenAI Chat language model.
-   * @see https://github.com/hmarr/openai-chat-tokens/blob/main/src/index.ts and
+   * Estimates the total number of tokens used in a chat session. This includes messages
+   * and any defined tools or function calls.
+   *
+   * Reference:
+   * @see https://github.com/hmarr/openai-chat-tokens/blob/main/src/index.ts
    * @see https://github.com/forestwanglin/openai-java/blob/main/jtokkit/src/main/java/xyz/felh/openai/jtokkit/utils/TikTokenUtils.java
+   *
+   * @param modelName - The model name used for token calculations.
+   * @param messages - The array of base messages from the chat.
+   * @param tools - Optional array of tools that may influence token usage.
+   * @param toolChoiceOption - Optional tool choice configuration.
+   * @returns The total number of tokens estimated to be used in the chat.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInChat(
+   *   'gpt-3.5-turbo',
+   *   [new HumanMessage('Hello!')]
+   * );
+   * console.log(tokenCount);
+   * ```
    */
   static async getNumTokensInChat(
     modelName: string,
@@ -531,8 +757,23 @@ export class OpenAIChat<
   }
 
   /**
-   * Estimate token used in an array of OpenAI Chat Completion messages.
+   * Estimates the number of tokens for an array of messages formatted for the OpenAI Chat API.
+   *
+   * Reference:
    * @see https://github.com/forestwanglin/openai-java/blob/main/jtokkit/src/main/java/xyz/felh/openai/jtokkit/utils/TikTokenUtils.java
+   *
+   * @param modelName - The model used for token calculations.
+   * @param messages - Chat messages formatted for the API.
+   * @param tools - Tools that may be present in the chat influencing token usage.
+   * @returns The total number of tokens estimated for the provided messages.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInMessages(
+   *   'gpt-3.5-turbo',
+   *   [{ role: 'user', content: 'Hello!' }]
+   * );
+   * console.log(tokenCount);
+   * ```
    */
   static async getNumTokensInMessages(
     modelName: string,
@@ -589,8 +830,24 @@ export class OpenAIChat<
   }
 
   /**
-   * Estimate token used in an array of OpenAI Chat Completion messages.
+   * Calculates the number of tokens for a single chat message, considering non-tool content
+   * and tool-related adjustments.
+   *
+   * Reference:
    * @see https://github.com/forestwanglin/openai-java/blob/main/jtokkit/src/main/java/xyz/felh/openai/jtokkit/utils/TikTokenUtils.java
+   *
+   * @param modelName - The model used for token calculations.
+   * @param message - A single chat message.
+   * @param toolMessageSize - Number of tool messages which can affect token calculations.
+   * @returns The number of tokens used by the message.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInMessage(
+   *   'gpt-3.5-turbo',
+   *   [{ role: 'user', content: 'Hello!' }]
+   * );
+   * console.log(tokenCount);
+   * ```
    */
   static async getNumTokensInMessage(
     modelName: string,
@@ -647,6 +904,22 @@ export class OpenAIChat<
     return count;
   }
 
+  /**
+   * Estimates token count for message content that does not involve tool operations, such as
+   * plain text or structured data.
+   *
+   * @param modelName - The model used for token calculations.
+   * @param content - The content of the message, either a string or structured content.
+   * @returns The number of tokens estimated for the non-tool content.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInMessageNonToolContent(
+   *   'gpt-3.5-turbo',
+   *   [{ type: 'text', content: 'Hello!' }]
+   * );
+   * console.log(tokenCount);
+   * ```
+   */
   static async getNumTokensInMessageNonToolContent(
     modelName: string,
     content:
@@ -732,6 +1005,31 @@ export class OpenAIChat<
     return count;
   }
 
+  /**
+   * Estimates the number of tokens used by tool calls within a message, accounting for
+   * function names and arguments.
+   *
+   * @param modelName - The model used for token calculations.
+   * @param toolCalls - Array of tool calls within the message.
+   * @returns The number of tokens used by all tool calls in the message.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInMessageToolCalls(
+   *   'gpt-4-turbo',
+   *   [
+   *     {
+   *       id: 'tool-id-from-api',
+   *       type: 'function',
+   *       function: {
+   *         name: 'get_current_weather',
+   *         arguments: "{\n\"location\": \"Boston, MA\"\n}"
+   *       }
+   *     }
+   *   ]
+   * );
+   * console.log(tokenCount);
+   * ```
+   */
   static async getNumTokensInMessageToolCalls(
     modelName: string,
     toolCalls:
@@ -748,16 +1046,10 @@ export class OpenAIChat<
         if (tc.type === 'function') {
           // name is required in function
           if (tc.function.name) {
-            count += await getNumTokens(
-              tc.function.name,
-              modelName
-            );
+            count += await getNumTokens(tc.function.name, modelName);
           }
           if (tc.function.arguments) {
-            count += await getNumTokens(
-              tc.function.arguments,
-              modelName
-            );
+            count += await getNumTokens(tc.function.arguments, modelName);
           }
         }
       }
@@ -767,7 +1059,20 @@ export class OpenAIChat<
   }
 
   /**
-   * Estimate token used in generation from OpenAI Chat language model.
+   * Estimates the total number of tokens generated in response to chat interactions, useful
+   * for API quota management.
+   *
+   * @param modelName - The model used for token calculations.
+   * @param generations - Array of chat generation chunks produced by the model.
+   * @returns The total number of tokens used in the generations.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInGenerations(
+   *   'gpt-4-turbo',
+   *   [new ChatGenerationChunk({ message: new BotMessage('Hello!') })]
+   * );
+   * console.log(tokenCount);
+   * ```
    */
   static async getNumTokensInGenerations(
     modelName: string,
@@ -802,6 +1107,42 @@ export class OpenAIChat<
     return counts.reduce((a, b) => a + b, 0);
   }
 
+  /**
+   * Calculates the number of tokens associated with the tools defined for use in the chat.
+   *
+   * @param modelName - The model used for token calculations.
+   * @param tools - Tools configured for the chat.
+   * @returns The total number of tokens estimated for all tools.
+   * @example
+   * ```typescript
+   * const tokenCount = await OpenAIChat.getNumTokensInTools(
+   *   'gpt-4-turbo',
+   *   [
+   *     {
+   *       type: 'function',
+   *       function: {
+   *         name: 'get_current_weather',
+   *         description: 'get weather in a given location',
+   *         parameters: {
+   *           type: 'object',
+   *           properties: {
+   *             location: {
+   *               type: 'string'
+   *             },
+   *             unit: {
+   *               type: 'string',
+   *               enum: ['celsius', 'fahrenheit'],
+   *             }
+   *           },
+   *           required: ['location']
+   *         }
+   *       }
+   *     }
+   *   ]
+   * );
+   * console.log(tokenCount);
+   * ```
+   */
   static async getNumTokensInTools(
     modelName: string,
     tools: OpenAIClient.Chat.Completions.ChatCompletionTool[]
@@ -816,6 +1157,14 @@ export class OpenAIChat<
     return count;
   }
 
+  /**
+   * Configures and returns the request options for API calls, merging any additional options
+   * provided with the default client options.
+   *
+   * @param options - Optional request configurations that may override default settings.
+   * @returns The complete request options for API calls.
+   * @internal
+   */
   private _getRequestOptions(
     options?: OpenAIClientRequestOptions
   ): OpenAIClientRequestOptions {

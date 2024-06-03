@@ -3,11 +3,11 @@ import { BaseLoader } from './base.js';
 import { Context } from './context.js';
 
 /**
- * Abstract class that extends the `BaseLoader` class. It is a
- * document loader that loads document from a buffer. The `load()`
- * method is implemented to read the buffer contents and metadata,
- * and then calls the `parse()` method to parse the buffer and
- * return the documents.
+ * An abstract class that extends `BaseLoader` to specifically handle the loading of documents from buffers.
+ * This class is designed to facilitate the reading of file contents or blob data, parse them, and convert them into a structured format (`Context` objects).
+ * Implementations need to define the `parse` method to specify how the buffer is processed.
+ *
+ * @template CallInput The type of input this loader accepts, either a file path (`string`) or a blob (`Blob`).
  */
 export abstract class BufferLoader<
   CallInput extends string | Blob = string | Blob,
@@ -25,15 +25,18 @@ export abstract class BufferLoader<
 
   /**
    * Abstract method that parse the buffer and return the documents.
+   * 
    * @param rawData The buffer to parse.
    * @param metadata The metadata of the document.
    * @returns Promise that resolves with an array of `Context` objects.
+   * @internal
    */
   protected abstract parse(
     rawData: Buffer,
     metadata: Context['metadata']
   ): Promise<Context[]>;
 
+  /** @hidden */
   static async imports(): Promise<{ readFile: typeof readFile }> {
     try {
       const { readFile } = await import('node:fs/promises');
@@ -46,9 +49,11 @@ export abstract class BufferLoader<
   }
 
   /**
-   * Async method that reads the buffer contents and metadata, and then
-   * calls the `parse()` method to parse the buffer and return the documents.
-   * @returns Promise that resolves with an array of `Context` objects.
+   * Loads and parses document data from a buffer, converting it into an array of `Context` instances.
+   * This method orchestrates the reading of file or blob data and their subsequent parsing into structured formats.
+   *
+   * @param filePathOrBlob The file path or blob object containing the document data to be loaded.
+   * @returns A promise resolving to an array of `Context` instances, representing the parsed documents.
    */
   public async load(filePathOrBlob: CallInput): Promise<Context[]> {
     let buffer: Buffer;

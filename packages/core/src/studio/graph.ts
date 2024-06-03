@@ -19,14 +19,38 @@ import { GraphScheduler } from './scheduler.js';
 import { SerializedGraph, SerializedNode } from './serde.js';
 
 export interface NodeGraph {
+  /**
+   * Unique identifier for the graph.
+   */
   id?: RecordId;
+
+  /**
+   * Human-readable title for the graph.
+   */
   title?: string;
+
+  /**
+   * Description of the graph's purpose and contents.
+   */
   description?: string;
 
   registry?: NodeRegistration;
 
+  /**
+   * Collection of nodes that compose the graph. Nodes can be of any type
+   * derived from `SerializableNode`, including `SubGraphNode`.
+   */
   nodes: SerializableNode[];
+
+  /**
+   * Connections between nodes within the graph, specifying data flow from node to node.
+   * Connections can be connected to/from `SubGraphNode`.
+   */
   connections: NodeConnection[];
+
+  /**
+   * Optional comments associated with the graph, for user notes or documentation purposes.
+   */
   comments?: GraphComment[];
 }
 
@@ -38,24 +62,47 @@ export type NodeProcessInfo = {
   memory: number;
 };
 
+/**
+ * Represents a base class for creating and managing a graph structure consisting of nodes,
+ * connections, and comments. This class provides functionalities for graph operations,
+ * node registration, and data integrity validation across a potentially complex network of nodes.
+ *
+ */
 export abstract class BaseGraph extends Serializable implements NodeGraph {
   _isSerializable = true;
 
   _namespace: string[] = ['studio', 'graph'];
 
+  /**
+   * Unique identifier for the graph.
+   */
   id: RecordId;
 
+  /**
+   * Human-readable title for the graph.
+   */
   title: string;
 
+  /**
+   * Description of the graph's purpose and contents.
+   */
   description: string;
 
-  // all of the nodes in the graph, this allows subgraph nodes
+  /**
+   * Collection of nodes that compose the graph. Nodes can be of any type
+   * derived from `SerializableNode`, including `SubGraphNode`.
+   */
   nodes: SerializableNode[];
 
-  // all of the connections in the graph, this allows the connection with
-  // subgraph nodes
+  /**
+   * Connections between nodes within the graph, specifying data flow from node to node.
+   * Connections can be connected to/from `SubGraphNode`.
+   */
   connections: NodeConnection[];
 
+  /**
+   * Optional comments associated with the graph, for user notes or documentation purposes.
+   */
   comments: GraphComment[];
 
   // all of the non-subgraph nodes in the graph
@@ -123,6 +170,12 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     };
   }
 
+  /**
+   * Constructs a new instance of the BaseGraph, setting up initial configuration including
+   * nodes, connections, and other parameters.
+   *
+   * @param {NodeGraph} fields - Initial fields to set up the graph.
+   */
   constructor(fields?: NodeGraph) {
     let registry: NodeRegistration | undefined;
     if (fields?.registry) {
@@ -280,6 +333,13 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     }
   }
 
+  /**
+   * Abstract method to load a node registry into the graph. Implementations should handle
+   * the specifics of registry integration.
+   *
+   * @param {NodeRegistration | undefined} registry - The node registry to integrate.
+   * @returns {BaseGraph}
+   */
   abstract loadRegistry(registry: NodeRegistration | undefined): BaseGraph;
 
   /**
@@ -349,12 +409,13 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
    * @param nodes all of the nodes in the graph, this allows subgraph nodes
    * @param connections all of the connections in the graph, this allows the
    * connection with subgraph nodes
-   * @returns `flattenNodes` - all of the non-subgraph nodes in the graph,
-   * `flattenConnections` - all of the connections after removing subgraph
-   * nodes in the graph
-   * `inputs` - input port fields, `outputs` - output port fields,
-   * `inputNameMap` and `outputNameMap` are the pointer to the original node id and
-   * port name for reversing the name to the original.
+   * @returns `flattenNodes` are all of the non-subgraph nodes in the graph,
+   * `flattenConnections` are all of the connections after removing subgraph
+   * nodes in the graph,`inputs` are input port fields, `outputs` are output
+   * port fields, `inputNameMap` and `outputNameMap` are the pointer to the
+   * original node id and port name for reversing the name to the original,
+   * `startNodeIds` are the start non-subgraph node ids, `endNodeIds` are the
+   * end non-subgraph node ids.
    */
   static flattenGraph(
     graphId: RecordId,
@@ -484,9 +545,10 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
    * @param nodes all of the nodes in the graph, this allows subgraph nodes
    * @param connections all of the connections in the graph, this allows the
    * connection with subgraph nodes
-   * @returns `inputs` - input port fields, `outputs` - output port fields,
+   * @returns `inputs` are input port fields, `outputs` are output port fields,
    * `inputNameMap` and `outputNameMap` are the pointer to the original node id and
-   * port name for reversing the name to the original.
+   * port name for reversing the name to the original, `startNodeIds` are the start
+   * node ids, `endNodeIds` are the end node ids.
    */
   static getGraphPorts(
     nodes: SerializableNode[],
@@ -604,6 +666,17 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     };
   }
 
+  /**
+   * Converts a serialized graph object back into an instance of `BaseGraph`, restoring its structure and state
+   * from a previously serialized form. This method is static and typically used to rehydrate a graph from
+   * data stored in a database or received over a network.
+   *
+   * @param serialized - The serialized representation of the graph.
+   * @param values - Additional values that might be necessary for fully restoring the serialized nodes within the graph.
+   * @param registry - Optional registries for nodes and guardrails that may be needed during deserialization.
+   * @returns Returns a promise that resolves to an instance of `BaseGraph`.
+   * @throws {Error} Throws an error if the serialized object does not represent a graph.
+   */
   static async deserialize(
     serialized: SerializedGraph,
     values: Record<string, unknown> = {},
@@ -645,6 +718,13 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     });
   }
 
+  /**
+   * Serializes the current state of the graph into a format that can be easily stored or transmitted.
+   * This method facilitates the conversion of complex graph structures into a standardized JSON format,
+   * ensuring that all relevant details are preserved and can be reconstructed later.
+   *
+   * @returns Returns a promise that resolves to a serialized representation of the graph.
+   */
   async serialize(): Promise<SerializedGraph> {
     const serializedNodes: SerializedNode[] = [];
 
@@ -698,10 +778,60 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     };
   }
 
+  /**
+   * Abstract method to define the scheduling of node execution within the graph. This method should be implemented
+   * by subclasses to specify the order in which nodes should be processed based on dependencies or other criteria.
+   *
+   * Implementations should return an ordered array of tuples, where each tuple represents a scheduled group of nodes.
+   * Each group is identified by a processor ID and an array of node IDs that can be executed in parallel or sequence,
+   * depending on the graph's logic and node interdependencies.
+   *
+   * @returns An array of tuples, where each tuple contains a processor ID and an array of node IDs scheduled for execution.
+   */
   abstract schedule(): Array<[string, RecordId[]]>;
 }
 
+/**
+ * Represents a subgraph within a larger graph structure. This class extends the basic functionalities
+ * of a BaseGraph to handle specific cases such as loading custom node registries and scheduling nodes
+ * based on a more defined context or subgraph-specific logic.
+ *
+ * @example
+ * // Initializing a new SubGraph with predefined nodes and connections.
+ * const stringPromptNode = globalNodeRegistry.createDynamicRaw(
+ *   new StringPrompt('Who are you?')
+ * );
+ *
+ * const openAINode = globalNodeRegistry.createDynamicRaw(
+ *   new OpenAIChat({ modelName: 'gpt-3.5-turbo' })
+ * );
+ *
+ * const graph = new SubGraph({
+ *   nodes: [stringPromptNode, openAINode],
+ *   connections: [
+ *     {
+ *       fromNodeId: stringPromptNode.id,
+ *       fromPortName: 'prompt',
+ *       toNodeId: openAINode.id,
+ *       toPortName: 'prompt',
+ *     },
+ *   ],
+ * });
+ *
+ * // Scheduling the nodes in the subGraph for execution.
+ * const schedule = subGraph.schedule();
+ * console.log('Execution Schedule:', schedule);
+ */
 export class SubGraph extends BaseGraph {
+  /**
+   * Loads a given node registry into the subgraph, allowing the subgraph to update its internal structures
+   * to accommodate changes in node definitions or behaviors. If no registry is provided, the method returns
+   * the current instance without making any changes.
+   *
+   * @param registry - The node registration to load into the subgraph.
+   * @returns Returns a new instance of SubGraph if a registry is provided, otherwise returns the current instance.
+   *
+   */
   loadRegistry(registry: NodeRegistration | undefined): SubGraph {
     if (!registry) {
       return this;
@@ -720,6 +850,27 @@ export class SubGraph extends BaseGraph {
     return new SubGraph(nodeGraphFields);
   }
 
+  /**
+   * Schedules the execution of nodes within the subgraph. This method utilizes a GraphScheduler to determine
+   * the order of node execution based on dependencies and other scheduling criteria defined within the subgraph.
+   * It returns an array of tuples where each tuple consists of a processor ID and an array of node IDs, indicating
+   * the order of execution.
+   *
+   * @returns An array of tuples, each containing a processor ID and an array of node IDs, representing the execution order of the nodes.
+   *
+   * @example
+   * ```typescript
+   * const subGraph = new SubGraph({ ... });
+   * const executionSchedule = subGraph.schedule();
+   * console.log(executionSchedule);
+   * // Output might look like:
+   * // [
+   * //   ['<processor-id-1>', ['<node-id-1>', '<node-id-2>']],
+   * //   ['<processor-id-2>', ['<node-id-3>']],
+   * //   ['<processor-id-3>', ['<node-id-4>']]
+   * // ]
+   * ```
+   */
   schedule(): Array<[string, RecordId[]]> {
     const graphScheduler = new GraphScheduler(this);
 

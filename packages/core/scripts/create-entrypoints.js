@@ -22,6 +22,9 @@ const entrypoints = {
   "cache/base": "cache/base",
   // events
   "events/base": "events/base",
+  // events/embeddings
+  "events/embeddings/base": "events/embeddings/base",
+  "events/embeddings/openai": "events/embeddings/openai",
   // events/input/load/docs
   "events/input/load/docs/base": "events/input/load/docs/base",
   "events/input/load/docs/buffer": "events/input/load/docs/buffer",
@@ -38,10 +41,19 @@ const entrypoints = {
   "events/input/load/prompts/base": "events/input/load/prompts/base",
   "events/input/load/prompts/text": "events/input/load/prompts/text",
   "events/input/load/prompts/chat": "events/input/load/prompts/chat",
+  // events/input/load/rules
+  "events/input/load/rules": "events/input/load/rules/base",
+  // events/input/load/vectorstore
+  "events/input/load/vectorstore/base": "events/input/load/vectorstore/base",
+  "events/input/load/vectorstore/chroma":
+    "events/input/load/vectorstore/chroma",
+  "events/input/load/vectorstore/memory":
+    "events/input/load/vectorstore/memory",
   // events/input/transform
   "events/input/transform/splitter": "events/input/transform/splitter",
   // events/output/provide
   "events/output/provide/base": "events/output/provide/base",
+  "events/output/provide/embedresult": "events/output/provide/embedresult",
   "events/output/provide/file": "events/output/provide/file",
   "events/output/provide/generation": "events/output/provide/generation",
   "events/output/provide/llmresult": "events/output/provide/llmresult",
@@ -71,8 +83,7 @@ const entrypoints = {
   // events/inference/chat/llms/openai
   "events/inference/chat/llms/openai":
     "events/inference/chat/llms/openai/index",
-  "events/inference/chat/llms/openai":
-    "events/inference/chat/llms/openai/text",
+  "events/inference/chat/llms/openai": "events/inference/chat/llms/openai/text",
   "events/inference/chat/chatlms/openai":
     "events/inference/chat/llms/openai/chat",
   // events/inference/chat/llms/vertexai
@@ -85,11 +96,34 @@ const entrypoints = {
     "events/inference/chat/llms/vertexai/gemini/chat",
   "events/inference/chat/llms/vertexai/gemini/utils":
     "events/inference/chat/llms/vertexai/gemini/utils",
+  // events/inference/retrieve
+  "events/inference/retrieve/base": "events/inference/retrieve/base",
+  // events/inference/retrieve/text
+  "events/inference/retrieve/text/remote/base": "events/inference/retrieve/text/remote/base",
+  "events/inference/retrieve/text/remote": "events/inference/retrieve/text/remote/index",
+  // events/inference/retrieve/embedding
+  "events/inference/retrieve/embedding/vectorstore": "events/inference/retrieve/embedding/vectorstore",
+  "events/inference/retrieve/embedding": "events/inference/retrieve/embedding/index",
   // studio
-  "studio/data": "studio/data",
-  "studio/processor": "studio/processor",
-  "studio/graph": "studio/graph",
   "studio/condition": "studio/condition",
+  "studio/data": "studio/data",
+  "studio/graph": "studio/graph",
+  "studio/input": "studio/input",
+  "studio/processor": "studio/processor",
+  "studio/scheduler": "studio/scheduler",
+  "studio/serde": "studio/serde",
+  "studio/ui": "studio/ui",
+  // studio/comments
+  "studio/comments": "studio/comments/index",
+  // studio/guardrails
+  "studio/guardrails/base": "studio/guardrails/base",
+  "studio/guardrails": "studio/guardrails/index",
+  // studio/guardrails/data
+  "studio/guardrails/data/array": "studio/guardrails/data/array.guard",
+  "studio/guardrails/data/boolean": "studio/guardrails/data/boolean.guard",
+  "studio/guardrails/data/number": "studio/guardrails/data/number.guard",
+  "studio/guardrails/data/object": "studio/guardrails/data/object.guard",
+  "studio/guardrails/data/string": "studio/guardrails/data/string.guard",
   // studio/nodes
   "studio/nodes": "studio/nodes/index",
   "studio/nodes/base": "studio/nodes/base",
@@ -105,8 +139,14 @@ const entrypoints = {
   // studio/nodes/utility
   "studio/nodes/utility/graph": "studio/nodes/utility/graph.node",
   "studio/nodes/utility/if": "studio/nodes/utility/if.node",
+  "studio/nodes/utility/input": "studio/nodes/utility/input.node",
+  // studio/registration
+  "studio/registration/guardrails": "studio/registration/guardrails",
+  "studio/registration/nodes": "studio/registration/nodes",
   // studio/utils
   "studio/utils/coerce": "studio/utils/coerce",
+  "studio/utils/display": "studio/utils/display",
+  "studio/utils/load": "studio/utils/load",
   // utils
   "utils/nanoid": "utils/nanoid",
 };
@@ -114,7 +154,9 @@ const entrypoints = {
 const deprecatedNodeOnly = [];
 
 // Entrypoints in this list require an optional dependency to be installed.
-const reuqiresOptionalDependency = [,
+const reuqiresOptionalDependency = [
+  // events/embeddings
+  "events/embeddings/openai",
   // events/input/load/docs
   "events/input/load/docs/pdf",
   // events/input/load/msgs
@@ -126,6 +168,10 @@ const reuqiresOptionalDependency = [,
   // events/input/load/prompts
   "events/input/load/prompts/text",
   "events/input/load/prompts/chat",
+  // events/input/load/rules
+  "events/input/load/rules",
+  // events/input/load/vectorstore
+  "events/input/load/vectorstore/chroma",
   // events/input/transform
   "events/input/transform/splitter",
   // events/inference/validate/guardrails
@@ -141,9 +187,12 @@ const reuqiresOptionalDependency = [,
   "events/inference/chat/llms/gemini",
   "events/inference/chat/chatlms/openai",
   "events/inference/chat/chatlms/gemini",
+  // events/inference/retrieve/embedding
+  "events/inference/retrieve/embedding/vectorstore",
   // studio
   "studio/graph",
   "studio/condition",
+  "studio/input",
 ];
 
 // const testExports = [
@@ -213,7 +262,7 @@ const updateConfig = () => {
       ...json,
       typedocOptions: {
         ...json.typedocOptions,
-        entrypoints: [...Object.keys(entrypoints)]
+        entryPoints: [...Object.keys(entrypoints)]
           .filter((key) => !deprecatedNodeOnly.includes(key))
           .map((key) => `src/${entrypoints[key]}.ts`),
       },

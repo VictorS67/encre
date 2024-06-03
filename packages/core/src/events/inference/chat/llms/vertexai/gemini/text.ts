@@ -1,18 +1,13 @@
 import {
   GoogleGenerativeAI as GoogleGenerativeAIClient,
-  Content,
   ModelParams,
   GenerationConfig,
   SafetySetting,
   GenerateContentCandidate,
-  GenerateContentResponse,
   GenerativeModel,
-  GenerateContentRequest,
   EnhancedGenerateContentResponse,
   GenerateContentResult,
   CountTokensResponse,
-  InlineDataPart,
-  Part,
   PromptFeedback,
 } from '@google/generative-ai';
 
@@ -24,7 +19,7 @@ import { AsyncCallError } from '../../../../../../utils/asyncCaller.js';
 import { getEnvironmentVariables } from '../../../../../../utils/environment.js';
 import { Generation } from '../../../../../output/provide/generation.js';
 import { LLMResult } from '../../../../../output/provide/llmresult.js';
-import { BaseChatLM, BaseLLM, BaseLLMParams } from '../../../base.js';
+import { BaseLLM, BaseLLMParams } from '../../../base.js';
 import { TokenUsage } from '../../../index.js';
 import {
   GeminiCallOptions,
@@ -35,24 +30,59 @@ import {
   wrapGoogleGenerativeAIClientError,
 } from '../index.js';
 
+/**
+ * Base interface for all Gemini API call parameters, specifying the essential prompt
+ * required for generating content.
+ */
 export interface GeminiParamsBase extends ModelParams {
   prompt: string;
 }
 
+/**
+ * Interface for non-streaming Gemini API call parameters, indicating that responses
+ * will not be streamed.
+ */
 export interface GeminiParamsNonStreaming extends GeminiParamsBase {
   stream: false;
 }
 
+/**
+ * Interface for streaming Gemini API call parameters, indicating that responses should
+ * be streamed as they are generated.
+ */
 export interface GeminiParamsStreaming extends GeminiParamsBase {
   stream: true;
 }
 
+/**
+ * Type definition for Gemini API call parameters that may be either streaming or
+ * non-streaming based on the `stream` property.
+ */
 export type GeminiParams = GeminiParamsNonStreaming | GeminiParamsStreaming;
 
+/**
+ * Represents a text response candidate from a Gemini model generation, omitting the
+ * original content descriptor.
+ */
 export type GeminiTextCandidate = Omit<GenerateContentCandidate, 'content'> & {
   text: string;
 };
 
+/**
+ * The main class for interacting with the Gemini AI model, capable of handling both
+ * streaming and non-streaming responses.
+ *
+ * @example
+ * ```typescript
+ * const geminiAI = new Gemini({
+ *   modelName: 'gemini-pro',
+ *   googleApiKey: 'your-api-key',
+ * });
+ * const prompt = "Hello, world!";
+ * const response = await geminiAI.invoke(prompt);
+ * console.log(response);
+ * ```
+ */
 export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   extends BaseLLM<CallOptions>
   implements VertexAIBaseInput
@@ -76,49 +106,119 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   }
 
   /**
-   * only support `gemini-pro` for now
+   * ID of the model to use. Only support `gemini-pro` for now
    */
   modelName = 'gemini-pro';
 
   /**
+   * The temperature is used for sampling during the response generation,
+   * which occurs when topP and topK are applied. Temperature controls the
+   * degree of randomness in token selection. Lower temperatures are good
+   * for prompts that require a more deterministic and less open-ended or
+   * creative response, while higher temperatures can lead to more diverse
+   * or creative results.
+   *
+   * A temperature of 0 is deterministic: the highest probability response
+   * is always selected.
+   *
+   * Range: 0.0 - 1.0
+   *
    * Default for gemini-pro: 0.9
    */
   temperature = 0.9;
 
   /**
+   * Top-P changes how the model selects tokens for output. Tokens are
+   * selected from the most (see top-K) to least probable until the sum of
+   * their probabilities equals the top-P value.
+   *
+   * For example, if tokens A, B, and C have a probability of 0.3, 0.2, and
+   * 0.1 and the top-P value is 0.5, then the model will select either A or
+   * B as the next token by using temperature and excludes C as a candidate.
+   *
+   * Specify a lower value for less random responses and a higher value for
+   * more random responses.
+   *
+   * Range: 0.0 - 1.0
+   *
    * Default: 1.0
    */
   topP = 1.0;
 
   /**
+   * The number of response variations to return.
+   *
    * This value must be 1.
    */
   candidateCount = 1;
 
   /**
+   * Maximum number of tokens that can be generated in the response. A token
+   * is approximately four characters. 100 tokens correspond to roughly 60-80
+   * words. Specify a lower value for shorter responses and a higher value for
+   * potentially longer responses.
+   *
+   * Range: 1-2048
+   *
    * Default for gemini-pro: 2048
    */
   maxOutputTokens = 2048;
 
   /**
-   * Whether the response comes with stream
+   * Streaming involves receiving responses to prompts as they are generated.
+   * That is, as soon as the model generates output tokens, the output tokens
+   * are sent.
    */
   streaming = true;
 
   /**
-   * Default for gemini-pro: none
-   * Default for gemini-pro-vision: 32
+   * Top-K changes how the model selects tokens for output. A top-K of 1 means
+   * the next selected token is the most probable among all tokens in the model's
+   * vocabulary (also called greedy decoding), while a top-K of 3 means that
+   * the next token is selected from among the three most probable tokens by
+   * using temperature.
+   *
+   * For each token selection step, the top-K tokens with the highest probabilities
+   * are sampled. Then tokens are further filtered based on top-P with the final
+   * token selected using temperature sampling.
+   *
+   * Specify a lower value for less random responses and a higher value for more
+   * random responses.
+   *
+   * Range: 1 - 40
    */
   topK: number;
 
+  /**
+   * API key to use when making requests to Gemini. Defaults to the value of
+   * `GOOGLE_API_KEY` environment variable.
+   */
   googleApiKey?: string;
 
+  /**
+   * Up to 5 sequences where the API will stop generating text if one of the
+   * strings is encountered in the response. If a string appears multiple
+   * times in the response, then the response truncates where it's first
+   * encountered. The strings are case-sensitive.
+   */
   stopSequences?: string[];
 
+  /**
+   * Holds any additional parameters that are valid to pass to
+   * VertexAI models that are not explicitly specified on the class.
+   */
   additionalKwargs?: Record<string, unknown>;
 
+  /**
+   * The Vertex AI Gemini API blocks unsafe content based on a list of safety
+   * attributes and their configured blocking thresholds.
+   */
   safetySettings?: Array<GeminiSafetySetting>;
 
+  /**
+   * VertexAI API Client.
+   * @internal
+   */
   private _client: GoogleGenerativeAIClient;
 
   _llmType(): string {
@@ -166,6 +266,13 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     this.streaming = fields?.streaming ?? this.streaming;
   }
 
+  /**
+   * Constructs the generation configuration used for making requests to the AI model.
+   * This configuration controls aspects like temperature, token sampling, and response length.
+   *
+   * @returns An object detailing the generation configuration for the model.
+   * @internal
+   */
   protected _getGenerationConfig(): GenerationConfig {
     return {
       temperature: this.temperature,
@@ -177,6 +284,14 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     };
   }
 
+  /**
+   * Retrieves the safety settings from the provided options, which configure thresholds
+   * for blocking content based on its safety category.
+   *
+   * @param options - Optional serialized call options that may include safety settings.
+   * @returns An array of safety settings used to configure content blocking.
+   * @internal
+   */
   protected _getSafetySettings(
     options?: this['SerializedCallOptions'] | undefined
   ): Array<SafetySetting> {
@@ -207,6 +322,25 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     };
   }
 
+  /**
+   * Provides a response from the Gemini model based on the given prompt and options.
+   * Handles both streaming and non-streaming responses.
+   *
+   * @param prompt - The text prompt to send to the model.
+   * @param options - Serialized call options that may include request modifiers like streaming.
+   * @returns A promise resolving to the language model result.
+   * @internal
+   * @example
+   * ```typescript
+   * const geminiAI = new Gemini({
+   *   modelName: 'gemini-pro',
+   *   googleApiKey: 'your-api-key',
+   * });
+   * const prompt = "Explain the theory of relativity.";
+   * const result = await geminiAI._provide(prompt, { streaming: false });
+   * console.log(result);
+   * ```
+   */
   async _provide(
     prompt: string,
     options: this['SerializedCallOptions']
@@ -261,7 +395,8 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
 
     const generations: Array<unknown> = [];
     for (const candidate of response.candidates) {
-      completionTokens = (completionTokens ?? 0) + await this.getNumTokens(candidate.text);
+      completionTokens =
+        (completionTokens ?? 0) + (await this.getNumTokens(candidate.text));
 
       const output: string = candidate.text;
 
@@ -300,6 +435,16 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     };
   }
 
+  /**
+   * Handles the streaming of data from the Gemini model, aggregating responses as they are
+   * received.
+   *
+   * @param params - Parameters for the stream request, excluding the 'prompt'.
+   * @param prompt - The prompt to use for generating content.
+   * @param options - Serialized call options relevant to the request.
+   * @returns A promise resolving to a structured response aggregating all streamed content.
+   * @internal
+   */
   private async _completionWithStream(
     params: Omit<GeminiParams, 'prompt'>,
     prompt: string,
@@ -351,6 +496,16 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     return { ...res, candidates };
   }
 
+  /**
+   * Generates content asynchronously by creating an iterable that yields content responses
+   * from the AI model as they are received.
+   *
+   * @param model - The generative model to use for content generation.
+   * @param prompt - The input prompt based on which the content is generated.
+   * @param options - Optional parameters that may affect the generation process.
+   * @returns An async iterable that yields content responses.
+   * @internal
+   */
   private async *_generateContentIterable(
     model: GenerativeModel,
     prompt: string,
@@ -385,6 +540,27 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     }
   }
 
+  /**
+   * Attempts to complete an operation with the Gemini model, retrying on failure.
+   * Supports both streaming and non-streaming operations based on the provided request configuration.
+   *
+   * @param request - The request parameters, which may indicate whether the response should be streamed.
+   * @param options - Optional call options including signaling for aborting the request.
+   * @returns Either an async iterable of responses for streaming or a single response for non-streaming.
+   * @example
+   * ```typescript
+   * const geminiAI = new Gemini({
+   *   modelName: 'gemini-pro',
+   *   googleApiKey: 'your-api-key',
+   * });
+   * try {
+   *   const response = await geminiAI.completionWithRetry({ model: 'gemini-pro', prompt: "Hello, world!", stream: false });
+   *   console.log(response);
+   * } catch (error) {
+   *   console.error("Failed to fetch response:", error);
+   * }
+   * ```
+   */
   async completionWithRetry(
     request: GeminiParamsStreaming,
     options?: GeminiCallOptions
@@ -433,6 +609,21 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     }
   }
 
+  /**
+   * Retrieves the number of tokens in the given text using the specified model's tokenizer.
+   *
+   * @param text - The text to tokenize.
+   * @returns The total number of tokens in the text.
+   * @example
+   * ```
+   * const geminiAI = new Gemini({
+   *   modelName: 'gemini-pro',
+   *   googleApiKey: 'your-api-key',
+   * });
+   * const tokenCount = await geminiAI.getNumTokens("Example text for tokenization.");
+   * console.log(tokenCount); // Outputs the number of tokens
+   * ```
+   */
   async getNumTokens(text: string): Promise<number> {
     const numTokensResponse: CountTokensResponse = await this._getClient()
       .getGenerativeModel({
@@ -443,7 +634,15 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     return numTokensResponse.totalTokens;
   }
 
-
+  /**
+   * Throws a formatted error based on a provided block reason, potentially including a
+   * custom message.
+   *
+   * @param blockReason - The reason provided by the model for blocking the generation.
+   * @param blockReasonMessage - Optional additional message to include in the error.
+   * @throws An error indicating why the generation was blocked.
+   * @internal
+   */
   protected _throwErrorForBlockReason(
     blockReason: string,
     blockReasonMessage?: string
@@ -458,13 +657,32 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     throw error;
   }
 
-  getModelContextSize(modelName: 'gemini-pro'): number {
+  /**
+   * Retrieves the context size of the specified model, which indicates the maximum number 
+   * of tokens that can be considered in one response.
+   *
+   * @param modelName - The name of the model to query.
+   * @returns The number of tokens in the model's context size.
+   * @example
+   * ```
+   * const contextSize = Gemini.getModelContextSize('gemini-pro');
+   * console.log(contextSize); // Outputs: 32768
+   * ```
+   */
+  static getModelContextSize(modelName: 'gemini-pro'): number {
     switch (modelName) {
       case 'gemini-pro':
         return 32768;
     }
   }
 
+  /**
+   * Retrieves or initializes the client for interacting with the AI service.
+   *
+   * @returns The initialized client.
+   * @throws Error if the API key is not found.
+   * @internal
+   */
   private _getClient(): GoogleGenerativeAIClient {
     if (!this._client) {
       if (!this.googleApiKey) {
@@ -477,6 +695,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
     return this._client;
   }
 
+  /** @hidden */
   private _getModelParams(options?: GeminiCallOptions): ModelParams {
     return {
       model: this.modelName,

@@ -11,8 +11,19 @@ import { BaseLoaderParams } from './base.js';
 import { BufferLoader } from './buffer.js';
 import { Context } from './context.js';
 
+/**
+ * Interface of PDFLoader
+ */
 export interface PDFLoaderParams extends BaseLoaderParams {}
 
+/**
+ * Dynamically imports the necessary dependencies from the 'pdf-parse' module.
+ * This function is used to manage the dynamic loading of the 'pdf-parse' library,
+ * which provides the functionality to parse PDF files.
+ *
+ * @returns A promise that resolves to the imported PdfParse function.
+ * @throws Error if the 'pdf-parse' module fails to load.
+ */
 async function PDFLoaderImports() {
   try {
     const { default: PdfParse } = await import('pdf-parse');
@@ -24,14 +35,22 @@ async function PDFLoaderImports() {
 }
 
 /**
- * Class that extends the `BufferLoader` class. It is a
- * document loader that loads documents from PDF files.
+ * A class that extends BufferLoader to specifically handle the loading and parsing of PDF files into contextual data.
+ * This loader is designed to read PDF files, extract textual content from each page, and construct an array of `Context` instances
+ * representing the content of each page along with relevant metadata.
+ *
+ * @template CallInput The type of input this loader accepts, restricted to strings representing file paths or Blob objects.
  */
 export class PDFLoader<
   CallInput extends string | Blob = string | Blob,
 > extends BufferLoader<CallInput> {
   _isSerializable = true;
 
+  /**
+   * The PdfParse module dynamically imported to handle PDF parsing.
+   * @hidden
+   * @internal
+   */
   private _pdfjs: typeof PDFLoaderImports;
 
   static _name(): string {
@@ -42,6 +61,12 @@ export class PDFLoader<
     return 'pdf';
   }
 
+  /**
+   * Constructs a new PDFLoader instance with optional loader parameters and a PdfParse function.
+   *
+   * @param fields Loader-specific parameters including flags like shouldSplit to determine if the output should be split per page.
+   * @param pdfjs An optional function to dynamically import PdfParse, defaults to PDFLoaderImports if not provided.
+   */
   constructor(fields?: PDFLoaderParams, pdfjs?: typeof PDFLoaderImports) {
     super(fields ?? {});
 
@@ -50,11 +75,13 @@ export class PDFLoader<
   }
 
   /**
-   * Method that taks a `rawData` buffer and `metadata` as parameters
-   * and returns a promise that resolves to an array of `Context` instances.
-   * @param rawData The buffer to be parsed.
-   * @param metadata The metadata of the context.
-   * @returns A promise that resolves to an array of `Context` instances.
+   * Parses the provided raw PDF data buffer, extracting textual content and associated metadata from each page.
+   * This method is designed to sequentially render each page of the PDF, extracting the text and structuring it
+   * into Context instances.
+   *
+   * @param rawData The raw buffer of the PDF file to be parsed.
+   * @param metadata Metadata associated with the PDF document.
+   * @returns A promise that resolves to an array of `Context` instances representing the parsed content of each page.
    */
   public async parse(
     rawData: Buffer,

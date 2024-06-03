@@ -13,12 +13,49 @@ import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
 import { CallableNode } from '../../index.js';
 
+/**
+ * A type alias for a specialized callable node focused on variable validation.
+ * This node type is specialized for handling validation operations,
+ * particularly in scenarios where variable inputs need to be checked against specific rules.
+ */
 export type VariableValidatorNode = CallableNode<
   'variable-validator',
   VariableValidator
 >;
 
+/**
+ * Implementation of a CallableNode specifically for validating variable inputs.
+ * This node handles the validation of variables based on defined rules, returning whether the variables
+ * are valid and any associated error messages.
+ *
+ * ### Node Properties
+ *
+ * | Field       | Type                     | Description                                                                   |
+ * |-------------|--------------------------|-------------------------------------------------------------------------------|
+ * | `type`      | `'variable-validator'`   | The type of the node, indicating it handles validation of variables.          |
+ * | `subType`   | `'variable'`             | The subtype of the node, specifying that it is specialized for variable validation. |
+ * | `data`      | {@link VariableValidator}| The callable used for variable validation operations.                         |
+ *
+ * ### Input Ports
+ *
+ * | Port Name   | Supported Types     | Description                                                                 |
+ * |-------------|---------------------|-----------------------------------------------------------------------------|
+ * | `variables` | `object`            | Accepts an object containing variables to be validated.                     |
+ *
+ * ### Output Ports
+ *
+ * | Port Name      | Supported Types         | Description                                                                |
+ * |----------------|-------------------------|----------------------------------------------------------------------------|
+ * | `isValid`      | `boolean`               | Outputs a boolean indicating whether the variables are valid.              |
+ * | `errorMessage` | `string`, `unknown`     | Outputs an error message if the variables are invalid, otherwise undefined.|
+ *
+ */
 export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidatorNode> {
+  /**
+   * Creates a VariableValidatorNode configuration from a VariableValidator callable instance.
+   * @param callable An instance of VariableValidator defining the validation logic.
+   * @returns A fully configured VariableValidatorNode specialized for validating variables.
+   */
   static nodeFrom(callable: VariableValidator): VariableValidatorNode {
     return {
       id: getRecordId(),
@@ -45,6 +82,13 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
     };
   }
 
+  /**
+   * Factory method to create a new instance of VariableValidatorNode.
+   * This method provides a simple way to instantiate a variable validator node with default settings,
+   * preparing it for use in validation operations with customizable rules.
+   *
+   * @returns An instance of VariableValidatorNode prepared with a default VariableValidator.
+   */
   static create(): VariableValidatorNode {
     const variableValidator = new VariableValidator({
       variables: [],
@@ -57,6 +101,15 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
     return node;
   }
 
+  /**
+   * Preprocesses the input variables to ensure they are in a valid format for validation.
+   *
+   * @param inputs The map containing input data for the node.
+   * @param context The processing context, not actively used here.
+   * @returns The validated input data as a record of strings to unknown.
+   * @throws Error if the inputs are not valid.
+   * @internal
+   */
   protected async _preprocess(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -72,6 +125,14 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
     return variables.value;
   }
 
+  /**
+   * Postprocesses the validation results, extracting the validity status and any error messages.
+   *
+   * @param rawOutputs The validation results from the callable.
+   * @param context The processing context, not actively used here.
+   * @returns A map of process outputs keyed by their output port names.
+   * @internal
+   */
   protected async _postprocess(
     rawOutputs: ValidateResult,
     context: ProcessContext
@@ -84,6 +145,13 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
     };
   }
 
+  /**
+   * Invokes the variable validation logic with the given input.
+   *
+   * @param input The input data for validation, expected to be a record of strings to unknown.
+   * @param options Optional additional settings for the validation call.
+   * @returns The result from the validation as specified by the callable's output type.
+   */
   async invoke<CallInput, CallOutput, CallOptions>(
     input: CallInput,
     options?: Partial<CallOptions> | undefined
@@ -97,6 +165,15 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
     return this.data.invoke(input, options) as CallOutput;
   }
 
+  /**
+   * Main process method that orchestrates the full lifecycle of variable validation.
+   * This method integrates input validation, preprocessing, validation invocation, and postprocessing.
+   *
+   * @param inputs A map containing all inputs to the node.
+   * @param context The current processing context.
+   * @returns A map of outputs as processed by the node, including validity and any error messages.
+   * @throws Error if inputs are not valid or if any stage of processing fails.
+   */
   async process(
     inputs: ProcessInputMap,
     context: ProcessContext

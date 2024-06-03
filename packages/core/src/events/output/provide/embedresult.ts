@@ -2,6 +2,9 @@
  * Contains all relevant information returned by an LLM Embeddings.
  */
 export type EmbedResult = {
+  /**
+   * Embedding vectors
+   */
   embedding: number[];
 
   /**

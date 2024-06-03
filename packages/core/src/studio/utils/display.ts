@@ -3,7 +3,6 @@ import { ContentLike, MessageRole } from '../../events/input/load/msgs/base.js';
 import { SecretFields } from '../../load/keymap.js';
 import {
   ConditionField,
-  ConditionFieldVariables,
   ElseConditionField,
   IfConditionField,
 } from '../condition.js';

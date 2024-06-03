@@ -39,9 +39,26 @@ import {
   SerializableNode,
 } from '../index.js';
 
+/**
+ * A type alias for a specialized callable node focused on conditional logic operations.
+ * This node type is designed to handle dynamic decision-making based on inputs,
+ * typically used in flow control within systems.
+ */
 export type IfNode = CallableNode<'if', BaseIfCondition>;
 
+/**
+ * An abstract class providing a base implementation for conditional nodes.
+ * This class extends the callable node implementation to provide specialized functionalities
+ * for handling conditions based on configured rules and actions.
+ */
 export abstract class IfNodeImpl extends CallableNodeImpl<IfNode> {
+  /**
+   * Retrieves a dynamic user interface representation of the condition,
+   * typically used for configuring the node in a user interface.
+   *
+   * @returns A promise that resolves to the condition UI contexts which might include
+   * details about the sources and actions associated with the condition.
+   */
   async getBody(): Promise<NodeBody> {
     const conditionUIContexts: UIContext[] = await displayConditionUI(
       this.data.sources,
@@ -52,6 +69,28 @@ export abstract class IfNodeImpl extends CallableNodeImpl<IfNode> {
   }
 }
 
+/**
+ * Implementation of an IfNode specifically for managing conditional logic within a node-graph system.
+ * This node provides interfaces to dynamically configure input and output ports based on the
+ * conditional logic and connections established in a network or system.
+ *
+ * ### Node Properties
+ *
+ * | Field        | Type                  | Description                                                                    |
+ * |--------------|-----------------------|--------------------------------------------------------------------------------|
+ * | `type`       | `'if'`                | The type of the node, indicating it handles conditional logic.                 |
+ * | `subType`    | `'condition'`         | The subtype of the node, specifying it is focused on conditional operations.   |
+ * | `data`       | {@link IfCondition}   | The actual condition logic being managed by this node.                         |
+ *
+ * ### Input Ports
+ *
+ * Input ports in an if node are from `sources` of {@link BaseIfCondition}, default with types of {@link dataTypes}.
+ *
+ * ### Output Ports
+ *
+ * Output ports in an if node are from `targets` of {@link BaseIfCondition}, default with types of {@link dataTypes}.
+ *
+ */
 export class IfConditionNodeImpl extends IfNodeImpl {
   set inputs(newVal: NodePortFields | undefined) {
     this.node.inputs = newVal;
@@ -139,6 +178,12 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     });
   }
 
+  /**
+   * Dynamically adds a new input port to the node. This method updates the node's internal
+   * input structure and condition source list to include the new port.
+   *
+   * @returns {string} The name of the newly added input port.
+   */
   addInputPort(): string {
     if (this.inputs === undefined) {
       this.inputs = {};
@@ -152,6 +197,12 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return newName;
   }
 
+  /**
+   * Dynamically adds a new output port to the node. This method updates the node's internal
+   * output structure and condition target list to include the new port and associated action.
+   *
+   * @returns {string} The name of the newly added output port.
+   */
   addOutputPort(): string {
     if (this.outputs === undefined) {
       this.outputs = {};
@@ -173,6 +224,13 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return newName;
   }
 
+  /**
+   * Removes an existing input port from the node by name. This also updates the condition source list
+   * to no longer include the removed port.
+   *
+   * @param inputPortName The name of the input port to remove.
+   * @returns {boolean} True if the input port was successfully removed, false otherwise.
+   */
   removeInputPort(inputPortName: string): boolean {
     if (!this.inputs || !this.inputs[inputPortName]) {
       return false;
@@ -184,6 +242,13 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return true;
   }
 
+  /**
+   * Removes an existing output port from the node by name. This also updates the condition target list
+   * and removes any associated actions.
+   *
+   * @param outputPortName The name of the output port to remove.
+   * @returns {boolean} True if the output port was successfully removed, false otherwise.
+   */
   removeOutputPort(outputPortName: string): boolean {
     if (!this.outputs || !this.outputs[outputPortName]) {
       return false;
@@ -195,6 +260,11 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return this.data.removeAction(outputPortName);
   }
 
+  /**
+   * Creates a IfNode configuration from a IfCondition callable instance.
+   * @param callable An instance of IfCondition defining the interaction logic with if-else logics.
+   * @returns A fully configured IfNode specialized for IfCondition operations.
+   */
   static nodeFrom(callable: IfCondition): IfNode {
     return {
       id: getRecordId(),
@@ -228,6 +298,13 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     };
   }
 
+  /**
+   * Factory method to create a new instance of IfCondition.
+   * This method initializes a new node with a if-condition instance configured
+   * for managing conditional logic.
+   *
+   * @returns An instance of IfCondition.
+   */
   static create(): IfNode {
     const ifCondition = new IfCondition({
       sources: ['A'],
@@ -298,6 +375,14 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     };
   }
 
+  /**
+   * Preprocesses the input data to convert it from the process input map format to a structured format
+   * that includes the input values and any relevant variable context from memory.
+   *
+   * @param inputs A map containing input data for the node.
+   * @param context The processing context.
+   * @internal
+   */
   protected async _preprocess(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -320,6 +405,14 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     };
   }
 
+  /**
+   * Postprocesses the raw outputs from the invoke method, converting them to a process output map
+   * format by coercing data types as necessary.
+   *
+   * @param rawOutputs The raw outputs from the condition evaluation.
+   * @param context The processing context.
+   * @internal
+   */
   protected async _postprocess(
     rawOutputs: IfConditionTarget,
     context: ProcessContext
@@ -332,6 +425,14 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     );
   }
 
+  /**
+   * Invokes the condition logic defined in the data property with the provided input,
+   * handling any dynamic rule evaluation based on the input conditions and specified options.
+   *
+   * @param input The input data for the condition, expected to be IfConditionSource.
+   * @param options Optional additional settings for the condition call.
+   * @returns The output from the condition logic as specified by the condition's output type.
+   */
   async invoke<CallInput, CallOutput, CallOptions>(
     input: CallInput,
     options?: Partial<CallOptions> | undefined
@@ -345,6 +446,14 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return this.data.invoke(input, options) as CallOutput;
   }
 
+  /**
+   * Processes the inputs based on the conditional logic defined within the node.
+   * This process might involve checking conditions and producing outputs accordingly.
+   *
+   * @param inputs The map containing input data for the node.
+   * @param context The processing context.
+   * @returns A promise that resolves to a map of process outputs.
+   */
   async process(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -367,6 +476,22 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return this._postprocess(rawOutputs, context);
   }
 
+  /**
+   * Generates a new unique port name for input or output ports based on existing port names.
+   * This method ensures that each new port name does not conflict with existing names
+   * by checking against the current list of input and output ports. It uses a systematic
+   * approach to iterate through potential names using a combination of alphabetic characters
+   * and numeric suffixes to ensure uniqueness.
+   *
+   * @returns A unique port name that is not already used in the node's inputs or outputs.
+   * @internal
+   * 
+   * @example
+   * // Example of generating a new unique port name when adding a new port
+   * const newPortName = ifNodeInstance._getNewPortName(); // suppose new name is 'A'
+   * const anotherNewPortName = ifNodeInstance._getNewPortName(); // now new name is 'B'
+   * 
+   */
   private _getNewPortName(): string {
     const existingPortNames: string[] = Object.keys(this.inputs ?? {}).concat(
       Object.keys(this.outputs ?? {})
