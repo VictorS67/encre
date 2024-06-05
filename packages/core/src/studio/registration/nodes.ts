@@ -29,6 +29,7 @@ import {
   TokenTextSplitterNodeImpl,
 } from '../nodes/input/splitter.node.js';
 import { SubGraphNodeImpl } from '../nodes/utility/graph.node.js';
+import { InputNodeImpl } from '../nodes/utility/input.node.js';
 
 type ExtractType<T> = T extends `${infer U}-${any}` ? U : never;
 
@@ -281,7 +282,8 @@ export function registerBuiltInNodes(registry: NodeRegistration) {
     .register(GeminiNodeImpl)
     .register(OpenAIChatNodeImpl)
     .register(GeminiChatNodeImpl)
-    .register(VariableValidatorNodeImpl);
+    .register(VariableValidatorNodeImpl)
+    .register(InputNodeImpl);
 }
 
 let globalNodeRegistry = registerBuiltInNodes(new NodeRegistration());

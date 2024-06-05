@@ -555,12 +555,8 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
 
             inputs[inputName] = nodeInputs[i];
             inputNameMap[inputName] = { nodeId, name: i };
-
-            startNodeIds.push(nodeId);
           }
         });
-      } else {
-        startNodeIds.push(nodeId);
       }
 
       if (Object.keys(nodeOutputs).length > 0) {
@@ -579,12 +575,22 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
 
             outputs[outputName] = nodeOutputs[o];
             outputNameMap[outputName] = { nodeId, name: o };
-
-            endNodeIds.push(nodeId);
           }
         });
-      } else {
-        endNodeIds.push(nodeId);
+      }
+
+      if (
+        !(node.id in incomingConnections) ||
+        Object.keys(incomingConnections[node.id]).length === 0
+      ) {
+        startNodeIds.push(node.id);
+      }
+
+      if (
+        !(node.id in outgoingConnections) ||
+        Object.keys(outgoingConnections[node.id]).length === 0
+      ) {
+        endNodeIds.push(node.id);
       }
     }
 

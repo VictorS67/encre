@@ -209,6 +209,10 @@ export abstract class NodeImpl<
         const { IfNodeImpl } = await import('./utility/if.node.js');
         return IfNodeImpl.deserialize(serialized, values, registry);
       }
+      case 'input': {
+        const { InputNodeImpl } = await import('./utility/input.node.js');
+        return InputNodeImpl.deserialize(serialized);
+      }
       case 'splitter': {
         const { SplitterNodeImpl } = await import('./input/splitter.node.js');
         return SplitterNodeImpl.deserialize(serialized);
