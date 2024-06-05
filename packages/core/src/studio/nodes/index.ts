@@ -90,6 +90,8 @@ export type NodeInputPortDef = {
 
   type: DataType | Readonly<DataType[]>;
 
+  required?: boolean;
+
   data?: ValueOf<DataType> | Readonly<ValueOf<DataType>[]>;
 
   default?: unknown;
@@ -101,6 +103,8 @@ export type NodeOutputPortDef = {
   name: string;
 
   type: DataType | Readonly<DataType[]>;
+
+  required?: boolean;
 
   data?: ValueOf<DataType> | Readonly<ValueOf<DataType>[]>;
 

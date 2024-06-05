@@ -1,6 +1,4 @@
-import {
-  BaseMessage,
-} from '../../../events/input/load/msgs/base.js';
+import { BaseMessage } from '../../../events/input/load/msgs/base.js';
 import { BotMessage } from '../../../events/input/load/msgs/bot.js';
 import { ChatMessage } from '../../../events/input/load/msgs/chat.js';
 import { FunctionMessage } from '../../../events/input/load/msgs/function.js';
@@ -33,46 +31,48 @@ export abstract class MessageNodeImpl extends NodeImpl<MessageNode> {
 }
 
 export class ChatMessageNodeImpl extends MessageNodeImpl {
+  static nodeFrom(serializable: ChatMessage): MessageNode {
+    return {
+      id: getRecordId(),
+      type: 'message',
+      subType: 'chat',
+      data: serializable,
+      visualInfo: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 300,
+          height: 500,
+        },
+      },
+      inputs: {},
+      outputs: {
+        message: 'chat-message',
+      },
+    };
+  }
+
   static create(): MessageNode {
     const chatMessage = new ChatMessage({
       content: scalarDefaults['string'],
       role: 'human',
     });
 
-    const node: MessageNode = {
-      id: getRecordId(),
-      type: 'message',
-      subType: 'chat',
-      data: chatMessage,
-      visualInfo: {
-        position: {
-          x: 0,
-          y: 0,
-        },
-        size: {
-          width: 300,
-          height: 500,
-        },
-      },
-      inputs: {},
-      outputs: {
-        message: 'chat-message',
-      },
-    };
+    const node: MessageNode = ChatMessageNodeImpl.nodeFrom(chatMessage);
 
     return node;
   }
 }
 
 export class HumanMessageNodeImpl extends MessageNodeImpl {
-  static create(): MessageNode {
-    const humanMessage = new HumanMessage(scalarDefaults['string']);
-
-    const node: MessageNode = {
+  static nodeFrom(serializable: HumanMessage): MessageNode {
+    return {
       id: getRecordId(),
       type: 'message',
       subType: 'human',
-      data: humanMessage,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -88,20 +88,24 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
         message: 'chat-message',
       },
     };
+  }
+
+  static create(): MessageNode {
+    const humanMessage = new HumanMessage(scalarDefaults['string']);
+
+    const node: MessageNode = HumanMessageNodeImpl.nodeFrom(humanMessage);
 
     return node;
   }
 }
 
 export class BotMessageNodeImpl extends MessageNodeImpl {
-  static create(): MessageNode {
-    const botMessage = new BotMessage(scalarDefaults['string']);
-
-    const node: MessageNode = {
+  static nodeFrom(serializable: BotMessage): MessageNode {
+    return {
       id: getRecordId(),
       type: 'message',
       subType: 'bot',
-      data: botMessage,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -117,20 +121,24 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
         message: 'chat-message',
       },
     };
+  }
+
+  static create(): MessageNode {
+    const botMessage = new BotMessage(scalarDefaults['string']);
+
+    const node: MessageNode = BotMessageNodeImpl.nodeFrom(botMessage);
 
     return node;
   }
 }
 
 export class SystemMessageNodeImpl extends MessageNodeImpl {
-  static create(): MessageNode {
-    const systemMessage = new SystemMessage(scalarDefaults['string']);
-
-    const node: MessageNode = {
+  static nodeFrom(serializable: BotMessage): MessageNode {
+    return {
       id: getRecordId(),
       type: 'message',
       subType: 'prompt',
-      data: systemMessage,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -146,23 +154,24 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
         message: 'chat-message',
       },
     };
+  }
+
+  static create(): MessageNode {
+    const systemMessage = new SystemMessage(scalarDefaults['string']);
+
+    const node: MessageNode = SystemMessageNodeImpl.nodeFrom(systemMessage);
 
     return node;
   }
 }
 
 export class FunctionMessageNodeImpl extends MessageNodeImpl {
-  static create(): MessageNode {
-    const functionMessage = new FunctionMessage({
-      content: scalarDefaults['string'],
-      additionalKwargs: scalarDefaults['object'],
-    });
-
-    const node: MessageNode = {
+  static nodeFrom(serializable: BotMessage): MessageNode {
+    return {
       id: getRecordId(),
       type: 'message',
       subType: 'function',
-      data: functionMessage,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -178,6 +187,15 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
         message: 'chat-message',
       },
     };
+  }
+
+  static create(): MessageNode {
+    const functionMessage = new FunctionMessage({
+      content: scalarDefaults['string'],
+      additionalKwargs: scalarDefaults['object'],
+    });
+
+    const node: MessageNode = FunctionMessageNodeImpl.nodeFrom(functionMessage);
 
     return node;
   }

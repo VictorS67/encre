@@ -1,3 +1,4 @@
+import { Serializable } from '../../load/serializable.js';
 import { NodeImpl } from '../nodes/base.js';
 import { SerializableNode } from '../nodes/index.js';
 import {
@@ -36,6 +37,7 @@ type ExtractSubType<T> = T extends `${any}-${infer U}` ? U : never;
 export interface NodeImplConstructor<T extends SerializableNode> {
   new (node: T): NodeImpl<T>;
   create(args?: Record<string, unknown>): T;
+  nodeFrom(raw: Serializable, args?: Record<string, unknown>): T;
 }
 
 export class NodeRegistration<
@@ -57,7 +59,19 @@ export class NodeRegistration<
     };
   };
 
+  /**
+   * A look-up table to search for corresponding nodeImpl/node from a key combination
+   * of `${type}-${subType}`
+   */
   implsMap = {} as Record<
+    string,
+    { impl: NodeImplConstructor<SerializableNode>; init: SerializableNode }
+  >;
+
+  /**
+   * A look-up table to search for corresponding nodeImpl/node from a Serializable id
+   */
+  rawImplsMap = {} as Record<
     string,
     { impl: NodeImplConstructor<SerializableNode>; init: SerializableNode }
   >;
@@ -72,9 +86,16 @@ export class NodeRegistration<
 
   get dynamicImplsMap(): Record<
     string,
-    { impl: NodeImplConstructor<SerializableNode> }
+    { impl: NodeImplConstructor<SerializableNode>; init: SerializableNode }
   > {
     return this.implsMap;
+  }
+
+  get dynamicRawImplsMap(): Record<
+    string,
+    { impl: NodeImplConstructor<SerializableNode>; init: SerializableNode }
+  > {
+    return this.rawImplsMap;
   }
 
   register<T extends SerializableNode>(
@@ -109,6 +130,14 @@ export class NodeRegistration<
       impl: impl as any,
       init: node,
     };
+
+    const serializableId = node.data._id.join('-');
+    if (!newRegistration.rawImplsMap[serializableId]) {
+      newRegistration.rawImplsMap[serializableId] = {
+        impl: impl as any,
+        init: node,
+      };
+    }
 
     newRegistration.nodeTypes.add(type);
 
@@ -176,6 +205,22 @@ export class NodeRegistration<
     }
 
     return implClass.impl.create(registerArgs);
+  }
+
+  createDynamicRaw(
+    serializable: Serializable,
+    registerArgs?: Record<string, unknown>
+  ): SerializableNode {
+    const implClass = this.dynamicRawImplsMap[serializable._id.join('-')];
+    if (!implClass) {
+      throw new Error(
+        `createDynamicRaw: Unknown node - name: ${
+          serializable._id[serializable._id.length - 1]
+        }`
+      );
+    }
+
+    return implClass.impl.nodeFrom(serializable, registerArgs);
   }
 
   createDynamicImpl(node: SerializableNode): NodeImpl<SerializableNode> {

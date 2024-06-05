@@ -1,7 +1,7 @@
 import { RecordId } from '../load/keymap.js';
 import { Serializable } from '../load/serializable.js';
-import { Callable, CallableConfig } from '../record/callable.js';
 import { getRecordId } from '../utils/nanoid.js';
+import { isNotNull } from '../utils/safeTypes.js';
 import { GraphComment } from './comments/index.js';
 import { DataType } from './data.js';
 import { NodeImpl } from './nodes/base.js';
@@ -15,6 +15,7 @@ import {
 import { GraphNode } from './nodes/utility/graph.node.js';
 import { GuardrailRegistration } from './registration/guardrails.js';
 import { globalNodeRegistry, NodeRegistration } from './registration/nodes.js';
+import { GraphScheduler } from './scheduler.js';
 import { SerializedGraph, SerializedNode } from './serde.js';
 
 export interface NodeGraph {
@@ -29,16 +30,15 @@ export interface NodeGraph {
   comments?: GraphComment[];
 }
 
-/** The input and output values from a graph */
-export type GraphValues = Record<RecordId, Record<string, unknown>>;
+// /** The input and output values from a graph */
+// export type GraphValues = Record<RecordId, Record<string, unknown>>;
 
-export abstract class BaseGraph<
-    CallInput extends GraphValues = GraphValues,
-    CallOutput extends GraphValues = GraphValues,
-  >
-  extends Callable<CallInput, CallOutput>
-  implements NodeGraph
-{
+export type NodeProcessInfo = {
+  runtime: number;
+  memory: number;
+};
+
+export abstract class BaseGraph extends Serializable implements NodeGraph {
   _isSerializable = true;
 
   _namespace: string[] = ['studio', 'graph'];
@@ -77,12 +77,16 @@ export abstract class BaseGraph<
     { nodeId: RecordId; name: string }
   >;
 
+  readonly graphStartNodeIds: RecordId[];
+
   // a lookup table with the key of the output port name and the value
   // of the corresponding node id and actual output port name in the node
   readonly graphOutputNameMap: Record<
     string,
     { nodeId: RecordId; name: string }
   >;
+
+  readonly graphEndNodeIds: RecordId[];
 
   // node-map: a lookup table with the key of the non-subgraph node id and
   // the value of the non-subgraph node
@@ -106,6 +110,11 @@ export abstract class BaseGraph<
 
   // where the node are registered, in default we use globalNodeRegistry
   readonly registry: NodeRegistration;
+
+  // node-process-info-map: a lookup table with the key of the non-subgraph
+  // node id and the value of node process info. This map is updated once
+  // per processing.
+  nodeProcessInfoMap: Record<RecordId, NodeProcessInfo>;
 
   get _attributes() {
     return {
@@ -136,6 +145,8 @@ export abstract class BaseGraph<
     this.connections = fields?.connections ?? [];
     this.comments = fields?.comments ?? [];
 
+    this.nodeProcessInfoMap = {};
+
     this.registry =
       registry ?? (globalNodeRegistry as unknown as NodeRegistration);
     this.nodeMap = {};
@@ -151,15 +162,19 @@ export abstract class BaseGraph<
       flattenConnections,
       inputs,
       inputNameMap,
+      startNodeIds,
       outputs,
       outputNameMap,
+      endNodeIds,
     } = BaseGraph.flattenGraph(this.id, this.nodes, this.connections);
     this.flattenNodes = flattenNodes;
     this.flattenConnections = flattenConnections;
     this.graphInputs = inputs;
     this.graphInputNameMap = inputNameMap;
+    this.graphStartNodeIds = startNodeIds;
     this.graphOutputs = outputs;
     this.graphOutputNameMap = outputNameMap;
+    this.graphEndNodeIds = endNodeIds;
 
     // Create nodeImpl-map and node-map for future lookup
     for (const node of this.flattenNodes) {
@@ -268,6 +283,60 @@ export abstract class BaseGraph<
   abstract loadRegistry(registry: NodeRegistration | undefined): BaseGraph;
 
   /**
+   * Get all nodes that push data toward the current node.
+   *
+   * @param node the current node
+   * @returns all nodes that push data toward the current node
+   */
+  getFromNodes(node: SerializableNode): SerializableNode[] {
+    const connections: NodeConnection[] = this.nodeConnMap[node.id] ?? [];
+
+    const incomingConnections = connections.filter(
+      (conn) => conn.toNodeId === node.id
+    );
+
+    const inputDefs = this.nodePortDefMap[node.id]?.inputs ?? [];
+
+    return incomingConnections
+      .filter((conn) => {
+        const connectionDef = inputDefs.find(
+          (def) => def.nodeId === node.id && def.name === conn.toPortName
+        );
+
+        return connectionDef !== undefined;
+      })
+      .map((conn) => this.nodeMap[conn.fromNodeId])
+      .filter(isNotNull);
+  }
+
+  /**
+   * Get all nodes that receive data from the current node.
+   *
+   * @param node the current node
+   * @returns all nodes that receive data from the current node
+   */
+  getToNodes(node: SerializableNode): SerializableNode[] {
+    const connections: NodeConnection[] = this.nodeConnMap[node.id] ?? [];
+
+    const outgoingConnections = connections.filter(
+      (conn) => conn.fromNodeId === node.id
+    );
+
+    const outputDefs = this.nodePortDefMap[node.id]?.outputs ?? [];
+
+    return outgoingConnections
+      .filter((conn) => {
+        const connectionDef = outputDefs.find(
+          (def) => def.nodeId === node.id && def.name === conn.fromPortName
+        );
+
+        return connectionDef !== undefined;
+      })
+      .map((conn) => this.nodeMap[conn.toNodeId])
+      .filter(isNotNull);
+  }
+
+  /**
    * Flatten a graph by exploding the nodes and connections in any subgraph
    * node in the graph. Since the original connections use the subgraph node
    * id and port name, these will be replaced with the inner node id and port
@@ -276,7 +345,7 @@ export abstract class BaseGraph<
    * In addition, get graph ports for the start nodes and end nodes in the
    * flatten graph
    *
-   * @param nodeId graph id
+   * @param graphId graph id
    * @param nodes all of the nodes in the graph, this allows subgraph nodes
    * @param connections all of the connections in the graph, this allows the
    * connection with subgraph nodes
@@ -288,7 +357,7 @@ export abstract class BaseGraph<
    * port name for reversing the name to the original.
    */
   static flattenGraph(
-    nodeId: RecordId,
+    graphId: RecordId,
     nodes: SerializableNode[],
     connections: NodeConnection[]
   ): {
@@ -296,15 +365,23 @@ export abstract class BaseGraph<
     flattenConnections: NodeConnection[];
     inputs: Record<string, DataType | Readonly<DataType[]>>;
     inputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    startNodeIds: RecordId[];
     outputs: Record<string, DataType | Readonly<DataType[]>>;
     outputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    endNodeIds: RecordId[];
   } {
     let flattenNodes: SerializableNode[] = [];
     let flattenConnections: NodeConnection[] = [];
 
     // Get all of the input ports and output ports of the graph
-    const { inputs, inputNameMap, outputs, outputNameMap } =
-      BaseGraph.getGraphPorts(nodes, connections);
+    const {
+      inputs,
+      inputNameMap,
+      startNodeIds,
+      outputs,
+      outputNameMap,
+      endNodeIds,
+    } = BaseGraph.getGraphPorts(nodes, connections);
 
     for (const node of nodes) {
       if (node.type === 'graph' && node.subType === 'subgraph') {
@@ -328,21 +405,21 @@ export abstract class BaseGraph<
     const inputPortNames: string[] = Object.keys(inputs);
     const outputPortNames: string[] = Object.keys(outputs);
     for (const conn of connections) {
-      if (conn.toNodeId === nodeId) {
+      if (conn.toNodeId === graphId) {
         // To GraphNode's input ports
         const inputPortName: string | undefined = inputPortNames.find(
           (ipn) => ipn === conn.toPortName
         );
         if (!inputPortName) {
           throw new Error(
-            `Graph ${nodeId} cannot find an input port name that matches to the connection to-port name: ${conn.toPortName}`
+            `Graph ${graphId} cannot find an input port name that matches to the connection to-port name: ${conn.toPortName}`
           );
         }
 
         const nameMap = inputNameMap[inputPortName];
         if (!nameMap) {
           throw new Error(
-            `Graph ${nodeId} cannot find an node id that has input port that matches to the connection to-port name: ${conn.toPortName}`
+            `Graph ${graphId} cannot find an node id that has input port that matches to the connection to-port name: ${conn.toPortName}`
           );
         }
 
@@ -352,21 +429,21 @@ export abstract class BaseGraph<
           toNodeId: nameMap.nodeId,
           toPortName: nameMap.name,
         });
-      } else if (conn.fromNodeId === nodeId) {
+      } else if (conn.fromNodeId === graphId) {
         // From GraphNode's output ports
         const outputPortName: string | undefined = outputPortNames.find(
           (opn) => opn === conn.fromPortName
         );
         if (!outputPortName) {
           throw new Error(
-            `Graph ${nodeId} cannot find an output port name that matches to the connection from-port name: ${conn.fromPortName}`
+            `Graph ${graphId} cannot find an output port name that matches to the connection from-port name: ${conn.fromPortName}`
           );
         }
 
         const nameMap = outputNameMap[outputPortName];
         if (!nameMap) {
           throw new Error(
-            `Graph ${nodeId} cannot find an node id that has output port that matches to the connection from-port name: ${conn.fromPortName}`
+            `Graph ${graphId} cannot find an node id that has output port that matches to the connection from-port name: ${conn.fromPortName}`
           );
         }
 
@@ -386,8 +463,10 @@ export abstract class BaseGraph<
       flattenConnections,
       inputs,
       inputNameMap,
+      startNodeIds,
       outputs,
       outputNameMap,
+      endNodeIds,
     };
   }
 
@@ -415,8 +494,10 @@ export abstract class BaseGraph<
   ): {
     inputs: Record<string, DataType | Readonly<DataType[]>>;
     inputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    startNodeIds: RecordId[];
     outputs: Record<string, DataType | Readonly<DataType[]>>;
     outputNameMap: Record<string, { nodeId: RecordId; name: string }>;
+    endNodeIds: RecordId[];
   } {
     const incomingConnections: {
       [key in RecordId]: {
@@ -446,9 +527,11 @@ export abstract class BaseGraph<
 
     const inputs: Record<string, DataType | Readonly<DataType[]>> = {};
     const inputNameMap: Record<string, { nodeId: RecordId; name: string }> = {};
+    const startNodeIds: RecordId[] = [];
     const outputs: Record<string, DataType | Readonly<DataType[]>> = {};
     const outputNameMap: Record<string, { nodeId: RecordId; name: string }> =
       {};
+    const endNodeIds: RecordId[] = [];
     for (const node of nodes) {
       const nodeId: RecordId = node.id;
       const nodeTitle: string =
@@ -456,42 +539,63 @@ export abstract class BaseGraph<
       const nodeInputs: NodePortFields = node.inputs ?? {};
       const nodeOutputs: NodePortFields = node.outputs ?? {};
 
-      Object.keys(nodeInputs).forEach((i) => {
-        if (!(incomingConnections[nodeId] && incomingConnections[nodeId][i])) {
-          let inputName: string = i;
-          let count = 1;
-          while (inputNameMap[inputName]) {
-            inputName = `${nodeTitle} ${
-              count > 1 ? `${count} ` : ''
-            }${inputName}`;
-            count += 1;
+      if (Object.keys(nodeInputs).length > 0) {
+        Object.keys(nodeInputs).forEach((i) => {
+          if (
+            !(incomingConnections[nodeId] && incomingConnections[nodeId][i])
+          ) {
+            let inputName: string = i;
+            let count = 1;
+            while (inputNameMap[inputName]) {
+              inputName = `${nodeTitle} ${
+                count > 1 ? `${count} ` : ''
+              }${inputName}`;
+              count += 1;
+            }
+
+            inputs[inputName] = nodeInputs[i];
+            inputNameMap[inputName] = { nodeId, name: i };
+
+            startNodeIds.push(nodeId);
           }
+        });
+      } else {
+        startNodeIds.push(nodeId);
+      }
 
-          inputs[inputName] = nodeInputs[i];
-          inputNameMap[inputName] = { nodeId, name: i };
-        }
-      });
+      if (Object.keys(nodeOutputs).length > 0) {
+        Object.keys(nodeOutputs).forEach((o) => {
+          if (
+            !(outgoingConnections[nodeId] && outgoingConnections[nodeId][o])
+          ) {
+            let outputName: string = o;
+            let count = 1;
+            while (outputNameMap[outputName]) {
+              outputName = `${nodeTitle} ${
+                count > 1 ? `${count} ` : ''
+              }${outputName}`;
+              count += 1;
+            }
 
-      Object.keys(nodeOutputs).forEach((o) => {
-        if (!(outgoingConnections[nodeId] && outgoingConnections[nodeId][o])) {
-          let outputName: string = o;
-          let count = 1;
-          while (outputNameMap[outputName]) {
-            outputName = `${nodeTitle} ${
-              count > 1 ? `${count} ` : ''
-            }${outputName}`;
-            count += 1;
+            outputs[outputName] = nodeOutputs[o];
+            outputNameMap[outputName] = { nodeId, name: o };
+
+            endNodeIds.push(nodeId);
           }
-
-          console.log(`outputName: ${outputName}`);
-
-          outputs[outputName] = nodeOutputs[o];
-          outputNameMap[outputName] = { nodeId, name: o };
-        }
-      });
+        });
+      } else {
+        endNodeIds.push(nodeId);
+      }
     }
 
-    return { inputs, inputNameMap, outputs, outputNameMap };
+    return {
+      inputs,
+      inputNameMap,
+      startNodeIds: [...new Set(startNodeIds)],
+      outputs,
+      outputNameMap,
+      endNodeIds: [...new Set(endNodeIds)],
+    };
   }
 
   static async deserialize(
@@ -550,7 +654,33 @@ export abstract class BaseGraph<
         continue;
       }
 
-      serializedNodes.push(await nodeImpl.serialize(nodeConnections));
+      let processInfo: NodeProcessInfo | undefined =
+        this.nodeProcessInfoMap[node.id];
+      if (node.type === 'graph') {
+        const subGraphProcessInfoMap: Record<RecordId, NodeProcessInfo> = (
+          node.data as BaseGraph
+        ).nodeProcessInfoMap;
+
+        const subGraphNodes: SerializableNode[] = (node.data as BaseGraph)
+          .flattenNodes;
+
+        let subGraphRuntime = 0;
+        let subGraphMemory = 0;
+        for (const subGraphNode of subGraphNodes) {
+          const subGraphNodeProcessInfo: NodeProcessInfo | undefined =
+            this.nodeProcessInfoMap[subGraphNode.id] ??
+            subGraphProcessInfoMap[subGraphNode.id];
+
+          subGraphRuntime += subGraphNodeProcessInfo?.runtime ?? 0;
+          subGraphMemory += subGraphNodeProcessInfo?.memory ?? 0;
+        }
+
+        processInfo = { runtime: subGraphRuntime, memory: subGraphMemory };
+      }
+
+      serializedNodes.push(
+        await nodeImpl.serialize(nodeConnections, processInfo)
+      );
     }
 
     return {
@@ -562,12 +692,7 @@ export abstract class BaseGraph<
     };
   }
 
-  abstract schedule(): Promise<SerializableNode<string, Serializable>[][]>;
-
-  abstract invoke(
-    input: CallInput,
-    options?: Partial<CallableConfig> | undefined
-  ): Promise<CallOutput>;
+  abstract schedule(): Array<[string, RecordId[]]>;
 }
 
 export class SubGraph extends BaseGraph {
@@ -589,14 +714,9 @@ export class SubGraph extends BaseGraph {
     return new SubGraph(nodeGraphFields);
   }
 
-  schedule(): Promise<SerializableNode<string, Serializable>[][]> {
-    throw new Error('Method not implemented.');
-  }
+  schedule(): Array<[string, RecordId[]]> {
+    const graphScheduler = new GraphScheduler(this);
 
-  invoke(
-    input: GraphValues,
-    options?: Partial<CallableConfig> | undefined
-  ): Promise<GraphValues> {
-    throw new Error('Method not implemented.');
+    return graphScheduler.schedule();
   }
 }

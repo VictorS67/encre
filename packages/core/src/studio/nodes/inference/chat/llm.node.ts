@@ -55,18 +55,14 @@ export abstract class LLMNodeImpl extends CallableNodeImpl<LLMNode> {
       return {
         output: coerceToData(output),
         info: coerceToData(info),
-        completionTokens: coerceToData(undefined),
-        promptTokens: coerceToData(undefined),
-        totalTokens: coerceToData(undefined),
+        tokenUsage: coerceToData(undefined),
       };
     }
 
     return {
       output: coerceToData(output),
       info: coerceToData(info),
-      completionTokens: coerceToData(llmOutput['completionTokens']),
-      promptTokens: coerceToData(llmOutput['promptTokens']),
-      totalTokens: coerceToData(llmOutput['totalTokens']),
+      tokenUsage: coerceToData(llmOutput['tokenUsage']),
     };
   }
 
@@ -85,18 +81,12 @@ export abstract class LLMNodeImpl extends CallableNodeImpl<LLMNode> {
 }
 
 export class OpenAINodeImpl extends LLMNodeImpl {
-  static create(): LLMNode {
-    const openai = new OpenAI({
-      modelName: 'text-davinci-003',
-      openAIApiKey: 'openai-secret-placeholder',
-      maxTokens: 2048,
-    });
-
-    const node: LLMNode = {
+  static nodeFrom(callable: OpenAI): LLMNode {
+    return {
       id: getRecordId(),
       type: 'llm',
       subType: 'openai',
-      data: openai,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -113,11 +103,19 @@ export class OpenAINodeImpl extends LLMNodeImpl {
       outputs: {
         output: 'string',
         info: ['object', 'unknown'],
-        completionTokens: ['number', 'unknown'],
-        promptTokens: ['number', 'unknown'],
-        totalTokens: ['number', 'unknown'],
+        tokenUsage: ['object', 'unknown'],
       },
     };
+  }
+
+  static create(): LLMNode {
+    const openai = new OpenAI({
+      modelName: 'text-davinci-003',
+      openAIApiKey: 'openai-secret-placeholder',
+      maxTokens: 2048,
+    });
+
+    const node: LLMNode = OpenAINodeImpl.nodeFrom(openai);
 
     return node;
   }
@@ -143,18 +141,12 @@ export class OpenAINodeImpl extends LLMNodeImpl {
 }
 
 export class GeminiNodeImpl extends LLMNodeImpl {
-  static create(): LLMNode {
-    const gemini = new Gemini({
-      modelName: 'gemini-pro',
-      googleApiKey: 'google-secret-placeholder',
-      maxOutputTokens: 2048,
-    });
-
-    const node: LLMNode = {
+  static nodeFrom(callable: Gemini): LLMNode {
+    return {
       id: getRecordId(),
       type: 'llm',
       subType: 'gemini',
-      data: gemini,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -171,11 +163,19 @@ export class GeminiNodeImpl extends LLMNodeImpl {
       outputs: {
         output: 'string',
         info: 'object',
-        completionTokens: 'number',
-        promptTokens: 'number',
-        totalTokens: 'number',
+        tokenUsage: ['object', 'unknown'],
       },
     };
+  }
+
+  static create(): LLMNode {
+    const gemini = new Gemini({
+      modelName: 'gemini-pro',
+      googleApiKey: 'google-secret-placeholder',
+      maxOutputTokens: 2048,
+    });
+
+    const node: LLMNode = GeminiNodeImpl.nodeFrom(gemini);
 
     return node;
   }

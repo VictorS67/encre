@@ -54,7 +54,7 @@ export class GuardrailRegistration<
 
   get dynamicImplsMap(): Record<
     string,
-    { impl: GuardrailImplConstructor<Guardrail> }
+    { impl: GuardrailImplConstructor<Guardrail>; init: Guardrails }
   > {
     return this.implsMap;
   }

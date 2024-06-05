@@ -23,21 +23,19 @@ export abstract class PromptNodeImpl extends NodeImpl<PromptNode> {
       throw new Error(`${this.type} Node ${this.title} has invalid inputs`);
     }
 
-    // TODO: This depends on the connected input type, 
+    // TODO: This depends on the connected input type,
     // since the output types can be different.
     return { prompt: coerceToData(this.data.toChatMessages()) };
   }
 }
 
 export class StringPromptNodeImpl extends PromptNodeImpl {
-  static create(): PromptNode {
-    const stringPrompt = new StringPrompt(scalarDefaults['string']);
-
-    const node: PromptNode = {
+  static nodeFrom(serializable: StringPrompt): PromptNode {
+    return {
       id: getRecordId(),
       type: 'prompt',
       subType: 'string',
-      data: stringPrompt,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -53,20 +51,24 @@ export class StringPromptNodeImpl extends PromptNodeImpl {
         prompt: ['string', 'chat-message[]'],
       },
     };
+  }
+
+  static create(): PromptNode {
+    const stringPrompt = new StringPrompt(scalarDefaults['string']);
+
+    const node: PromptNode = StringPromptNodeImpl.nodeFrom(stringPrompt);
 
     return node;
   }
 }
 
 export class ChatPromptNodeImpl extends PromptNodeImpl {
-  static create(): PromptNode {
-    const chatPrompt = new ChatPrompt([]);
-
-    const node: PromptNode = {
+  static nodeFrom(serializable: ChatPrompt): PromptNode {
+    return {
       id: getRecordId(),
       type: 'prompt',
       subType: 'chat',
-      data: chatPrompt,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -82,6 +84,12 @@ export class ChatPromptNodeImpl extends PromptNodeImpl {
         prompt: ['string', 'chat-message[]'],
       },
     };
+  }
+
+  static create(): PromptNode {
+    const chatPrompt = new ChatPrompt([]);
+
+    const node: PromptNode = ChatPromptNodeImpl.nodeFrom(chatPrompt);
 
     return node;
   }

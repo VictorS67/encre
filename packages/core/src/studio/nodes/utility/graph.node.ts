@@ -5,7 +5,7 @@ import {
 } from '../../../load/registration.js';
 import { SerializedConstructor } from '../../../load/serializable.js';
 import { getRecordId } from '../../../utils/nanoid.js';
-import { BaseGraph, GraphValues, SubGraph } from '../../graph.js';
+import { BaseGraph, SubGraph } from '../../graph.js';
 import {
   ProcessContext,
   ProcessInputMap,
@@ -14,27 +14,12 @@ import {
 import { GuardrailRegistration } from '../../registration/guardrails.js';
 import { NodeRegistration } from '../../registration/nodes.js';
 import { SerializedNode } from '../../serde.js';
-import { CallableNodeImpl } from '../base.js';
+import { CallableNodeImpl, NodeImpl } from '../base.js';
 import { CallableNode, NodeConnection, SerializableNode } from '../index.js';
 
-export type GraphNode = CallableNode<'graph', BaseGraph>;
+export type GraphNode = SerializableNode<'graph', BaseGraph>;
 
-export abstract class GraphNodeImpl extends CallableNodeImpl<GraphNode> {
-  abstract _preprocess(
-    inputs: ProcessInputMap,
-    context: ProcessContext
-  ): Promise<GraphValues>;
-
-  abstract _postprocess(
-    rawOutputs: GraphValues,
-    context: ProcessContext
-  ): Promise<ProcessOutputMap>;
-
-  abstract invoke<CallInput, CallOutput, CallOptions>(
-    input: CallInput,
-    options?: Partial<CallOptions>
-  ): Promise<CallOutput>;
-
+export abstract class GraphNodeImpl extends NodeImpl<GraphNode> {
   abstract process(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -91,23 +76,24 @@ export abstract class GraphNodeImpl extends CallableNodeImpl<GraphNode> {
 }
 
 export class SubGraphNodeImpl extends GraphNodeImpl {
-  static create(fields: {
-    nodes: SerializableNode[];
-    connections: NodeConnection[];
-  }): GraphNode {
-    const subGraph = new SubGraph(fields);
-
+  static nodeFrom(
+    serializable: SubGraph,
+    registerArgs: {
+      nodes: SerializableNode[];
+      connections: NodeConnection[];
+    }
+  ): GraphNode {
     const { inputs, outputs } = BaseGraph.getGraphPorts(
-      fields.nodes,
-      fields.connections
+      registerArgs.nodes,
+      registerArgs.connections
     );
 
-    const node: GraphNode = {
+    return {
       id: getRecordId(),
       type: 'graph',
       subType: 'subgraph',
-      registerArgs: fields,
-      data: subGraph,
+      registerArgs: registerArgs,
+      data: serializable,
       visualInfo: {
         position: {
           x: 0,
@@ -121,28 +107,19 @@ export class SubGraphNodeImpl extends GraphNodeImpl {
       inputs,
       outputs,
     };
+  }
+
+  static create(fields: {
+    nodes: SerializableNode[];
+    connections: NodeConnection[];
+  }): GraphNode {
+    const subGraph = new SubGraph(fields);
+
+    const node: GraphNode = SubGraphNodeImpl.nodeFrom(subGraph, fields);
 
     return node;
   }
 
-  _preprocess(
-    inputs: ProcessInputMap,
-    context: ProcessContext
-  ): Promise<GraphValues> {
-    throw new Error('Method not implemented.');
-  }
-  _postprocess(
-    rawOutputs: GraphValues,
-    context: ProcessContext
-  ): Promise<ProcessOutputMap> {
-    throw new Error('Method not implemented.');
-  }
-  invoke<CallInput, CallOutput, CallOptions>(
-    input: CallInput,
-    options?: Partial<CallOptions> | undefined
-  ): Promise<CallOutput> {
-    throw new Error('Method not implemented.');
-  }
   process(
     inputs: ProcessInputMap,
     context: ProcessContext

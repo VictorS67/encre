@@ -16,7 +16,7 @@ import {
   IfConditionSource,
   IfConditionTarget,
 } from '../../condition.js';
-import { dataTypes } from '../../data.js';
+import { DataType, dataTypes } from '../../data.js';
 import {
   ProcessInputMap,
   ProcessContext,
@@ -169,7 +169,6 @@ export class IfConditionNodeImpl extends IfNodeImpl {
         }),
       },
     ];
-    // this.data.variables[newName] = [undefined];
 
     return newName;
   }
@@ -196,7 +195,40 @@ export class IfConditionNodeImpl extends IfNodeImpl {
     return this.data.removeAction(outputPortName);
   }
 
-  static create() {
+  static nodeFrom(callable: IfCondition): IfNode {
+    return {
+      id: getRecordId(),
+      type: 'if',
+      subType: 'condition',
+      data: callable,
+      visualInfo: {
+        position: {
+          x: 0,
+          y: 0,
+        },
+        size: {
+          width: 300,
+          height: 500,
+        },
+      },
+      inputs: callable.sources.reduce(
+        (acc, source) => {
+          acc[source] = dataTypes;
+          return acc;
+        },
+        {} as Record<string, DataType | Readonly<DataType[]>>
+      ),
+      outputs: callable.targets.reduce(
+        (acc, target) => {
+          acc[target] = dataTypes;
+          return acc;
+        },
+        {} as Record<string, DataType | Readonly<DataType[]>>
+      ),
+    };
+  }
+
+  static create(): IfNode {
     const ifCondition = new IfCondition({
       sources: ['A'],
       targets: ['B'],
@@ -212,28 +244,7 @@ export class IfConditionNodeImpl extends IfNodeImpl {
       },
     });
 
-    const node: IfNode = {
-      id: getRecordId(),
-      type: 'if',
-      subType: 'condition',
-      data: ifCondition,
-      visualInfo: {
-        position: {
-          x: 0,
-          y: 0,
-        },
-        size: {
-          width: 300,
-          height: 500,
-        },
-      },
-      inputs: {
-        A: dataTypes,
-      },
-      outputs: {
-        B: dataTypes,
-      },
-    };
+    const node: IfNode = IfConditionNodeImpl.nodeFrom(ifCondition);
 
     return node;
   }
@@ -305,7 +316,7 @@ export class IfConditionNodeImpl extends IfNodeImpl {
           data ? data.value : undefined,
         ])
       ),
-      variables: context.memory[this.id] as any,
+      variables: context.memory?.[this.id] as any,
     };
   }
 

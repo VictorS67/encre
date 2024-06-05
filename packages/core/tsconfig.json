@@ -2,9 +2,7 @@
   "compilerOptions": {
     "target": "ESNEXT",
     "module": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "declaration": true,
@@ -17,23 +15,15 @@
     "strictPropertyInitialization": false,
     "noImplicitThis": false,
     "moduleResolution": "node",
-    "types": [
-      "reflect-metadata",
-      "node"
-    ],
+    "types": ["reflect-metadata", "node"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "inlineSourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "build"
-  ],
+  "include": ["src/**/*", "jest.global.env.ts"],
+  "exclude": ["node_modules", "build"],
   "typedocOptions": {
     "entrypoints": [
       "src/load/index.ts",

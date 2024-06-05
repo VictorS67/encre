@@ -5,14 +5,7 @@ import {
 import { Context } from '../../../events/input/load/docs/context.js';
 import { PDFLoader } from '../../../events/input/load/docs/pdf.js';
 import { getRecordId } from '../../../utils/nanoid.js';
-import {
-  ArrayOf,
-  BlobData,
-  ContextData,
-  Data,
-  StringData,
-  scalarDefaults,
-} from '../../data.js';
+import { Data, scalarDefaults } from '../../data.js';
 import {
   ProcessInputMap,
   ProcessContext,
@@ -20,21 +13,19 @@ import {
 } from '../../processor.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { CallableNodeImpl } from '../base.js';
-import { CallableNode, NodeInputPortDef, NodeOutputPortDef } from '../index.js';
+import { CallableNode } from '../index.js';
 
 export type LoaderNode = CallableNode<'loader', BaseLoader>;
 
 export abstract class LoaderNodeImpl extends CallableNodeImpl<LoaderNode> {}
 
 export class PDFLoaderNodeImpl extends LoaderNodeImpl {
-  static create(): LoaderNode {
-    const loader = new PDFLoader({ shouldSplit: scalarDefaults['boolean'] });
-
-    const node: LoaderNode = {
+  static nodeFrom(callable: PDFLoader): LoaderNode {
+    return {
       id: getRecordId(),
       type: 'loader',
       subType: 'pdf',
-      data: loader,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -52,6 +43,12 @@ export class PDFLoaderNodeImpl extends LoaderNodeImpl {
         contexts: 'context[]',
       },
     };
+  }
+
+  static create(): LoaderNode {
+    const loader = new PDFLoader({ shouldSplit: scalarDefaults['boolean'] });
+
+    const node: LoaderNode = PDFLoaderNodeImpl.nodeFrom(loader);
 
     return node;
   }
