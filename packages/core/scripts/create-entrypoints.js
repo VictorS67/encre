@@ -147,6 +147,7 @@ const entrypoints = {
   "studio/utils/coerce": "studio/utils/coerce",
   "studio/utils/display": "studio/utils/display",
   "studio/utils/load": "studio/utils/load",
+  "studio/utils/save": "studio/utils/save",
   // utils
   "utils/nanoid": "utils/nanoid",
 };
@@ -305,7 +306,7 @@ const updateConfig = () => {
   });
 
   // Update .gitignore
-  fs.writeFileSync("./.gitignore", filenames.join("\n") + "\n");
+  fs.writeFileSync("./.gitignore", ['docs/', ...filenames].join("\n") + "\n");
 
   // Update test-exports-*/entrypoints.js
   // const entrypointsToTest = Object.keys(entrypoints)

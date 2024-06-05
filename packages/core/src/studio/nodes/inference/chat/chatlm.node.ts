@@ -10,6 +10,11 @@ import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertex
 import { BaseMessage } from '../../../../events/input/load/msgs/base.js';
 import { LLMResult } from '../../../../events/output/provide/llmresult.js';
 import { ChatGenerationChunk } from '../../../../events/output/provide/message.js';
+import { load } from '../../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../../load/registration.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
 import { Data } from '../../../data.js';
 import {
@@ -17,6 +22,7 @@ import {
   ProcessContext,
   ProcessOutputMap,
 } from '../../../processor.js';
+import { SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
 import { CallableNode } from '../../index.js';
@@ -33,6 +39,26 @@ export type ChatLMNode = CallableNode<'chatlm', BaseChatLM>;
  * functionalities for chat generation using language models.
  */
 export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
+  /**
+   * Deserializes a serialized chatlm node representation into an executable chatlm node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized chatlm node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<ChatLMNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'openai':
+        return OpenAIChatNodeImpl.deserialize(serialized);
+      case 'gemini':
+        return GeminiChatNodeImpl.deserialize(serialized);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
   /**
    * Preprocesses the input data to ensure it is in a valid format for the language model.
    * This step ensures that the input data is either a string or an array of chat messages.
@@ -201,6 +227,47 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
     return node;
   }
 
+  static async deserialize(serialized: SerializedNode): Promise<ChatLMNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'chatlm') {
+      throw new Error(`CANNOT deserialize this type in chatlm node: ${type}`);
+    }
+
+    const openaiChatStr = JSON.stringify(data);
+    const openaiChat = await load<OpenAIChat>(
+      openaiChatStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: openaiChat,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
+
   /**
    * Main process method that orchestrates the full lifecycle of chat generation using a language model.
    * This method integrates input validation, preprocessing, language model invocation, and postprocessing.
@@ -311,6 +378,47 @@ export class GeminiChatNodeImpl extends ChatLMNodeImpl {
     const node: ChatLMNode = GeminiChatNodeImpl.nodeFrom(geminiChat);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<ChatLMNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'chatlm') {
+      throw new Error(`CANNOT deserialize this type in chatlm node: ${type}`);
+    }
+
+    const geminiChatStr = JSON.stringify(data);
+    const geminiChat = await load<GeminiChat>(
+      geminiChatStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: geminiChat,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 
   /**

@@ -28,7 +28,7 @@ import {
   TextSplitterNodeImpl,
   TokenTextSplitterNodeImpl,
 } from '../nodes/input/splitter.node.js';
-import { SubGraphNodeImpl } from '../nodes/utility/graph.node.js';
+import { IfConditionNodeImpl } from '../nodes/utility/if.node.js';
 import { InputNodeImpl } from '../nodes/utility/input.node.js';
 
 type ExtractType<T> = T extends `${infer U}-${any}` ? U : never;
@@ -411,7 +411,8 @@ export function registerBuiltInNodes(registry: NodeRegistration) {
     .register(OpenAIChatNodeImpl)
     .register(GeminiChatNodeImpl)
     .register(VariableValidatorNodeImpl)
-    .register(InputNodeImpl);
+    .register(InputNodeImpl)
+    .register(IfConditionNodeImpl);
 }
 
 /**
@@ -438,7 +439,7 @@ export function registerBuiltInNodes(registry: NodeRegistration) {
  * #### Resetting the Registry
  * In scenarios such as testing or when starting a new session where a clean registry state is needed:
  * ```typescript
- * resetNodeRegistry();
+ * await resetNodeRegistry();
  * ```
  */
 let globalNodeRegistry = registerBuiltInNodes(new NodeRegistration());
@@ -474,7 +475,7 @@ export type BuiltInNodeTypePairs =
  * A utility type that extracts nodes of a specific type from the built-in nodes based on the provided node type.
  * This type is particularly useful when you need to obtain a subset of nodes that match a given type, allowing
  * for operations that are specific to that type while maintaining type safety.
- * 
+ *
  * @template T - The type of the node to extract from the built-in nodes.
  */
 export type NodeOf<T extends BuiltInNodeTypes> = Extract<

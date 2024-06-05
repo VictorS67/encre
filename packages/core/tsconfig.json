@@ -122,6 +122,7 @@
       "src/studio/utils/coerce.ts",
       "src/studio/utils/display.ts",
       "src/studio/utils/load.ts",
+      "src/studio/utils/save.ts",
       "src/utils/nanoid.ts"
     ]
   }

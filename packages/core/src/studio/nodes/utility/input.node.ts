@@ -1,4 +1,6 @@
+import { load } from '../../../load/index.js';
 import { RecordId } from '../../../load/keymap.js';
+import { globalImportMap, globalSecretMap } from '../../../load/registration.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { isNotNull } from '../../../utils/safeTypes.js';
 import {
@@ -13,6 +15,7 @@ import {
   ProcessContext,
   ProcessOutputMap,
 } from '../../processor.js';
+import { SerializedNode } from '../../serde.js';
 import { displayUIFromDataFields } from '../../utils/display.js';
 import { NodeImpl } from '../base.js';
 import {
@@ -34,7 +37,7 @@ export type InputNode = SerializableNode<'input', BaseInput>;
  * An implementation class for InputNode. This class extends the basic node implementation to provide
  * specialized functionalities for input handling. It supports dynamic definition of inputs and outputs
  * based on connected node configurations and the data types defined in the serialized data.
- * 
+ *
  * ### Node Properties
  *
  * | Field       | Type           | Description                                                                  |
@@ -101,6 +104,56 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
     });
 
     return InputNodeImpl.nodeFrom(input);
+  }
+
+  /**
+   * Deserializes a serialized input node representation into an executable input node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized input node.
+   */
+  static async deserialize(
+    serialized: SerializedNode,
+  ): Promise<InputNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'input') {
+      throw new Error(`CANNOT deserialize this type in input node: ${type}`);
+    }
+
+    const userInputStr = JSON.stringify(data);
+    const userInput = await load<BaseInput>(
+      userInputStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: userInput,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 
   /**

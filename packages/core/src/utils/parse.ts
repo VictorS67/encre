@@ -10,7 +10,7 @@ export const parseFile = (
   const suffix = extname(path);
 
   if (
-    !['.json', '.yaml'].includes(suffix) ||
+    !['.json', '.yaml', '.yml', '.encre'].includes(suffix) ||
     (supportedTypes && !supportedTypes.includes(suffix))
   ) {
     throw new Error(`Unsupport file type ${suffix}`);

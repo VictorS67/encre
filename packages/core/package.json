@@ -508,6 +508,11 @@
       "import": "./studio/utils/load.js",
       "require": "./studio/utils/load.cjs"
     },
+    "./studio/utils/save": {
+      "types": "./studio/utils/save.d.ts",
+      "import": "./studio/utils/save.js",
+      "require": "./studio/utils/save.cjs"
+    },
     "./utils/nanoid": {
       "types": "./utils/nanoid.d.ts",
       "import": "./utils/nanoid.js",
@@ -775,6 +780,9 @@
     "studio/utils/load.cjs",
     "studio/utils/load.js",
     "studio/utils/load.d.ts",
+    "studio/utils/save.cjs",
+    "studio/utils/save.js",
+    "studio/utils/save.d.ts",
     "utils/nanoid.cjs",
     "utils/nanoid.js",
     "utils/nanoid.d.ts",

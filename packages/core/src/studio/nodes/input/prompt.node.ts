@@ -1,6 +1,11 @@
 import { BasePrompt } from '../../../events/input/load/prompts/base.js';
 import { ChatPrompt } from '../../../events/input/load/prompts/chat.js';
 import { StringPrompt } from '../../../events/input/load/prompts/text.js';
+import { load } from '../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../load/registration.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { scalarDefaults } from '../../data.js';
 import {
@@ -8,13 +13,14 @@ import {
   ProcessInputMap,
   ProcessOutputMap,
 } from '../../processor.js';
+import { SerializedNode } from '../../serde.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { NodeImpl } from '../base.js';
 import { SerializableNode } from '../index.js';
 
 /**
  * A type alias for a specialized serializable node focused on prompts.
- * This node type is specialized for representing prompts, particularly in the 
+ * This node type is specialized for representing prompts, particularly in the
  * context of generating strings or arrays of chat messages.
  */
 export type PromptNode = SerializableNode<'prompt', BasePrompt>;
@@ -25,6 +31,26 @@ export type PromptNode = SerializableNode<'prompt', BasePrompt>;
  * prompt functionalities.
  */
 export abstract class PromptNodeImpl extends NodeImpl<PromptNode> {
+  /**
+   * Deserializes a serialized prompt node representation into an executable prompt node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized prompt node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<PromptNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'string':
+        return StringPromptNodeImpl.deserialize(serialized);
+      case 'chat':
+        return ChatPromptNodeImpl.deserialize(serialized);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
   /**
    * Processes the inputs to generate outputs based on the prompt logic encapsulated by the node.
    * This method orchestrates the validation and processing of input data to generate chat messages
@@ -116,11 +142,52 @@ export class StringPromptNodeImpl extends PromptNodeImpl {
 
     return node;
   }
+
+  static async deserialize(serialized: SerializedNode): Promise<PromptNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'prompt') {
+      throw new Error(`CANNOT deserialize this type in prompt node: ${type}`);
+    }
+
+    const promptStr = JSON.stringify(data);
+    const prompt = await load<StringPrompt>(
+      promptStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: prompt,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
 }
 
 /**
  * Implementation of a PromptNode specifically for generating chat-based prompts.
- * This node handles the creation and management of chat prompts, adapting the output based on the 
+ * This node handles the creation and management of chat prompts, adapting the output based on the
  * serialized data provided which can include complex chat interactions or simple messages.
  *
  * ### Node Properties
@@ -181,5 +248,46 @@ export class ChatPromptNodeImpl extends PromptNodeImpl {
     const node: PromptNode = ChatPromptNodeImpl.nodeFrom(chatPrompt);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<PromptNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'prompt') {
+      throw new Error(`CANNOT deserialize this type in prompt node: ${type}`);
+    }
+
+    const promptStr = JSON.stringify(data);
+    const prompt = await load<ChatPrompt>(
+      promptStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: prompt,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }

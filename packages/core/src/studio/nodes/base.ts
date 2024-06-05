@@ -337,6 +337,8 @@ export abstract class NodeImpl<
       );
     }
 
+    console.log(`node type: ${serialized.type}`);
+
     switch (serialized.type) {
       case 'graph': {
         const { GraphNodeImpl } = await import('./utility/graph.node.js');
@@ -398,8 +400,11 @@ export abstract class NodeImpl<
     } = {};
 
     for (const conn of connections) {
-      const { fromPortName, toNodeId, toPortName } = conn;
-      outgoingConnections[fromPortName] = { toNodeId, toPortName };
+      const { fromNodeId, fromPortName, toNodeId, toPortName } = conn;
+
+      if (fromNodeId === this.id) {
+        outgoingConnections[fromPortName] = { toNodeId, toPortName };
+      }
     }
 
     return {

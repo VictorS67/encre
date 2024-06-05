@@ -9,6 +9,11 @@ import { Gemini } from '../../../../events/inference/chat/llms/vertexai/gemini/t
 import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
 import { Generation } from '../../../../events/output/provide/generation.js';
 import { LLMResult } from '../../../../events/output/provide/llmresult.js';
+import { load } from '../../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../../load/registration.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
 import { Data } from '../../../data.js';
 import {
@@ -16,6 +21,7 @@ import {
   ProcessContext,
   ProcessOutputMap,
 } from '../../../processor.js';
+import { SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
 import { CallableNode } from '../../index.js';
@@ -33,6 +39,26 @@ export type LLMNode = CallableNode<'llm', BaseLLM>;
  * for interacting with large language models.
  */
 export abstract class LLMNodeImpl extends CallableNodeImpl<LLMNode> {
+  /**
+   * Deserializes a serialized llm node representation into an executable llm node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized llm node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<LLMNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'openai':
+        return OpenAINodeImpl.deserialize(serialized);
+      case 'gemini':
+        return GeminiNodeImpl.deserialize(serialized);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
   /**
    * Preprocesses the input data to ensure it is in a valid format for the language model.
    * This step ensures that the input data is either a string or an array of chat messages,
@@ -198,6 +224,47 @@ export class OpenAINodeImpl extends LLMNodeImpl {
     return node;
   }
 
+  static async deserialize(serialized: SerializedNode): Promise<LLMNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'llm') {
+      throw new Error(`CANNOT deserialize this type in llm node: ${type}`);
+    }
+
+    const openaiStr = JSON.stringify(data);
+    const openai = await load<OpenAI>(
+      openaiStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: openai,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
+
   /**
    * Main process method that orchestrates the full lifecycle of text generation using OpenAI's language model.
    * This method integrates input validation, preprocessing, language model invocation, and postprocessing,
@@ -307,6 +374,47 @@ export class GeminiNodeImpl extends LLMNodeImpl {
     const node: LLMNode = GeminiNodeImpl.nodeFrom(gemini);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<LLMNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'llm') {
+      throw new Error(`CANNOT deserialize this type in llm node: ${type}`);
+    }
+
+    const geminiStr = JSON.stringify(data);
+    const gemini = await load<Gemini>(
+      geminiStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: gemini,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 
   /**

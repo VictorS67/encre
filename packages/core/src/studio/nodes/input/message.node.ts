@@ -4,6 +4,11 @@ import { ChatMessage } from '../../../events/input/load/msgs/chat.js';
 import { FunctionMessage } from '../../../events/input/load/msgs/function.js';
 import { HumanMessage } from '../../../events/input/load/msgs/human.js';
 import { SystemMessage } from '../../../events/input/load/msgs/system.js';
+import { load } from '../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../load/registration.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { scalarDefaults } from '../../data.js';
 import {
@@ -11,6 +16,7 @@ import {
   ProcessContext,
   ProcessOutputMap,
 } from '../../processor.js';
+import { SerializedNode } from '../../serde.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { NodeImpl } from '../base.js';
 import { SerializableNode } from '../index.js';
@@ -26,6 +32,32 @@ export type MessageNode = SerializableNode<'message', BaseMessage>;
  * This class extends the node implementation to handle specialized messaging functionalities.
  */
 export abstract class MessageNodeImpl extends NodeImpl<MessageNode> {
+  /**
+   * Deserializes a serialized message node representation into an executable message node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized message node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<MessageNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'chat':
+        return ChatMessageNodeImpl.deserialize(serialized);
+      case 'human':
+        return HumanMessageNodeImpl.deserialize(serialized);
+      case 'bot':
+        return BotMessageNodeImpl.deserialize(serialized);
+      case 'prompt':
+        return SystemMessageNodeImpl.deserialize(serialized);
+      case 'function':
+        return FunctionMessageNodeImpl.deserialize(serialized);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
   /**
    * Processes the inputs provided to the node.
    * @param inputs - The input data for the node, may be undefined.
@@ -111,6 +143,47 @@ export class ChatMessageNodeImpl extends MessageNodeImpl {
 
     return node;
   }
+
+  static async deserialize(serialized: SerializedNode): Promise<MessageNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'message') {
+      throw new Error(`CANNOT deserialize this type in message node: ${type}`);
+    }
+
+    const messageStr = JSON.stringify(data);
+    const message = await load<ChatMessage>(
+      messageStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: message,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
 }
 
 /**
@@ -177,6 +250,47 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
 
     return node;
   }
+
+  static async deserialize(serialized: SerializedNode): Promise<MessageNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'message') {
+      throw new Error(`CANNOT deserialize this type in message node: ${type}`);
+    }
+
+    const messageStr = JSON.stringify(data);
+    const message = await load<HumanMessage>(
+      messageStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: message,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
 }
 
 /**
@@ -242,6 +356,47 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
     const node: MessageNode = BotMessageNodeImpl.nodeFrom(botMessage);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<MessageNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'message') {
+      throw new Error(`CANNOT deserialize this type in message node: ${type}`);
+    }
+
+    const messageStr = JSON.stringify(data);
+    const message = await load<BotMessage>(
+      messageStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: message,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }
 
@@ -310,6 +465,47 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
     const node: MessageNode = SystemMessageNodeImpl.nodeFrom(systemMessage);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<MessageNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'message') {
+      throw new Error(`CANNOT deserialize this type in message node: ${type}`);
+    }
+
+    const messageStr = JSON.stringify(data);
+    const message = await load<SystemMessage>(
+      messageStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: message,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }
 
@@ -381,5 +577,46 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
     const node: MessageNode = FunctionMessageNodeImpl.nodeFrom(functionMessage);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<MessageNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'message') {
+      throw new Error(`CANNOT deserialize this type in message node: ${type}`);
+    }
+
+    const messageStr = JSON.stringify(data);
+    const message = await load<FunctionMessage>(
+      messageStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: message,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }

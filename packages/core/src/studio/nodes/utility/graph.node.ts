@@ -32,19 +32,6 @@ export type GraphNode = SerializableNode<'graph', BaseGraph>;
  */
 export abstract class GraphNodeImpl extends NodeImpl<GraphNode> {
   /**
-   * Abstract process method that must be implemented by subclasses to handle
-   * specific graph operations based on input data and execution context.
-   *
-   * @param inputs The map containing input data for the node.
-   * @param context The processing context providing additional data and operations for processing.
-   * @returns A promise resolving to a map of process outputs.
-   */
-  abstract process(
-    inputs: ProcessInputMap,
-    context: ProcessContext
-  ): Promise<ProcessOutputMap>;
-
-  /**
    * Deserializes a serialized graph node representation into an executable graph node,
    * reconstituting the node with its operational parameters and data.
    *
@@ -62,46 +49,28 @@ export abstract class GraphNodeImpl extends NodeImpl<GraphNode> {
       guardrails?: GuardrailRegistration;
     }
   ): Promise<GraphNode> {
-    const {
-      id,
-      type,
-      subType,
-      registerArgs,
-      data,
-      visualInfo,
-      inputs,
-      outputs,
-      runtime,
-      memory,
-      outputSizes,
-    } = serialized;
+    const subType: string = serialized.subType;
 
-    if (type !== 'graph') {
-      throw new Error(`CANNOT deserialize this type in graph node: ${type}`);
+    switch (subType) {
+      case 'subgraph':
+        return SubGraphNodeImpl.deserialize(serialized, values, registry);
+      default:
+        throw new Error('Plugin node is unsupported for now');
     }
-
-    (data as SerializedConstructor)._kwargs['registry'] = registry?.nodes;
-    const subGraphStr = JSON.stringify(data);
-    const subGraph = await load<SubGraph>(
-      subGraphStr,
-      globalSecretMap,
-      globalImportMap
-    );
-
-    return {
-      id,
-      type,
-      subType,
-      registerArgs,
-      data: subGraph,
-      visualInfo,
-      inputs,
-      outputs,
-      runtime,
-      memory,
-      outputSizes,
-    };
   }
+
+  /**
+   * Abstract process method that must be implemented by subclasses to handle
+   * specific graph operations based on input data and execution context.
+   *
+   * @param inputs The map containing input data for the node.
+   * @param context The processing context providing additional data and operations for processing.
+   * @returns A promise resolving to a map of process outputs.
+   */
+  abstract process(
+    inputs: ProcessInputMap,
+    context: ProcessContext
+  ): Promise<ProcessOutputMap>;
 }
 
 /**
@@ -200,5 +169,54 @@ export class SubGraphNodeImpl extends GraphNodeImpl {
     context: ProcessContext
   ): Promise<ProcessOutputMap> {
     throw new Error('Method not implemented.');
+  }
+
+  static async deserialize(
+    serialized: SerializedNode,
+    values: Record<string, unknown> = {},
+    registry?: {
+      nodes?: NodeRegistration;
+      guardrails?: GuardrailRegistration;
+    }
+  ): Promise<GraphNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'graph') {
+      throw new Error(`CANNOT deserialize this type in graph node: ${type}`);
+    }
+
+    const { SubGraph } = await import('../../graph.js');
+    (data as SerializedConstructor)._kwargs['registry'] = registry?.nodes;
+    const subGraphStr = JSON.stringify(data);
+    const subGraph = await load<SubGraph>(subGraphStr, globalSecretMap, {
+      ...globalImportMap,
+      'studio/graph': SubGraph,
+    });
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: subGraph,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }

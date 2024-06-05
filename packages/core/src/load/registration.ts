@@ -1,7 +1,9 @@
+import { OpenAIEmbeddings } from '../events/embeddings/openai.js';
 import { OpenAIChat } from '../events/inference/chat/llms/openai/chat.js';
 import { OpenAI } from '../events/inference/chat/llms/openai/text.js';
 import { GeminiChat } from '../events/inference/chat/llms/vertexai/gemini/chat.js';
 import { Gemini } from '../events/inference/chat/llms/vertexai/gemini/text.js';
+import { VectorStoreRetriever } from '../events/inference/retrieve/embedding/vectorstore.js';
 import { ArrayRule } from '../events/inference/validate/guardrails/array.js';
 import { BooleanRule } from '../events/inference/validate/guardrails/boolean.js';
 import { NumberRule } from '../events/inference/validate/guardrails/number.js';
@@ -19,15 +21,19 @@ import {
   StringPrompt,
   StringPromptTemplate,
 } from '../events/input/load/prompts/text.js';
+import { BaseRuleCollection } from '../events/input/load/rules/base.js';
+import { ChromaVectorStore } from '../events/input/load/vectorstore/chroma.js';
 import {
   RecursiveTextSplitter,
   TextSplitter,
   TokenTextSplitter,
 } from '../events/input/transform/splitter.js';
-import { SubGraph } from '../studio/graph.js';
+import { IfCondition } from '../studio/condition.js';
+import { BaseInput } from '../studio/input.js';
 import { OptionalImportMap, SecretMap } from './importType.js';
 
 const globalImportMap: OptionalImportMap = {
+  'events/embeddings/openai': { OpenAIEmbeddings },
   'events/input/load/docs/pdf': { PDFLoader },
   'events/input/load/msgs/human': { HumanMessage },
   'events/input/load/msgs/bot': { BotMessage },
@@ -36,6 +42,8 @@ const globalImportMap: OptionalImportMap = {
   'events/input/load/msgs/general': { ChatMessage },
   'events/input/load/prompts/text': { StringPrompt, StringPromptTemplate },
   'events/input/load/prompts/chat': { ChatPrompt },
+  'events/input/load/rules': { BaseRuleCollection },
+  'events/input/load/vectorstore/chroma': { ChromaVectorStore },
   'events/input/transform/splitter': {
     TextSplitter,
     RecursiveTextSplitter,
@@ -51,7 +59,9 @@ const globalImportMap: OptionalImportMap = {
   'events/inference/chat/chatlms/openai': { OpenAIChat },
   'events/inference/chat/llms/gemini': { Gemini },
   'events/inference/chat/chatlms/gemini': { GeminiChat },
-  'studio/graph': { SubGraph },
+  'events/inference/retrieve/embedding/vectorstore': { VectorStoreRetriever },
+  'studio/condition': { IfCondition },
+  'studio/input': { BaseInput }
 };
 
 const globalSecretMap: SecretMap = {

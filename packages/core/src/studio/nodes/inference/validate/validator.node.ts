@@ -1,5 +1,10 @@
 import { ValidateResult } from '../../../../events/inference/validate/index.js';
 import { VariableValidator } from '../../../../events/inference/validate/validators/variable.js';
+import { load } from '../../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../../load/registration.js';
 import { CallableConfig } from '../../../../record/callable.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
 import { isRecordStringUnknown } from '../../../../utils/safeTypes.js';
@@ -9,6 +14,7 @@ import {
   ProcessContext,
   ProcessOutputMap,
 } from '../../../processor.js';
+import { SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
 import { CallableNode } from '../../index.js';
@@ -99,6 +105,58 @@ export class VariableValidatorNodeImpl extends CallableNodeImpl<VariableValidato
       VariableValidatorNodeImpl.nodeFrom(variableValidator);
 
     return node;
+  }
+
+  /**
+   * Deserializes a serialized variable-validator node representation into an executable variable-validator node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized variable-validator node.
+   */
+  static async deserialize(
+    serialized: SerializedNode
+  ): Promise<VariableValidatorNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'variable-validator') {
+      throw new Error(
+        `CANNOT deserialize this type in variable-validator node: ${type}`
+      );
+    }
+
+    const variableValidatorStr = JSON.stringify(data);
+    const variableValidator = await load<VariableValidator>(
+      variableValidatorStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: variableValidator,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 
   /**

@@ -1,7 +1,7 @@
 import { RecordId } from '../load/keymap.js';
-import { Serializable } from '../load/serializable.js';
+import { Serializable, Serialized } from '../load/serializable.js';
 import { getRecordId } from '../utils/nanoid.js';
-import { isNotNull } from '../utils/safeTypes.js';
+import { isNotNull, Writeable } from '../utils/safeTypes.js';
 import { GraphComment } from './comments/index.js';
 import { DataType } from './data.js';
 import { NodeImpl } from './nodes/base.js';
@@ -12,7 +12,6 @@ import {
   NodePortFields,
   SerializableNode,
 } from './nodes/index.js';
-import { GraphNode } from './nodes/utility/graph.node.js';
 import { GuardrailRegistration } from './registration/guardrails.js';
 import { globalNodeRegistry, NodeRegistration } from './registration/nodes.js';
 import { GraphScheduler } from './scheduler.js';
@@ -452,8 +451,8 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
           flattenConnections: subFlattenConnections,
         } = BaseGraph.flattenGraph(
           node.id,
-          (node as GraphNode).data.nodes,
-          (node as GraphNode).data.connections
+          (node as any).data.nodes,
+          (node as any).data.connections
         );
 
         flattenNodes = [...flattenNodes, ...subFlattenNodes];
@@ -776,6 +775,16 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
       description: this.description,
       nodes: serializedNodes,
     };
+  }
+
+  toJSON(): Serialized {
+    if (this._kwargs['registry']) {
+      delete this._kwargs['registry'];
+    }
+
+    (this.registry as Writeable<this['registry']>) = undefined!;
+
+    return super.toJSON();
   }
 
   /**

@@ -10,6 +10,11 @@ import {
   TextSplitter,
   TokenTextSplitter,
 } from '../../../events/input/transform/splitter.js';
+import { load } from '../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../load/registration.js';
 import { CallableConfig } from '../../../record/callable.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { Data, scalarDefaults } from '../../data.js';
@@ -18,6 +23,7 @@ import {
   ProcessContext,
   ProcessOutputMap,
 } from '../../processor.js';
+import { SerializedNode } from '../../serde.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { CallableNodeImpl } from '../base.js';
 import { CallableNode } from '../index.js';
@@ -35,6 +41,45 @@ export type SplitterNode = CallableNode<'splitter', ContextSplitter>;
  * functionalities for data splitting.
  */
 export abstract class SplitterNodeImpl extends CallableNodeImpl<SplitterNode> {
+  /**
+   * Deserializes a serialized splitter node representation into an executable splitter node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized splitter node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<SplitterNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'text':
+        return TextSplitterNodeImpl.deserialize(serialized);
+      case 'paragraph':
+        return RecursiveTextSplitterNodeImpl.deserialize(serialized);
+      case 'cpp': 
+      case 'go': 
+      case 'java': 
+      case 'js': 
+      case 'php': 
+      case 'proto': 
+      case 'python': 
+      case 'rst': 
+      case 'ruby': 
+      case 'rust': 
+      case 'scala': 
+      case 'swift': 
+      case 'markdown': 
+      case 'latex': 
+      case 'html': 
+      case 'sol':
+        return LanguageTextSplitterNodeImpl.deserialize(serialized);
+      case 'token':
+        return TokenTextSplitterNodeImpl.deserialize(serialized);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
   /**
    * Preprocesses the input data to ensure it is in a valid format for splitting.
    * This step ensures that the input data is a string, a single context, or an array of contexts.
@@ -206,6 +251,47 @@ export class TextSplitterNodeImpl extends SplitterNodeImpl {
 
     return node;
   }
+
+  static async deserialize(serialized: SerializedNode): Promise<SplitterNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'splitter') {
+      throw new Error(`CANNOT deserialize this type in splitter node: ${type}`);
+    }
+
+    const splitterStr = JSON.stringify(data);
+    const splitter = await load<TextSplitter>(
+      splitterStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: splitter,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
 }
 
 /**
@@ -286,6 +372,47 @@ export class RecursiveTextSplitterNodeImpl extends SplitterNodeImpl {
       RecursiveTextSplitterNodeImpl.nodeFrom(textSplitter);
 
     return node;
+  }
+
+  static async deserialize(serialized: SerializedNode): Promise<SplitterNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'splitter') {
+      throw new Error(`CANNOT deserialize this type in splitter node: ${type}`);
+    }
+
+    const splitterStr = JSON.stringify(data);
+    const splitter = await load<RecursiveTextSplitter>(
+      splitterStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: splitter,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }
 
@@ -372,6 +499,54 @@ export class LanguageTextSplitterNodeImpl extends SplitterNodeImpl {
 
     return node;
   }
+
+  /**
+   * Deserializes a serialized splitter node representation into an executable splitter node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized splitter node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<SplitterNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'splitter') {
+      throw new Error(`CANNOT deserialize this type in splitter node: ${type}`);
+    }
+
+    const splitterStr = JSON.stringify(data);
+    const splitter = await load<RecursiveTextSplitter>(
+      splitterStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: splitter,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
 }
 
 /**
@@ -445,5 +620,53 @@ export class TokenTextSplitterNodeImpl extends SplitterNodeImpl {
       TokenTextSplitterNodeImpl.nodeFrom(tokenSplitter);
 
     return node;
+  }
+
+  /**
+   * Deserializes a serialized splitter node representation into an executable splitter node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized splitter node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<SplitterNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'splitter') {
+      throw new Error(`CANNOT deserialize this type in splitter node: ${type}`);
+    }
+
+    const splitterStr = JSON.stringify(data);
+    const splitter = await load<TokenTextSplitter>(
+      splitterStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: splitter,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
   }
 }

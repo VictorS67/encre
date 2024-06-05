@@ -2,7 +2,7 @@ import { BaseRuleCollection } from '../../../events/input/load/rules/base.js';
 import { load } from '../../../load/index.js';
 import { RecordId } from '../../../load/keymap.js';
 import {
-  globalImportMap,
+  // globalImportMap,
   globalSecretMap,
 } from '../../../load/registration.js';
 import { SerializedConstructor } from '../../../load/serializable.js';
@@ -52,6 +52,34 @@ export type IfNode = CallableNode<'if', BaseIfCondition>;
  * for handling conditions based on configured rules and actions.
  */
 export abstract class IfNodeImpl extends CallableNodeImpl<IfNode> {
+  /**
+   * Deserializes a serialized if node representation into an executable if node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @param values Additional values that might be used during deserialization.
+   * @param registry Optional registry containing additional configurations such as node types and guardrails.
+   * @returns A promise resolving to a deserialized if node.
+   * @throws Error if the node type is not compatible with if operations.
+   */
+  static async deserialize(
+    serialized: SerializedNode,
+    values: Record<string, unknown> = {},
+    registry?: {
+      nodes?: NodeRegistration;
+      guardrails?: GuardrailRegistration;
+    }
+  ): Promise<IfNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'condition':
+        return IfConditionNodeImpl.deserialize(serialized, values, registry);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
   /**
    * Retrieves a dynamic user interface representation of the condition,
    * typically used for configuring the node in a user interface.
@@ -354,11 +382,7 @@ export class IfConditionNodeImpl extends IfNodeImpl {
 
     (data as SerializedConstructor)._kwargs['registry'] = registry?.guardrails;
     const ifConditionStr = JSON.stringify(data);
-    const ifCondition = await load<IfCondition>(
-      ifConditionStr,
-      globalSecretMap,
-      globalImportMap
-    );
+    const ifCondition = await load<IfCondition>(ifConditionStr);
 
     return {
       id,
@@ -485,12 +509,12 @@ export class IfConditionNodeImpl extends IfNodeImpl {
    *
    * @returns A unique port name that is not already used in the node's inputs or outputs.
    * @internal
-   * 
+   *
    * @example
    * // Example of generating a new unique port name when adding a new port
    * const newPortName = ifNodeInstance._getNewPortName(); // suppose new name is 'A'
    * const anotherNewPortName = ifNodeInstance._getNewPortName(); // now new name is 'B'
-   * 
+   *
    */
   private _getNewPortName(): string {
     const existingPortNames: string[] = Object.keys(this.inputs ?? {}).concat(

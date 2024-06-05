@@ -59,4 +59,5 @@ export * as studio_registration_nodes from '../studio/registration/nodes.js';
 export * as studio_utils_coerce from '../studio/utils/coerce.js';
 export * as studio_utils_display from '../studio/utils/display.js';
 export * as studio_utils_load from '../studio/utils/load.js';
+export * as studio_utils_save from '../studio/utils/save.js';
 export * as utils_nanoid from '../utils/nanoid.js';

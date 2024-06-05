@@ -1,4 +1,3 @@
-import { threadId } from 'worker_threads';
 import { BaseRule } from '../../events/inference/validate/guardrails/base.js';
 import { ValidateFunc } from '../../events/inference/validate/index.js';
 import { RecordId } from '../../load/keymap.js';
