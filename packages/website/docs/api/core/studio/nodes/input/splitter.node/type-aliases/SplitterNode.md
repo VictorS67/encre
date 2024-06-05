@@ -8,4 +8,4 @@ particularly in scenarios where input data needs to be divided into manageable p
 
 ## Source
 
-[packages/core/src/studio/nodes/input/splitter.node.ts:30](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/input/splitter.node.ts#L30)
+[packages/core/src/studio/nodes/input/splitter.node.ts:36](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/splitter.node.ts#L36)

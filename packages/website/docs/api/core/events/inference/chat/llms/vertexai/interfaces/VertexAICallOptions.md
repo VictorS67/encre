@@ -22,7 +22,7 @@ If not provided, the default regionalized endpoint
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:15](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L15)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:15](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L15)
 
 ***
 
@@ -38,7 +38,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L56)
+[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L56)
 
 ***
 
@@ -54,7 +54,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L51)
+[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L51)
 
 ***
 
@@ -70,7 +70,7 @@ The name of the callable, used for identification or logging. not-implemented ye
 
 #### Source
 
-[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L41)
+[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L41)
 
 ***
 
@@ -86,7 +86,7 @@ Optional abort signal to cancel the request prematurely.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:44](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L44)
+[packages/core/src/events/inference/chat/base.ts:44](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L44)
 
 ***
 
@@ -102,7 +102,7 @@ Optional array of tokens that should stop the language model's generation.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:34](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L34)
+[packages/core/src/events/inference/chat/base.ts:34](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L34)
 
 ***
 
@@ -118,7 +118,7 @@ An array of strings used for categorizing or filtering callables. not-implemente
 
 #### Source
 
-[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L46)
+[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L46)
 
 ***
 
@@ -134,7 +134,7 @@ Maximum time in milliseconds to wait for a response from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:39](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L39)
+[packages/core/src/events/inference/chat/base.ts:39](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L39)
 
 ***
 
@@ -155,4 +155,4 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L23)
+[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L23)

@@ -19,7 +19,7 @@ Optional metadata associated with the page content, providing additional informa
 
 #### Source
 
-[packages/core/src/events/input/load/docs/context.ts:16](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/docs/context.ts#L16)
+[packages/core/src/events/input/load/docs/context.ts:16](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/docs/context.ts#L16)
 
 ***
 
@@ -31,4 +31,4 @@ The main content of the page, typically as a string.
 
 #### Source
 
-[packages/core/src/events/input/load/docs/context.ts:11](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/docs/context.ts#L11)
+[packages/core/src/events/input/load/docs/context.ts:11](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/docs/context.ts#L11)

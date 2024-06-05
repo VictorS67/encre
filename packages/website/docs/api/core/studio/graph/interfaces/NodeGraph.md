@@ -10,7 +10,7 @@ Optional comments associated with the graph, for user notes or documentation pur
 
 #### Source
 
-[packages/core/src/studio/graph.ts:54](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L54)
+[packages/core/src/studio/graph.ts:53](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L53)
 
 ***
 
@@ -23,7 +23,7 @@ Connections can be connected to/from `SubGraphNode`.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:49](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L49)
+[packages/core/src/studio/graph.ts:48](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L48)
 
 ***
 
@@ -35,7 +35,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:35](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L35)
+[packages/core/src/studio/graph.ts:34](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L34)
 
 ***
 
@@ -47,7 +47,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:25](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L25)
+[packages/core/src/studio/graph.ts:24](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L24)
 
 ***
 
@@ -60,7 +60,7 @@ derived from `SerializableNode`, including `SubGraphNode`.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:43](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L43)
+[packages/core/src/studio/graph.ts:42](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L42)
 
 ***
 
@@ -70,7 +70,7 @@ derived from `SerializableNode`, including `SubGraphNode`.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:37](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L37)
+[packages/core/src/studio/graph.ts:36](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L36)
 
 ***
 
@@ -82,4 +82,4 @@ Human-readable title for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:30](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L30)
+[packages/core/src/studio/graph.ts:29](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L29)

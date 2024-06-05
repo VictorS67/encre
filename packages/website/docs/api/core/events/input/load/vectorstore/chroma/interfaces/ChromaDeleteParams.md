@@ -32,7 +32,7 @@ Optional. A filter defining which vectors to delete based on their metadata and 
 
 #### Source
 
-[packages/core/src/events/input/load/vectorstore/chroma.ts:87](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/vectorstore/chroma.ts#L87)
+[packages/core/src/events/input/load/vectorstore/chroma.ts:87](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/vectorstore/chroma.ts#L87)
 
 ***
 
@@ -44,4 +44,4 @@ Optional. Array of vector IDs to delete.
 
 #### Source
 
-[packages/core/src/events/input/load/vectorstore/chroma.ts:82](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/vectorstore/chroma.ts#L82)
+[packages/core/src/events/input/load/vectorstore/chroma.ts:82](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/vectorstore/chroma.ts#L82)

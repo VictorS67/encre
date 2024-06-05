@@ -44,7 +44,7 @@ Constructs a new instance of a rule with the specified fields.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:116](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L116)
+[packages/core/src/events/inference/validate/guardrails/base.ts:116](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L116)
 
 ## Properties
 
@@ -60,7 +60,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:21](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L21)
+[packages/core/src/events/inference/validate/guardrails/array.ts:21](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L21)
 
 ***
 
@@ -76,7 +76,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -92,7 +92,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:59](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L59)
+[packages/core/src/events/inference/validate/guardrails/base.ts:59](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L59)
 
 ***
 
@@ -108,7 +108,7 @@ A human-readable description of what the rule checks or enforces.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:70](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L70)
+[packages/core/src/events/inference/validate/guardrails/base.ts:70](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L70)
 
 ***
 
@@ -124,7 +124,7 @@ Optional track-back metadata of rules that are used for merging to the current r
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:80](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L80)
+[packages/core/src/events/inference/validate/guardrails/base.ts:80](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L80)
 
 ***
 
@@ -140,7 +140,7 @@ An optional set of variables that can be used within the rule's validation funct
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:75](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L75)
+[packages/core/src/events/inference/validate/guardrails/base.ts:75](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L75)
 
 ## Accessors
 
@@ -158,7 +158,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L217)
+[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L217)
 
 ***
 
@@ -176,7 +176,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:208](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L208)
+[packages/core/src/load/serializable.ts:208](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L208)
 
 ***
 
@@ -194,7 +194,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -212,7 +212,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L199)
+[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L199)
 
 ***
 
@@ -236,7 +236,7 @@ Sets the validation function, with conversion from string format if necessary.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:92](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L92)
+[packages/core/src/events/inference/validate/guardrails/base.ts:92](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L92)
 
 ## Methods
 
@@ -258,7 +258,7 @@ The type identifier for this rule class.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:31](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L31)
+[packages/core/src/events/inference/validate/guardrails/array.ts:31](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L31)
 
 ***
 
@@ -292,7 +292,7 @@ variables in the function
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:447](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L447)
+[packages/core/src/events/inference/validate/guardrails/base.ts:447](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L447)
 
 ***
 
@@ -328,7 +328,7 @@ A new `ArrayRule` instance representing the combined rule.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L41)
+[packages/core/src/events/inference/validate/guardrails/array.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L41)
 
 ***
 
@@ -362,7 +362,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L430)
+[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L430)
 
 ***
 
@@ -384,19 +384,19 @@ A formatted description with variable values substituted.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:212](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L212)
+[packages/core/src/events/inference/validate/guardrails/base.ts:212](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L212)
 
 ***
 
 ### serialize()
 
-> **serialize**(): [`SerializedRule`](../../../../../../studio/serde/type-aliases/SerializedRule.md)
+> **serialize**(): [`SerializedRule`](../../../../../../studio/serde/interfaces/SerializedRule.md)
 
 Serializes the rule into a structured format for storage or transmission.
 
 #### Returns
 
-[`SerializedRule`](../../../../../../studio/serde/type-aliases/SerializedRule.md)
+[`SerializedRule`](../../../../../../studio/serde/interfaces/SerializedRule.md)
 
 A `SerializedRule` object containing the serialized state.
 
@@ -406,7 +406,7 @@ A `SerializedRule` object containing the serialized state.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:190](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L190)
+[packages/core/src/events/inference/validate/guardrails/base.ts:190](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L190)
 
 ***
 
@@ -428,7 +428,7 @@ A new `CallableLambda` based on the rule's validation function.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:264](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L264)
+[packages/core/src/events/inference/validate/guardrails/base.ts:264](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L264)
 
 ***
 
@@ -450,7 +450,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L665)
 
 ***
 
@@ -486,7 +486,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -508,7 +508,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -536,7 +536,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -568,7 +568,7 @@ A promise that resolves to true if the input is valid according to the rule.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:274](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L274)
+[packages/core/src/events/inference/validate/guardrails/base.ts:274](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L274)
 
 ***
 
@@ -606,7 +606,7 @@ merged rule description.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:312](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L312)
+[packages/core/src/events/inference/validate/guardrails/base.ts:312](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L312)
 
 ***
 
@@ -644,7 +644,7 @@ merged rule functions.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:388](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L388)
+[packages/core/src/events/inference/validate/guardrails/base.ts:388](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L388)
 
 ***
 
@@ -682,7 +682,7 @@ the trace-back metadata..
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:425](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L425)
+[packages/core/src/events/inference/validate/guardrails/base.ts:425](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L425)
 
 ***
 
@@ -716,7 +716,7 @@ merged rule variables.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/base.ts:364](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/base.ts#L364)
+[packages/core/src/events/inference/validate/guardrails/base.ts:364](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/base.ts#L364)
 
 ***
 
@@ -736,7 +736,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L23)
+[packages/core/src/events/inference/validate/guardrails/array.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L23)
 
 ***
 
@@ -769,7 +769,7 @@ console.log(containsRule.func([4, 5, 6])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:215](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L215)
+[packages/core/src/events/inference/validate/guardrails/array.ts:215](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L215)
 
 ***
 
@@ -781,7 +781,7 @@ Deserializes a serialized rule object into an `ArrayRule` instance.
 
 #### Parameters
 
-• **serialized**: [`SerializedRule`](../../../../../../studio/serde/type-aliases/SerializedRule.md)
+• **serialized**: [`SerializedRule`](../../../../../../studio/serde/interfaces/SerializedRule.md)
 
 The serialized rule data.
 
@@ -801,7 +801,7 @@ A promise that resolves to a new instance of `ArrayRule`.
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:71](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L71)
+[packages/core/src/events/inference/validate/guardrails/array.ts:71](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L71)
 
 ***
 
@@ -834,7 +834,7 @@ console.log(doesNotContainRule.func([1, 2, 3])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:235](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L235)
+[packages/core/src/events/inference/validate/guardrails/array.ts:235](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L235)
 
 ***
 
@@ -861,7 +861,7 @@ console.log(doesNotExistRule.func([1, 2, 3])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:114](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L114)
+[packages/core/src/events/inference/validate/guardrails/array.ts:114](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L114)
 
 ***
 
@@ -888,7 +888,7 @@ console.log(existsRule.func(undefined)); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:96](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L96)
+[packages/core/src/events/inference/validate/guardrails/array.ts:96](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L96)
 
 ***
 
@@ -922,7 +922,7 @@ console.log(isNotEqualRule.func([1, 2, 3])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:175](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L175)
+[packages/core/src/events/inference/validate/guardrails/array.ts:175](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L175)
 
 ***
 
@@ -956,7 +956,7 @@ console.log(isEqualRule.func([1, 2])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:134](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L134)
+[packages/core/src/events/inference/validate/guardrails/array.ts:134](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L134)
 
 ***
 
@@ -989,7 +989,7 @@ console.log(lengthEqualRule.func([1, 2])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:255](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L255)
+[packages/core/src/events/inference/validate/guardrails/array.ts:255](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L255)
 
 ***
 
@@ -1022,7 +1022,7 @@ console.log(lengthGreaterThanRule.func([1])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:295](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L295)
+[packages/core/src/events/inference/validate/guardrails/array.ts:295](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L295)
 
 ***
 
@@ -1055,7 +1055,7 @@ console.log(lengthGreaterThanOrEqualRule.func([1, 2])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:335](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L335)
+[packages/core/src/events/inference/validate/guardrails/array.ts:335](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L335)
 
 ***
 
@@ -1088,7 +1088,7 @@ console.log(lengthLessThanRule.func([1, 2, 3])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:315](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L315)
+[packages/core/src/events/inference/validate/guardrails/array.ts:315](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L315)
 
 ***
 
@@ -1121,7 +1121,7 @@ console.log(lengthLessThanOrEqualRule.func([1, 2, 3])); // Outputs: false
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:355](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L355)
+[packages/core/src/events/inference/validate/guardrails/array.ts:355](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L355)
 
 ***
 
@@ -1154,4 +1154,4 @@ console.log(lengthNotEqualRule.func([1, 2, 3, 4])); // Outputs: true
 
 #### Source
 
-[packages/core/src/events/inference/validate/guardrails/array.ts:275](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/guardrails/array.ts#L275)
+[packages/core/src/events/inference/validate/guardrails/array.ts:275](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/guardrails/array.ts#L275)

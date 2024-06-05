@@ -43,7 +43,7 @@ console.log(response);
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:169](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L169)
+[packages/core/src/events/embeddings/openai.ts:169](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L169)
 
 ## Properties
 
@@ -57,7 +57,7 @@ OpenAI API Client.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:161](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L161)
+[packages/core/src/events/embeddings/openai.ts:161](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L161)
 
 ***
 
@@ -71,7 +71,7 @@ OpenAI API request options.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:167](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L167)
+[packages/core/src/events/embeddings/openai.ts:167](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L167)
 
 ***
 
@@ -87,7 +87,7 @@ Indicates if the instance is callable. If false, then the callable cannot be inv
 
 #### Source
 
-[packages/core/src/record/callable.ts:188](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L188)
+[packages/core/src/record/callable.ts:188](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L188)
 
 ***
 
@@ -103,7 +103,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:85](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L85)
+[packages/core/src/events/embeddings/openai.ts:85](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L85)
 
 ***
 
@@ -119,7 +119,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -135,7 +135,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/events/base.ts:44](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L44)
+[packages/core/src/events/base.ts:44](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L44)
 
 ***
 
@@ -155,7 +155,7 @@ Cache instance to store and retrieve results for given string.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:61](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L61)
+[packages/core/src/events/embeddings/base.ts:61](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L61)
 
 ***
 
@@ -177,7 +177,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/events/base.ts:79](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L79)
+[packages/core/src/events/base.ts:79](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L79)
 
 ***
 
@@ -194,7 +194,7 @@ which will thus benefit from the concurrency and retry logic.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L56)
+[packages/core/src/events/embeddings/base.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L56)
 
 ***
 
@@ -211,7 +211,7 @@ Only supported in `text-embedding-3` and later models.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:120](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L120)
+[packages/core/src/events/embeddings/openai.ts:120](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L120)
 
 ***
 
@@ -228,7 +228,7 @@ Defaults to 2.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:134](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L134)
+[packages/core/src/events/embeddings/openai.ts:134](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L134)
 
 ***
 
@@ -244,7 +244,7 @@ The max number of retries that can be made for a single call.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:139](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L139)
+[packages/core/src/events/embeddings/openai.ts:139](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L139)
 
 ***
 
@@ -264,7 +264,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/events/base.ts:74](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L74)
+[packages/core/src/events/base.ts:74](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L74)
 
 ***
 
@@ -282,7 +282,7 @@ API to see all of your avaliable models, or see our
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:114](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L114)
+[packages/core/src/events/embeddings/openai.ts:114](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L114)
 
 ***
 
@@ -306,7 +306,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:61](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L61)
+[packages/core/src/events/base.ts:61](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L61)
 
 ***
 
@@ -323,7 +323,7 @@ API key to use when making requests to OpenAI. Defaults to the value of
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:150](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L150)
+[packages/core/src/events/embeddings/openai.ts:150](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L150)
 
 ***
 
@@ -335,7 +335,7 @@ Identifier for organization sometimes used in API requests。
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:155](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L155)
+[packages/core/src/events/embeddings/openai.ts:155](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L155)
 
 ***
 
@@ -359,7 +359,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:69](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L69)
+[packages/core/src/events/base.ts:69](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L69)
 
 ***
 
@@ -375,7 +375,7 @@ Timeout for the API requests.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:144](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L144)
+[packages/core/src/events/embeddings/openai.ts:144](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L144)
 
 ***
 
@@ -394,7 +394,7 @@ and detect abuse.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:128](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L128)
+[packages/core/src/events/embeddings/openai.ts:128](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L128)
 
 ***
 
@@ -419,7 +419,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:53](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L53)
+[packages/core/src/events/base.ts:53](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L53)
 
 ## Accessors
 
@@ -437,7 +437,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:94](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L94)
+[packages/core/src/events/embeddings/openai.ts:94](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L94)
 
 ***
 
@@ -455,7 +455,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/base.ts:81](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L81)
+[packages/core/src/events/base.ts:81](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L81)
 
 ***
 
@@ -473,7 +473,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -491,7 +491,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:87](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L87)
+[packages/core/src/events/embeddings/openai.ts:87](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L87)
 
 ## Methods
 
@@ -533,7 +533,7 @@ console.log(result.embedding);
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:259](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L259)
+[packages/core/src/events/embeddings/openai.ts:259](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L259)
 
 ***
 
@@ -567,7 +567,7 @@ The result from the language model embeddings.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L168)
+[packages/core/src/events/embeddings/base.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L168)
 
 ***
 
@@ -587,7 +587,7 @@ Returns the type of the embeddings.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:105](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L105)
+[packages/core/src/events/embeddings/openai.ts:105](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L105)
 
 ***
 
@@ -605,7 +605,7 @@ Returns the type of the embeddings.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:63](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L63)
+[packages/core/src/events/embeddings/base.ts:63](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L63)
 
 ***
 
@@ -635,7 +635,7 @@ The generated key.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:223](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L223)
+[packages/core/src/events/embeddings/base.ts:223](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L223)
 
 ***
 
@@ -662,7 +662,7 @@ The combined request options.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:319](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L319)
+[packages/core/src/events/embeddings/openai.ts:319](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L319)
 
 ***
 
@@ -686,7 +686,7 @@ A record of identified parameters.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:236](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L236)
+[packages/core/src/events/embeddings/openai.ts:236](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L236)
 
 ***
 
@@ -721,7 +721,7 @@ An async generator yielding callable outputs.
 
 #### Source
 
-[packages/core/src/record/callable.ts:429](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L429)
+[packages/core/src/record/callable.ts:429](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L429)
 
 ***
 
@@ -757,7 +757,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:368](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L368)
+[packages/core/src/record/callable.ts:368](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L368)
 
 #### batch(inputs, options, batchOptions)
 
@@ -781,7 +781,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:374](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L374)
+[packages/core/src/record/callable.ts:374](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L374)
 
 #### batch(inputs, options, batchOptions)
 
@@ -805,7 +805,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:380](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L380)
+[packages/core/src/record/callable.ts:380](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L380)
 
 ***
 
@@ -834,7 +834,7 @@ A new [CallableBind](../../../../record/callable/classes/CallableBind.md) instan
 
 #### Source
 
-[packages/core/src/record/callable.ts:343](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L343)
+[packages/core/src/record/callable.ts:343](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L343)
 
 ***
 
@@ -871,7 +871,7 @@ console.log(response.data[0].embedding);
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:300](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L300)
+[packages/core/src/events/embeddings/openai.ts:300](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L300)
 
 ***
 
@@ -908,7 +908,7 @@ The result from the language model embeddings.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:111](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L111)
+[packages/core/src/events/embeddings/base.ts:111](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L111)
 
 ***
 
@@ -954,7 +954,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/record/callable.ts:511](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L511)
+[packages/core/src/record/callable.ts:511](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L511)
 
 ***
 
@@ -985,7 +985,7 @@ An object containing the necessary parameters for the OpenAI API request,
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:225](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L225)
+[packages/core/src/events/embeddings/openai.ts:225](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L225)
 
 ***
 
@@ -1018,7 +1018,7 @@ A promise that resolves to a vector for the query document.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:93](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L93)
+[packages/core/src/events/embeddings/base.ts:93](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L93)
 
 ***
 
@@ -1041,7 +1041,7 @@ A new [CallableEach](../../../../record/callable/classes/CallableEach.md) instan
 
 #### Source
 
-[packages/core/src/record/callable.ts:355](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L355)
+[packages/core/src/record/callable.ts:355](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L355)
 
 ***
 
@@ -1074,7 +1074,7 @@ A new [CallableSequence](../../../../record/callable/classes/CallableSequence.md
 
 #### Source
 
-[packages/core/src/record/callable.ts:460](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L460)
+[packages/core/src/record/callable.ts:460](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L460)
 
 ***
 
@@ -1107,7 +1107,7 @@ A promise that resolves to a readable stream of callable outputs.
 
 #### Source
 
-[packages/core/src/record/callable.ts:444](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L444)
+[packages/core/src/record/callable.ts:444](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L444)
 
 ***
 
@@ -1129,7 +1129,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L665)
 
 ***
 
@@ -1165,7 +1165,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -1187,7 +1187,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -1215,7 +1215,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -1244,7 +1244,7 @@ A new [CallableBind](../../../../record/callable/classes/CallableBind.md) instan
 
 #### Source
 
-[packages/core/src/record/callable.ts:314](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L314)
+[packages/core/src/record/callable.ts:314](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L314)
 
 ***
 
@@ -1275,7 +1275,7 @@ A new [CallableWithFallbacks](../../../../record/callable/classes/CallableWithFa
 
 #### Source
 
-[packages/core/src/record/callable.ts:327](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L327)
+[packages/core/src/record/callable.ts:327](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L327)
 
 ***
 
@@ -1295,7 +1295,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:101](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L101)
+[packages/core/src/events/embeddings/openai.ts:101](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L101)
 
 ***
 
@@ -1323,4 +1323,4 @@ True if the object is an instance of Callable, false otherwise.
 
 #### Source
 
-[packages/core/src/record/callable.ts:196](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L196)
+[packages/core/src/record/callable.ts:196](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L196)

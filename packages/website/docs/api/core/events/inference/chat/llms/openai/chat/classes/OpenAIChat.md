@@ -54,7 +54,7 @@ Configuration options for the OpenAI client and chat behavior.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:272](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L272)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:272](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L272)
 
 ## Properties
 
@@ -68,7 +68,7 @@ OpenAI API Client.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:252](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L252)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:252](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L252)
 
 ***
 
@@ -82,7 +82,7 @@ OpenAI API request options.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:258](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L258)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:258](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L258)
 
 ***
 
@@ -98,7 +98,7 @@ Indicates if the instance is callable. If false, then the callable cannot be inv
 
 #### Source
 
-[packages/core/src/record/callable.ts:188](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L188)
+[packages/core/src/record/callable.ts:188](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L188)
 
 ***
 
@@ -112,7 +112,7 @@ Whether the model supports vision (i.e. multimodal)
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:264](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L264)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:264](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L264)
 
 ***
 
@@ -128,7 +128,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:69](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L69)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:69](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L69)
 
 ***
 
@@ -144,7 +144,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -160,7 +160,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/events/base.ts:44](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L44)
+[packages/core/src/events/base.ts:44](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L44)
 
 ***
 
@@ -178,7 +178,7 @@ that are not explicitly specified on this class.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:227](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L227)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:227](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L227)
 
 ***
 
@@ -194,7 +194,7 @@ Cache instance to store and retrieve results for given prompts.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:93](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L93)
+[packages/core/src/events/inference/chat/base.ts:93](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L93)
 
 ***
 
@@ -212,7 +212,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/events/base.ts:79](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L79)
+[packages/core/src/events/base.ts:79](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L79)
 
 ***
 
@@ -228,7 +228,7 @@ Instance responsible for making asynchronous calls.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:88](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L88)
+[packages/core/src/events/inference/chat/base.ts:88](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L88)
 
 ***
 
@@ -244,7 +244,7 @@ ChatGPT messages to pass as a prefix to the prompt
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:241](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L241)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:241](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L241)
 
 ***
 
@@ -264,7 +264,7 @@ repeat the same line verbatim.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:104](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L104)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:104](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L104)
 
 ***
 
@@ -292,7 +292,7 @@ from being generated.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:197](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L197)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:197](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L197)
 
 ***
 
@@ -315,7 +315,7 @@ or counting tokens.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:144](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L144)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:144](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L144)
 
 ***
 
@@ -331,7 +331,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/events/base.ts:74](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L74)
+[packages/core/src/events/base.ts:74](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L74)
 
 ***
 
@@ -349,7 +349,7 @@ for descriptions of them.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:95](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L95)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:95](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L95)
 
 ***
 
@@ -369,7 +369,7 @@ settings for `maxTokens` and `stopWords`.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:162](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L162)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:162](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L162)
 
 ***
 
@@ -389,7 +389,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:61](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L61)
+[packages/core/src/events/base.ts:61](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L61)
 
 ***
 
@@ -406,7 +406,7 @@ API key to use when making requests to OpenAI. Defaults to the value of
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:238](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L238)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:238](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L238)
 
 ***
 
@@ -418,7 +418,7 @@ Identifier for organization sometimes used in API requests。
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:246](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L246)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:246](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L246)
 
 ***
 
@@ -438,7 +438,7 @@ talk about new topics.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:113](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L113)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:113](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L113)
 
 ***
 
@@ -467,7 +467,7 @@ max context length.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:180](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L180)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:180](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L180)
 
 ***
 
@@ -487,7 +487,7 @@ in the backend.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:206](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L206)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:206](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L206)
 
 ***
 
@@ -504,7 +504,7 @@ returned text will not contain the stop sequence.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:212](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L212)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:212](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L212)
 
 ***
 
@@ -525,7 +525,7 @@ message.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:123](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L123)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:123](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L123)
 
 ***
 
@@ -545,7 +545,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:69](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L69)
+[packages/core/src/events/base.ts:69](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L69)
 
 ***
 
@@ -565,7 +565,7 @@ We generally recommend altering this or `topP` but not both.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:132](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L132)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:132](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L132)
 
 ***
 
@@ -581,7 +581,7 @@ Timeout to use when making requests to OpenAI.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:232](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L232)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:232](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L232)
 
 ***
 
@@ -601,7 +601,7 @@ We generally recommend altering this or `temperature` but not both.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:153](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L153)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:153](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L153)
 
 ***
 
@@ -620,7 +620,7 @@ and detect abuse.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:220](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L220)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:220](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L220)
 
 ***
 
@@ -641,7 +641,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:53](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L53)
+[packages/core/src/events/base.ts:53](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L53)
 
 ## Accessors
 
@@ -659,7 +659,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:78](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L78)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:78](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L78)
 
 ***
 
@@ -677,7 +677,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/base.ts:81](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L81)
+[packages/core/src/events/base.ts:81](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L81)
 
 ***
 
@@ -695,7 +695,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -713,7 +713,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:71](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L71)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:71](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L71)
 
 ## Methods
 
@@ -748,7 +748,7 @@ An async generator that yields chat generation chunks as they arrive from the AP
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:577](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L577)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:577](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L577)
 
 ***
 
@@ -768,7 +768,7 @@ A predefined namespace array to identify the type of language model and other re
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:415](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L415)
+[packages/core/src/events/inference/chat/base.ts:415](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L415)
 
 ***
 
@@ -794,7 +794,7 @@ The error encountered during an attempt.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:354](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L354)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:354](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L354)
 
 ***
 
@@ -824,7 +824,7 @@ The generated key.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:185](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L185)
+[packages/core/src/events/inference/chat/base.ts:185](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L185)
 
 ***
 
@@ -851,7 +851,7 @@ The complete request options for API calls.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:1168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1168)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:1168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1168)
 
 ***
 
@@ -875,7 +875,7 @@ A record of identified parameters.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:175](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L175)
+[packages/core/src/events/inference/chat/base.ts:175](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L175)
 
 ***
 
@@ -897,7 +897,7 @@ The type of LLM.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:350](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L350)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:350](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L350)
 
 ***
 
@@ -919,7 +919,7 @@ The type of the model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:427](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L427)
+[packages/core/src/events/inference/chat/base.ts:427](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L427)
 
 ***
 
@@ -966,7 +966,7 @@ console.log(result);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:417](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L417)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:417](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L417)
 
 ***
 
@@ -998,7 +998,7 @@ The result from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:527](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L527)
+[packages/core/src/events/inference/chat/base.ts:527](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L527)
 
 ***
 
@@ -1026,7 +1026,7 @@ A tuple containing callable options and serialized options.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:548](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L548)
+[packages/core/src/events/inference/chat/base.ts:548](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L548)
 
 ***
 
@@ -1061,7 +1061,7 @@ An async generator yielding callable outputs.
 
 #### Source
 
-[packages/core/src/record/callable.ts:429](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L429)
+[packages/core/src/record/callable.ts:429](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L429)
 
 ***
 
@@ -1097,7 +1097,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:368](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L368)
+[packages/core/src/record/callable.ts:368](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L368)
 
 #### batch(inputs, options, batchOptions)
 
@@ -1121,7 +1121,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:374](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L374)
+[packages/core/src/record/callable.ts:374](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L374)
 
 #### batch(inputs, options, batchOptions)
 
@@ -1145,7 +1145,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:380](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L380)
+[packages/core/src/record/callable.ts:380](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L380)
 
 ***
 
@@ -1174,7 +1174,7 @@ A new [CallableBind](../../../../../../../record/callable/classes/CallableBind.m
 
 #### Source
 
-[packages/core/src/record/callable.ts:343](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L343)
+[packages/core/src/record/callable.ts:343](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L343)
 
 ***
 
@@ -1230,7 +1230,7 @@ try {
 
 ##### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:658](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L658)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:658](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L658)
 
 #### completionWithRetry(request, options)
 
@@ -1248,7 +1248,7 @@ try {
 
 ##### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:663](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L663)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:663](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L663)
 
 ***
 
@@ -1294,7 +1294,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/record/callable.ts:511](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L511)
+[packages/core/src/record/callable.ts:511](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L511)
 
 ***
 
@@ -1326,7 +1326,7 @@ An object containing parameters for the OpenAIClient's chat completion
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:368](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L368)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:368](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L368)
 
 ***
 
@@ -1358,7 +1358,7 @@ The output llm result from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:445](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L445)
+[packages/core/src/events/inference/chat/base.ts:445](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L445)
 
 ***
 
@@ -1381,7 +1381,7 @@ A new [CallableEach](../../../../../../../record/callable/classes/CallableEach.m
 
 #### Source
 
-[packages/core/src/record/callable.ts:355](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L355)
+[packages/core/src/record/callable.ts:355](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L355)
 
 ***
 
@@ -1414,7 +1414,7 @@ A new [CallableSequence](../../../../../../../record/callable/classes/CallableSe
 
 #### Source
 
-[packages/core/src/record/callable.ts:460](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L460)
+[packages/core/src/record/callable.ts:460](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L460)
 
 ***
 
@@ -1450,7 +1450,7 @@ The result from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:463](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L463)
+[packages/core/src/events/inference/chat/base.ts:463](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L463)
 
 ***
 
@@ -1483,7 +1483,7 @@ A promise that resolves to a readable stream of callable outputs.
 
 #### Source
 
-[packages/core/src/record/callable.ts:444](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L444)
+[packages/core/src/record/callable.ts:444](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L444)
 
 ***
 
@@ -1505,7 +1505,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L665)
 
 ***
 
@@ -1541,7 +1541,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -1563,7 +1563,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -1591,7 +1591,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -1620,7 +1620,7 @@ A new [CallableBind](../../../../../../../record/callable/classes/CallableBind.m
 
 #### Source
 
-[packages/core/src/record/callable.ts:314](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L314)
+[packages/core/src/record/callable.ts:314](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L314)
 
 ***
 
@@ -1651,7 +1651,7 @@ A new [CallableWithFallbacks](../../../../../../../record/callable/classes/Calla
 
 #### Source
 
-[packages/core/src/record/callable.ts:327](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L327)
+[packages/core/src/record/callable.ts:327](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L327)
 
 ***
 
@@ -1681,7 +1681,7 @@ The corresponding prompt.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:158](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L158)
+[packages/core/src/events/inference/chat/base.ts:158](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L158)
 
 ***
 
@@ -1701,7 +1701,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:86](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L86)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:86](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L86)
 
 ***
 
@@ -1755,7 +1755,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:710](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L710)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:710](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L710)
 
 ***
 
@@ -1794,7 +1794,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:1077](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1077)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:1077](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1077)
 
 ***
 
@@ -1843,7 +1843,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:852](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L852)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:852](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L852)
 
 ***
 
@@ -1882,7 +1882,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:923](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L923)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:923](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L923)
 
 ***
 
@@ -1930,7 +1930,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:1033](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1033)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:1033](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1033)
 
 ***
 
@@ -1978,7 +1978,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:778](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L778)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:778](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L778)
 
 ***
 
@@ -2037,7 +2037,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/openai/chat.ts:1146](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1146)
+[packages/core/src/events/inference/chat/llms/openai/chat.ts:1146](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/openai/chat.ts#L1146)
 
 ***
 
@@ -2065,4 +2065,4 @@ True if the object is an instance of Callable, false otherwise.
 
 #### Source
 
-[packages/core/src/record/callable.ts:196](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L196)
+[packages/core/src/record/callable.ts:196](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L196)

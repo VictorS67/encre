@@ -30,4 +30,4 @@ Optional. Specifies conditions used to filter vectors based on their metadata.
 
 ## Source
 
-[packages/core/src/events/input/load/vectorstore/chroma.ts:102](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/vectorstore/chroma.ts#L102)
+[packages/core/src/events/input/load/vectorstore/chroma.ts:102](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/vectorstore/chroma.ts#L102)

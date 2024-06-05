@@ -48,7 +48,7 @@ console.log(response);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:238](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L238)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:238](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L238)
 
 ## Properties
 
@@ -62,7 +62,7 @@ VertexAI API Client.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:226](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L226)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:226](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L226)
 
 ***
 
@@ -78,7 +78,7 @@ Indicates if the instance is callable. If false, then the callable cannot be inv
 
 #### Source
 
-[packages/core/src/record/callable.ts:188](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L188)
+[packages/core/src/record/callable.ts:188](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L188)
 
 ***
 
@@ -92,7 +92,7 @@ Whether the model supports vision (i.e. multimodal)
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:232](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L232)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:232](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L232)
 
 ***
 
@@ -108,7 +108,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:85](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L85)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:85](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L85)
 
 ***
 
@@ -124,7 +124,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -140,7 +140,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/events/base.ts:44](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L44)
+[packages/core/src/events/base.ts:44](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L44)
 
 ***
 
@@ -157,7 +157,7 @@ VertexAI models that are not explicitly specified on the class.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:211](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L211)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:211](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L211)
 
 ***
 
@@ -173,7 +173,7 @@ Cache instance to store and retrieve results for given prompts.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:93](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L93)
+[packages/core/src/events/inference/chat/base.ts:93](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L93)
 
 ***
 
@@ -191,7 +191,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/events/base.ts:79](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L79)
+[packages/core/src/events/base.ts:79](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L79)
 
 ***
 
@@ -207,7 +207,7 @@ Instance responsible for making asynchronous calls.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:88](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L88)
+[packages/core/src/events/inference/chat/base.ts:88](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L88)
 
 ***
 
@@ -225,7 +225,7 @@ This value must be 1.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:150](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L150)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:150](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L150)
 
 ***
 
@@ -241,7 +241,7 @@ Gemini contents to pass as a prefix to the prompt
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:214](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L214)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:214](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L214)
 
 ***
 
@@ -258,7 +258,7 @@ API key to use when making requests to Gemini. Defaults to the value of
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:197](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L197)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:197](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L197)
 
 ***
 
@@ -283,7 +283,7 @@ Default for gemini-pro-vision: 4096
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:164](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L164)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:164](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L164)
 
 ***
 
@@ -299,7 +299,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/events/base.ts:74](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L74)
+[packages/core/src/events/base.ts:74](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L74)
 
 ***
 
@@ -315,7 +315,7 @@ ID of the model to use. `gemini-pro` or `gemini-pro-vision`
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:106](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L106)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:106](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L106)
 
 ***
 
@@ -335,7 +335,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:61](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L61)
+[packages/core/src/events/base.ts:61](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L61)
 
 ***
 
@@ -348,7 +348,7 @@ attributes and their configured blocking thresholds.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:220](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L220)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:220](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L220)
 
 ***
 
@@ -367,7 +367,7 @@ encountered. The strings are case-sensitive.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:205](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L205)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:205](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L205)
 
 ***
 
@@ -383,7 +383,7 @@ Whether the response comes with stream
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:169](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L169)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:169](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L169)
 
 ***
 
@@ -403,7 +403,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:69](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L69)
+[packages/core/src/events/base.ts:69](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L69)
 
 ***
 
@@ -433,7 +433,7 @@ Default for gemini-pro-vision: 0.4
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:125](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L125)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:125](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L125)
 
 ***
 
@@ -466,7 +466,7 @@ Default for gemini-pro-vision: 32
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:191](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L191)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:191](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L191)
 
 ***
 
@@ -495,7 +495,7 @@ Default: 1.0
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:143](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L143)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:143](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L143)
 
 ***
 
@@ -516,7 +516,7 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:53](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L53)
+[packages/core/src/events/base.ts:53](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L53)
 
 ## Accessors
 
@@ -534,7 +534,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:93](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L93)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:93](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L93)
 
 ***
 
@@ -552,7 +552,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/base.ts:81](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L81)
+[packages/core/src/events/base.ts:81](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L81)
 
 ***
 
@@ -570,7 +570,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -588,7 +588,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:87](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L87)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:87](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L87)
 
 ## Methods
 
@@ -623,7 +623,7 @@ An async generator yielding chat generation chunks.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:513](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L513)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:513](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L513)
 
 ***
 
@@ -643,7 +643,7 @@ A predefined namespace array to identify the type of language model and other re
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:415](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L415)
+[packages/core/src/events/inference/chat/base.ts:415](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L415)
 
 ***
 
@@ -669,7 +669,7 @@ The error encountered during an attempt.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:336](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L336)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:336](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L336)
 
 ***
 
@@ -704,7 +704,7 @@ An async iterable that yields generated content responses.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:576](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L576)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:576](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L576)
 
 ***
 
@@ -728,7 +728,7 @@ Error if the API key is not found or the client could not be initialized.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:821](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L821)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:821](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L821)
 
 ***
 
@@ -749,7 +749,7 @@ An object detailing the generation configuration for the model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:296](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L296)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:296](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L296)
 
 ***
 
@@ -779,7 +779,7 @@ The generated key.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:185](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L185)
+[packages/core/src/events/inference/chat/base.ts:185](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L185)
 
 ***
 
@@ -805,7 +805,7 @@ The constructed model parameters.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:840](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L840)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:840](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L840)
 
 ***
 
@@ -831,7 +831,7 @@ Array of configured safety settings.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:323](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L323)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:323](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L323)
 
 ***
 
@@ -855,7 +855,7 @@ A record of identified parameters.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:175](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L175)
+[packages/core/src/events/inference/chat/base.ts:175](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L175)
 
 ***
 
@@ -877,7 +877,7 @@ The type of LLM.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:234](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L234)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:234](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L234)
 
 ***
 
@@ -899,7 +899,7 @@ The type of the model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:427](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L427)
+[packages/core/src/events/inference/chat/base.ts:427](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L427)
 
 ***
 
@@ -945,7 +945,7 @@ console.log(result);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:373](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L373)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:373](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L373)
 
 ***
 
@@ -977,7 +977,7 @@ The result from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:527](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L527)
+[packages/core/src/events/inference/chat/base.ts:527](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L527)
 
 ***
 
@@ -1005,7 +1005,7 @@ A tuple containing callable options and serialized options.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:548](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L548)
+[packages/core/src/events/inference/chat/base.ts:548](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L548)
 
 ***
 
@@ -1040,7 +1040,7 @@ An async generator yielding callable outputs.
 
 #### Source
 
-[packages/core/src/record/callable.ts:429](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L429)
+[packages/core/src/record/callable.ts:429](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L429)
 
 ***
 
@@ -1073,7 +1073,7 @@ An error indicating why the generation was blocked.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:698](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L698)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:698](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L698)
 
 ***
 
@@ -1109,7 +1109,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:368](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L368)
+[packages/core/src/record/callable.ts:368](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L368)
 
 #### batch(inputs, options, batchOptions)
 
@@ -1133,7 +1133,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:374](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L374)
+[packages/core/src/record/callable.ts:374](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L374)
 
 #### batch(inputs, options, batchOptions)
 
@@ -1157,7 +1157,7 @@ An arrays of CallOutputs, or mixed CallOutputs and Errors (if returnExceptions i
 
 ##### Source
 
-[packages/core/src/record/callable.ts:380](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L380)
+[packages/core/src/record/callable.ts:380](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L380)
 
 ***
 
@@ -1186,7 +1186,7 @@ A new [CallableBind](../../../../../../../../record/callable/classes/CallableBin
 
 #### Source
 
-[packages/core/src/record/callable.ts:343](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L343)
+[packages/core/src/record/callable.ts:343](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L343)
 
 ***
 
@@ -1241,7 +1241,7 @@ try {
 
 ##### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:640](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L640)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:640](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L640)
 
 #### completionWithRetry(request, options)
 
@@ -1259,7 +1259,7 @@ try {
 
 ##### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:645](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L645)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:645](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L645)
 
 ***
 
@@ -1305,7 +1305,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/record/callable.ts:511](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L511)
+[packages/core/src/record/callable.ts:511](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L511)
 
 ***
 
@@ -1341,7 +1341,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:775](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L775)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:775](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L775)
 
 ***
 
@@ -1380,7 +1380,7 @@ console.log(tokenCount);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:802](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L802)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:802](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L802)
 
 ***
 
@@ -1415,7 +1415,7 @@ console.log("Total tokens in generations:", tokens);
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:750](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L750)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:750](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L750)
 
 ***
 
@@ -1441,7 +1441,7 @@ The parameters of the model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:341](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L341)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:341](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L341)
 
 ***
 
@@ -1473,7 +1473,7 @@ The output llm result from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:445](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L445)
+[packages/core/src/events/inference/chat/base.ts:445](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L445)
 
 ***
 
@@ -1496,7 +1496,7 @@ A new [CallableEach](../../../../../../../../record/callable/classes/CallableEac
 
 #### Source
 
-[packages/core/src/record/callable.ts:355](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L355)
+[packages/core/src/record/callable.ts:355](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L355)
 
 ***
 
@@ -1529,7 +1529,7 @@ A new [CallableSequence](../../../../../../../../record/callable/classes/Callabl
 
 #### Source
 
-[packages/core/src/record/callable.ts:460](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L460)
+[packages/core/src/record/callable.ts:460](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L460)
 
 ***
 
@@ -1565,7 +1565,7 @@ The result from the language model.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:463](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L463)
+[packages/core/src/events/inference/chat/base.ts:463](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L463)
 
 ***
 
@@ -1598,7 +1598,7 @@ A promise that resolves to a readable stream of callable outputs.
 
 #### Source
 
-[packages/core/src/record/callable.ts:444](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L444)
+[packages/core/src/record/callable.ts:444](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L444)
 
 ***
 
@@ -1620,7 +1620,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L665)
 
 ***
 
@@ -1656,7 +1656,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -1678,7 +1678,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -1706,7 +1706,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -1735,7 +1735,7 @@ A new [CallableBind](../../../../../../../../record/callable/classes/CallableBin
 
 #### Source
 
-[packages/core/src/record/callable.ts:314](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L314)
+[packages/core/src/record/callable.ts:314](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L314)
 
 ***
 
@@ -1766,7 +1766,7 @@ A new [CallableWithFallbacks](../../../../../../../../record/callable/classes/Ca
 
 #### Source
 
-[packages/core/src/record/callable.ts:327](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L327)
+[packages/core/src/record/callable.ts:327](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L327)
 
 ***
 
@@ -1796,7 +1796,7 @@ The corresponding prompt.
 
 #### Source
 
-[packages/core/src/events/inference/chat/base.ts:158](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/base.ts#L158)
+[packages/core/src/events/inference/chat/base.ts:158](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/base.ts#L158)
 
 ***
 
@@ -1816,7 +1816,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:99](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L99)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:99](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L99)
 
 ***
 
@@ -1848,7 +1848,7 @@ console.log(contextSize); // Outputs: 16384
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:724](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L724)
+[packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts:724](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/gemini/chat.ts#L724)
 
 ***
 
@@ -1876,4 +1876,4 @@ True if the object is an instance of Callable, false otherwise.
 
 #### Source
 
-[packages/core/src/record/callable.ts:196](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L196)
+[packages/core/src/record/callable.ts:196](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L196)

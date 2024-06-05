@@ -8,4 +8,4 @@ particularly in the context of data loading from various formats.
 
 ## Source
 
-[packages/core/src/studio/nodes/input/loader.node.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/input/loader.node.ts#L23)
+[packages/core/src/studio/nodes/input/loader.node.ts:30](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/loader.node.ts#L30)

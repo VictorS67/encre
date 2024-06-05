@@ -21,7 +21,7 @@ This is typically used to track how the source was created, which can be critica
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:20](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L20)
+[packages/core/src/events/output/provide/base.ts:20](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L20)
 
 ***
 
@@ -33,4 +33,4 @@ The source data provided by this provider. The type is generic, allowing for fle
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:14](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L14)
+[packages/core/src/events/output/provide/base.ts:14](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L14)

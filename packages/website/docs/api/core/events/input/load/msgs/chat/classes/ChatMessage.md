@@ -33,7 +33,7 @@ The role of the message if the content is provided as a string.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:30](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L30)
+[packages/core/src/events/input/load/msgs/chat.ts:30](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L30)
 
 ### new ChatMessage()
 
@@ -57,7 +57,7 @@ Either a string representing the message content or an object conforming to Chat
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:32](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L32)
+[packages/core/src/events/input/load/msgs/chat.ts:32](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L32)
 
 ## Properties
 
@@ -73,7 +73,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:19](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L19)
+[packages/core/src/events/input/load/msgs/chat.ts:19](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L19)
 
 ***
 
@@ -89,7 +89,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -105,7 +105,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:88](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L88)
+[packages/core/src/events/input/load/msgs/base.ts:88](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L88)
 
 ***
 
@@ -126,7 +126,7 @@ in handling the message. These might include additional data fields not covered 
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:105](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L105)
+[packages/core/src/events/input/load/msgs/base.ts:105](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L105)
 
 ***
 
@@ -143,7 +143,7 @@ represented by an object with key-value pairs.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:94](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L94)
+[packages/core/src/events/input/load/msgs/base.ts:94](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L94)
 
 ***
 
@@ -159,7 +159,7 @@ An optional name for the message, which could be used for identifying or categor
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:99](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L99)
+[packages/core/src/events/input/load/msgs/base.ts:99](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L99)
 
 ***
 
@@ -171,7 +171,7 @@ The role of the message, specifying the category of the sender or the purpose of
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:28](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L28)
+[packages/core/src/events/input/load/msgs/chat.ts:28](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L28)
 
 ## Accessors
 
@@ -189,7 +189,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L217)
+[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L217)
 
 ***
 
@@ -207,7 +207,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:208](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L208)
+[packages/core/src/load/serializable.ts:208](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L208)
 
 ***
 
@@ -225,7 +225,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -243,7 +243,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L199)
+[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L199)
 
 ## Methods
 
@@ -265,7 +265,7 @@ The role of the message as a string.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:49](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L49)
+[packages/core/src/events/input/load/msgs/chat.ts:49](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L49)
 
 ***
 
@@ -293,7 +293,7 @@ boolean if coerceable, otherwise return undefined.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:151](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L151)
+[packages/core/src/events/input/load/msgs/base.ts:151](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L151)
 
 ***
 
@@ -321,7 +321,7 @@ A new instance of BaseMessage resulting from the concatenation.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:53](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L53)
+[packages/core/src/events/input/load/msgs/chat.ts:53](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L53)
 
 ***
 
@@ -355,7 +355,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L430)
+[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L430)
 
 ***
 
@@ -377,7 +377,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L665)
 
 ***
 
@@ -413,7 +413,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -435,7 +435,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -463,7 +463,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -485,7 +485,7 @@ An object representing the serialized state of the message.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:132](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L132)
+[packages/core/src/events/input/load/msgs/base.ts:132](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L132)
 
 ***
 
@@ -519,7 +519,7 @@ merged additional keyword arguments.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:232](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L232)
+[packages/core/src/events/input/load/msgs/base.ts:232](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L232)
 
 ***
 
@@ -553,7 +553,7 @@ merged message content.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:186](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L186)
+[packages/core/src/events/input/load/msgs/base.ts:186](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L186)
 
 ***
 
@@ -573,7 +573,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:21](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L21)
+[packages/core/src/events/input/load/msgs/chat.ts:21](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L21)
 
 ***
 
@@ -605,7 +605,7 @@ true if strictly equal.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:275](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L275)
+[packages/core/src/events/input/load/msgs/base.ts:275](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L275)
 
 ***
 
@@ -637,7 +637,7 @@ true if strictly equal.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:286](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L286)
+[packages/core/src/events/input/load/msgs/base.ts:286](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L286)
 
 ***
 
@@ -661,4 +661,4 @@ True if the provided message is an instance of ChatMessage, false otherwise.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/chat.ts:74](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/chat.ts#L74)
+[packages/core/src/events/input/load/msgs/chat.ts:74](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/chat.ts#L74)

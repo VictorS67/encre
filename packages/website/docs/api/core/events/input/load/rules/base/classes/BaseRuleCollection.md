@@ -36,7 +36,7 @@ The fields required to initialize the rule collection.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:54](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L54)
+[packages/core/src/events/input/load/rules/base.ts:54](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L54)
 
 ## Properties
 
@@ -52,7 +52,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:33](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L33)
+[packages/core/src/events/input/load/rules/base.ts:33](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L33)
 
 ***
 
@@ -68,7 +68,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -84,7 +84,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:35](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L35)
+[packages/core/src/events/input/load/rules/base.ts:35](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L35)
 
 ***
 
@@ -101,7 +101,7 @@ either a BaseRule or another BaseRuleCollection.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L41)
+[packages/core/src/events/input/load/rules/base.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L41)
 
 ***
 
@@ -118,7 +118,7 @@ Possible values are 'and' or 'or'.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:47](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L47)
+[packages/core/src/events/input/load/rules/base.ts:47](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L47)
 
 ## Accessors
 
@@ -136,7 +136,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L217)
+[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L217)
 
 ***
 
@@ -154,7 +154,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:208](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L208)
+[packages/core/src/load/serializable.ts:208](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L208)
 
 ***
 
@@ -172,7 +172,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -190,7 +190,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L199)
+[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L199)
 
 ***
 
@@ -207,7 +207,7 @@ rules and their logical relationship.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:65](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L65)
+[packages/core/src/events/input/load/rules/base.ts:65](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L65)
 
 ## Methods
 
@@ -239,7 +239,7 @@ Throws if the description does not contain a clear outermost conjunction.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:326](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L326)
+[packages/core/src/events/input/load/rules/base.ts:326](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L326)
 
 ***
 
@@ -267,7 +267,7 @@ True if the description includes composite rule indicators, false otherwise.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:313](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L313)
+[packages/core/src/events/input/load/rules/base.ts:313](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L313)
 
 ***
 
@@ -287,7 +287,7 @@ True if the description includes composite rule indicators, false otherwise.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:288](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L288)
+[packages/core/src/events/input/load/rules/base.ts:288](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L288)
 
 ***
 
@@ -319,7 +319,7 @@ True if the rule's logic is inverted relative to the conjunction, false otherwis
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:385](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L385)
+[packages/core/src/events/input/load/rules/base.ts:385](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L385)
 
 ***
 
@@ -363,7 +363,7 @@ The result of the validation for the specific input part.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:242](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L242)
+[packages/core/src/events/input/load/rules/base.ts:242](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L242)
 
 ***
 
@@ -391,7 +391,7 @@ The new combined rule collection.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:217](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L217)
+[packages/core/src/events/input/load/rules/base.ts:217](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L217)
 
 ***
 
@@ -425,7 +425,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L430)
+[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L430)
 
 ***
 
@@ -445,13 +445,13 @@ A simplified string representation of the rule collection's logic.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:155](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L155)
+[packages/core/src/events/input/load/rules/base.ts:155](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L155)
 
 ***
 
 ### serialize()
 
-> **serialize**(): [`SerializedRuleCollection`](../../../../../../studio/serde/type-aliases/SerializedRuleCollection.md)
+> **serialize**(): [`SerializedRuleCollection`](../../../../../../studio/serde/interfaces/SerializedRuleCollection.md)
 
 Serializes the current state of the rule collection to a format suitable for storage or transmission.
 This method facilitates the conversion of the rule collection into a simplified JSON format,
@@ -459,13 +459,13 @@ capturing essential properties like description, collection, and conjunction.
 
 #### Returns
 
-[`SerializedRuleCollection`](../../../../../../studio/serde/type-aliases/SerializedRuleCollection.md)
+[`SerializedRuleCollection`](../../../../../../studio/serde/interfaces/SerializedRuleCollection.md)
 
 The serialized form of the rule collection.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:135](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L135)
+[packages/core/src/events/input/load/rules/base.ts:135](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L135)
 
 ***
 
@@ -487,7 +487,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L665)
 
 ***
 
@@ -523,7 +523,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -545,7 +545,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -573,7 +573,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -601,7 +601,7 @@ The result of the validation.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L178)
+[packages/core/src/events/input/load/rules/base.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L178)
 
 ***
 
@@ -621,7 +621,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/load/serializable.ts:178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L178)
+[packages/core/src/load/serializable.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L178)
 
 ***
 
@@ -633,7 +633,7 @@ Deserializes a given serialized rule collection into an instance of BaseRuleColl
 
 #### Parameters
 
-• **serialized**: [`SerializedRuleCollection`](../../../../../../studio/serde/type-aliases/SerializedRuleCollection.md)
+• **serialized**: [`SerializedRuleCollection`](../../../../../../studio/serde/interfaces/SerializedRuleCollection.md)
 
 The serialized rule collection.
 
@@ -649,4 +649,4 @@ The deserialized rule collection.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:92](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L92)
+[packages/core/src/events/input/load/rules/base.ts:92](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L92)

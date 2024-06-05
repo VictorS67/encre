@@ -21,7 +21,7 @@ The serializable group.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L23)
+[packages/core/src/load/serializable.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L23)
 
 ***
 
@@ -37,7 +37,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:33](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L33)
+[packages/core/src/load/serializable.ts:33](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L33)
 
 ***
 
@@ -49,7 +49,7 @@ A dictionary mapping attribute names to their serialized values.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:44](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L44)
+[packages/core/src/load/serializable.ts:44](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L44)
 
 ***
 
@@ -65,4 +65,4 @@ The serializable type. Different types have their own way of serializing data.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:28](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L28)
+[packages/core/src/load/serializable.ts:28](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L28)

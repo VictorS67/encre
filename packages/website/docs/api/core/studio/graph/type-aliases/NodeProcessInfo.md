@@ -14,4 +14,4 @@
 
 ## Source
 
-[packages/core/src/studio/graph.ts:60](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L60)
+[packages/core/src/studio/graph.ts:59](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L59)

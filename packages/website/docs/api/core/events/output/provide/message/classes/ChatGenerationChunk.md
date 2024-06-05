@@ -31,7 +31,7 @@ This class is used to handle segments of chat data, particularly useful in syste
 
 #### Source
 
-[packages/core/src/events/output/provide/message.ts:114](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/message.ts#L114)
+[packages/core/src/events/output/provide/message.ts:114](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/message.ts#L114)
 
 ## Properties
 
@@ -51,7 +51,7 @@ Optional metadata providing additional information about this particular chunk's
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L41)
+[packages/core/src/events/output/provide/generation.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L41)
 
 ***
 
@@ -67,7 +67,7 @@ The associated BaseMessage for this chunk of chat generation.
 
 #### Source
 
-[packages/core/src/events/output/provide/message.ts:112](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/message.ts#L112)
+[packages/core/src/events/output/provide/message.ts:112](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/message.ts#L112)
 
 ## Methods
 
@@ -95,4 +95,4 @@ A new ChatGenerationChunk representing the combined result.
 
 #### Source
 
-[packages/core/src/events/output/provide/message.ts:125](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/message.ts#L125)
+[packages/core/src/events/output/provide/message.ts:125](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/message.ts#L125)

@@ -20,7 +20,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L56)
+[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L56)
 
 ***
 
@@ -36,7 +36,7 @@ Optional rules for validating the input variables.
 
 #### Source
 
-[packages/core/src/events/input/load/prompts/base.ts:62](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/prompts/base.ts#L62)
+[packages/core/src/events/input/load/prompts/base.ts:62](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/prompts/base.ts#L62)
 
 ***
 
@@ -52,7 +52,7 @@ List of input variables explicitly declared, used within the template.
 
 #### Source
 
-[packages/core/src/events/input/load/prompts/base.ts:57](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/prompts/base.ts#L57)
+[packages/core/src/events/input/load/prompts/base.ts:57](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/prompts/base.ts#L57)
 
 ***
 
@@ -68,7 +68,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L51)
+[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L51)
 
 ***
 
@@ -84,7 +84,7 @@ The name of the callable, used for identification or logging. not-implemented ye
 
 #### Source
 
-[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L41)
+[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L41)
 
 ***
 
@@ -96,7 +96,7 @@ Optional prefix to be added before the formatted template string.
 
 #### Source
 
-[packages/core/src/events/input/load/prompts/text.ts:63](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/prompts/text.ts#L63)
+[packages/core/src/events/input/load/prompts/text.ts:63](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/prompts/text.ts#L63)
 
 ***
 
@@ -108,7 +108,7 @@ Optional suffix to be added after the formatted template string.
 
 #### Source
 
-[packages/core/src/events/input/load/prompts/text.ts:68](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/prompts/text.ts#L68)
+[packages/core/src/events/input/load/prompts/text.ts:68](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/prompts/text.ts#L68)
 
 ***
 
@@ -124,7 +124,7 @@ An array of strings used for categorizing or filtering callables. not-implemente
 
 #### Source
 
-[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L46)
+[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L46)
 
 ***
 
@@ -140,7 +140,7 @@ Template string used to generate prompts.
 
 #### Source
 
-[packages/core/src/events/input/load/prompts/base.ts:52](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/prompts/base.ts#L52)
+[packages/core/src/events/input/load/prompts/base.ts:52](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/prompts/base.ts#L52)
 
 ***
 
@@ -161,4 +161,4 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L23)
+[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L23)

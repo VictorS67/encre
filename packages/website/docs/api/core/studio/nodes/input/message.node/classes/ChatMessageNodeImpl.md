@@ -49,7 +49,7 @@ The node data to initialize the instance with.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:80](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L80)
+[packages/core/src/studio/nodes/base.ts:80](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L80)
 
 ## Properties
 
@@ -65,7 +65,7 @@ Key aliases for serializable data fields.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:63](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L63)
+[packages/core/src/studio/nodes/base.ts:63](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L63)
 
 ***
 
@@ -81,7 +81,7 @@ Reference to the serialized node instance.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:58](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L58)
+[packages/core/src/studio/nodes/base.ts:58](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L58)
 
 ***
 
@@ -97,7 +97,7 @@ Secret keys used in the serializable data.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:68](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L68)
+[packages/core/src/studio/nodes/base.ts:68](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L68)
 
 ## Accessors
 
@@ -113,7 +113,7 @@ Retrieves the data associated with the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:149](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L149)
+[packages/core/src/studio/nodes/base.ts:149](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L149)
 
 ***
 
@@ -129,7 +129,7 @@ Retrieves the description of the node, defaulting to an empty string if not set.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:99](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L99)
+[packages/core/src/studio/nodes/base.ts:99](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L99)
 
 ***
 
@@ -145,7 +145,7 @@ Retrieves the unique identifier of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:106](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L106)
+[packages/core/src/studio/nodes/base.ts:106](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L106)
 
 ***
 
@@ -166,7 +166,7 @@ please use [getInputPortDefs](ChatMessageNodeImpl.md#getinputportdefs) instead.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:160](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L160)
+[packages/core/src/studio/nodes/base.ts:160](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L160)
 
 ***
 
@@ -182,7 +182,7 @@ Retrieves keyword arguments for the serializable data.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:185](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L185)
+[packages/core/src/studio/nodes/base.ts:185](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L185)
 
 ***
 
@@ -198,7 +198,7 @@ Retrieves the memory allocation for the node, defaulting to 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L199)
+[packages/core/src/studio/nodes/base.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L199)
 
 ***
 
@@ -214,7 +214,7 @@ Retrieves the name of the node. It is equvalent to the serializable data's name.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:135](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L135)
+[packages/core/src/studio/nodes/base.ts:135](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L135)
 
 ***
 
@@ -230,7 +230,7 @@ Retrieves or initializes output port sizes.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L178)
+[packages/core/src/studio/nodes/base.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L178)
 
 ***
 
@@ -251,7 +251,7 @@ please use [getOutputPortDefs](ChatMessageNodeImpl.md#getoutputportdefs) instead
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:171](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L171)
+[packages/core/src/studio/nodes/base.ts:171](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L171)
 
 ***
 
@@ -268,7 +268,7 @@ This is used for creating the current node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:128](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L128)
+[packages/core/src/studio/nodes/base.ts:128](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L128)
 
 ***
 
@@ -284,7 +284,7 @@ Retrieves the runtime allocation for the node, defaulting to 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:192](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L192)
+[packages/core/src/studio/nodes/base.ts:192](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L192)
 
 ***
 
@@ -300,7 +300,7 @@ Retrieves the subtype of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:120](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L120)
+[packages/core/src/studio/nodes/base.ts:120](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L120)
 
 ***
 
@@ -316,7 +316,7 @@ Retrieves the title of the node, defaulting to the serializable data's name if n
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:92](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L92)
+[packages/core/src/studio/nodes/base.ts:92](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L92)
 
 ***
 
@@ -332,7 +332,7 @@ Retrieves the type of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:113](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L113)
+[packages/core/src/studio/nodes/base.ts:113](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L113)
 
 ***
 
@@ -348,7 +348,7 @@ Retrieves visual information such as position and size of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:142](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L142)
+[packages/core/src/studio/nodes/base.ts:142](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L142)
 
 ## Methods
 
@@ -371,7 +371,7 @@ A promise that resolves to a `NodeBody`, potentially containing multiple `UICont
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:306](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L306)
+[packages/core/src/studio/nodes/base.ts:306](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L306)
 
 ***
 
@@ -403,7 +403,7 @@ An array of `NodeInputPortDef` detailing the input port configurations.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:238](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L238)
+[packages/core/src/studio/nodes/base.ts:238](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L238)
 
 ***
 
@@ -435,7 +435,7 @@ An array of `NodeOutputPortDef` detailing the output port configurations.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:264](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L264)
+[packages/core/src/studio/nodes/base.ts:264](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L264)
 
 ***
 
@@ -471,13 +471,13 @@ Will throw an error if the inputs are invalid.
 
 #### Source
 
-[packages/core/src/studio/nodes/input/message.node.ts:36](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/input/message.node.ts#L36)
+[packages/core/src/studio/nodes/input/message.node.ts:68](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/message.node.ts#L68)
 
 ***
 
 ### serialize()
 
-> **serialize**(`connections`, `processInfo`?): `Promise` \<[`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)\>
+> **serialize**(`connections`, `processInfo`?): `Promise` \<[`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)\>
 
 Serializes the current node instance to a `SerializedNode`, including connection and
 process information.
@@ -494,7 +494,7 @@ Optional information about the node's runtime and memory usage.
 
 #### Returns
 
-`Promise` \<[`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)\>
+`Promise` \<[`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)\>
 
 A promise that resolves to a `SerializedNode` encapsulating the node's current state and configuration.
 
@@ -504,7 +504,7 @@ A promise that resolves to a `SerializedNode` encapsulating the node's current s
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:392](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L392)
+[packages/core/src/studio/nodes/base.ts:394](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L394)
 
 ***
 
@@ -534,7 +534,7 @@ The value to set for the argument.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:208](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L208)
+[packages/core/src/studio/nodes/base.ts:208](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L208)
 
 ***
 
@@ -563,7 +563,7 @@ A boolean indicating whether the provided inputs meet all requirements specified
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:278](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L278)
+[packages/core/src/studio/nodes/base.ts:278](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L278)
 
 ***
 
@@ -582,48 +582,36 @@ An instance of MessageNode prepared with a default ChatMessage.
 
 #### Source
 
-[packages/core/src/studio/nodes/input/message.node.ts:104](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/input/message.node.ts#L104)
+[packages/core/src/studio/nodes/input/message.node.ts:136](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/message.node.ts#L136)
 
 ***
 
 ### deserialize()
 
-> `static` **deserialize**(`serialized`, `values`, `registry`?): `Promise` \<[`SerializableNode`](../../../interfaces/SerializableNode.md)\<`string`, [`Serializable`](../../../../../load/serializable/classes/Serializable.md)\>\>
+> `static` **deserialize**(`serialized`): `Promise` \<[`MessageNode`](../type-aliases/MessageNode.md)\>
 
-Static method to deserialize a node from its serialized representation, handling different
-node types via dynamic imports based on the type.
+Deserializes a serialized message node representation into an executable message node,
+reconstituting the node with its operational parameters and data.
 
 #### Parameters
 
-• **serialized**: [`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)
+• **serialized**: [`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)
 
 The serialized node data.
 
-• **values**: `Record`\<`string`, `unknown`\>= `{}`
-
-Optional values to override or provide additional deserialization context.
-
-• **registry?**
-
-Optional registry containing node and guardrail registrations.
-
-• **registry.guardrails?**: [`GuardrailRegistration`](../../../../registration/guardrails/classes/GuardrailRegistration.md)\<`never`, `never`, `never`\>
-
-• **registry.nodes?**: [`NodeRegistration`](../../../../registration/nodes/classes/NodeRegistration.md)\<`never`, `never`, `never`\>
-
 #### Returns
 
-`Promise` \<[`SerializableNode`](../../../interfaces/SerializableNode.md)\<`string`, [`Serializable`](../../../../../load/serializable/classes/Serializable.md)\>\>
+`Promise` \<[`MessageNode`](../type-aliases/MessageNode.md)\>
 
-A promise resolving to an instance of `SerializableNode`.
+A promise resolving to a deserialized message node.
 
-#### Inherited from
+#### Overrides
 
 [`MessageNodeImpl`](MessageNodeImpl.md) . [`deserialize`](MessageNodeImpl.md#deserialize)
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:326](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L326)
+[packages/core/src/studio/nodes/input/message.node.ts:147](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/message.node.ts#L147)
 
 ***
 
@@ -647,4 +635,4 @@ A new instance of MessageNode.
 
 #### Source
 
-[packages/core/src/studio/nodes/input/message.node.ts:76](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/input/message.node.ts#L76)
+[packages/core/src/studio/nodes/input/message.node.ts:108](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/message.node.ts#L108)

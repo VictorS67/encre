@@ -31,7 +31,7 @@ Maps type-subtype pairs to their corresponding node implementations and initiali
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:106](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L106)
+[packages/core/src/studio/registration/nodes.ts:106](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L106)
 
 ***
 
@@ -43,7 +43,7 @@ Stores implementation details for node types and subtypes.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:95](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L95)
+[packages/core/src/studio/registration/nodes.ts:95](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L95)
 
 ***
 
@@ -58,7 +58,7 @@ such as dynamic node creation and validation by providing a clear map of how typ
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:133](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L133)
+[packages/core/src/studio/registration/nodes.ts:133](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L133)
 
 ***
 
@@ -73,7 +73,7 @@ what types of nodes are available.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:125](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L125)
+[packages/core/src/studio/registration/nodes.ts:125](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L125)
 
 ***
 
@@ -85,7 +85,7 @@ Maps serializable IDs to their node implementations for nodes that are initializ
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:114](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L114)
+[packages/core/src/studio/registration/nodes.ts:114](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L114)
 
 ***
 
@@ -99,7 +99,7 @@ Maintains a mapping from node types to their subtypes.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:90](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L90)
+[packages/core/src/studio/registration/nodes.ts:90](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L90)
 
 ***
 
@@ -113,7 +113,7 @@ Tracks registered primary node types.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:83](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L83)
+[packages/core/src/studio/registration/nodes.ts:83](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L83)
 
 ***
 
@@ -127,7 +127,7 @@ Stores instances of registered nodes.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:76](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L76)
+[packages/core/src/studio/registration/nodes.ts:76](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L76)
 
 ## Accessors
 
@@ -147,7 +147,7 @@ A map where each key is a string in the format `type-subType` and each value is 
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:150](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L150)
+[packages/core/src/studio/registration/nodes.ts:150](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L150)
 
 ***
 
@@ -167,7 +167,7 @@ A map where each key is a serializable ID and each value is an object containing
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:163](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L163)
+[packages/core/src/studio/registration/nodes.ts:163](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L163)
 
 ***
 
@@ -186,7 +186,7 @@ An array of node implementation constructors, enabling the creation of node inst
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:140](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L140)
+[packages/core/src/studio/registration/nodes.ts:140](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L140)
 
 ## Methods
 
@@ -229,7 +229,7 @@ an error if the type-subtype pair is not registered.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:239](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L239)
+[packages/core/src/studio/registration/nodes.ts:239](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L239)
 
 ***
 
@@ -266,7 +266,7 @@ An error if no implementation is registered for the specified type and subtype.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:297](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L297)
+[packages/core/src/studio/registration/nodes.ts:297](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L297)
 
 ***
 
@@ -295,7 +295,7 @@ An error if no implementation is registered for the node's type and subtype.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:343](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L343)
+[packages/core/src/studio/registration/nodes.ts:343](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L343)
 
 ***
 
@@ -328,7 +328,7 @@ An error if no implementation is found for the node's serializable ID.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:320](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L320)
+[packages/core/src/studio/registration/nodes.ts:320](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L320)
 
 ***
 
@@ -360,7 +360,7 @@ an error if the node's type-subtype pair is unknown.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:264](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L264)
+[packages/core/src/studio/registration/nodes.ts:264](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L264)
 
 ***
 
@@ -388,7 +388,7 @@ The node subtype to check.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:368](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L368)
+[packages/core/src/studio/registration/nodes.ts:368](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L368)
 
 ***
 
@@ -421,4 +421,4 @@ An updated instance of `NodeRegistration` reflecting the new node registration.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:177](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L177)
+[packages/core/src/studio/registration/nodes.ts:177](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L177)

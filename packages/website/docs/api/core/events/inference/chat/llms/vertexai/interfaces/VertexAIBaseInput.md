@@ -18,7 +18,7 @@ VertexAI models that are not explicitly specified on the class.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:248](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L248)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:248](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L248)
 
 ***
 
@@ -32,7 +32,7 @@ This value must be 1.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:200](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L200)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:200](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L200)
 
 ***
 
@@ -45,7 +45,7 @@ API key to use when making requests to Gemini. Defaults to the value of
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:242](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L242)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:242](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L242)
 
 ***
 
@@ -62,7 +62,7 @@ Range: 1-2048
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:210](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L210)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:210](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L210)
 
 ***
 
@@ -80,7 +80,7 @@ Chat model: [https://cloud.google.com/vertex-ai/docs/generative-ai/model-referen
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:228](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L228)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:228](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L228)
 
 ***
 
@@ -95,7 +95,7 @@ encountered. The strings are case-sensitive.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:236](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L236)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:236](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L236)
 
 ***
 
@@ -109,7 +109,7 @@ are sent.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:217](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L217)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:217](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L217)
 
 ***
 
@@ -131,7 +131,7 @@ Range: 0.0 - 1.0
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:159](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L159)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:159](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L159)
 
 ***
 
@@ -156,7 +156,7 @@ Range: 1 - 40
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:193](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L193)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:193](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L193)
 
 ***
 
@@ -179,4 +179,4 @@ Range: 0.0 - 1.0
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:175](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L175)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:175](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L175)

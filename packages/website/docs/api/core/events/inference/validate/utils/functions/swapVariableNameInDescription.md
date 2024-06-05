@@ -36,4 +36,4 @@ A new string with the old variable names replaced by the new variable names.
 
 ## Source
 
-[packages/core/src/events/inference/validate/utils.ts:19](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/utils.ts#L19)
+[packages/core/src/events/inference/validate/utils.ts:19](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/utils.ts#L19)

@@ -41,7 +41,7 @@ Whether the abort action was successful.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:269](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L269)
+[packages/core/src/studio/processor.ts:269](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L269)
 
 ***
 
@@ -74,7 +74,7 @@ The final outputs from the graph processing.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:246](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L246)
+[packages/core/src/studio/processor.ts:246](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L246)
 
 ***
 
@@ -107,7 +107,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:297](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L297)
+[packages/core/src/studio/processor.ts:297](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L297)
 
 ***
 
@@ -134,7 +134,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:228](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L228)
+[packages/core/src/studio/processor.ts:228](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L228)
 
 ***
 
@@ -178,7 +178,7 @@ Indicates if the abort was successful.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:400](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L400)
+[packages/core/src/studio/processor.ts:400](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L400)
 
 ***
 
@@ -216,7 +216,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:346](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L346)
+[packages/core/src/studio/processor.ts:346](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L346)
 
 ***
 
@@ -254,7 +254,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:373](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L373)
+[packages/core/src/studio/processor.ts:373](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L373)
 
 ***
 
@@ -292,7 +292,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:319](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L319)
+[packages/core/src/studio/processor.ts:319](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L319)
 
 ***
 
@@ -327,7 +327,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:553](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L553)
+[packages/core/src/studio/processor.ts:553](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L553)
 
 ***
 
@@ -371,7 +371,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:496](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L496)
+[packages/core/src/studio/processor.ts:496](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L496)
 
 ***
 
@@ -403,7 +403,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:528](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L528)
+[packages/core/src/studio/processor.ts:528](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L528)
 
 ***
 
@@ -447,7 +447,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:464](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L464)
+[packages/core/src/studio/processor.ts:464](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L464)
 
 ***
 
@@ -491,7 +491,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:432](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L432)
+[packages/core/src/studio/processor.ts:432](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L432)
 
 ***
 
@@ -517,7 +517,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:193](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L193)
+[packages/core/src/studio/processor.ts:193](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L193)
 
 ***
 
@@ -550,7 +550,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:171](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L171)
+[packages/core/src/studio/processor.ts:171](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L171)
 
 ***
 
@@ -611,7 +611,7 @@ The context provided to prompt the user for input.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:576](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L576)
+[packages/core/src/studio/processor.ts:576](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L576)
 
 ***
 
@@ -637,7 +637,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:210](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L210)
+[packages/core/src/studio/processor.ts:210](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L210)
 
 ***
 
@@ -681,7 +681,7 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:138](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L138)
+[packages/core/src/studio/processor.ts:138](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L138)
 
 ***
 
@@ -714,4 +714,4 @@ The ID of the processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:615](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L615)
+[packages/core/src/studio/processor.ts:615](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L615)

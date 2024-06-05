@@ -17,4 +17,4 @@ The expected output type of the callable.
 
 ## Source
 
-[packages/core/src/record/callable.ts:77](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L77)
+[packages/core/src/record/callable.ts:77](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L77)

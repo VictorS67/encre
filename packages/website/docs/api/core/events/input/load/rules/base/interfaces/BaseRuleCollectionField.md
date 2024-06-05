@@ -15,7 +15,7 @@ either a BaseRule or another BaseRuleCollection.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:16](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L16)
+[packages/core/src/events/input/load/rules/base.ts:16](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L16)
 
 ***
 
@@ -28,4 +28,4 @@ Possible values are 'and' or 'or'.
 
 #### Source
 
-[packages/core/src/events/input/load/rules/base.ts:22](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/rules/base.ts#L22)
+[packages/core/src/events/input/load/rules/base.ts:22](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/rules/base.ts#L22)

@@ -62,7 +62,7 @@ Initial fields to set up the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:179](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L179)
+[packages/core/src/studio/graph.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L178)
 
 ## Properties
 
@@ -78,7 +78,7 @@ Indicates if the instance is serializable. If false, toJSON returns a non-implem
 
 #### Source
 
-[packages/core/src/studio/graph.ts:72](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L72)
+[packages/core/src/studio/graph.ts:71](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L71)
 
 ***
 
@@ -94,7 +94,7 @@ Key-value pairs of properties to be serialized.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L168)
+[packages/core/src/load/serializable.ts:168](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L168)
 
 ***
 
@@ -110,7 +110,7 @@ Unique namespace identifier for the serialized object, represented as an array o
 
 #### Source
 
-[packages/core/src/studio/graph.ts:74](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L74)
+[packages/core/src/studio/graph.ts:73](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L73)
 
 ***
 
@@ -126,7 +126,7 @@ Optional comments associated with the graph, for user notes or documentation pur
 
 #### Source
 
-[packages/core/src/studio/graph.ts:106](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L106)
+[packages/core/src/studio/graph.ts:105](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L105)
 
 ***
 
@@ -143,7 +143,7 @@ Connections can be connected to/from `SubGraphNode`.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:101](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L101)
+[packages/core/src/studio/graph.ts:100](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L100)
 
 ***
 
@@ -159,7 +159,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:89](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L89)
+[packages/core/src/studio/graph.ts:88](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L88)
 
 ***
 
@@ -173,7 +173,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:112](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L112)
+[packages/core/src/studio/graph.ts:111](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L111)
 
 ***
 
@@ -187,7 +187,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:109](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L109)
+[packages/core/src/studio/graph.ts:108](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L108)
 
 ***
 
@@ -201,7 +201,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:136](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L136)
+[packages/core/src/studio/graph.ts:135](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L135)
 
 ***
 
@@ -215,7 +215,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:122](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L122)
+[packages/core/src/studio/graph.ts:121](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L121)
 
 ***
 
@@ -229,7 +229,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:115](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L115)
+[packages/core/src/studio/graph.ts:114](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L114)
 
 ***
 
@@ -243,7 +243,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:131](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L131)
+[packages/core/src/studio/graph.ts:130](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L130)
 
 ***
 
@@ -257,7 +257,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:118](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L118)
+[packages/core/src/studio/graph.ts:117](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L117)
 
 ***
 
@@ -271,7 +271,7 @@ Description of the graph's purpose and contents.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:127](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L127)
+[packages/core/src/studio/graph.ts:126](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L126)
 
 ***
 
@@ -287,7 +287,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:79](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L79)
+[packages/core/src/studio/graph.ts:78](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L78)
 
 ***
 
@@ -301,7 +301,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:148](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L148)
+[packages/core/src/studio/graph.ts:147](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L147)
 
 ***
 
@@ -315,7 +315,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:144](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L144)
+[packages/core/src/studio/graph.ts:143](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L143)
 
 ***
 
@@ -329,7 +329,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:140](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L140)
+[packages/core/src/studio/graph.ts:139](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L139)
 
 ***
 
@@ -343,7 +343,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:153](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L153)
+[packages/core/src/studio/graph.ts:152](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L152)
 
 ***
 
@@ -357,7 +357,7 @@ Unique identifier for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:164](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L164)
+[packages/core/src/studio/graph.ts:163](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L163)
 
 ***
 
@@ -374,7 +374,7 @@ derived from `SerializableNode`, including `SubGraphNode`.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:95](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L95)
+[packages/core/src/studio/graph.ts:94](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L94)
 
 ***
 
@@ -388,7 +388,7 @@ derived from `SerializableNode`, including `SubGraphNode`.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:159](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L159)
+[packages/core/src/studio/graph.ts:158](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L158)
 
 ***
 
@@ -404,7 +404,7 @@ Human-readable title for the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:84](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L84)
+[packages/core/src/studio/graph.ts:83](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L83)
 
 ## Accessors
 
@@ -422,7 +422,7 @@ An object representing key aliases, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L217)
+[packages/core/src/load/serializable.ts:217](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L217)
 
 ***
 
@@ -448,7 +448,7 @@ An object representing attributes, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:166](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L166)
+[packages/core/src/studio/graph.ts:165](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L165)
 
 ***
 
@@ -466,7 +466,7 @@ The path of serializable.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L187)
+[packages/core/src/load/serializable.ts:187](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L187)
 
 ***
 
@@ -484,7 +484,7 @@ An object representing secret fields, or undefined if none are defined.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L199)
+[packages/core/src/load/serializable.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L199)
 
 ## Methods
 
@@ -518,7 +518,7 @@ An object containing aliases, secrets, and keyword arguments.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L430)
+[packages/core/src/load/serializable.ts:430](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L430)
 
 ***
 
@@ -546,7 +546,7 @@ all nodes that push data toward the current node
 
 #### Source
 
-[packages/core/src/studio/graph.ts:351](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L351)
+[packages/core/src/studio/graph.ts:350](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L350)
 
 ***
 
@@ -574,7 +574,7 @@ all nodes that receive data from the current node
 
 #### Source
 
-[packages/core/src/studio/graph.ts:378](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L378)
+[packages/core/src/studio/graph.ts:377](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L377)
 
 ***
 
@@ -604,7 +604,7 @@ Returns a new instance of SubGraph if a registry is provided, otherwise returns 
 
 #### Source
 
-[packages/core/src/studio/graph.ts:835](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L835)
+[packages/core/src/studio/graph.ts:844](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L844)
 
 ***
 
@@ -643,13 +643,13 @@ console.log(executionSchedule);
 
 #### Source
 
-[packages/core/src/studio/graph.ts:874](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L874)
+[packages/core/src/studio/graph.ts:883](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L883)
 
 ***
 
 ### serialize()
 
-> **serialize**(): `Promise` \<[`SerializedGraph`](../../serde/type-aliases/SerializedGraph.md)\>
+> **serialize**(): `Promise` \<[`SerializedGraph`](../../serde/interfaces/SerializedGraph.md)\>
 
 Serializes the current state of the graph into a format that can be easily stored or transmitted.
 This method facilitates the conversion of complex graph structures into a standardized JSON format,
@@ -657,7 +657,7 @@ ensuring that all relevant details are preserved and can be reconstructed later.
 
 #### Returns
 
-`Promise` \<[`SerializedGraph`](../../serde/type-aliases/SerializedGraph.md)\>
+`Promise` \<[`SerializedGraph`](../../serde/interfaces/SerializedGraph.md)\>
 
 Returns a promise that resolves to a serialized representation of the graph.
 
@@ -667,7 +667,7 @@ Returns a promise that resolves to a serialized representation of the graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:728](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L728)
+[packages/core/src/studio/graph.ts:727](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L727)
 
 ***
 
@@ -689,7 +689,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:665](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L665)
+[packages/core/src/studio/graph.ts:780](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L780)
 
 ***
 
@@ -725,7 +725,7 @@ A serialized representation of the object as a constructor.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L478)
+[packages/core/src/load/serializable.ts:478](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L478)
 
 ***
 
@@ -747,7 +747,7 @@ A serialized representation of the object.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L448)
+[packages/core/src/load/serializable.ts:448](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L448)
 
 ***
 
@@ -775,7 +775,7 @@ A serialized representation of the secret key.
 
 #### Source
 
-[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L462)
+[packages/core/src/load/serializable.ts:462](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L462)
 
 ***
 
@@ -795,7 +795,7 @@ Generates a unique name for the class, typically used for serialization identifi
 
 #### Source
 
-[packages/core/src/load/serializable.ts:178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/load/serializable.ts#L178)
+[packages/core/src/load/serializable.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/load/serializable.ts#L178)
 
 ***
 
@@ -809,7 +809,7 @@ data stored in a database or received over a network.
 
 #### Parameters
 
-• **serialized**: [`SerializedGraph`](../../serde/type-aliases/SerializedGraph.md)
+• **serialized**: [`SerializedGraph`](../../serde/interfaces/SerializedGraph.md)
 
 The serialized representation of the graph.
 
@@ -841,7 +841,7 @@ Throws an error if the serialized object does not represent a graph.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:680](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L680)
+[packages/core/src/studio/graph.ts:679](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L679)
 
 ***
 
@@ -922,7 +922,7 @@ end non-subgraph node ids.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:420](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L420)
+[packages/core/src/studio/graph.ts:419](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L419)
 
 ***
 
@@ -990,4 +990,4 @@ node ids, `endNodeIds` are the end node ids.
 
 #### Source
 
-[packages/core/src/studio/graph.ts:553](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/graph.ts#L553)
+[packages/core/src/studio/graph.ts:552](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/graph.ts#L552)

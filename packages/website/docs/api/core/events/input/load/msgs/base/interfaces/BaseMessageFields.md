@@ -23,7 +23,7 @@ in handling the message. These might include additional data fields not covered 
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:75](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L75)
+[packages/core/src/events/input/load/msgs/base.ts:75](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L75)
 
 ***
 
@@ -36,7 +36,7 @@ represented by an object with key-value pairs.
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:64](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L64)
+[packages/core/src/events/input/load/msgs/base.ts:64](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L64)
 
 ***
 
@@ -48,4 +48,4 @@ An optional name for the message, which could be used for identifying or categor
 
 #### Source
 
-[packages/core/src/events/input/load/msgs/base.ts:69](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/msgs/base.ts#L69)
+[packages/core/src/events/input/load/msgs/base.ts:69](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/msgs/base.ts#L69)

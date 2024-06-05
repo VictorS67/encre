@@ -7,4 +7,4 @@ This type specializes in handling messaging operations within a node-based syste
 
 ## Source
 
-[packages/core/src/studio/nodes/input/message.node.ts:22](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/input/message.node.ts#L22)
+[packages/core/src/studio/nodes/input/message.node.ts:28](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/input/message.node.ts#L28)

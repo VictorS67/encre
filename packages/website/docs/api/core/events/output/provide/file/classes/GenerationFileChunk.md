@@ -31,7 +31,7 @@ An object containing the file output and optional metadata.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:35](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L35)
+[packages/core/src/events/output/provide/file.ts:35](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L35)
 
 ## Properties
 
@@ -47,7 +47,7 @@ Optional metadata providing additional information about this particular chunk's
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L41)
+[packages/core/src/events/output/provide/generation.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L41)
 
 ## Methods
 
@@ -65,7 +65,7 @@ A Blob representation of the output.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:43](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L43)
+[packages/core/src/events/output/provide/file.ts:43](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L43)
 
 ***
 
@@ -93,4 +93,4 @@ A new GenerationFileChunk representing the concatenated output.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:58](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L58)
+[packages/core/src/events/output/provide/file.ts:58](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L58)

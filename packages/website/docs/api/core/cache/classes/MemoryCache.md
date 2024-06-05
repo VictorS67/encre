@@ -46,7 +46,7 @@ An optional pre-existing map to initialize the cache, allowing for shared or iso
 
 #### Source
 
-[packages/core/src/cache/index.ts:30](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/index.ts#L30)
+[packages/core/src/cache/index.ts:30](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/index.ts#L30)
 
 ## Properties
 
@@ -58,7 +58,7 @@ The internal map that stores cached values. The keys are string identifiers, and
 
 #### Source
 
-[packages/core/src/cache/index.ts:24](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/index.ts#L24)
+[packages/core/src/cache/index.ts:24](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/index.ts#L24)
 
 ## Methods
 
@@ -87,7 +87,7 @@ A promise that resolves to the cached value or null if the key is not present in
 
 #### Source
 
-[packages/core/src/cache/index.ts:42](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/index.ts#L42)
+[packages/core/src/cache/index.ts:42](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/index.ts#L42)
 
 ***
 
@@ -120,7 +120,7 @@ A promise that resolves once the value is set in the cache.
 
 #### Source
 
-[packages/core/src/cache/index.ts:54](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/index.ts#L54)
+[packages/core/src/cache/index.ts:54](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/index.ts#L54)
 
 ***
 
@@ -145,4 +145,4 @@ An instance of MemoryCache with a global shared map.
 
 #### Source
 
-[packages/core/src/cache/index.ts:65](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/index.ts#L65)
+[packages/core/src/cache/index.ts:65](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/index.ts#L65)

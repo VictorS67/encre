@@ -35,7 +35,7 @@ we recommend that you include a description.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:76](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L76)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:76](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L76)
 
 ***
 
@@ -49,7 +49,7 @@ with a maximum length of 64.
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:69](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L69)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:69](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L69)
 
 ***
 
@@ -70,4 +70,4 @@ https://spec.openapis.org/oas/v3.0.3#schema
 
 #### Source
 
-[packages/core/src/events/inference/chat/llms/vertexai/index.ts:84](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L84)
+[packages/core/src/events/inference/chat/llms/vertexai/index.ts:84](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/llms/vertexai/index.ts#L84)

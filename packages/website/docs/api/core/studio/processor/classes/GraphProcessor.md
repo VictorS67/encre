@@ -32,7 +32,7 @@ Optional parameters for initializing a sub-processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:959](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L959)
+[packages/core/src/studio/processor.ts:959](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L959)
 
 ## Properties
 
@@ -47,7 +47,7 @@ sources or internally in case of errors or other conditions that require stoppin
 
 #### Source
 
-[packages/core/src/studio/processor.ts:736](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L736)
+[packages/core/src/studio/processor.ts:736](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L736)
 
 ***
 
@@ -62,7 +62,7 @@ and for providing context to the user or to downstream systems about why process
 
 #### Source
 
-[packages/core/src/studio/processor.ts:862](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L862)
+[packages/core/src/studio/processor.ts:862](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L862)
 
 ***
 
@@ -78,7 +78,7 @@ that involve parallelism or segmentation of the graph.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:813](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L813)
+[packages/core/src/studio/processor.ts:813](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L813)
 
 ***
 
@@ -94,7 +94,7 @@ and behavior across different parts of the graph.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:694](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L694)
+[packages/core/src/studio/processor.ts:694](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L694)
 
 ***
 
@@ -109,7 +109,7 @@ These values can include configurations or any supplementary data that nodes nee
 
 #### Source
 
-[packages/core/src/studio/processor.ts:702](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L702)
+[packages/core/src/studio/processor.ts:702](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L702)
 
 ***
 
@@ -124,7 +124,7 @@ and ensuring that nodes do not start processing before all their dependencies ar
 
 #### Source
 
-[packages/core/src/studio/processor.ts:787](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L787)
+[packages/core/src/studio/processor.ts:787](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L787)
 
 ***
 
@@ -139,7 +139,7 @@ This includes starting, pausing, resuming, and aborting the process, along with 
 
 #### Source
 
-[packages/core/src/studio/processor.ts:661](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L661)
+[packages/core/src/studio/processor.ts:661](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L661)
 
 ***
 
@@ -154,7 +154,7 @@ such as memoization or storing intermediate results that can be reused.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:720](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L720)
+[packages/core/src/studio/processor.ts:720](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L720)
 
 ***
 
@@ -169,7 +169,7 @@ including its nodes and connections, facilitating the management and execution o
 
 #### Source
 
-[packages/core/src/studio/processor.ts:653](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L653)
+[packages/core/src/studio/processor.ts:653](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L653)
 
 ***
 
@@ -184,7 +184,7 @@ to feed the initial nodes of the graph that require external data to begin proce
 
 #### Source
 
-[packages/core/src/studio/processor.ts:677](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L677)
+[packages/core/src/studio/processor.ts:677](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L677)
 
 ***
 
@@ -199,7 +199,7 @@ the graph complete their processing, storing their results for further use or fo
 
 #### Source
 
-[packages/core/src/studio/processor.ts:685](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L685)
+[packages/core/src/studio/processor.ts:685](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L685)
 
 ***
 
@@ -214,7 +214,7 @@ for the particular processing instance or because they have been disabled or con
 
 #### Source
 
-[packages/core/src/studio/processor.ts:779](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L779)
+[packages/core/src/studio/processor.ts:779](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L779)
 
 ***
 
@@ -229,7 +229,7 @@ tasks when processing is stopped prematurely.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:846](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L846)
+[packages/core/src/studio/processor.ts:846](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L846)
 
 ***
 
@@ -244,7 +244,7 @@ post-abort and for deciding subsequent actions or error handling.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:854](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L854)
+[packages/core/src/studio/processor.ts:854](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L854)
 
 ***
 
@@ -259,7 +259,7 @@ processing and resume it later, which is useful for scenarios requiring user int
 
 #### Source
 
-[packages/core/src/studio/processor.ts:838](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L838)
+[packages/core/src/studio/processor.ts:838](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L838)
 
 ***
 
@@ -275,7 +275,7 @@ when appropriate.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:830](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L830)
+[packages/core/src/studio/processor.ts:830](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L830)
 
 ***
 
@@ -290,7 +290,7 @@ and responsibilities of processors, especially in managing events and handling s
 
 #### Source
 
-[packages/core/src/studio/processor.ts:821](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L821)
+[packages/core/src/studio/processor.ts:821](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L821)
 
 ***
 
@@ -305,7 +305,7 @@ of node processes without affecting the entire graph processing.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:744](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L744)
+[packages/core/src/studio/processor.ts:744](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L744)
 
 ***
 
@@ -320,7 +320,7 @@ and potentially continue processing other parts of the graph if possible.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:755](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L755)
+[packages/core/src/studio/processor.ts:755](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L755)
 
 ***
 
@@ -335,7 +335,7 @@ especially in complex graphs where nodes might be processed in parallel or on di
 
 #### Source
 
-[packages/core/src/studio/processor.ts:878](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L878)
+[packages/core/src/studio/processor.ts:878](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L878)
 
 ***
 
@@ -350,7 +350,7 @@ processing where different processors might be responsible for different parts o
 
 #### Source
 
-[packages/core/src/studio/processor.ts:870](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L870)
+[packages/core/src/studio/processor.ts:870](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L870)
 
 ***
 
@@ -365,7 +365,7 @@ are inputs to other nodes, ensuring that data flows correctly through the graph.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:712](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L712)
+[packages/core/src/studio/processor.ts:712](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L712)
 
 ***
 
@@ -381,7 +381,7 @@ processing scenarios.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:804](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L804)
+[packages/core/src/studio/processor.ts:804](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L804)
 
 ***
 
@@ -396,7 +396,7 @@ that resolve when the user provides the needed input, ensuring that the node can
 
 #### Source
 
-[packages/core/src/studio/processor.ts:886](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L886)
+[packages/core/src/studio/processor.ts:886](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L886)
 
 ***
 
@@ -411,7 +411,7 @@ their readiness to be processed, ensuring that nodes are processed in the correc
 
 #### Source
 
-[packages/core/src/studio/processor.ts:728](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L728)
+[packages/core/src/studio/processor.ts:728](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L728)
 
 ***
 
@@ -426,7 +426,7 @@ processors, especially when there are multiple sub-processors involved in proces
 
 #### Source
 
-[packages/core/src/studio/processor.ts:669](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L669)
+[packages/core/src/studio/processor.ts:669](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L669)
 
 ***
 
@@ -441,7 +441,7 @@ execution and ensuring that nodes are ready to process as soon as their prerequi
 
 #### Source
 
-[packages/core/src/studio/processor.ts:795](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L795)
+[packages/core/src/studio/processor.ts:795](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L795)
 
 ***
 
@@ -456,7 +456,7 @@ and managing the workflow of nodes as they move through various stages of execut
 
 #### Source
 
-[packages/core/src/studio/processor.ts:763](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L763)
+[packages/core/src/studio/processor.ts:763](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L763)
 
 ***
 
@@ -471,7 +471,7 @@ reprocessing of nodes and to manage dependencies and execution order within the 
 
 #### Source
 
-[packages/core/src/studio/processor.ts:771](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L771)
+[packages/core/src/studio/processor.ts:771](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L771)
 
 ***
 
@@ -501,7 +501,7 @@ The function that was attached earlier.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1061](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1061)
+[packages/core/src/studio/processor.ts:1061](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1061)
 
 ***
 
@@ -523,7 +523,7 @@ The function that was attached earlier.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1080](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1080)
+[packages/core/src/studio/processor.ts:1080](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1080)
 
 ***
 
@@ -553,7 +553,7 @@ The function to call when the event is emitted.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1054](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1054)
+[packages/core/src/studio/processor.ts:1054](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1054)
 
 ***
 
@@ -575,7 +575,7 @@ The function to call when any event is emitted.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1074](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1074)
+[packages/core/src/studio/processor.ts:1074](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1074)
 
 ***
 
@@ -601,7 +601,7 @@ The event name to listen for once.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1068](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1068)
+[packages/core/src/studio/processor.ts:1068](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1068)
 
 ## Accessors
 
@@ -617,7 +617,7 @@ Indicates whether the graph is currently being processed.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:897](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L897)
+[packages/core/src/studio/processor.ts:897](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L897)
 
 ## Methods
 
@@ -642,7 +642,7 @@ The node to fetch data for and process.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1553](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1553)
+[packages/core/src/studio/processor.ts:1553](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1553)
 
 ***
 
@@ -669,7 +669,7 @@ A map of input names to their corresponding data.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:2117](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L2117)
+[packages/core/src/studio/processor.ts:2117](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L2117)
 
 ***
 
@@ -690,7 +690,7 @@ An instance of AbortController.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:942](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L942)
+[packages/core/src/studio/processor.ts:942](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L942)
 
 ***
 
@@ -719,7 +719,7 @@ The identifier for the ongoing process.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1906](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1906)
+[packages/core/src/studio/processor.ts:1906](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1906)
 
 ***
 
@@ -746,7 +746,7 @@ A promise that resolves to the process identifier.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1861](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1861)
+[packages/core/src/studio/processor.ts:1861](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1861)
 
 ***
 
@@ -771,7 +771,7 @@ The node to process.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1704](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1704)
+[packages/core/src/studio/processor.ts:1704](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1704)
 
 ***
 
@@ -806,7 +806,7 @@ A promise that resolves to the outputs of the node.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:2045](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L2045)
+[packages/core/src/studio/processor.ts:2045](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L2045)
 
 ***
 
@@ -835,7 +835,7 @@ The identifier for the ongoing process.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1993](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1993)
+[packages/core/src/studio/processor.ts:1993](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1993)
 
 ***
 
@@ -851,7 +851,7 @@ Subscribes to necessary internal events to manage the processing flow and error 
 
 #### Source
 
-[packages/core/src/studio/processor.ts:986](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L986)
+[packages/core/src/studio/processor.ts:986](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L986)
 
 ***
 
@@ -884,7 +884,7 @@ The identifier for the ongoing process.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:2169](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L2169)
+[packages/core/src/studio/processor.ts:2169](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L2169)
 
 ***
 
@@ -905,7 +905,7 @@ emitted, indicating that the processing has been resumed.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1207](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1207)
+[packages/core/src/studio/processor.ts:1207](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1207)
 
 ***
 
@@ -928,7 +928,7 @@ This method is used to balance the load and optimize parallel processing.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:2196](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L2196)
+[packages/core/src/studio/processor.ts:2196](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L2196)
 
 ***
 
@@ -955,7 +955,7 @@ The processor responsible for handling the node.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:2235](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L2235)
+[packages/core/src/studio/processor.ts:2235](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L2235)
 
 ***
 
@@ -982,7 +982,7 @@ Optional error that might have triggered the abort.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1089](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1089)
+[packages/core/src/studio/processor.ts:1089](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1089)
 
 ***
 
@@ -1017,7 +1017,7 @@ An instance of GraphProcessor configured as a sub-processor.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1239](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1239)
+[packages/core/src/studio/processor.ts:1239](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1239)
 
 ***
 
@@ -1036,7 +1036,7 @@ An asynchronous generator yielding processing events.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1221](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1221)
+[packages/core/src/studio/processor.ts:1221](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1221)
 
 ***
 
@@ -1053,7 +1053,7 @@ This method should be called before any processing starts.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:905](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L905)
+[packages/core/src/studio/processor.ts:905](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L905)
 
 ***
 
@@ -1069,7 +1069,7 @@ Pauses the graph processing. This can be resumed later.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1133](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1133)
+[packages/core/src/studio/processor.ts:1133](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1133)
 
 ***
 
@@ -1102,7 +1102,7 @@ A promise that resolves to the outputs from the graph processing.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1317](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1317)
+[packages/core/src/studio/processor.ts:1317](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1317)
 
 ***
 
@@ -1118,7 +1118,7 @@ Resumes the graph processing if it was previously paused.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1153](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1153)
+[packages/core/src/studio/processor.ts:1153](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1153)
 
 ***
 
@@ -1146,4 +1146,4 @@ The inputs provided by the user.
 
 #### Source
 
-[packages/core/src/studio/processor.ts:1178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/processor.ts#L1178)
+[packages/core/src/studio/processor.ts:1178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/processor.ts#L1178)

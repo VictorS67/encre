@@ -2552,27 +2552,27 @@ const typedocSidebar = { items: [
     "items": [
       {
         "type": "doc",
-        "id": "api/core/studio/serde/type-aliases/SerializedGraph",
+        "id": "api/core/studio/serde/interfaces/SerializedGraph",
         "label": "SerializedGraph"
       },
       {
         "type": "doc",
-        "id": "api/core/studio/serde/type-aliases/SerializedNode",
+        "id": "api/core/studio/serde/interfaces/SerializedNode",
         "label": "SerializedNode"
       },
       {
         "type": "doc",
-        "id": "api/core/studio/serde/type-aliases/SerializedRule",
+        "id": "api/core/studio/serde/interfaces/SerializedRule",
         "label": "SerializedRule"
       },
       {
         "type": "doc",
-        "id": "api/core/studio/serde/type-aliases/SerializedRuleCollection",
+        "id": "api/core/studio/serde/interfaces/SerializedRuleCollection",
         "label": "SerializedRuleCollection"
       },
       {
         "type": "doc",
-        "id": "api/core/studio/serde/type-aliases/SerializedRuleMetadata",
+        "id": "api/core/studio/serde/interfaces/SerializedRuleMetadata",
         "label": "SerializedRuleMetadata"
       }
     ],
@@ -2764,6 +2764,21 @@ const typedocSidebar = { items: [
     "link": {
       "type": "doc",
       "id": "api/core/studio/utils/load/index"
+    }
+  },
+  {
+    "type": "category",
+    "label": "studio/utils/save",
+    "items": [
+      {
+        "type": "doc",
+        "id": "api/core/studio/utils/save/functions/saveGraph",
+        "label": "saveGraph"
+      }
+    ],
+    "link": {
+      "type": "doc",
+      "id": "api/core/studio/utils/save/index"
     }
   },
   {

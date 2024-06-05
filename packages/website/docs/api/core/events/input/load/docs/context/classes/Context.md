@@ -33,7 +33,7 @@ An object containing pageContent and optionally metadata, conforming to ContextI
 
 #### Source
 
-[packages/core/src/events/input/load/docs/context.ts:42](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/docs/context.ts#L42)
+[packages/core/src/events/input/load/docs/context.ts:42](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/docs/context.ts#L42)
 
 ## Properties
 
@@ -49,7 +49,7 @@ Metadata associated with the page content, of type Metadata.
 
 #### Source
 
-[packages/core/src/events/input/load/docs/context.ts:36](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/docs/context.ts#L36)
+[packages/core/src/events/input/load/docs/context.ts:36](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/docs/context.ts#L36)
 
 ***
 
@@ -65,7 +65,7 @@ The content of the page stored as a string.
 
 #### Source
 
-[packages/core/src/events/input/load/docs/context.ts:31](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/docs/context.ts#L31)
+[packages/core/src/events/input/load/docs/context.ts:31](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/docs/context.ts#L31)
 
 ## Methods
 
@@ -89,4 +89,4 @@ True if the value is an instance of Context, false otherwise.
 
 #### Source
 
-[packages/core/src/events/input/load/docs/context.ts:54](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/load/docs/context.ts#L54)
+[packages/core/src/events/input/load/docs/context.ts:54](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/load/docs/context.ts#L54)

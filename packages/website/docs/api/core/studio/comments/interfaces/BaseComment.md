@@ -20,7 +20,7 @@ Optional descriptive text for the comment.
 
 #### Source
 
-[packages/core/src/studio/comments/index.ts:58](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/comments/index.ts#L58)
+[packages/core/src/studio/comments/index.ts:58](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/comments/index.ts#L58)
 
 ***
 
@@ -32,7 +32,7 @@ The unique identifier for the comment.
 
 #### Source
 
-[packages/core/src/studio/comments/index.ts:12](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/comments/index.ts#L12)
+[packages/core/src/studio/comments/index.ts:12](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/comments/index.ts#L12)
 
 ***
 
@@ -44,7 +44,7 @@ Optional title for the comment.
 
 #### Source
 
-[packages/core/src/studio/comments/index.ts:53](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/comments/index.ts#L53)
+[packages/core/src/studio/comments/index.ts:53](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/comments/index.ts#L53)
 
 ***
 
@@ -101,4 +101,4 @@ and optional content styling such as text alignment and color.
 
 #### Source
 
-[packages/core/src/studio/comments/index.ts:18](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/comments/index.ts#L18)
+[packages/core/src/studio/comments/index.ts:18](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/comments/index.ts#L18)

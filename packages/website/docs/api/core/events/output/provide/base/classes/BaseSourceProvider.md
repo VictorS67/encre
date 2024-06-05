@@ -43,7 +43,7 @@ The generation details of the current source, encapsulating the output and any a
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:42](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L42)
+[packages/core/src/events/output/provide/base.ts:42](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L42)
 
 ***
 
@@ -59,7 +59,7 @@ The current source data managed by this provider.
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:37](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L37)
+[packages/core/src/events/output/provide/base.ts:37](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L37)
 
 ## Methods
 
@@ -81,7 +81,7 @@ The source data to be added to the existing source.
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L56)
+[packages/core/src/events/output/provide/base.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L56)
 
 ***
 
@@ -100,7 +100,7 @@ The output of the generation process, which is defined by the concrete implement
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:64](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L64)
+[packages/core/src/events/output/provide/base.ts:64](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L64)
 
 ***
 
@@ -122,4 +122,4 @@ The new source data to replace the existing source.
 
 #### Source
 
-[packages/core/src/events/output/provide/base.ts:49](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/base.ts#L49)
+[packages/core/src/events/output/provide/base.ts:49](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/base.ts#L49)

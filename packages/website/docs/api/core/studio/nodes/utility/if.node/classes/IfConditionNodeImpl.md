@@ -48,7 +48,7 @@ The `CallableNode` data that provides configuration and runtime information.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:503](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L503)
+[packages/core/src/studio/nodes/base.ts:508](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L508)
 
 ## Properties
 
@@ -64,7 +64,7 @@ Key aliases for serializable data fields.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:63](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L63)
+[packages/core/src/studio/nodes/base.ts:63](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L63)
 
 ***
 
@@ -80,7 +80,7 @@ Reference to the serialized node instance.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:58](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L58)
+[packages/core/src/studio/nodes/base.ts:58](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L58)
 
 ***
 
@@ -96,7 +96,7 @@ Secret keys used in the serializable data.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:68](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L68)
+[packages/core/src/studio/nodes/base.ts:68](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L68)
 
 ## Accessors
 
@@ -114,7 +114,7 @@ The callable type as a string.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:515](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L515)
+[packages/core/src/studio/nodes/base.ts:520](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L520)
 
 ***
 
@@ -130,7 +130,7 @@ Retrieves the data associated with the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:149](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L149)
+[packages/core/src/studio/nodes/base.ts:149](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L149)
 
 ***
 
@@ -146,7 +146,7 @@ Retrieves the description of the node, defaulting to an empty string if not set.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:99](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L99)
+[packages/core/src/studio/nodes/base.ts:99](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L99)
 
 ***
 
@@ -162,7 +162,7 @@ Retrieves the unique identifier of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:106](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L106)
+[packages/core/src/studio/nodes/base.ts:106](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L106)
 
 ***
 
@@ -176,7 +176,7 @@ Retrieves the unique identifier of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:95](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L95)
+[packages/core/src/studio/nodes/utility/if.node.ts:123](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L123)
 
 ***
 
@@ -192,7 +192,7 @@ Retrieves keyword arguments for the serializable data.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:185](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L185)
+[packages/core/src/studio/nodes/base.ts:185](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L185)
 
 ***
 
@@ -208,7 +208,7 @@ Retrieves the memory allocation for the node, defaulting to 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L199)
+[packages/core/src/studio/nodes/base.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L199)
 
 ***
 
@@ -224,7 +224,7 @@ Retrieves the name of the node. It is equvalent to the serializable data's name.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:135](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L135)
+[packages/core/src/studio/nodes/base.ts:135](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L135)
 
 ***
 
@@ -240,7 +240,7 @@ Retrieves or initializes output port sizes.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L178)
+[packages/core/src/studio/nodes/base.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L178)
 
 ***
 
@@ -254,7 +254,7 @@ Retrieves or initializes output port sizes.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:99](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L99)
+[packages/core/src/studio/nodes/utility/if.node.ts:127](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L127)
 
 ***
 
@@ -271,7 +271,7 @@ This is used for creating the current node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:128](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L128)
+[packages/core/src/studio/nodes/base.ts:128](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L128)
 
 ***
 
@@ -287,7 +287,7 @@ Retrieves the runtime allocation for the node, defaulting to 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:192](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L192)
+[packages/core/src/studio/nodes/base.ts:192](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L192)
 
 ***
 
@@ -303,7 +303,7 @@ Retrieves the subtype of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:120](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L120)
+[packages/core/src/studio/nodes/base.ts:120](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L120)
 
 ***
 
@@ -319,7 +319,7 @@ Retrieves the title of the node, defaulting to the serializable data's name if n
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:92](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L92)
+[packages/core/src/studio/nodes/base.ts:92](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L92)
 
 ***
 
@@ -335,7 +335,7 @@ Retrieves the type of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:113](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L113)
+[packages/core/src/studio/nodes/base.ts:113](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L113)
 
 ***
 
@@ -351,7 +351,7 @@ Retrieves visual information such as position and size of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:142](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L142)
+[packages/core/src/studio/nodes/base.ts:142](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L142)
 
 ## Methods
 
@@ -383,7 +383,7 @@ const anotherNewPortName = ifNodeInstance._getNewPortName(); // now new name is 
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:495](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L495)
+[packages/core/src/studio/nodes/utility/if.node.ts:519](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L519)
 
 ***
 
@@ -416,7 +416,7 @@ The processing context.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:416](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L416)
+[packages/core/src/studio/nodes/utility/if.node.ts:440](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L440)
 
 ***
 
@@ -465,7 +465,7 @@ The processing context.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:386](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L386)
+[packages/core/src/studio/nodes/utility/if.node.ts:410](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L410)
 
 ***
 
@@ -484,7 +484,7 @@ The name of the newly added input port.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:187](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L187)
+[packages/core/src/studio/nodes/utility/if.node.ts:215](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L215)
 
 ***
 
@@ -503,7 +503,7 @@ The name of the newly added output port.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:206](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L206)
+[packages/core/src/studio/nodes/utility/if.node.ts:234](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L234)
 
 ***
 
@@ -527,7 +527,7 @@ details about the sources and actions associated with the condition.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:62](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L62)
+[packages/core/src/studio/nodes/utility/if.node.ts:90](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L90)
 
 ***
 
@@ -559,7 +559,7 @@ An array of `NodeInputPortDef` detailing the input port configurations.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:103](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L103)
+[packages/core/src/studio/nodes/utility/if.node.ts:131](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L131)
 
 ***
 
@@ -591,7 +591,7 @@ An array of `NodeOutputPortDef` detailing the output port configurations.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:142](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L142)
+[packages/core/src/studio/nodes/utility/if.node.ts:170](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L170)
 
 ***
 
@@ -632,7 +632,7 @@ The output from the condition logic as specified by the condition's output type.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:436](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L436)
+[packages/core/src/studio/nodes/utility/if.node.ts:460](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L460)
 
 ***
 
@@ -665,7 +665,7 @@ A promise that resolves to a map of process outputs.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:457](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L457)
+[packages/core/src/studio/nodes/utility/if.node.ts:481](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L481)
 
 ***
 
@@ -690,7 +690,7 @@ True if the input port was successfully removed, false otherwise.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:234](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L234)
+[packages/core/src/studio/nodes/utility/if.node.ts:262](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L262)
 
 ***
 
@@ -715,13 +715,13 @@ True if the output port was successfully removed, false otherwise.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:252](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L252)
+[packages/core/src/studio/nodes/utility/if.node.ts:280](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L280)
 
 ***
 
 ### serialize()
 
-> **serialize**(`connections`, `processInfo`?): `Promise` \<[`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)\>
+> **serialize**(`connections`, `processInfo`?): `Promise` \<[`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)\>
 
 Serializes the current node instance to a `SerializedNode`, including connection and
 process information.
@@ -738,7 +738,7 @@ Optional information about the node's runtime and memory usage.
 
 #### Returns
 
-`Promise` \<[`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)\>
+`Promise` \<[`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)\>
 
 A promise that resolves to a `SerializedNode` encapsulating the node's current state and configuration.
 
@@ -748,7 +748,7 @@ A promise that resolves to a `SerializedNode` encapsulating the node's current s
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:392](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L392)
+[packages/core/src/studio/nodes/base.ts:394](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L394)
 
 ***
 
@@ -778,7 +778,7 @@ The value to set for the argument.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:208](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L208)
+[packages/core/src/studio/nodes/base.ts:208](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L208)
 
 ***
 
@@ -807,7 +807,7 @@ A boolean indicating whether the provided inputs meet all requirements specified
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:278](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L278)
+[packages/core/src/studio/nodes/base.ts:278](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L278)
 
 ***
 
@@ -827,7 +827,7 @@ An instance of IfCondition.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:308](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L308)
+[packages/core/src/studio/nodes/utility/if.node.ts:336](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L336)
 
 ***
 
@@ -835,22 +835,22 @@ An instance of IfCondition.
 
 > `static` **deserialize**(`serialized`, `values`, `registry`?): `Promise` \<[`IfNode`](../type-aliases/IfNode.md)\>
 
-Static method to deserialize a node from its serialized representation, handling different
-node types via dynamic imports based on the type.
+Deserializes a serialized if node representation into an executable if node,
+reconstituting the node with its operational parameters and data.
 
 #### Parameters
 
-• **serialized**: [`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)
+• **serialized**: [`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)
 
 The serialized node data.
 
 • **values**: `Record`\<`string`, `unknown`\>= `{}`
 
-Optional values to override or provide additional deserialization context.
+Additional values that might be used during deserialization.
 
 • **registry?**
 
-Optional registry containing node and guardrail registrations.
+Optional registry containing additional configurations such as node types and guardrails.
 
 • **registry.guardrails?**: [`GuardrailRegistration`](../../../../registration/guardrails/classes/GuardrailRegistration.md)\<`never`, `never`, `never`\>
 
@@ -860,15 +860,19 @@ Optional registry containing node and guardrail registrations.
 
 `Promise` \<[`IfNode`](../type-aliases/IfNode.md)\>
 
-A promise resolving to an instance of `SerializableNode`.
+A promise resolving to a deserialized if node.
 
 #### Overrides
 
 [`IfNodeImpl`](IfNodeImpl.md) . [`deserialize`](IfNodeImpl.md#deserialize)
 
+#### Throws
+
+Error if the node type is not compatible with if operations.
+
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:329](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L329)
+[packages/core/src/studio/nodes/utility/if.node.ts:357](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L357)
 
 ***
 
@@ -892,4 +896,4 @@ A fully configured IfNode specialized for IfCondition operations.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/if.node.ts:268](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/if.node.ts#L268)
+[packages/core/src/studio/nodes/utility/if.node.ts:296](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/if.node.ts#L296)

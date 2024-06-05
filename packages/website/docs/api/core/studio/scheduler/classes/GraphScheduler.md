@@ -24,7 +24,7 @@ The graph to schedule.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:64](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L64)
+[packages/core/src/studio/scheduler.ts:64](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L64)
 
 ## Properties
 
@@ -38,7 +38,7 @@ graph structure and node information required for scheduling tasks.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:50](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L50)
+[packages/core/src/studio/scheduler.ts:50](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L50)
 
 ***
 
@@ -53,7 +53,7 @@ balancing the complexity and performance of the scheduling process.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:58](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L58)
+[packages/core/src/studio/scheduler.ts:58](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L58)
 
 ## Methods
 
@@ -87,7 +87,7 @@ Error if the node ID is not found in any group set.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:383](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L383)
+[packages/core/src/studio/scheduler.ts:383](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L383)
 
 ***
 
@@ -114,7 +114,7 @@ A tuple of the maximum distance and the node ID at that distance.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:293](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L293)
+[packages/core/src/studio/scheduler.ts:293](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L293)
 
 ***
 
@@ -145,7 +145,7 @@ Error if the node does not exist in the graph.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:402](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L402)
+[packages/core/src/studio/scheduler.ts:402](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L402)
 
 ***
 
@@ -167,7 +167,7 @@ A tuple containing an array of node groups and a set of nodes forming the critic
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:87](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L87)
+[packages/core/src/studio/scheduler.ts:87](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L87)
 
 ***
 
@@ -194,7 +194,7 @@ A map of node IDs to their respective in-degrees.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:150](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L150)
+[packages/core/src/studio/scheduler.ts:150](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L150)
 
 ***
 
@@ -224,7 +224,7 @@ The current set of node groups.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:317](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L317)
+[packages/core/src/studio/scheduler.ts:317](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L317)
 
 ***
 
@@ -259,7 +259,7 @@ The current set of node groups.
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:346](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L346)
+[packages/core/src/studio/scheduler.ts:346](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L346)
 
 ***
 
@@ -290,7 +290,7 @@ A tuple containing maps for node distances and previous node vectors for path re
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:200](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L200)
+[packages/core/src/studio/scheduler.ts:200](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L200)
 
 ***
 
@@ -309,4 +309,4 @@ An array of tuples, each containing a unique processor ID and an array of node I
 
 #### Source
 
-[packages/core/src/studio/scheduler.ts:73](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/scheduler.ts#L73)
+[packages/core/src/studio/scheduler.ts:73](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/scheduler.ts#L73)

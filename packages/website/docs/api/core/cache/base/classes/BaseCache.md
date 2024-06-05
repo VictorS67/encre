@@ -48,7 +48,7 @@ A promise that resolves to the cached value if found, or null if no entry exists
 
 #### Source
 
-[packages/core/src/cache/base.ts:20](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/base.ts#L20)
+[packages/core/src/cache/base.ts:20](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/base.ts#L20)
 
 ***
 
@@ -77,4 +77,4 @@ A promise that resolves once the cache is updated.
 
 #### Source
 
-[packages/core/src/cache/base.ts:30](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/cache/base.ts#L30)
+[packages/core/src/cache/base.ts:30](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/cache/base.ts#L30)

@@ -19,4 +19,4 @@ A MessageGeneration or ChatGeneration object reconstructed from the serialized d
 
 ## Source
 
-[packages/core/src/events/output/provide/message.ts:238](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/message.ts#L238)
+[packages/core/src/events/output/provide/message.ts:238](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/message.ts#L238)

@@ -18,7 +18,7 @@ it implies that all special characters are allowed during tokenization.
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:1133](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L1133)
+[packages/core/src/events/input/transform/splitter.ts:1133](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L1133)
 
 ***
 
@@ -34,7 +34,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L56)
+[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L56)
 
 ***
 
@@ -50,7 +50,7 @@ Optional function to compute the size of a context, which can be asynchronous.
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:38](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L38)
+[packages/core/src/events/input/transform/splitter.ts:38](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L38)
 
 ***
 
@@ -64,7 +64,7 @@ If set to "all", it implies that all special characters are disallowed.
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:1140](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L1140)
+[packages/core/src/events/input/transform/splitter.ts:1140](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L1140)
 
 ***
 
@@ -80,7 +80,7 @@ Flag to determine if the separator should be kept in the output
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:317](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L317)
+[packages/core/src/events/input/transform/splitter.ts:317](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L317)
 
 ***
 
@@ -96,7 +96,7 @@ The maximum size of a single context chunk.
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:28](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L28)
+[packages/core/src/events/input/transform/splitter.ts:28](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L28)
 
 ***
 
@@ -112,7 +112,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L51)
+[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L51)
 
 ***
 
@@ -125,7 +125,7 @@ identifying a specific language model that understands how to tokenize the input
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:1126](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L1126)
+[packages/core/src/events/input/transform/splitter.ts:1126](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L1126)
 
 ***
 
@@ -141,7 +141,7 @@ The name of the callable, used for identification or logging. not-implemented ye
 
 #### Source
 
-[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L41)
+[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L41)
 
 ***
 
@@ -157,7 +157,7 @@ The number of characters to overlap between adjacent context chunks.
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:33](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L33)
+[packages/core/src/events/input/transform/splitter.ts:33](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L33)
 
 ***
 
@@ -173,7 +173,7 @@ Separator in splitting text
 
 #### Source
 
-[packages/core/src/events/input/transform/splitter.ts:312](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/input/transform/splitter.ts#L312)
+[packages/core/src/events/input/transform/splitter.ts:312](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/input/transform/splitter.ts#L312)
 
 ***
 
@@ -189,7 +189,7 @@ An array of strings used for categorizing or filtering callables. not-implemente
 
 #### Source
 
-[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L46)
+[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L46)
 
 ***
 
@@ -210,4 +210,4 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L23)
+[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L23)

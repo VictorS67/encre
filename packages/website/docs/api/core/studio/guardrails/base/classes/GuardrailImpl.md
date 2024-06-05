@@ -32,7 +32,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:21](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L21)
+[packages/core/src/studio/guardrails/base.ts:20](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L20)
 
 ## Properties
 
@@ -42,7 +42,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:19](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L19)
+[packages/core/src/studio/guardrails/base.ts:18](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L18)
 
 ## Accessors
 
@@ -56,7 +56,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:45](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L45)
+[packages/core/src/studio/guardrails/base.ts:44](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L44)
 
 ***
 
@@ -76,7 +76,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L41)
+[packages/core/src/studio/guardrails/base.ts:40](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L40)
 
 ***
 
@@ -90,7 +90,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:29](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L29)
+[packages/core/src/studio/guardrails/base.ts:28](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L28)
 
 ***
 
@@ -110,7 +110,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:49](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L49)
+[packages/core/src/studio/guardrails/base.ts:48](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L48)
 
 ***
 
@@ -124,7 +124,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:33](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L33)
+[packages/core/src/studio/guardrails/base.ts:32](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L32)
 
 ***
 
@@ -138,7 +138,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:25](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L25)
+[packages/core/src/studio/guardrails/base.ts:24](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L24)
 
 ***
 
@@ -152,7 +152,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:37](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L37)
+[packages/core/src/studio/guardrails/base.ts:36](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L36)
 
 ***
 
@@ -172,7 +172,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:57](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L57)
+[packages/core/src/studio/guardrails/base.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L56)
 
 ## Methods
 
@@ -192,7 +192,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:110](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L110)
+[packages/core/src/studio/guardrails/base.ts:109](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L109)
 
 ***
 
@@ -212,7 +212,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:105](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L105)
+[packages/core/src/studio/guardrails/base.ts:104](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L104)
 
 ***
 
@@ -232,7 +232,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:115](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L115)
+[packages/core/src/studio/guardrails/base.ts:114](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L114)
 
 ***
 
@@ -252,7 +252,7 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:141](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L141)
+[packages/core/src/studio/guardrails/base.ts:140](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L140)
 
 ***
 
@@ -270,4 +270,4 @@
 
 #### Source
 
-[packages/core/src/studio/guardrails/base.ts:101](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/guardrails/base.ts#L101)
+[packages/core/src/studio/guardrails/base.ts:100](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/guardrails/base.ts#L100)

@@ -37,7 +37,7 @@ An object conforming to the GenerationChunkField interface, providing initial va
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:48](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L48)
+[packages/core/src/events/output/provide/generation.ts:48](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L48)
 
 ## Properties
 
@@ -53,7 +53,7 @@ Optional metadata providing additional information about this particular chunk's
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L41)
+[packages/core/src/events/output/provide/generation.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L41)
 
 ***
 
@@ -69,7 +69,7 @@ The generated output of this chunk. The nature of this data is determined by the
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:36](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L36)
+[packages/core/src/events/output/provide/generation.ts:36](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L36)
 
 ## Methods
 
@@ -94,4 +94,4 @@ A new instance of GenerationChunk representing the concatenated result.
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:60](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L60)
+[packages/core/src/events/output/provide/generation.ts:60](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L60)

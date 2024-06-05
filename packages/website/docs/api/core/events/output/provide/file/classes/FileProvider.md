@@ -32,7 +32,7 @@ Either a string representing a file path or a Blob object.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:94](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L94)
+[packages/core/src/events/output/provide/file.ts:94](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L94)
 
 ## Methods
 
@@ -58,7 +58,7 @@ A new source, either a file path or a Blob, to add to the existing source.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:126](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L126)
+[packages/core/src/events/output/provide/file.ts:126](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L126)
 
 ***
 
@@ -80,7 +80,7 @@ The current source, either as the original string (file path) or Blob.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:143](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L143)
+[packages/core/src/events/output/provide/file.ts:143](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L143)
 
 ***
 
@@ -106,4 +106,4 @@ A new source, either a file path or a Blob, to replace the existing one.
 
 #### Source
 
-[packages/core/src/events/output/provide/file.ts:111](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/file.ts#L111)
+[packages/core/src/events/output/provide/file.ts:111](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/file.ts#L111)

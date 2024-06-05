@@ -25,7 +25,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L56)
+[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L56)
 
 ***
 
@@ -37,7 +37,7 @@ Optional filtering type specific to the vector store.
 
 #### Source
 
-[packages/core/src/events/inference/retrieve/embedding/vectorstore.ts:28](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/retrieve/embedding/vectorstore.ts#L28)
+[packages/core/src/events/inference/retrieve/embedding/vectorstore.ts:28](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/retrieve/embedding/vectorstore.ts#L28)
 
 ***
 
@@ -53,7 +53,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L51)
+[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L51)
 
 ***
 
@@ -69,7 +69,7 @@ The name of the callable, used for identification or logging. not-implemented ye
 
 #### Source
 
-[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L41)
+[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L41)
 
 ***
 
@@ -82,7 +82,7 @@ relevance (MMR) search.
 
 #### Source
 
-[packages/core/src/events/inference/retrieve/embedding/vectorstore.ts:34](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/retrieve/embedding/vectorstore.ts#L34)
+[packages/core/src/events/inference/retrieve/embedding/vectorstore.ts:34](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/retrieve/embedding/vectorstore.ts#L34)
 
 ***
 
@@ -98,7 +98,7 @@ An array of strings used for categorizing or filtering callables. not-implemente
 
 #### Source
 
-[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L46)
+[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L46)
 
 ***
 
@@ -110,7 +110,7 @@ The vector store used for retrieving vectors.
 
 #### Source
 
-[packages/core/src/events/inference/retrieve/embedding/vectorstore.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/retrieve/embedding/vectorstore.ts#L23)
+[packages/core/src/events/inference/retrieve/embedding/vectorstore.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/retrieve/embedding/vectorstore.ts#L23)
 
 ***
 
@@ -131,4 +131,4 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L23)
+[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L23)

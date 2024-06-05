@@ -20,7 +20,7 @@ not-implemented yet
 
 #### Source
 
-[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L56)
+[packages/core/src/record/callable.ts:56](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L56)
 
 ***
 
@@ -32,7 +32,7 @@ Format of the encoding for the embeddings, either as 'float' or 'base64'.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:59](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L59)
+[packages/core/src/events/embeddings/openai.ts:59](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L59)
 
 ***
 
@@ -48,7 +48,7 @@ A dictionary containing metadata related to the callable, defined as [CallableCo
 
 #### Source
 
-[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L51)
+[packages/core/src/record/callable.ts:51](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L51)
 
 ***
 
@@ -64,7 +64,7 @@ The name of the callable, used for identification or logging. not-implemented ye
 
 #### Source
 
-[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L41)
+[packages/core/src/record/callable.ts:41](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L41)
 
 ***
 
@@ -76,7 +76,7 @@ Additional options to pass to the underlying axios request.
 
 #### Source
 
-[packages/core/src/events/embeddings/openai.ts:64](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/openai.ts#L64)
+[packages/core/src/events/embeddings/openai.ts:64](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/openai.ts#L64)
 
 ***
 
@@ -93,7 +93,7 @@ If provided, the call will be aborted when the signal is aborted.
 
 #### Source
 
-[packages/core/src/events/embeddings/base.ts:19](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/embeddings/base.ts#L19)
+[packages/core/src/events/embeddings/base.ts:19](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/embeddings/base.ts#L19)
 
 ***
 
@@ -109,7 +109,7 @@ An array of strings used for categorizing or filtering callables. not-implemente
 
 #### Source
 
-[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/record/callable.ts#L46)
+[packages/core/src/record/callable.ts:46](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/record/callable.ts#L46)
 
 ***
 
@@ -130,4 +130,4 @@ not-implement yet
 
 #### Source
 
-[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/base.ts#L23)
+[packages/core/src/events/base.ts:23](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/base.ts#L23)

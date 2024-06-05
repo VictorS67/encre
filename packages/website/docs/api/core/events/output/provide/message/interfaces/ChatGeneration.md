@@ -25,7 +25,7 @@ or reasons why the generation process was concluded, structured as a record of k
 
 #### Source
 
-[packages/core/src/events/output/provide/generation.ts:14](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/generation.ts#L14)
+[packages/core/src/events/output/provide/generation.ts:14](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/generation.ts#L14)
 
 ***
 
@@ -37,7 +37,7 @@ The chat message associated with this generation, detailing the specifics of the
 
 #### Source
 
-[packages/core/src/events/output/provide/message.ts:90](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/message.ts#L90)
+[packages/core/src/events/output/provide/message.ts:90](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/message.ts#L90)
 
 ***
 
@@ -53,4 +53,4 @@ Generated text output, representing the processed or computed response.
 
 #### Source
 
-[packages/core/src/events/output/provide/message.ts:80](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/output/provide/message.ts#L80)
+[packages/core/src/events/output/provide/message.ts:80](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/output/provide/message.ts#L80)

@@ -25,7 +25,7 @@ Constructor that initializes with a node instance.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:46](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L46)
+[packages/core/src/studio/registration/nodes.ts:46](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L46)
 
 ## Methods
 
@@ -47,7 +47,7 @@ registry arguments for creating the specific node.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:52](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L52)
+[packages/core/src/studio/registration/nodes.ts:52](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L52)
 
 ***
 
@@ -73,4 +73,4 @@ registry arguments for creating the specific node.
 
 #### Source
 
-[packages/core/src/studio/registration/nodes.ts:59](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L59)
+[packages/core/src/studio/registration/nodes.ts:59](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L59)

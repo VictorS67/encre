@@ -45,4 +45,4 @@ The data type or types that this port accepts.
 
 ## Source
 
-[packages/core/src/studio/nodes/index.ts:150](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L150)
+[packages/core/src/studio/nodes/index.ts:150](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L150)

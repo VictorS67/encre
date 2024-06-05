@@ -1,6 +1,6 @@
 # Variable: globalNodeRegistry
 
-> **globalNodeRegistry**: [`NodeRegistration`](../classes/NodeRegistration.md)\<`"message"` \| `"input"` \| `"prompt"` \| `"chatlm"` \| `"llm"` \| `"variable-validator"` \| `"loader"` \| `"splitter"`, `string`, [`ChatLMNode`](../../../nodes/inference/chat/chatlm.node/type-aliases/ChatLMNode.md) \| [`LLMNode`](../../../nodes/inference/chat/llm.node/type-aliases/LLMNode.md) \| `VariableValidatorNode` \| [`LoaderNode`](../../../nodes/input/loader.node/type-aliases/LoaderNode.md) \| [`MessageNode`](../../../nodes/input/message.node/type-aliases/MessageNode.md) \| [`PromptNode`](../../../nodes/input/prompt.node/type-aliases/PromptNode.md) \| [`SplitterNode`](../../../nodes/input/splitter.node/type-aliases/SplitterNode.md) \| [`InputNode`](../../../nodes/utility/input.node/type-aliases/InputNode.md)\>
+> **globalNodeRegistry**: [`NodeRegistration`](../classes/NodeRegistration.md)\<`"message"` \| `"input"` \| `"if"` \| `"prompt"` \| `"splitter"` \| `"chatlm"` \| `"llm"` \| `"variable-validator"` \| `"loader"`, `string`, [`ChatLMNode`](../../../nodes/inference/chat/chatlm.node/type-aliases/ChatLMNode.md) \| [`LLMNode`](../../../nodes/inference/chat/llm.node/type-aliases/LLMNode.md) \| `VariableValidatorNode` \| [`LoaderNode`](../../../nodes/input/loader.node/type-aliases/LoaderNode.md) \| [`MessageNode`](../../../nodes/input/message.node/type-aliases/MessageNode.md) \| [`PromptNode`](../../../nodes/input/prompt.node/type-aliases/PromptNode.md) \| [`SplitterNode`](../../../nodes/input/splitter.node/type-aliases/SplitterNode.md) \| [`IfNode`](../../../nodes/utility/if.node/type-aliases/IfNode.md) \| [`InputNode`](../../../nodes/utility/input.node/type-aliases/InputNode.md)\>
 
 The `globalNodeRegistry` is a global singleton instance that holds registrations
 for all the built-in node types within the system. It facilitates the dynamic creation,
@@ -26,9 +26,9 @@ const pdfNode = globalNodeRegistry.createDynamic('pdf', 'loader');
 #### Resetting the Registry
 In scenarios such as testing or when starting a new session where a clean registry state is needed:
 ```typescript
-resetNodeRegistry();
+await resetNodeRegistry();
 ```
 
 ## Source
 
-[packages/core/src/studio/registration/nodes.ts:444](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L444)
+[packages/core/src/studio/registration/nodes.ts:445](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L445)

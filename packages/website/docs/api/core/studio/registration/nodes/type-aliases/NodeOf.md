@@ -14,4 +14,4 @@ The type of the node to extract from the built-in nodes.
 
 ## Source
 
-[packages/core/src/studio/registration/nodes.ts:480](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/registration/nodes.ts#L480)
+[packages/core/src/studio/registration/nodes.ts:481](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/registration/nodes.ts#L481)

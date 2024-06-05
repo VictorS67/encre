@@ -49,7 +49,7 @@ The node data to initialize the instance with.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:80](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L80)
+[packages/core/src/studio/nodes/base.ts:80](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L80)
 
 ## Properties
 
@@ -65,7 +65,7 @@ Key aliases for serializable data fields.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:63](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L63)
+[packages/core/src/studio/nodes/base.ts:63](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L63)
 
 ***
 
@@ -81,7 +81,7 @@ Reference to the serialized node instance.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:58](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L58)
+[packages/core/src/studio/nodes/base.ts:58](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L58)
 
 ***
 
@@ -97,7 +97,7 @@ Secret keys used in the serializable data.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:68](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L68)
+[packages/core/src/studio/nodes/base.ts:68](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L68)
 
 ## Accessors
 
@@ -113,7 +113,7 @@ Retrieves the data associated with the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:149](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L149)
+[packages/core/src/studio/nodes/base.ts:149](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L149)
 
 ***
 
@@ -129,7 +129,7 @@ Retrieves the description of the node, defaulting to an empty string if not set.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:99](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L99)
+[packages/core/src/studio/nodes/base.ts:99](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L99)
 
 ***
 
@@ -145,7 +145,7 @@ Retrieves the unique identifier of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:106](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L106)
+[packages/core/src/studio/nodes/base.ts:106](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L106)
 
 ***
 
@@ -166,7 +166,7 @@ please use [getInputPortDefs](SubGraphNodeImpl.md#getinputportdefs) instead.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:160](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L160)
+[packages/core/src/studio/nodes/base.ts:160](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L160)
 
 ***
 
@@ -182,7 +182,7 @@ Retrieves keyword arguments for the serializable data.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:185](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L185)
+[packages/core/src/studio/nodes/base.ts:185](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L185)
 
 ***
 
@@ -198,7 +198,7 @@ Retrieves the memory allocation for the node, defaulting to 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:199](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L199)
+[packages/core/src/studio/nodes/base.ts:199](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L199)
 
 ***
 
@@ -214,7 +214,7 @@ Retrieves the name of the node. It is equvalent to the serializable data's name.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:135](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L135)
+[packages/core/src/studio/nodes/base.ts:135](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L135)
 
 ***
 
@@ -230,7 +230,7 @@ Retrieves or initializes output port sizes.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:178](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L178)
+[packages/core/src/studio/nodes/base.ts:178](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L178)
 
 ***
 
@@ -251,7 +251,7 @@ please use [getOutputPortDefs](SubGraphNodeImpl.md#getoutputportdefs) instead.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:171](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L171)
+[packages/core/src/studio/nodes/base.ts:171](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L171)
 
 ***
 
@@ -268,7 +268,7 @@ This is used for creating the current node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:128](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L128)
+[packages/core/src/studio/nodes/base.ts:128](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L128)
 
 ***
 
@@ -284,7 +284,7 @@ Retrieves the runtime allocation for the node, defaulting to 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:192](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L192)
+[packages/core/src/studio/nodes/base.ts:192](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L192)
 
 ***
 
@@ -300,7 +300,7 @@ Retrieves the subtype of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:120](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L120)
+[packages/core/src/studio/nodes/base.ts:120](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L120)
 
 ***
 
@@ -316,7 +316,7 @@ Retrieves the title of the node, defaulting to the serializable data's name if n
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:92](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L92)
+[packages/core/src/studio/nodes/base.ts:92](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L92)
 
 ***
 
@@ -332,7 +332,7 @@ Retrieves the type of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:113](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L113)
+[packages/core/src/studio/nodes/base.ts:113](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L113)
 
 ***
 
@@ -348,7 +348,7 @@ Retrieves visual information such as position and size of the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:142](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L142)
+[packages/core/src/studio/nodes/base.ts:142](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L142)
 
 ## Methods
 
@@ -371,7 +371,7 @@ A promise that resolves to a `NodeBody`, potentially containing multiple `UICont
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:306](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L306)
+[packages/core/src/studio/nodes/base.ts:306](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L306)
 
 ***
 
@@ -403,7 +403,7 @@ An array of `NodeInputPortDef` detailing the input port configurations.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:238](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L238)
+[packages/core/src/studio/nodes/base.ts:238](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L238)
 
 ***
 
@@ -435,7 +435,7 @@ An array of `NodeOutputPortDef` detailing the output port configurations.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:264](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L264)
+[packages/core/src/studio/nodes/base.ts:264](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L264)
 
 ***
 
@@ -475,13 +475,13 @@ Error if the method is not implemented.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/graph.node.ts:198](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/graph.node.ts#L198)
+[packages/core/src/studio/nodes/utility/graph.node.ts:167](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/graph.node.ts#L167)
 
 ***
 
 ### serialize()
 
-> **serialize**(`connections`, `processInfo`?): `Promise` \<[`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)\>
+> **serialize**(`connections`, `processInfo`?): `Promise` \<[`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)\>
 
 Serializes the current node instance to a `SerializedNode`, including connection and
 process information.
@@ -498,7 +498,7 @@ Optional information about the node's runtime and memory usage.
 
 #### Returns
 
-`Promise` \<[`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)\>
+`Promise` \<[`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)\>
 
 A promise that resolves to a `SerializedNode` encapsulating the node's current state and configuration.
 
@@ -508,7 +508,7 @@ A promise that resolves to a `SerializedNode` encapsulating the node's current s
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:392](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L392)
+[packages/core/src/studio/nodes/base.ts:394](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L394)
 
 ***
 
@@ -538,7 +538,7 @@ The value to set for the argument.
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:208](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L208)
+[packages/core/src/studio/nodes/base.ts:208](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L208)
 
 ***
 
@@ -567,7 +567,7 @@ A boolean indicating whether the provided inputs meet all requirements specified
 
 #### Source
 
-[packages/core/src/studio/nodes/base.ts:278](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/base.ts#L278)
+[packages/core/src/studio/nodes/base.ts:278](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/base.ts#L278)
 
 ***
 
@@ -595,7 +595,7 @@ An instance of SubGraph.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/graph.node.ts:176](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/graph.node.ts#L176)
+[packages/core/src/studio/nodes/utility/graph.node.ts:145](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/graph.node.ts#L145)
 
 ***
 
@@ -608,7 +608,7 @@ reconstituting the node with its operational parameters and data.
 
 #### Parameters
 
-• **serialized**: [`SerializedNode`](../../../../serde/type-aliases/SerializedNode.md)
+• **serialized**: [`SerializedNode`](../../../../serde/interfaces/SerializedNode.md)
 
 The serialized node data.
 
@@ -630,7 +630,7 @@ Optional registry containing additional configurations such as node types and gu
 
 A promise resolving to a deserialized graph node.
 
-#### Inherited from
+#### Overrides
 
 [`GraphNodeImpl`](GraphNodeImpl.md) . [`deserialize`](GraphNodeImpl.md#deserialize)
 
@@ -640,7 +640,7 @@ Error if the node type is not compatible with graph operations.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/graph.node.ts:57](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/graph.node.ts#L57)
+[packages/core/src/studio/nodes/utility/graph.node.ts:174](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/graph.node.ts#L174)
 
 ***
 
@@ -668,4 +668,4 @@ A fully configured GraphNode specialized for SubGraph operations.
 
 #### Source
 
-[packages/core/src/studio/nodes/utility/graph.node.ts:136](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/utility/graph.node.ts#L136)
+[packages/core/src/studio/nodes/utility/graph.node.ts:105](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/utility/graph.node.ts#L105)

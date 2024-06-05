@@ -13,7 +13,7 @@ The default rule applied to all variables unless specifically overridden or excl
 
 #### Source
 
-[packages/core/src/events/inference/validate/validators/variable.ts:14](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/validators/variable.ts#L14)
+[packages/core/src/events/inference/validate/validators/variable.ts:14](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/validators/variable.ts#L14)
 
 ***
 
@@ -25,7 +25,7 @@ A list of variable names to be excluded from validation.
 
 #### Source
 
-[packages/core/src/events/inference/validate/validators/variable.ts:24](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/validators/variable.ts#L24)
+[packages/core/src/events/inference/validate/validators/variable.ts:24](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/validators/variable.ts#L24)
 
 ***
 
@@ -37,4 +37,4 @@ A dictionary of rules specific to certain variables.
 
 #### Source
 
-[packages/core/src/events/inference/validate/validators/variable.ts:19](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/validate/validators/variable.ts#L19)
+[packages/core/src/events/inference/validate/validators/variable.ts:19](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/validate/validators/variable.ts#L19)

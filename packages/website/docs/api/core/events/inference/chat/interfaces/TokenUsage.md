@@ -10,7 +10,7 @@ Interface for tracking token usage in LLM/Chat LM API Calls.
 
 #### Source
 
-[packages/core/src/events/inference/chat/index.ts:5](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/index.ts#L5)
+[packages/core/src/events/inference/chat/index.ts:5](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/index.ts#L5)
 
 ***
 
@@ -20,7 +20,7 @@ Interface for tracking token usage in LLM/Chat LM API Calls.
 
 #### Source
 
-[packages/core/src/events/inference/chat/index.ts:6](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/index.ts#L6)
+[packages/core/src/events/inference/chat/index.ts:6](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/index.ts#L6)
 
 ***
 
@@ -30,4 +30,4 @@ Interface for tracking token usage in LLM/Chat LM API Calls.
 
 #### Source
 
-[packages/core/src/events/inference/chat/index.ts:7](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/events/inference/chat/index.ts#L7)
+[packages/core/src/events/inference/chat/index.ts:7](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/events/inference/chat/index.ts#L7)

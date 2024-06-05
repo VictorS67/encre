@@ -17,7 +17,7 @@ Optional description of the node's functionality.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:83](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L83)
+[packages/core/src/studio/nodes/index.ts:83](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L83)
 
 ***
 
@@ -29,7 +29,7 @@ Unique identifier for the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:30](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L30)
+[packages/core/src/studio/nodes/index.ts:30](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L30)
 
 ***
 
@@ -41,7 +41,7 @@ Input ports for the node, mapping port names to data types.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:68](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L68)
+[packages/core/src/studio/nodes/index.ts:68](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L68)
 
 ***
 
@@ -54,7 +54,7 @@ Default is 0.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:89](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L89)
+[packages/core/src/studio/nodes/index.ts:89](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L89)
 
 ***
 
@@ -66,7 +66,7 @@ Output ports for the node, mapping port names to data types.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:73](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L73)
+[packages/core/src/studio/nodes/index.ts:73](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L73)
 
 ***
 
@@ -78,7 +78,7 @@ Optional title for the node.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:78](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L78)
+[packages/core/src/studio/nodes/index.ts:78](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L78)
 
 ***
 
@@ -126,4 +126,4 @@ Visual presentation details of the node, including position and size.
 
 #### Source
 
-[packages/core/src/studio/nodes/index.ts:35](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/studio/nodes/index.ts#L35)
+[packages/core/src/studio/nodes/index.ts:35](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/studio/nodes/index.ts#L35)

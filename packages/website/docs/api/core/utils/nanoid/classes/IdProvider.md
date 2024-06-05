@@ -32,7 +32,7 @@ Optional custom alphabet for ID generation. If not provided, a default set is us
 
 #### Source
 
-[packages/core/src/utils/nanoid.ts:29](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/utils/nanoid.ts#L29)
+[packages/core/src/utils/nanoid.ts:29](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/utils/nanoid.ts#L29)
 
 ## Properties
 
@@ -44,7 +44,7 @@ The alphabet set used for generating the IDs. Can be customized via the construc
 
 #### Source
 
-[packages/core/src/utils/nanoid.ts:21](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/utils/nanoid.ts#L21)
+[packages/core/src/utils/nanoid.ts:21](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/utils/nanoid.ts#L21)
 
 ## Methods
 
@@ -68,7 +68,7 @@ A promise that resolves to a unique identifier string.
 
 #### Source
 
-[packages/core/src/utils/nanoid.ts:61](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/utils/nanoid.ts#L61)
+[packages/core/src/utils/nanoid.ts:61](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/utils/nanoid.ts#L61)
 
 ***
 
@@ -203,4 +203,4 @@ An error if the `nanoid` module cannot be loaded or is not installed.
 
 #### Source
 
-[packages/core/src/utils/nanoid.ts:40](https://github.com/VictorS67/encre/blob/42c3bddca4be2d23ad959c1c99381eefbf43789c/packages/core/src/utils/nanoid.ts#L40)
+[packages/core/src/utils/nanoid.ts:40](https://github.com/VictorS67/encre/blob/c09849eb59af073bf23be826a912f2ba4f635f93/packages/core/src/utils/nanoid.ts#L40)
