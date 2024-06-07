@@ -1,21 +1,34 @@
+import { BaseCallbackManager } from "../callbacks/managers.js";
 import {
   Callable,
+  CallableConfig,
   CallableLambda,
   CallableLike,
   CallableMap,
-} from './callable';
+} from "./callable.js";
+
+export function configureCallbackManager(
+  config?: CallableConfig
+): BaseCallbackManager | undefined {
+  return BaseCallbackManager.configure(
+    config?.callbacks,
+    config?.name,
+    config?.tags,
+    config?.metadata
+  );
+}
 
 export function convertCallableLikeToCallable<CallInput, CallOutput>(
   callableLike: CallableLike<CallInput, CallOutput>
 ): Callable<CallInput, CallOutput> {
-  if (typeof callableLike === 'function') {
+  if (typeof callableLike === "function") {
     return new CallableLambda({ func: callableLike }) as Callable<
       CallInput,
       CallOutput
     >;
   } else if (Callable.isCallable(callableLike)) {
     return callableLike as Callable<CallInput, CallOutput>;
-  } else if (!Array.isArray(callableLike) && typeof callableLike === 'object') {
+  } else if (!Array.isArray(callableLike) && typeof callableLike === "object") {
     const callables: Record<string, Callable<CallInput>> = {};
 
     for (const [k, v] of Object.entries(callableLike)) {
@@ -27,7 +40,7 @@ export function convertCallableLikeToCallable<CallInput, CallOutput>(
     }) as Callable<CallInput, CallOutput>;
   } else {
     throw new Error(
-      'CANNOT convert to Callable. It requires a function or object.'
+      "CANNOT convert to Callable. It requires a function or object."
     );
   }
 }
@@ -37,7 +50,7 @@ export function isValidLambdaFunc(funcStr: string): boolean {
   const hasInput = /\binput\b/.test(funcStr);
 
   // Check if the function is asynchronous
-  const isFuncAsync = funcStr.trim().startsWith('async');
+  const isFuncAsync = funcStr.trim().startsWith("async");
 
   // Check for 'return' statement if output is not undefined
   // This is a basic check and assumes output is not explicitly typed as 'undefined'
@@ -45,7 +58,7 @@ export function isValidLambdaFunc(funcStr: string): boolean {
 
   // Check if the function is anonymous or named
   const isFuncAnonymous =
-    funcStr.includes('function') || funcStr.includes('=>') || isFuncAsync;
+    funcStr.includes("function") || funcStr.includes("=>") || isFuncAsync;
 
   // Final validation
   if (hasInput && isFuncAnonymous) {
@@ -59,23 +72,23 @@ export function isValidLambdaFunc(funcStr: string): boolean {
 
 export function convertLambdaFuncFromStr(funcStr: string) {
   const funcBody: string = funcStr.slice(
-    funcStr.indexOf('{') + 1,
-    funcStr.lastIndexOf('}')
+    funcStr.indexOf("{") + 1,
+    funcStr.lastIndexOf("}")
   );
 
   const params: string[] = funcStr
-    .slice(funcStr.indexOf('(') + 1, funcStr.indexOf(')'))
-    .split(',')
+    .slice(funcStr.indexOf("(") + 1, funcStr.indexOf(")"))
+    .split(",")
     .map((param) => param.trim());
 
-  const isAsync = funcStr.trim().startsWith('async');
+  const isAsync = funcStr.trim().startsWith("async");
 
   if (isAsync) {
     return new Function(
       ...params,
       `return (async function(${params.join(
-        ', '
-      )}) {${funcBody}}).apply(this, [${params.join(', ')}])`
+        ", "
+      )}) {${funcBody}}).apply(this, [${params.join(", ")}])`
     );
   }
 
@@ -84,18 +97,18 @@ export function convertLambdaFuncFromStr(funcStr: string) {
 
 export function formatLambdaFuncStr(funcStr: string, isAsyncFunc: boolean) {
   const funcBody: string = funcStr.slice(
-    funcStr.indexOf('{') + 1,
-    funcStr.lastIndexOf('}')
+    funcStr.indexOf("{") + 1,
+    funcStr.lastIndexOf("}")
   );
 
   const params: string[] = funcStr
-    .slice(funcStr.indexOf('(') + 1, funcStr.indexOf(')'))
-    .split(',')
+    .slice(funcStr.indexOf("(") + 1, funcStr.indexOf(")"))
+    .split(",")
     .map((param) => param.trim());
 
-  const isAsync = funcStr.trim().startsWith('async') || isAsyncFunc;
+  const isAsync = funcStr.trim().startsWith("async") || isAsyncFunc;
 
-  return `${isAsync ? 'async' : ''} (${params.join(', ')}) => {
+  return `${isAsync ? "async" : ""} (${params.join(", ")}) => {
 ${funcBody}
 }`.trim();
 }

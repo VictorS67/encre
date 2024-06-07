@@ -1,9 +1,6 @@
-import { SerializedFields } from '../load/keymap.js';
-import {
-  Callable,
-  CallableConfigFields,
-  CallableConfig,
-} from '../record/callable.js';
+import { CallbackMetadata } from "../callbacks/managers.js";
+import { SerializedFields } from "../load/keymap.js";
+import { Callable, CallableConfig } from "../record/callable.js";
 
 /**
  * Extends the CallableConfig to include parameters specific to event handling.
@@ -41,7 +38,7 @@ export abstract class BaseEvent<
   extends Callable<CallInput, CallOutput, CallOptions>
   implements BaseEventParams
 {
-  _namespace: string[] = ['events', ...this._eventNamespace()];
+  _namespace: string[] = ["events", ...this._eventNamespace()];
 
   /**
    * Specifies whether the event should provide verbose output, such as detailed logs or response texts.
@@ -69,9 +66,9 @@ export abstract class BaseEvent<
   tags?: string[];
 
   /**
-   * A dictionary containing metadata related to the callable, defined as {@link CallableConfigFields}.
+   * A dictionary containing metadata related to the callable, defined as {@link CallbackMetadata}.
    */
-  metadata?: CallableConfigFields;
+  metadata?: CallbackMetadata;
 
   /**
    * @experimental not-implemented yet
