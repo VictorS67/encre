@@ -5,10 +5,10 @@ const GLOBAL_MAP = new Map();
 
 /**
  * A generic caching mechanism that stores data in memory using a `Map`.
- * This cache is suitable for applications needing rapid access to precomputed data,
+ * This cache is suitable for applications that need rapid access to precomputed data,
  * such as generated outputs or processed results, reducing the need for repetitive computations.
  *
- * @template T The type of data stored in the cache. Defaults to an array of {@link Generation} objects.
+ * @template T The type of data stored in the cache defaults to an array of {@link Generation} objects.
  * 
  * @example
  * ```typescript
