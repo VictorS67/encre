@@ -4,7 +4,7 @@ import {
   ReadableStreamDefaultReadResult,
   ReadableStreamDefaultReader,
   TextDecoderStream,
-} from 'stream/web';
+} from "stream/web";
 
 type Bytes = string | ArrayBuffer | Uint8Array | Buffer | null | undefined;
 
@@ -136,7 +136,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
   private async *iterMessages(): AsyncGenerator<ServerSentEvent> {
     if (!this.response.body) {
       this.controller.abort();
-      throw new Error('Attempted to iterate over a response with no body');
+      throw new Error("Attempted to iterate over a response with no body");
     }
     const lineDecoder = new LineDecoder();
 
@@ -168,7 +168,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
       for await (const sse of this.iterMessages()) {
         if (done) continue;
 
-        if (sse.data.startsWith('[DONE]')) {
+        if (sse.data.startsWith("[DONE]")) {
           done = true;
           continue;
         }
@@ -179,8 +179,8 @@ export class Stream<Item> implements AsyncIterable<Item> {
             // throw new Error(data);
             yield data;
           } catch (e) {
-            console.error('Could not parse message into JSON:', sse.data);
-            console.error('From chunk:', sse.raw);
+            console.error("Could not parse message into JSON:", sse.data);
+            console.error("From chunk:", sse.raw);
             throw e;
           }
         }
@@ -188,7 +188,7 @@ export class Stream<Item> implements AsyncIterable<Item> {
       done = true;
     } catch (e) {
       // If the user calls `stream.controller.abort()`, we should exit without throwing.
-      if (e instanceof Error && e.name === 'AbortError') {
+      if (e instanceof Error && e.name === "AbortError") {
         console.error(`error is thrown: ${e.message}`);
         return;
       }
@@ -222,7 +222,7 @@ export class SSEDecoder {
    * @returns {ServerSentEvent | null} - The decoded Server-Sent Event or null if the line is not part of an event.
    */
   decode(line: string) {
-    if (line.endsWith('\r')) {
+    if (line.endsWith("\r")) {
       line = line.substring(0, line.length - 1);
     }
 
@@ -232,7 +232,7 @@ export class SSEDecoder {
 
       const sse: ServerSentEvent = {
         event: this.event,
-        data: this.data.join('\n'),
+        data: this.data.join("\n"),
         raw: this.chunks,
       };
 
@@ -245,21 +245,21 @@ export class SSEDecoder {
 
     this.chunks.push(line);
 
-    if (line.startsWith(':')) {
+    if (line.startsWith(":")) {
       return null;
     }
 
-    const partitionArr: string[] = partition(line, ':');
+    const partitionArr: string[] = partition(line, ":");
     const fieldname: string = partitionArr[0];
     let value: string = partitionArr[partitionArr.length - 1];
 
-    if (value.startsWith(' ')) {
+    if (value.startsWith(" ")) {
       value = value.substring(1);
     }
 
-    if (fieldname === 'event') {
+    if (fieldname === "event") {
       this.event = value;
-    } else if (fieldname === 'data') {
+    } else if (fieldname === "data") {
       this.data.push(value);
     }
 
@@ -276,16 +276,16 @@ class LineDecoder {
   // See https://docs.python.org/3/library/stdtypes.html#str.splitlines
   /* eslint no-control-regex: "warn" */
   static NEWLINE_CHARS = new Set([
-    '\n',
-    '\r',
-    '\x0b',
-    '\x0c',
-    '\x1c',
-    '\x1d',
-    '\x1e',
-    '\x85',
-    '\u2028',
-    '\u2029',
+    "\n",
+    "\r",
+    "\x0b",
+    "\x0c",
+    "\x1c",
+    "\x1d",
+    "\x1e",
+    "\x85",
+    "\u2028",
+    "\u2029",
   ]);
 
   static NEWLINE_REGEXP = /\r\n|[\n\r\x0b\x0c\x1c\x1d\x1e\x85\u2028\u2029]/g;
@@ -311,10 +311,10 @@ class LineDecoder {
 
     // We always push a trailing `\r` into the next decode iteration.
     if (this.trailingCR) {
-      text = '\r' + text;
+      text = "\r" + text;
       this.trailingCR = false;
     }
-    if (text.endsWith('\r')) {
+    if (text.endsWith("\r")) {
       this.trailingCR = true;
       text = text.slice(0, -1);
     }
@@ -324,7 +324,7 @@ class LineDecoder {
     }
 
     const trailingNewline = LineDecoder.NEWLINE_CHARS.has(
-      text[text.length - 1] || ''
+      text[text.length - 1] || ""
     );
     let lines = text.split(LineDecoder.NEWLINE_REGEXP);
 
@@ -336,25 +336,25 @@ class LineDecoder {
 
     if (this.buffer.length > 0) {
       // Include any existing buffer in the first portion of the splitlines result.
-      lines = [this.buffer.join('') + lines[0], ...lines.slice(1)];
+      lines = [this.buffer.join("") + lines[0], ...lines.slice(1)];
       this.buffer = [];
     }
 
     if (!trailingNewline) {
       // If the last segment of splitlines is not newline terminated,
       // then drop it from our output and start a new buffer.
-      this.buffer = [lines.pop() || ''];
+      this.buffer = [lines.pop() || ""];
     }
 
     return lines;
   }
 
   decodeText(bytes: Bytes): string {
-    if (bytes == null) return '';
-    if (typeof bytes === 'string') return bytes;
+    if (bytes == null) return "";
+    if (typeof bytes === "string") return bytes;
 
     // Node
-    if (typeof Buffer !== 'undefined') {
+    if (typeof Buffer !== "undefined") {
       if (bytes instanceof Buffer) {
         return bytes.toString();
       }
@@ -368,9 +368,9 @@ class LineDecoder {
     }
 
     // Browser
-    if (typeof TextDecoder !== 'undefined') {
+    if (typeof TextDecoder !== "undefined") {
       if (bytes instanceof Uint8Array || bytes instanceof ArrayBuffer) {
-        this.textDecoder ??= new TextDecoder('utf8');
+        this.textDecoder ??= new TextDecoder("utf8");
         return this.textDecoder.decode(bytes);
       }
 
@@ -382,7 +382,7 @@ class LineDecoder {
     }
 
     throw new Error(
-      'Unexpected: neither Buffer nor TextDecoder are available as globals. Please report this error.'
+      "Unexpected: neither Buffer nor TextDecoder are available as globals. Please report this error."
     );
   }
 
@@ -395,11 +395,36 @@ class LineDecoder {
       return [];
     }
 
-    const lines = [this.buffer.join('')];
+    const lines = [this.buffer.join("")];
     this.buffer = [];
     this.trailingCR = false;
     return lines;
   }
+}
+
+export function teeAsyncGenerator<T>(
+  iterator: AsyncGenerator<T>,
+  length: number = 2
+): AsyncGenerator<T>[] {
+  const buffers = Array.from(
+    { length },
+    () => [] as Array<IteratorResult<T> | IteratorReturnResult<T>>
+  );
+
+  return buffers.map(async function* makeIter(buffer) {
+    while (true) {
+      if (buffer.length === 0) {
+        const result = await iterator.next();
+        for (const buffer of buffers) {
+          buffer.push(result);
+        }
+      } else if (buffer[0].done) {
+        return;
+      } else {
+        yield buffer.shift()!.value;
+      }
+    }
+  });
 }
 
 /**
@@ -418,7 +443,7 @@ function partition(str: string, delimiter: string): [string, string, string] {
     ];
   }
 
-  return [str, '', ''];
+  return [str, "", ""];
 }
 
 /**
@@ -439,7 +464,7 @@ async function* streamToAsyncGenerator<T>(stream: any): AsyncGenerator<T> {
   } catch (e) {
     // Error handling if necessary
     const error = new Error((e as Error).message);
-    error.name = 'AbortError';
+    error.name = "AbortError";
     throw error;
   } finally {
     reader.releaseLock();

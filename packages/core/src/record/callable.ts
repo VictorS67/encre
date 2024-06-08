@@ -20,13 +20,22 @@ import {
   SerializedInputRecord,
 } from "../load/serializable.js";
 import { AsyncCallError, AsyncCaller } from "../utils/asyncCaller.js";
+import { concat } from "../utils/concat.js";
 import { shallowCopy } from "../utils/copy.js";
-import { ReadableStreamAsyncIterable } from "../utils/stream.js";
+import { isAsyncIterable, isIterableIterator } from "../utils/safeTypes.js";
+import {
+  ReadableStreamAsyncIterable,
+  teeAsyncGenerator,
+} from "../utils/stream.js";
 import {
   configureCallbackManager,
+  consumeAsyncIterableInContext,
+  consumeIteratorInContext,
   convertCallableLikeToCallable,
   convertLambdaFuncFromStr,
   isValidLambdaFunc,
+  mergeConfigs,
+  patchConfig,
 } from "./utils.js";
 
 /**
@@ -86,7 +95,8 @@ export type CallableLike<CallInput = unknown, CallOutput = unknown> =
  * @template CallOutput The type of output the function returns, which may be wrapped in a Promise.
  */
 export type CallableFunc<CallInput, CallOutput> = (
-  input: CallInput
+  input: CallInput,
+  options?: CallableConfig
 ) => CallOutput | Promise<CallOutput>;
 
 /**
@@ -220,7 +230,13 @@ export abstract class Callable<
    * @internal
    */
   protected async _callWithConfig<T extends CallInput>(
-    func: (input: T) => Promise<CallOutput>,
+    func:
+      | ((input: T) => Promise<CallOutput>)
+      | ((
+          input: T,
+          options?: Partial<CallOptions>,
+          callbackManager?: BaseCallbackManager
+        ) => Promise<CallOutput>),
     input: T,
     options?: Partial<CallOptions>
   ): Promise<CallOutput> {
@@ -233,7 +249,7 @@ export abstract class Callable<
 
     /*eslint no-useless-catch: "warn"*/
     try {
-      output = await func.bind(this)(input, options);
+      output = await func.bind(this)(input, options, callbackManager);
     } catch (e) {
       await callbackManager?.onError(this, e as Error);
       throw e;
@@ -241,6 +257,86 @@ export abstract class Callable<
 
     await callbackManager?.afterInvoke(this, output);
     return output;
+  }
+
+  protected async *_transformStreamWithConfig<
+    I extends CallInput,
+    O extends CallOutput,
+  >(
+    transformer: (
+      generator: AsyncGenerator<I>,
+      options?: Partial<CallOptions>,
+      callbackManager?: BaseCallbackManager
+    ) => AsyncGenerator<O>,
+    inputGenerator: AsyncGenerator<I>,
+    options?: Partial<CallOptions>
+  ): AsyncGenerator<O> {
+    let finalInput: I | undefined;
+    let finalOutput: O | undefined;
+
+    let finalInputSupported: boolean = true;
+    let finalOutputSupported: boolean = true;
+
+    const callbackManager: BaseCallbackManager | undefined =
+      configureCallbackManager(options);
+
+    const wrapInputGenerator = async function* () {
+      for await (const chunk of inputGenerator) {
+        if (finalInputSupported) {
+          if (finalInput === undefined) {
+            finalInput = chunk;
+          } else {
+            try {
+              finalInput = concat(finalInput, chunk as any);
+            } catch {
+              finalInput = undefined;
+              finalInputSupported = false;
+            }
+          }
+        }
+        yield chunk;
+      }
+    };
+
+    try {
+      await callbackManager?.beforeInvoke(this, "");
+
+      const wrapTransformer = async function* () {
+        const transformedGenerator = transformer(
+          wrapInputGenerator(),
+          options,
+          callbackManager
+        );
+
+        for await (const value of transformedGenerator) {
+          yield value;
+        }
+      };
+
+      let iterator = wrapTransformer();
+
+      for await (const chunk of iterator) {
+        yield chunk;
+        if (finalOutputSupported) {
+          if (finalOutput === undefined) {
+            finalOutput = chunk;
+          } else {
+            try {
+              finalOutput = concat(finalOutput, chunk as any);
+            } catch {
+              finalOutput = undefined;
+              finalOutputSupported = false;
+            }
+          }
+        }
+      }
+    } catch (e) {
+      await callbackManager?.onError(this, e as Error);
+
+      throw e;
+    }
+
+    await callbackManager?.afterInvoke(this, finalOutput);
   }
 
   /**
@@ -369,21 +465,12 @@ export abstract class Callable<
       },
     });
 
-    const callbackManagers: (BaseCallbackManager | undefined)[] =
-      optionsList.map(configureCallbackManager);
-
     const batchCalls: Promise<CallOutput | Error>[] = inputs.map((input, i) =>
       caller.call(async () => {
         try {
-          await callbackManagers[i]?.beforeInvoke(this, input);
-
           const result: CallOutput = await this.invoke(input, optionsList[i]);
-
-          await callbackManagers[i]?.afterInvoke(this, result);
           return result;
         } catch (e) {
-          await callbackManagers[i]?.onError(this, e as Error);
-
           if (batchOptions?.returnExceptions) {
             return e as Error;
           }
@@ -442,6 +529,21 @@ export abstract class Callable<
       first: this,
       last: convertCallableLikeToCallable(callableLike),
     });
+  }
+
+  async *transform(
+    generator: AsyncGenerator<CallInput>,
+    options?: Partial<CallOptions>
+  ): AsyncGenerator<CallOutput> {
+    let finalChunk;
+    for await (const chunk of generator) {
+      if (finalChunk === undefined) {
+        finalChunk = chunk;
+      } else {
+        finalChunk = concat(finalChunk, chunk as any);
+      }
+    }
+    yield* this._streamIterator(finalChunk, options);
   }
 
   /** @hidden */
@@ -606,22 +708,10 @@ export class CallableBind<
    * @hidden
    * @internal
    */
-  protected _mergeConfig(config?: CallableConfig): Partial<CallOptions> {
-    const configCopy: CallableConfig = { ...this.config };
-
-    if (config) {
-      for (const key of Object.keys(config)) {
-        if (key === "metadata") {
-          configCopy[key] = { ...configCopy[key], ...config[key] };
-        } else if (key === "tags") {
-          configCopy[key] = (configCopy[key] ?? []).concat(config[key] ?? []);
-        } else {
-          configCopy[key] = config[key] ?? configCopy[key];
-        }
-      }
-    }
-
-    return configCopy as Partial<CallOptions>;
+  protected _mergeConfig(
+    ...options: (Partial<CallOptions> | CallableConfig | undefined)[]
+  ): Partial<CallOptions> {
+    return mergeConfigs(this.config, ...options);
   }
 
   /**
@@ -636,7 +726,7 @@ export class CallableBind<
   ): CallableBind<CallInput, CallOutput, CallOptions> {
     return this.constructor({
       bound: this.bound,
-      kwargs: { ...this.kwargs, ...kwargs },
+      kwargs: mergeConfigs(this.kwargs, kwargs),
       config: this.config,
     });
   }
@@ -654,7 +744,7 @@ export class CallableBind<
     return this.constructor({
       bound: this.bound,
       kwargs: this.kwargs,
-      config: { ...this.config, ...config },
+      config: mergeConfigs(this.config, config),
     });
   }
 
@@ -672,7 +762,7 @@ export class CallableBind<
     return this._callWithConfig(
       this.bound.invoke,
       input,
-      this._mergeConfig({ ...options, ...this.kwargs })
+      this._mergeConfig(options, this.kwargs)
     );
   }
 
@@ -711,11 +801,11 @@ export class CallableBind<
   ): Promise<(CallOutput | Error)[]> {
     const mergedOptions = Array.isArray(options)
       ? options.map((option: Partial<CallOptions>) =>
-          this._mergeConfig({ ...option, ...this.kwargs })
+          this._mergeConfig(option, this.kwargs)
         )
-      : this._mergeConfig({ ...options, ...this.kwargs });
+      : this._mergeConfig(options, this.kwargs);
 
-    return this.batch(inputs, mergedOptions, batchOptions);
+    return this.bound.batch(inputs, mergedOptions, batchOptions);
   }
 
   /**
@@ -730,10 +820,7 @@ export class CallableBind<
     input: CallInput,
     options?: Partial<CallOptions>
   ): Promise<ReadableStreamAsyncIterable<CallOutput>> {
-    return this.bound.stream(
-      input,
-      this._mergeConfig({ ...options, ...this.kwargs })
-    );
+    return this.bound.stream(input, this._mergeConfig(options, this.kwargs));
   }
 
   /**
@@ -943,20 +1030,58 @@ export class CallableLambda<CallInput, CallOutput> extends Callable<
    */
   async _invoke(
     input: CallInput,
-    options?: Partial<CallableConfig>
+    options?: Partial<CallableConfig>,
+    callbackManager?: BaseCallbackManager
   ): Promise<CallOutput> {
-    let output: CallOutput | undefined;
-    try {
-      output = await this._func()(input);
-    } catch {
-      throw new Error("Function is not valid");
-    }
+    return new Promise<CallOutput>(async (resolve, rejects) => {
+      const subConfig: Partial<CallableConfig> = patchConfig(options, {
+        callbacks: callbackManager?.getSubCallbackManager(),
+      });
 
-    if (output && Callable.isCallable(output)) {
-      output = (await output.invoke(input, options)) as CallOutput;
-    }
+      let output: CallOutput | undefined;
+      try {
+        output = await this._func()(input, subConfig);
 
-    return output;
+        if (output && Callable.isCallable(output)) {
+          output = (await output.invoke(input, subConfig)) as CallOutput;
+        } else if (isAsyncIterable(output)) {
+          let finalOutput: CallOutput | undefined;
+          for await (const chunk of consumeAsyncIterableInContext(
+            subConfig,
+            output
+          )) {
+            if (finalOutput === undefined) {
+              finalOutput = chunk as CallOutput;
+            } else {
+              try {
+                finalOutput = concat(finalOutput, chunk) as CallOutput;
+              } catch (e) {
+                finalOutput = chunk as CallOutput;
+              }
+            }
+          }
+          output = finalOutput as typeof output;
+        } else if (isIterableIterator(output)) {
+          let finalOutput: CallOutput | undefined;
+          for (const chunk of consumeIteratorInContext(subConfig, output)) {
+            if (finalOutput === undefined) {
+              finalOutput = chunk as CallOutput;
+            } else {
+              try {
+                finalOutput = concat(finalOutput, chunk) as CallOutput;
+              } catch (e) {
+                finalOutput = chunk as CallOutput;
+              }
+            }
+          }
+          output = finalOutput as typeof output;
+        }
+
+        resolve(output);
+      } catch (e) {
+        rejects(e);
+      }
+    });
   }
 
   /**
@@ -1049,19 +1174,78 @@ export class CallableMap<CallInput> extends Callable<
     input: CallInput,
     options?: Partial<CallableConfig> | undefined
   ): Promise<Record<string, unknown>> {
+    const callbackManager: BaseCallbackManager | undefined =
+      configureCallbackManager(options);
+
+    await callbackManager?.beforeInvoke(this, input);
+
     const output: Record<string, unknown> = {};
 
     try {
       await Promise.all(
         Object.entries(this.steps).map(async ([k, callable]) => {
-          output[k] = await callable.invoke(input, options);
+          output[k] = await callable.invoke(input, {
+            ...options,
+            callbacks: callbackManager?.getSubCallbackManager(`map-${k}`),
+          });
         })
       );
     } catch (e) {
+      await callbackManager?.onError(this, e as Error);
+
       throw e;
     }
 
+    await callbackManager?.afterInvoke(this, output);
+
     return output;
+  }
+
+  async *_transform(
+    generator: AsyncGenerator<CallInput>,
+    options?: Partial<CallableConfig>,
+    callbackManager?: BaseCallbackManager
+  ): AsyncGenerator<Record<string, unknown>> {
+    const steps = { ...this.steps };
+    const inputIterators = teeAsyncGenerator(
+      generator,
+      Object.keys(steps).length
+    );
+
+    const tasks = new Map(
+      Object.entries(steps).map(([k, callable], i) => {
+        const gen = callable.transform(
+          inputIterators[i],
+          patchConfig(options, {
+            callbacks: callbackManager?.getSubCallbackManager(`map-${k}`),
+          })
+        );
+        return [k, gen.next().then((result) => ({ key: k, gen, result }))];
+      })
+    );
+
+    while (tasks.size) {
+      const { key, gen, result } = await Promise.race(tasks.values());
+      tasks.delete(key);
+      if (!result.done) {
+        yield { [key]: result.value };
+        tasks.set(
+          key,
+          gen.next().then((result) => ({ key, gen, result }))
+        );
+      }
+    }
+  }
+
+  transform(
+    generator: AsyncGenerator<CallInput>,
+    options?: Partial<CallableConfig>
+  ): AsyncGenerator<Record<string, unknown>> {
+    return this._transformStreamWithConfig(
+      this._transform.bind(this),
+      generator,
+      options,
+    );
   }
 
   /**
@@ -1163,9 +1347,15 @@ export class CallableEach<
   /** @internal */
   protected async _invoke(
     inputs: CallInputItem[],
-    options?: Partial<CallOptions>
+    options?: Partial<CallOptions>,
+    callbackManager?: BaseCallbackManager
   ): Promise<CallOutputItem[]> {
-    return this.bound.batch(inputs, options);
+    return this.bound.batch(
+      inputs,
+      patchConfig(options, {
+        callbacks: callbackManager?.getSubCallbackManager(),
+      })
+    );
   }
 
   /**
@@ -1337,11 +1527,23 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     input: CallInput,
     options?: Partial<CallableConfig> | undefined
   ): Promise<CallOutput> {
+    const callbackManager: BaseCallbackManager | undefined =
+      configureCallbackManager(options);
+
+    await callbackManager?.beforeInvoke(this, input);
+
     let firstError: Error | undefined;
 
     for (const callable of this.callables()) {
       try {
-        const output: CallOutput = await callable.invoke(input, options);
+        const output: CallOutput = await callable.invoke(
+          input,
+          patchConfig(options, {
+            callbacks: callbackManager?.getSubCallbackManager(),
+          })
+        );
+
+        await callbackManager?.afterInvoke(this, output);
 
         return output;
       } catch (e) {
@@ -1354,6 +1556,8 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     if (firstError === undefined) {
       throw new Error("Fallbacks end without Error stored.");
     }
+
+    await callbackManager?.onError(this, firstError);
 
     throw firstError;
   }
@@ -1395,11 +1599,34 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
       inputs.length
     );
 
+    const callbackManagers: (BaseCallbackManager | undefined)[] =
+      optionsList.map(configureCallbackManager);
+
+    await Promise.all(
+      callbackManagers.map(async (callbackManager, i) => {
+        await callbackManager?.beforeInvoke(this, inputs[i]);
+      })
+    );
+
     let firstError: Error | undefined;
 
     for (const callable of this.callables()) {
       try {
-        const outputs = await callable.batch(inputs, options, batchOptions);
+        const outputs = await callable.batch(
+          inputs,
+          callbackManagers.map((manager, j) =>
+            patchConfig(optionsList[j], {
+              callbacks: manager?.getSubCallbackManager(),
+            })
+          ),
+          batchOptions
+        );
+
+        await Promise.all(
+          callbackManagers.map(async (callbackManager, i) => {
+            await callbackManager?.beforeInvoke(this, outputs[i]);
+          })
+        );
 
         return outputs;
       } catch (e) {
@@ -1412,6 +1639,12 @@ export class CallableWithFallbacks<CallInput, CallOutput> extends Callable<
     if (firstError === undefined) {
       throw new Error("Fallbacks end without Error stored.");
     }
+
+    await Promise.all(
+      callbackManagers.map(async (callbackManager) => {
+        await callbackManager?.onError(this, firstError);
+      })
+    );
 
     throw firstError;
   }
@@ -1632,6 +1865,11 @@ export class CallableSequence<
     input: CallInput,
     options?: Partial<CallableConfig> | undefined
   ): Promise<CallOutput> {
+    const callbackManager: BaseCallbackManager | undefined =
+      configureCallbackManager(options);
+
+    await callbackManager?.beforeInvoke(this, input);
+
     let nextInput: unknown = input;
     let finalOutput: CallOutput;
 
@@ -1639,14 +1877,28 @@ export class CallableSequence<
       const initialSteps = [this.first, ...this.middle];
       for (let i = 0; i < initialSteps.length; i += 1) {
         const step: Callable = initialSteps[i];
-        nextInput = await step.invoke(nextInput, options);
+        nextInput = await step.invoke(
+          nextInput,
+          patchConfig(options, {
+            callbacks: callbackManager?.getSubCallbackManager(`seq-${i + 1}`),
+          })
+        );
       }
 
-      finalOutput = await this.last.invoke(nextInput, options);
+      finalOutput = await this.last.invoke(
+        nextInput,
+        patchConfig(options, {
+          callbacks: callbackManager?.getSubCallbackManager(
+            `seq-${this.steps.length}`
+          ),
+        })
+      );
     } catch (e) {
+      await callbackManager?.onError(this, e as Error);
       throw e as Error;
     }
 
+    await callbackManager?.afterInvoke(this, finalOutput);
     return finalOutput;
   }
 
@@ -1688,19 +1940,47 @@ export class CallableSequence<
       inputs.length
     );
 
+    const callbackManagers: (BaseCallbackManager | undefined)[] =
+      optionsList.map(configureCallbackManager);
+
+    await Promise.all(
+      callbackManagers.map(async (callbackManager, i) => {
+        await callbackManager?.beforeInvoke(this, inputs[i]);
+      })
+    );
+
     let nextInputs: unknown[] = inputs;
     let finalOutputs: (CallOutput | Error)[];
     try {
       const initialSteps = [this.first, ...this.middle];
       for (let i = 0; i < initialSteps.length; i += 1) {
         const step: Callable = initialSteps[i];
-        nextInputs = await step.batch(nextInputs, options, batchOptions);
+        nextInputs = await step.batch(
+          nextInputs,
+          callbackManagers.map((manager, j) =>
+            patchConfig(optionsList[j], {
+              callbacks: manager?.getSubCallbackManager(`seq-${i + 1}`),
+            })
+          ),
+          batchOptions
+        );
       }
 
       finalOutputs = await this.last.batch(nextInputs, options, batchOptions);
     } catch (e) {
+      await Promise.all(
+        callbackManagers.map(async (callbackManager) => {
+          await callbackManager?.onError(this, e as Error);
+        })
+      );
+
       throw e as Error;
     }
+    await Promise.all(
+      callbackManagers.map(async (callbackManager, i) => {
+        await callbackManager?.afterInvoke(this, finalOutputs[i]);
+      })
+    );
 
     return finalOutputs;
   }
@@ -1861,6 +2141,11 @@ export class CallableIf<
     const [callOptions, { variables }] =
       this._splitCallIfOptionsFromConfig(options);
 
+    const callbackManager: BaseCallbackManager | undefined =
+      configureCallbackManager(callOptions);
+
+    await callbackManager?.beforeInvoke(this, input);
+
     const ruleResults: Record<string, boolean> = {};
     const output: Record<string, unknown> = {};
 
@@ -1874,13 +2159,26 @@ export class CallableIf<
       await Promise.all(
         Object.entries(this._actions).map(async ([k, callable]) => {
           output[k] = ruleResults[k]
-            ? await callable.invoke(input, callOptions)
-            : await this._default?.invoke(input, callOptions);
+            ? await callable.invoke(
+                input,
+                patchConfig(callOptions, {
+                  callbacks: callbackManager?.getSubCallbackManager(`if-${k}`),
+                })
+              )
+            : await this._default?.invoke(
+                input,
+                patchConfig(callOptions, {
+                  callbacks: callbackManager?.getSubCallbackManager(`if-${k}`),
+                })
+              );
         })
       );
     } catch (e) {
+      await callbackManager?.onError(this, e as Error);
+
       throw e;
     }
+    await callbackManager?.beforeInvoke(this, output);
 
     return output as CallOutput;
   }

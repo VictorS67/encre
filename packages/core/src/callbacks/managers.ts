@@ -45,6 +45,31 @@ export class BaseCallbackManager
     this.metadata = fields?.metadata ?? {};
   }
 
+  getSubCallbackManager(newTag?: string): BaseCallbackManager {
+    const manager = this.copy();
+
+    if (newTag) {
+      manager.addTags([newTag]);
+    }
+
+    return manager;
+  }
+
+  copy(newHandlers: BaseCallbackHandler[] = []): BaseCallbackManager {
+    const manager = new BaseCallbackManager();
+
+    manager.name = this.name;
+    manager.tags = this.tags;
+    manager.metadata = this.metadata;
+    manager.handlers = this.handlers;
+
+    for (const handler of newHandlers) {
+      manager.addHandler(handler);
+    }
+
+    return manager;
+  }
+
   async beforeInvoke(callable: Callable, input: unknown): Promise<void> {
     if (this.verbose) {
       const name: string = this.name ?? callable._id[callable._id.length - 1];
@@ -149,6 +174,15 @@ export class BaseCallbackManager
     this.handlers = this.handlers.filter((h) => h !== handler);
   }
 
+  addTags(tags: string[]): void {
+    this.removeTags(tags);
+    this.tags.push(...tags);
+  }
+
+  removeTags(tags: string[]): void {
+    this.tags = this.tags.filter((t) => !tags.includes(t));
+  }
+
   static fromHooks(
     hooksArr: BaseCallbackHooks[],
     options?: Partial<Omit<BaseCallbackManagerParams, "handlers">>
@@ -186,7 +220,7 @@ export class BaseCallbackManager
       if (verbose) {
         manager.verbose = verbose;
       }
-  
+
       manager.name = name;
       manager.tags = tags ?? [];
       manager.metadata = metadata ?? {};
