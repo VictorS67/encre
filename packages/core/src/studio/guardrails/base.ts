@@ -1,14 +1,14 @@
-import { BaseRule } from '../../events/inference/validate/guardrails/base.js';
-import { ValidateFunc } from '../../events/inference/validate/index.js';
-import { RecordId } from '../../load/keymap.js';
+import { type BaseRule } from '../../events/inference/validate/guardrails/index.js';
+import { type ValidateFunc } from '../../events/inference/validate/index.js';
+import { type RecordId } from '../../load/keymap.js';
 import {
   convertLambdaFuncFromStr,
   formatLambdaFuncStr,
   isValidLambdaFunc,
 } from '../../record/utils.js';
-import { Data, scalarDefaults } from '../data.js';
-import { ProcessContext, validateProcessData } from '../processor.js';
-import { Guardrail } from './index.js';
+import { type Data, scalarDefaults } from '../data.js';
+import { type ProcessContext, validateProcessData } from '../processor.js';
+import { type Guardrail } from './index.js';
 
 export abstract class GuardrailImpl<
   T extends Guardrail<string, GuardDataType, BaseRule<GuardDataType>>,

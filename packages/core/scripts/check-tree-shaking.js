@@ -27,7 +27,9 @@ export function listExternals(packageJson) {
     "perf_hooks",
     "axios",
     "uuid",
-    "stream/web"
+    "stream/web",
+    "yaml",
+    "path"
   ];
 }
 

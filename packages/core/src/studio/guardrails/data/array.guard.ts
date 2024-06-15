@@ -1,17 +1,16 @@
-import { ArrayRule } from '../../../events/inference/validate/guardrails/array.js';
+import { ArrayRule } from '../../../events/inference/validate/guardrails/index.js';
 import { getRecordId } from '../../../utils/nanoid.js';
-import { isNotNull } from '../../../utils/safeTypes.js';
 import {
-  Data,
-  DataType,
+  type Data,
+  type DataType,
   dataTypes,
   isArrayData,
   isArrayDataType,
 } from '../../data.js';
-import { ProcessContext } from '../../processor.js';
+import { type ProcessContext } from '../../processor.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { GuardrailImpl } from '../base.js';
-import { Guardrail } from '../index.js';
+import { type Guardrail } from '../index.js';
 
 export type ArrayGuard = Guardrail<'array', Array<unknown>, ArrayRule>;
 

@@ -79,6 +79,42 @@ export interface OptionalImportMap {
   'studio/input'?:
     | typeof import('./studio/input.js')
     | Promise<typeof import('./studio/input.js')>;
+  'studio/nodes/inference/chat/chatlm'?:
+    | typeof import('./studio/nodes/inference/chat/chatlm.node.js')
+    | Promise<typeof import('./studio/nodes/inference/chat/chatlm.node.js')>;
+  'studio/nodes/inference/chat/llm'?:
+    | typeof import('./studio/nodes/inference/chat/llm.node.js')
+    | Promise<typeof import('./studio/nodes/inference/chat/llm.node.js')>;
+  'studio/nodes/inference/validate'?:
+    | typeof import('./studio/nodes/inference/validate/validator.node.js')
+    | Promise<typeof import('./studio/nodes/inference/validate/validator.node.js')>;
+  'studio/nodes/input/loader'?:
+    | typeof import('./studio/nodes/input/loader.node.js')
+    | Promise<typeof import('./studio/nodes/input/loader.node.js')>;
+  'studio/nodes/input/message'?:
+    | typeof import('./studio/nodes/input/message.node.js')
+    | Promise<typeof import('./studio/nodes/input/message.node.js')>;
+  'studio/nodes/input/prompt'?:
+    | typeof import('./studio/nodes/input/prompt.node.js')
+    | Promise<typeof import('./studio/nodes/input/prompt.node.js')>;
+  'studio/nodes/input/splitter'?:
+    | typeof import('./studio/nodes/input/splitter.node.js')
+    | Promise<typeof import('./studio/nodes/input/splitter.node.js')>;
+  'studio/nodes/utility/graph'?:
+    | typeof import('./studio/nodes/utility/graph.node.js')
+    | Promise<typeof import('./studio/nodes/utility/graph.node.js')>;
+  'studio/nodes/utility/if'?:
+    | typeof import('./studio/nodes/utility/if.node.js')
+    | Promise<typeof import('./studio/nodes/utility/if.node.js')>;
+  'studio/nodes/utility/input'?:
+    | typeof import('./studio/nodes/utility/input.node.js')
+    | Promise<typeof import('./studio/nodes/utility/input.node.js')>;
+  'studio/registration/nodes'?:
+    | typeof import('./studio/registration/nodes.js')
+    | Promise<typeof import('./studio/registration/nodes.js')>;
+  'studio/utils/load'?:
+    | typeof import('./studio/utils/load.js')
+    | Promise<typeof import('./studio/utils/load.js')>;
 }
 
 export interface SecretMap {

@@ -1,42 +1,42 @@
-import { BaseRuleCollection } from '../../../events/input/load/rules/base.js';
+import { BaseRuleCollection } from '../../../events/input/load/rules/index.js';
 import { load } from '../../../load/index.js';
-import { RecordId } from '../../../load/keymap.js';
+import { type RecordId } from '../../../load/keymap.js';
 import {
-  // globalImportMap,
+  globalImportMap,
   globalSecretMap,
 } from '../../../load/registration.js';
-import { SerializedConstructor } from '../../../load/serializable.js';
+import { type SerializedConstructor } from '../../../load/serializable.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { isNotNull } from '../../../utils/safeTypes.js';
 import {
-  BaseIfCondition,
-  ConditionFieldVariables,
+  type BaseIfCondition,
+  type ConditionFieldVariables,
   IfCondition,
-  IfConditionOptions,
-  IfConditionSource,
-  IfConditionTarget,
+  type IfConditionOptions,
+  type IfConditionSource,
+  type IfConditionTarget,
 } from '../../condition.js';
-import { DataType, dataTypes } from '../../data.js';
+import { type DataType, dataTypes } from '../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../processor.js';
-import { GuardrailRegistration } from '../../registration/guardrails.js';
-import { NodeRegistration } from '../../registration/nodes.js';
-import { SerializedNode } from '../../serde.js';
-import { UIContext } from '../../ui.js';
+import { type GuardrailRegistration } from '../../registration/guardrails.js';
+import { type NodeRegistration } from '../../registration/nodes.js';
+import { type SerializedNode } from '../../serde.js';
+import { type UIContext } from '../../ui.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { displayConditionUI } from '../../utils/display.js';
 import { CallableNodeImpl } from '../base.js';
 import {
-  CallableNode,
-  NodeBody,
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  NodePortFields,
-  SerializableNode,
+  type CallableNode,
+  type NodeBody,
+  type NodeConnection,
+  type NodeInputPortDef,
+  type NodeOutputPortDef,
+  type NodePortFields,
+  type SerializableNode,
 } from '../index.js';
 
 /**
@@ -382,7 +382,11 @@ export class IfConditionNodeImpl extends IfNodeImpl {
 
     (data as SerializedConstructor)._kwargs['registry'] = registry?.guardrails;
     const ifConditionStr = JSON.stringify(data);
-    const ifCondition = await load<IfCondition>(ifConditionStr);
+    const ifCondition = await load<IfCondition>(
+      ifConditionStr,
+      globalSecretMap,
+      globalImportMap
+    );
 
     return {
       id,

@@ -1,4 +1,4 @@
-import { RecordId } from '../../load/keymap';
+import { type RecordId } from '../../load/keymap.js';
 
 /**
  * Represents the basic structure of a comment in a graph-based application. 

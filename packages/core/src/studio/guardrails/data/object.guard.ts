@@ -1,9 +1,9 @@
-import { JSONObjectRule } from '../../../events/inference/validate/guardrails/object.js';
-import { Context } from '../../../events/input/load/docs/context.js';
+import { JSONObjectRule } from '../../../events/inference/validate/guardrails/index.js';
+import { Context } from '../../../events/input/load/docs/index.js';
 import {
   BaseMessage,
-  BaseMessageLike,
-} from '../../../events/input/load/msgs/base.js';
+  type BaseMessageLike,
+} from '../../../events/input/load/msgs/index.js';
 import {
   convertMessageLikeToMessage,
   isMessageLike,
@@ -11,17 +11,16 @@ import {
 import { getRecordId } from '../../../utils/nanoid.js';
 import { isRecordStringUnknown } from '../../../utils/safeTypes.js';
 import {
-  ChatMessageData,
-  ContextData,
-  Data,
-  DataType,
-  JSONObjectData,
-  TypeOf,
+  type ChatMessageData,
+  type ContextData,
+  type Data,
+  type JSONObjectData,
+  type TypeOf,
 } from '../../data.js';
-import { ProcessContext } from '../../processor.js';
+import { type ProcessContext } from '../../processor.js';
 import { coerceToData, expectTypeOptional } from '../../utils/coerce.js';
 import { GuardrailImpl } from '../base.js';
-import { Guardrail } from '../index.js';
+import { type Guardrail } from '../index.js';
 
 export type JSONObjectGuard = Guardrail<'object', object, JSONObjectRule>;
 

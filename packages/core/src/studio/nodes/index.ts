@@ -1,8 +1,8 @@
-import { RecordId } from '../../load/keymap.js';
-import { Serializable } from '../../load/serializable.js';
-import { Callable } from '../../record/callable.js';
-import { DataType, ValueOf } from '../data.js';
-import { UIContext } from '../ui.js';
+import { type RecordId } from '../../load/keymap.js';
+import { type Serializable } from '../../load/serializable.js';
+import { type Callable } from '../../record/index.js';
+import { type DataType, type ValueOf } from '../data.js';
+import { type UIContext } from '../ui.js';
 
 /**
  * Maps port names to their respective data types within a node.

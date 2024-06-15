@@ -1,5 +1,5 @@
 import { Serializable } from '../load/serializable.js';
-import { Data, DataFields, DataType } from './data.js';
+import { type Data, type DataFields, type DataType } from './data.js';
 import { coerceToData } from './utils/coerce.js';
 
 /**

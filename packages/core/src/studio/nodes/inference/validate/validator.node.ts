@@ -1,23 +1,23 @@
-import { ValidateResult } from '../../../../events/inference/validate/index.js';
-import { VariableValidator } from '../../../../events/inference/validate/validators/variable.js';
+import { type ValidateResult } from '../../../../events/inference/validate/index.js';
+import { VariableValidator } from '../../../../events/inference/validate/validators/index.js';
 import { load } from '../../../../load/index.js';
 import {
   globalImportMap,
   globalSecretMap,
 } from '../../../../load/registration.js';
-import { CallableConfig } from '../../../../record/callable.js';
+import { type CallableConfig } from '../../../../record/index.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
 import { isRecordStringUnknown } from '../../../../utils/safeTypes.js';
-import { Data } from '../../../data.js';
+import { type Data } from '../../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../../processor.js';
-import { SerializedNode } from '../../../serde.js';
+import { type SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
-import { CallableNode } from '../../index.js';
+import { type CallableNode } from '../../index.js';
 
 /**
  * A type alias for a specialized callable node focused on variable validation.

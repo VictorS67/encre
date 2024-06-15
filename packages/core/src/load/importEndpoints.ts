@@ -26,5 +26,17 @@ export const optionalImportEndpoints = [
   'events/inference/retrieve/embedding/vectorstore',
   'studio/condition',
   'studio/graph',
-  'studio/input'
+  'studio/input',
+  'studio/nodes/inference/chat/chatlm',
+  'studio/nodes/inference/chat/llm',
+  'studio/nodes/inference/validate',
+  'studio/nodes/input/loader',
+  'studio/nodes/input/message',
+  'studio/nodes/input/prompt',
+  'studio/nodes/input/splitter',
+  'studio/nodes/utility/graph',
+  'studio/nodes/utility/if',
+  'studio/nodes/utility/input',
+  'studio/registration/nodes',
+  'studio/utils/load'
 ] as string[];

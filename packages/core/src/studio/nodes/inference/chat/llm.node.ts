@@ -1,30 +1,32 @@
 import {
-  BaseLLM,
-  BaseLMInput,
+  type BaseLLM,
+  type BaseLMInput,
   isLMInput,
-} from '../../../../events/inference/chat/base.js';
-import { OpenAICallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
+} from '../../../../events/inference/chat/index.js';
+import { type OpenAICallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
 import { OpenAI } from '../../../../events/inference/chat/llms/openai/text.js';
 import { Gemini } from '../../../../events/inference/chat/llms/vertexai/gemini/text.js';
 import { type GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
-import { Generation } from '../../../../events/output/provide/generation.js';
-import { LLMResult } from '../../../../events/output/provide/llmresult.js';
+import {
+  type Generation,
+  type LLMResult,
+} from '../../../../events/output/provide/index.js';
 import { load } from '../../../../load/index.js';
 import {
   globalImportMap,
   globalSecretMap,
 } from '../../../../load/registration.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
-import { Data } from '../../../data.js';
+import { type Data } from '../../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../../processor.js';
-import { SerializedNode } from '../../../serde.js';
+import { type SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
-import { CallableNode } from '../../index.js';
+import { type CallableNode } from '../../index.js';
 
 /**
  * A type alias for a specialized callable node focused on language model (LM) operations,

@@ -3,19 +3,19 @@ import {
   globalImportMap,
   globalSecretMap,
 } from '../../../load/registration.js';
-import { SerializedConstructor } from '../../../load/serializable.js';
+import { type SerializedConstructor } from '../../../load/serializable.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { BaseGraph, SubGraph } from '../../graph.js';
 import {
-  ProcessContext,
-  ProcessInputMap,
-  ProcessOutputMap,
+  type ProcessContext,
+  type ProcessInputMap,
+  type ProcessOutputMap,
 } from '../../processor.js';
-import { GuardrailRegistration } from '../../registration/guardrails.js';
-import { NodeRegistration } from '../../registration/nodes.js';
-import { SerializedNode } from '../../serde.js';
+import { type GuardrailRegistration } from '../../registration/guardrails.js';
+import { type NodeRegistration } from '../../registration/nodes.js';
+import { type SerializedNode } from '../../serde.js';
 import { NodeImpl } from '../base.js';
-import { NodeConnection, SerializableNode } from '../index.js';
+import { type NodeConnection, type SerializableNode } from '../index.js';
 
 /**
  * A type alias for a specialized node focused on graph operations, handling complex data

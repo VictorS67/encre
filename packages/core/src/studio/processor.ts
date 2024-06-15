@@ -3,16 +3,16 @@ import Emittery from 'emittery';
 import PQueue from 'p-queue';
 import type { Opaque } from 'type-fest';
 
-import { RecordId } from '../load/keymap.js';
+import { type RecordId } from '../load/keymap.js';
 import { getRecordId } from '../utils/nanoid.js';
-import { Data, DataType } from './data.js';
-import { BaseGraph } from './graph.js';
+import { type Data, type DataType } from './data.js';
+import { type BaseGraph } from './graph.js';
 import {
-  NodeConnection,
-  NodePortFields,
-  SerializableNode,
+  type NodeConnection,
+  type NodePortFields,
+  type SerializableNode,
 } from './nodes/index.js';
-import { InputNode } from './nodes/utility/input.node.js';
+import { type InputNode } from './nodes/utility/input.node.js';
 
 /**
  * Represents a unique identifier for a process, ensuring type safety through

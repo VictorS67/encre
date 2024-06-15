@@ -2,6 +2,7 @@
 
 export * as serde from '../serde.js';
 export * as load_serializable from '../load/serializable.js';
+export * as load_registration from '../load/registration.js';
 export * as record_callable from '../record/index.js';
 export * as cache from '../cache/index.js';
 export * as cache_base from '../cache/base.js';
@@ -39,4 +40,24 @@ export * as events_inference_retrieve_base from '../events/inference/retrieve/ba
 export * as events_inference_retrieve_text_remote_base from '../events/inference/retrieve/text/remote/base.js';
 export * as events_inference_retrieve_text_remote from '../events/inference/retrieve/text/remote/index.js';
 export * as events_inference_retrieve_embedding from '../events/inference/retrieve/embedding/index.js';
+export * as studio_data from '../studio/data.js';
+export * as studio_processor from '../studio/processor.js';
+export * as studio_scheduler from '../studio/scheduler.js';
+export * as studio_serde from '../studio/serde.js';
+export * as studio_ui from '../studio/ui.js';
+export * as studio_comments from '../studio/comments/index.js';
+export * as studio_guardrails_base from '../studio/guardrails/base.js';
+export * as studio_guardrails from '../studio/guardrails/index.js';
+export * as studio_guardrails_data_array from '../studio/guardrails/data/array.guard.js';
+export * as studio_guardrails_data_boolean from '../studio/guardrails/data/boolean.guard.js';
+export * as studio_guardrails_data_number from '../studio/guardrails/data/number.guard.js';
+export * as studio_guardrails_data_object from '../studio/guardrails/data/object.guard.js';
+export * as studio_guardrails_data_string from '../studio/guardrails/data/string.guard.js';
+export * as studio_nodes from '../studio/nodes/index.js';
+export * as studio_nodes_base from '../studio/nodes/base.js';
+export * as studio_registration from '../studio/registration/index.js';
+export * as studio_registration_guardrails from '../studio/registration/guardrails.js';
+export * as studio_utils_coerce from '../studio/utils/coerce.js';
+export * as studio_utils_display from '../studio/utils/display.js';
+export * as studio_utils_save from '../studio/utils/save.js';
 export * as utils_nanoid from '../utils/nanoid.js';

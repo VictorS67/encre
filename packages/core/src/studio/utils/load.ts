@@ -1,8 +1,8 @@
-import { FileLoader, loadFromFile } from '../../utils/load.js';
+import { type FileLoader, loadFromFile } from '../../utils/load.js';
 import { parseFile } from '../../utils/parse.js';
 import { BaseGraph } from '../graph.js';
-import { GuardrailRegistration } from '../registration/guardrails.js';
-import { NodeRegistration } from '../registration/nodes.js';
+import { type GuardrailRegistration } from '../registration/guardrails.js';
+import { type NodeRegistration } from '../registration/nodes.js';
 
 /**
  * Asynchronously loads a graph from a specified file. This function is designed to read

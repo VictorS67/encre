@@ -1,9 +1,8 @@
-import { RecordId } from '../load/keymap.js';
+import { type RecordId } from '../load/keymap.js';
 import { Queue } from '../utils/algorithm.js';
 import { getRecordId } from '../utils/nanoid.js';
-import { BaseGraph, NodeProcessInfo } from './graph.js';
-import { NodeImpl } from './nodes/base.js';
-import { SerializableNode } from './nodes/index.js';
+import { type BaseGraph, type NodeProcessInfo } from './graph.js';
+import { type SerializableNode } from './nodes/index.js';
 
 /**
  * Represents the distance metrics for a graph node.

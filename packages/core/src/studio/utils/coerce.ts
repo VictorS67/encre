@@ -1,7 +1,9 @@
 import { match } from 'ts-pattern';
-import { Context } from '../../events/input/load/docs/context.js';
-import { BaseMessageLike } from '../../events/input/load/msgs/base.js';
-import { HumanMessage } from '../../events/input/load/msgs/human.js';
+import { Context } from '../../events/input/load/docs/index.js';
+import {
+  type BaseMessageLike,
+  HumanMessage,
+} from '../../events/input/load/msgs/index.js';
 import {
   checkMessageRole,
   convertMessageLikeToMessage,
@@ -10,13 +12,13 @@ import {
 import {
   isSerializedMessage,
   mapSerializedMessageToChatMessage,
-} from '../../events/output/provide/message.js';
+} from '../../events/output/provide/index.js';
 import {
-  Data,
-  DataType,
-  ScalarData,
-  ScalarDataType,
-  ValueOf,
+  type Data,
+  type DataType,
+  type ScalarData,
+  type ScalarDataType,
+  type ValueOf,
   getScalarTypeOf,
   isArrayData,
   isArrayDataType,

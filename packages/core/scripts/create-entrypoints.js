@@ -17,6 +17,7 @@ const entrypoints = {
   // load
   load: "load/index",
   "load/serializable": "load/serializable",
+  "load/registration": "load/registration",
   // record
   "record/callable": "record/index",
   // cache
@@ -120,48 +121,51 @@ const entrypoints = {
     "events/inference/retrieve/embedding/index",
   // studio
   "studio/condition": "studio/condition",
-  // "studio/data": "studio/data",
   "studio/graph": "studio/graph",
   "studio/input": "studio/input",
-  // "studio/processor": "studio/processor",
-  // "studio/scheduler": "studio/scheduler",
-  // "studio/serde": "studio/serde",
-  // "studio/ui": "studio/ui",
-  // // studio/comments
-  // "studio/comments": "studio/comments/index",
-  // // studio/guardrails
-  // "studio/guardrails/base": "studio/guardrails/base",
-  // "studio/guardrails": "studio/guardrails/index",
-  // // studio/guardrails/data
-  // "studio/guardrails/data/array": "studio/guardrails/data/array.guard",
-  // "studio/guardrails/data/boolean": "studio/guardrails/data/boolean.guard",
-  // "studio/guardrails/data/number": "studio/guardrails/data/number.guard",
-  // "studio/guardrails/data/object": "studio/guardrails/data/object.guard",
-  // "studio/guardrails/data/string": "studio/guardrails/data/string.guard",
-  // // studio/nodes
-  // "studio/nodes": "studio/nodes/index",
-  // "studio/nodes/base": "studio/nodes/base",
-  // // studio/nodes/inference/chat
-  // "studio/nodes/inference/chat/chatlm":
-  //   "studio/nodes/inference/chat/chatlm.node",
-  // "studio/nodes/inference/chat/llm": "studio/nodes/inference/chat/llm.node",
-  // // studio/nodes/input
-  // "studio/nodes/input/loader": "studio/nodes/input/loader.node",
-  // "studio/nodes/input/message": "studio/nodes/input/message.node",
-  // "studio/nodes/input/prompt": "studio/nodes/input/prompt.node",
-  // "studio/nodes/input/splitter": "studio/nodes/input/splitter.node",
-  // // studio/nodes/utility
-  // "studio/nodes/utility/graph": "studio/nodes/utility/graph.node",
-  // "studio/nodes/utility/if": "studio/nodes/utility/if.node",
-  // "studio/nodes/utility/input": "studio/nodes/utility/input.node",
-  // // studio/registration
-  // "studio/registration/guardrails": "studio/registration/guardrails",
-  // "studio/registration/nodes": "studio/registration/nodes",
-  // // studio/utils
-  // "studio/utils/coerce": "studio/utils/coerce",
-  // "studio/utils/display": "studio/utils/display",
-  // "studio/utils/load": "studio/utils/load",
-  // "studio/utils/save": "studio/utils/save",
+  "studio/data": "studio/data",
+  "studio/processor": "studio/processor",
+  "studio/scheduler": "studio/scheduler",
+  "studio/serde": "studio/serde",
+  "studio/ui": "studio/ui",
+  // studio/comments
+  "studio/comments": "studio/comments/index",
+  // studio/guardrails
+  "studio/guardrails/base": "studio/guardrails/base",
+  "studio/guardrails": "studio/guardrails/index",
+  // studio/guardrails/data
+  "studio/guardrails/data/array": "studio/guardrails/data/array.guard",
+  "studio/guardrails/data/boolean": "studio/guardrails/data/boolean.guard",
+  "studio/guardrails/data/number": "studio/guardrails/data/number.guard",
+  "studio/guardrails/data/object": "studio/guardrails/data/object.guard",
+  "studio/guardrails/data/string": "studio/guardrails/data/string.guard",
+  // studio/nodes
+  "studio/nodes": "studio/nodes/index",
+  "studio/nodes/base": "studio/nodes/base",
+  // studio/nodes/inference/chat
+  "studio/nodes/inference/chat/chatlm":
+    "studio/nodes/inference/chat/chatlm.node",
+  "studio/nodes/inference/chat/llm": "studio/nodes/inference/chat/llm.node",
+  // studio/nodes/inference/validate
+  "studio/nodes/inference/validate": "studio/nodes/inference/validate/validator.node",
+  // studio/nodes/input
+  "studio/nodes/input/loader": "studio/nodes/input/loader.node",
+  "studio/nodes/input/message": "studio/nodes/input/message.node",
+  "studio/nodes/input/prompt": "studio/nodes/input/prompt.node",
+  "studio/nodes/input/splitter": "studio/nodes/input/splitter.node",
+  // studio/nodes/utility
+  "studio/nodes/utility/graph": "studio/nodes/utility/graph.node",
+  "studio/nodes/utility/if": "studio/nodes/utility/if.node",
+  "studio/nodes/utility/input": "studio/nodes/utility/input.node",
+  // studio/registration
+  "studio/registration": "studio/registration/index",
+  "studio/registration/guardrails": "studio/registration/guardrails",
+  "studio/registration/nodes": "studio/registration/nodes",
+  // studio/utils
+  "studio/utils/coerce": "studio/utils/coerce",
+  "studio/utils/display": "studio/utils/display",
+  "studio/utils/load": "studio/utils/load",
+  "studio/utils/save": "studio/utils/save",
   // utils
   "utils/nanoid": "utils/nanoid",
 };
@@ -208,6 +212,18 @@ const reuqiresOptionalDependency = [
   "studio/graph",
   "studio/condition",
   "studio/input",
+  "studio/nodes/inference/chat/chatlm",
+  "studio/nodes/inference/chat/llm",
+  "studio/nodes/inference/validate",
+  "studio/nodes/input/loader",
+  "studio/nodes/input/message",
+  "studio/nodes/input/prompt",
+  "studio/nodes/input/splitter",
+  "studio/nodes/utility/graph",
+  "studio/nodes/utility/if",
+  "studio/nodes/utility/input",
+  "studio/registration/nodes",
+  "studio/utils/load"
 ];
 
 // const testExports = [

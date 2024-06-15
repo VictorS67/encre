@@ -13,7 +13,7 @@
     "build:esm": "tsc --outDir build/ && rimraf build/tests build/**/tests && cp .env.local ./build/.env && cp .env.local ./build/.env.local",
     "build:watch": "node scripts/create-entrypoints.js && tsc --outDir build/ --watch",
     "clean": "rimraf build/ && node scripts/create-entrypoints.js pre",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts && yarn lint:dpdm",
     "lint:dpdm": "dpdm --skip-dynamic-imports circular --no-warning --no-tree -T src/*.ts src/**/*.ts",
     "lint-fix": "eslint --fix src/**/*.ts",
     "test:debug": "jest .*.spec.test.ts --testTimeout 50000 --maxWorkers=50%",
@@ -93,6 +93,11 @@
       "types": "./load/serializable.d.ts",
       "import": "./load/serializable.js",
       "require": "./load/serializable.cjs"
+    },
+    "./load/registration": {
+      "types": "./load/registration.d.ts",
+      "import": "./load/registration.js",
+      "require": "./load/registration.cjs"
     },
     "./record/callable": {
       "types": "./record/callable.d.ts",
@@ -409,6 +414,166 @@
       "import": "./studio/input.js",
       "require": "./studio/input.cjs"
     },
+    "./studio/data": {
+      "types": "./studio/data.d.ts",
+      "import": "./studio/data.js",
+      "require": "./studio/data.cjs"
+    },
+    "./studio/processor": {
+      "types": "./studio/processor.d.ts",
+      "import": "./studio/processor.js",
+      "require": "./studio/processor.cjs"
+    },
+    "./studio/scheduler": {
+      "types": "./studio/scheduler.d.ts",
+      "import": "./studio/scheduler.js",
+      "require": "./studio/scheduler.cjs"
+    },
+    "./studio/serde": {
+      "types": "./studio/serde.d.ts",
+      "import": "./studio/serde.js",
+      "require": "./studio/serde.cjs"
+    },
+    "./studio/ui": {
+      "types": "./studio/ui.d.ts",
+      "import": "./studio/ui.js",
+      "require": "./studio/ui.cjs"
+    },
+    "./studio/comments": {
+      "types": "./studio/comments.d.ts",
+      "import": "./studio/comments.js",
+      "require": "./studio/comments.cjs"
+    },
+    "./studio/guardrails/base": {
+      "types": "./studio/guardrails/base.d.ts",
+      "import": "./studio/guardrails/base.js",
+      "require": "./studio/guardrails/base.cjs"
+    },
+    "./studio/guardrails": {
+      "types": "./studio/guardrails.d.ts",
+      "import": "./studio/guardrails.js",
+      "require": "./studio/guardrails.cjs"
+    },
+    "./studio/guardrails/data/array": {
+      "types": "./studio/guardrails/data/array.d.ts",
+      "import": "./studio/guardrails/data/array.js",
+      "require": "./studio/guardrails/data/array.cjs"
+    },
+    "./studio/guardrails/data/boolean": {
+      "types": "./studio/guardrails/data/boolean.d.ts",
+      "import": "./studio/guardrails/data/boolean.js",
+      "require": "./studio/guardrails/data/boolean.cjs"
+    },
+    "./studio/guardrails/data/number": {
+      "types": "./studio/guardrails/data/number.d.ts",
+      "import": "./studio/guardrails/data/number.js",
+      "require": "./studio/guardrails/data/number.cjs"
+    },
+    "./studio/guardrails/data/object": {
+      "types": "./studio/guardrails/data/object.d.ts",
+      "import": "./studio/guardrails/data/object.js",
+      "require": "./studio/guardrails/data/object.cjs"
+    },
+    "./studio/guardrails/data/string": {
+      "types": "./studio/guardrails/data/string.d.ts",
+      "import": "./studio/guardrails/data/string.js",
+      "require": "./studio/guardrails/data/string.cjs"
+    },
+    "./studio/nodes": {
+      "types": "./studio/nodes.d.ts",
+      "import": "./studio/nodes.js",
+      "require": "./studio/nodes.cjs"
+    },
+    "./studio/nodes/base": {
+      "types": "./studio/nodes/base.d.ts",
+      "import": "./studio/nodes/base.js",
+      "require": "./studio/nodes/base.cjs"
+    },
+    "./studio/nodes/inference/chat/chatlm": {
+      "types": "./studio/nodes/inference/chat/chatlm.d.ts",
+      "import": "./studio/nodes/inference/chat/chatlm.js",
+      "require": "./studio/nodes/inference/chat/chatlm.cjs"
+    },
+    "./studio/nodes/inference/chat/llm": {
+      "types": "./studio/nodes/inference/chat/llm.d.ts",
+      "import": "./studio/nodes/inference/chat/llm.js",
+      "require": "./studio/nodes/inference/chat/llm.cjs"
+    },
+    "./studio/nodes/inference/validate": {
+      "types": "./studio/nodes/inference/validate.d.ts",
+      "import": "./studio/nodes/inference/validate.js",
+      "require": "./studio/nodes/inference/validate.cjs"
+    },
+    "./studio/nodes/input/loader": {
+      "types": "./studio/nodes/input/loader.d.ts",
+      "import": "./studio/nodes/input/loader.js",
+      "require": "./studio/nodes/input/loader.cjs"
+    },
+    "./studio/nodes/input/message": {
+      "types": "./studio/nodes/input/message.d.ts",
+      "import": "./studio/nodes/input/message.js",
+      "require": "./studio/nodes/input/message.cjs"
+    },
+    "./studio/nodes/input/prompt": {
+      "types": "./studio/nodes/input/prompt.d.ts",
+      "import": "./studio/nodes/input/prompt.js",
+      "require": "./studio/nodes/input/prompt.cjs"
+    },
+    "./studio/nodes/input/splitter": {
+      "types": "./studio/nodes/input/splitter.d.ts",
+      "import": "./studio/nodes/input/splitter.js",
+      "require": "./studio/nodes/input/splitter.cjs"
+    },
+    "./studio/nodes/utility/graph": {
+      "types": "./studio/nodes/utility/graph.d.ts",
+      "import": "./studio/nodes/utility/graph.js",
+      "require": "./studio/nodes/utility/graph.cjs"
+    },
+    "./studio/nodes/utility/if": {
+      "types": "./studio/nodes/utility/if.d.ts",
+      "import": "./studio/nodes/utility/if.js",
+      "require": "./studio/nodes/utility/if.cjs"
+    },
+    "./studio/nodes/utility/input": {
+      "types": "./studio/nodes/utility/input.d.ts",
+      "import": "./studio/nodes/utility/input.js",
+      "require": "./studio/nodes/utility/input.cjs"
+    },
+    "./studio/registration": {
+      "types": "./studio/registration.d.ts",
+      "import": "./studio/registration.js",
+      "require": "./studio/registration.cjs"
+    },
+    "./studio/registration/guardrails": {
+      "types": "./studio/registration/guardrails.d.ts",
+      "import": "./studio/registration/guardrails.js",
+      "require": "./studio/registration/guardrails.cjs"
+    },
+    "./studio/registration/nodes": {
+      "types": "./studio/registration/nodes.d.ts",
+      "import": "./studio/registration/nodes.js",
+      "require": "./studio/registration/nodes.cjs"
+    },
+    "./studio/utils/coerce": {
+      "types": "./studio/utils/coerce.d.ts",
+      "import": "./studio/utils/coerce.js",
+      "require": "./studio/utils/coerce.cjs"
+    },
+    "./studio/utils/display": {
+      "types": "./studio/utils/display.d.ts",
+      "import": "./studio/utils/display.js",
+      "require": "./studio/utils/display.cjs"
+    },
+    "./studio/utils/load": {
+      "types": "./studio/utils/load.d.ts",
+      "import": "./studio/utils/load.js",
+      "require": "./studio/utils/load.cjs"
+    },
+    "./studio/utils/save": {
+      "types": "./studio/utils/save.d.ts",
+      "import": "./studio/utils/save.js",
+      "require": "./studio/utils/save.cjs"
+    },
     "./utils/nanoid": {
       "types": "./utils/nanoid.d.ts",
       "import": "./utils/nanoid.js",
@@ -427,6 +592,9 @@
     "load/serializable.cjs",
     "load/serializable.js",
     "load/serializable.d.ts",
+    "load/registration.cjs",
+    "load/registration.js",
+    "load/registration.d.ts",
     "record/callable.cjs",
     "record/callable.js",
     "record/callable.d.ts",
@@ -616,6 +784,102 @@
     "studio/input.cjs",
     "studio/input.js",
     "studio/input.d.ts",
+    "studio/data.cjs",
+    "studio/data.js",
+    "studio/data.d.ts",
+    "studio/processor.cjs",
+    "studio/processor.js",
+    "studio/processor.d.ts",
+    "studio/scheduler.cjs",
+    "studio/scheduler.js",
+    "studio/scheduler.d.ts",
+    "studio/serde.cjs",
+    "studio/serde.js",
+    "studio/serde.d.ts",
+    "studio/ui.cjs",
+    "studio/ui.js",
+    "studio/ui.d.ts",
+    "studio/comments.cjs",
+    "studio/comments.js",
+    "studio/comments.d.ts",
+    "studio/guardrails/base.cjs",
+    "studio/guardrails/base.js",
+    "studio/guardrails/base.d.ts",
+    "studio/guardrails.cjs",
+    "studio/guardrails.js",
+    "studio/guardrails.d.ts",
+    "studio/guardrails/data/array.cjs",
+    "studio/guardrails/data/array.js",
+    "studio/guardrails/data/array.d.ts",
+    "studio/guardrails/data/boolean.cjs",
+    "studio/guardrails/data/boolean.js",
+    "studio/guardrails/data/boolean.d.ts",
+    "studio/guardrails/data/number.cjs",
+    "studio/guardrails/data/number.js",
+    "studio/guardrails/data/number.d.ts",
+    "studio/guardrails/data/object.cjs",
+    "studio/guardrails/data/object.js",
+    "studio/guardrails/data/object.d.ts",
+    "studio/guardrails/data/string.cjs",
+    "studio/guardrails/data/string.js",
+    "studio/guardrails/data/string.d.ts",
+    "studio/nodes.cjs",
+    "studio/nodes.js",
+    "studio/nodes.d.ts",
+    "studio/nodes/base.cjs",
+    "studio/nodes/base.js",
+    "studio/nodes/base.d.ts",
+    "studio/nodes/inference/chat/chatlm.cjs",
+    "studio/nodes/inference/chat/chatlm.js",
+    "studio/nodes/inference/chat/chatlm.d.ts",
+    "studio/nodes/inference/chat/llm.cjs",
+    "studio/nodes/inference/chat/llm.js",
+    "studio/nodes/inference/chat/llm.d.ts",
+    "studio/nodes/inference/validate.cjs",
+    "studio/nodes/inference/validate.js",
+    "studio/nodes/inference/validate.d.ts",
+    "studio/nodes/input/loader.cjs",
+    "studio/nodes/input/loader.js",
+    "studio/nodes/input/loader.d.ts",
+    "studio/nodes/input/message.cjs",
+    "studio/nodes/input/message.js",
+    "studio/nodes/input/message.d.ts",
+    "studio/nodes/input/prompt.cjs",
+    "studio/nodes/input/prompt.js",
+    "studio/nodes/input/prompt.d.ts",
+    "studio/nodes/input/splitter.cjs",
+    "studio/nodes/input/splitter.js",
+    "studio/nodes/input/splitter.d.ts",
+    "studio/nodes/utility/graph.cjs",
+    "studio/nodes/utility/graph.js",
+    "studio/nodes/utility/graph.d.ts",
+    "studio/nodes/utility/if.cjs",
+    "studio/nodes/utility/if.js",
+    "studio/nodes/utility/if.d.ts",
+    "studio/nodes/utility/input.cjs",
+    "studio/nodes/utility/input.js",
+    "studio/nodes/utility/input.d.ts",
+    "studio/registration.cjs",
+    "studio/registration.js",
+    "studio/registration.d.ts",
+    "studio/registration/guardrails.cjs",
+    "studio/registration/guardrails.js",
+    "studio/registration/guardrails.d.ts",
+    "studio/registration/nodes.cjs",
+    "studio/registration/nodes.js",
+    "studio/registration/nodes.d.ts",
+    "studio/utils/coerce.cjs",
+    "studio/utils/coerce.js",
+    "studio/utils/coerce.d.ts",
+    "studio/utils/display.cjs",
+    "studio/utils/display.js",
+    "studio/utils/display.d.ts",
+    "studio/utils/load.cjs",
+    "studio/utils/load.js",
+    "studio/utils/load.d.ts",
+    "studio/utils/save.cjs",
+    "studio/utils/save.js",
+    "studio/utils/save.d.ts",
     "utils/nanoid.cjs",
     "utils/nanoid.js",
     "utils/nanoid.d.ts",
