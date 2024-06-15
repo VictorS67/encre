@@ -16,26 +16,28 @@ import {
 } from '@google/generative-ai';
 
 import {
-  SecretFields,
-  SerializedFields,
+  type SecretFields,
+  type SerializedFields,
 } from '../../../../../../load/keymap.js';
 import { AsyncCallError } from '../../../../../../utils/asyncCaller.js';
 import { getEnvironmentVariables } from '../../../../../../utils/environment.js';
-import { BaseMessage } from '../../../../../input/load/msgs/base.js';
-import { Generation } from '../../../../../output/provide/generation.js';
-import { LLMResult } from '../../../../../output/provide/llmresult.js';
-import { ChatGenerationChunk } from '../../../../../output/provide/message.js';
-import { BaseChatLM, BaseLLMParams } from '../../../base.js';
-import { TokenUsage } from '../../../index.js';
+import { BaseMessage } from '../../../../../input/load/msgs/index.js';
 import {
-  GeminiCallOptions,
-  GeminiContent,
-  GeminiContentRole,
-  GeminiInput,
-  GeminiSafetySetting,
+  type Generation,
+  type LLMResult,
+  ChatGenerationChunk,
+} from '../../../../../output/provide/index.js';
+import { BaseChatLM, type BaseLLMParams } from '../../../base.js';
+import { type TokenUsage } from '../../../index.js';
+import { wrapGoogleGenerativeAIClientError } from '../index.js';
+import {
+  type GeminiCallOptions,
+  type GeminiContent,
+  type GeminiContentRole,
+  type GeminiInput,
+  type GeminiSafetySetting,
   checkModelForGemini,
   checkModelForGeminiVision,
-  wrapGoogleGenerativeAIClientError,
 } from '../index.js';
 import {
   getContentFromMessage,

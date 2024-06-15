@@ -1,5 +1,5 @@
 import hash from 'object-hash';
-import { Generation } from '../events/output/provide/generation.js';
+import { type Generation } from '../events/output/provide/index.js';
 
 /**
  * An abstract class that defines the basic operations for a caching system.

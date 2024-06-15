@@ -1,15 +1,16 @@
 import {
   BaseMessage,
-  ContentLike,
+  type ContentLike,
   MessageRole,
-} from '../../input/load/msgs/base.js';
-import { BotMessage } from '../../input/load/msgs/bot.js';
-import { ChatMessage, ChatMessageFields } from '../../input/load/msgs/chat.js';
-import { FunctionMessage } from '../../input/load/msgs/function.js';
-import { HumanMessage } from '../../input/load/msgs/human.js';
-import { SystemMessage } from '../../input/load/msgs/system.js';
+  BotMessage,
+  ChatMessage,
+  type ChatMessageFields,
+  FunctionMessage,
+  HumanMessage,
+  SystemMessage,
+} from '../../input/load/msgs/index.js';
 import { checkMessageRole } from '../../input/load/msgs/utils.js';
-import { Generation, GenerationChunk } from './generation.js';
+import { type Generation, GenerationChunk } from './generation.js';
 
 /**
  * Represents the data structure of a serialized message, which includes all essential fields that describe a message.

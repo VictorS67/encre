@@ -1,4 +1,4 @@
-import { BaseMessage } from '../msgs/base.js';
+import { type BaseMessage } from '../msgs/index.js';
 import { getChatString } from '../msgs/utils.js';
 import { BasePrompt } from './base.js';
 

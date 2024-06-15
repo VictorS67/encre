@@ -1,4 +1,4 @@
-import { BaseMessage, BaseMessageFields, MessageRole } from './base.js';
+import { BaseMessage, type BaseMessageFields, MessageRole } from './base.js';
 
 /**
  * Class that stores the Bot message in a conversation.

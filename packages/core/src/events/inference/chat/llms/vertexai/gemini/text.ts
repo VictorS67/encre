@@ -12,23 +12,23 @@ import {
 } from '@google/generative-ai';
 
 import {
-  SecretFields,
-  SerializedFields,
+  type SecretFields,
+  type SerializedFields,
 } from '../../../../../../load/keymap.js';
 import { AsyncCallError } from '../../../../../../utils/asyncCaller.js';
 import { getEnvironmentVariables } from '../../../../../../utils/environment.js';
-import { Generation } from '../../../../../output/provide/generation.js';
-import { LLMResult } from '../../../../../output/provide/llmresult.js';
-import { BaseLLM, BaseLLMParams } from '../../../base.js';
-import { TokenUsage } from '../../../index.js';
+import { type Generation, type LLMResult } from '../../../../../output/provide/index.js';
+import { BaseLLM, type BaseLLMParams } from '../../../base.js';
+import { type TokenUsage } from '../../../index.js';
 import {
-  GeminiCallOptions,
-  GeminiSafetySetting,
-  VertexAIBaseInput,
-  checkModelForGemini,
-  checkModelForGeminiVision,
+  type VertexAIBaseInput,
   wrapGoogleGenerativeAIClientError,
-} from '../index.js';
+
+  type GeminiCallOptions,
+  type GeminiSafetySetting,
+  checkModelForGemini,
+  checkModelForGeminiVision } from '../index.js';
+
 
 /**
  * Base interface for all Gemini API call parameters, specifying the essential prompt

@@ -1,11 +1,11 @@
 import { Tiktoken } from 'js-tiktoken';
-import { CallableConfig } from '../../../record/callable.js';
+import { type CallableConfig } from '../../../record/index.js';
 import {
   encodingForModel,
   getTiktokenModel,
 } from '../../../utils/tokenizer.js';
-import { BaseEvent, BaseEventParams } from '../../base.js';
-import { Context, ContextLike } from '../load/docs/context.js';
+import { BaseEvent, type BaseEventParams } from '../../base.js';
+import { Context, type ContextLike } from '../load/docs/index.js';
 
 /**
  * Defines the parameters for the context splitter.

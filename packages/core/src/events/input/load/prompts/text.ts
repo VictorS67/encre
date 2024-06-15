@@ -1,10 +1,9 @@
-import { BaseMessage } from '../msgs/base.js';
-import { HumanMessage } from '../msgs/human.js';
+import { type BaseMessage, HumanMessage } from '../msgs/index.js';
 import {
   BasePrompt,
   BasePromptTemplate,
-  BasePromptTemplateInput,
-  PromptTemplateParams,
+  type BasePromptTemplateInput,
+  type PromptTemplateParams,
 } from './base.js';
 
 /**

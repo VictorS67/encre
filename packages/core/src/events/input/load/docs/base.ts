@@ -1,5 +1,5 @@
-import { BaseEvent, BaseEventParams } from '../../../base.js';
-import { Context } from './context.js';
+import { BaseEvent, type BaseEventParams } from '../../../base.js';
+import { type Context } from './context.js';
 
 /**
  * Interface for defining a loader that is responsible for loading readable sources and returning them in a specified output format.

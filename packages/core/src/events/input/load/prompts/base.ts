@@ -1,12 +1,12 @@
 import { Serializable } from '../../../../load/serializable.js';
-import { CallableConfig } from '../../../../record/callable.js';
-import { BaseEvent, BaseEventParams } from '../../../base.js';
-import { ValidateResult } from '../../../inference/validate/index.js';
+import { type CallableConfig } from '../../../../record/index.js';
+import { BaseEvent, type BaseEventParams } from '../../../base.js';
+import { type ValidateResult } from '../../../inference/validate/index.js';
 import {
-  VariableRules,
+  type VariableRules,
   VariableValidator,
-} from '../../../inference/validate/validators/variable.js';
-import { BaseMessage } from '../msgs/base.js';
+} from '../../../inference/validate/validators/index.js';
+import { type BaseMessage } from '../msgs/index.js';
 
 /**
  * Abstract base class representing a generic prompt. This class must be extended to provide specific types of prompts.

@@ -7,7 +7,7 @@ import type {
   TextItem,
   TextContent,
 } from 'pdf-parse';
-import { BaseLoaderParams } from './base.js';
+import { type BaseLoaderParams } from './base.js';
 import { BufferLoader } from './buffer.js';
 import { Context } from './context.js';
 

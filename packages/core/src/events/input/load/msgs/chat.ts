@@ -1,4 +1,4 @@
-import { BaseMessage, BaseMessageFields, MessageRole } from './base.js';
+import { BaseMessage, type BaseMessageFields, MessageRole } from './base.js';
 
 /**
  * Extends BaseMessageFields with a mandatory role property specific to chat messages.

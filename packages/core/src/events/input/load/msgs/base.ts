@@ -1,12 +1,12 @@
 import {
   Serializable,
-  SerializedConstructor,
+  type SerializedConstructor,
 } from '../../../../load/serializable.js';
 import { isDeepEqual } from '../../../../utils/equal.js';
 import {
-  SerializedMessage,
-  SerializedMessageData,
-} from '../../../output/provide/message.js';
+  type SerializedMessage,
+  type SerializedMessageData,
+} from '../../../output/provide/index.js';
 
 /**
  * Represents the role of a message within a system, which helps in identifying the purpose and the origin of the message.

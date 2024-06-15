@@ -1,4 +1,4 @@
-import { OpenAIEmbeddings } from '../events/embeddings/openai.js';
+import { OpenAIEmbeddings } from '../events/embeddings/index.js';
 import { OpenAIChat } from '../events/inference/chat/llms/openai/chat.js';
 import { OpenAI } from '../events/inference/chat/llms/openai/text.js';
 import { GeminiChat } from '../events/inference/chat/llms/vertexai/gemini/chat.js';

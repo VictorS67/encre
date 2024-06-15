@@ -1,6 +1,6 @@
-import { CallableConfig } from '../../../record/callable.js';
-import { BaseEvent, BaseEventParams } from '../../base.js';
-import { Context } from '../../input/load/docs/context.js';
+import { type CallableConfig } from '../../../record/index.js';
+import { BaseEvent, type BaseEventParams } from '../../base.js';
+import { type Context } from '../../input/load/docs/index.js';
 
 /**
  * Base interface for retriever call options, extends the base event parameters.

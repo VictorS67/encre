@@ -1,5 +1,5 @@
 import { Serializable } from '../../../../load/serializable.js';
-import { Context } from '../docs/context.js';
+import { type Context } from '../docs/index.js';
 
 export interface BaseVectorStoreField {}
 

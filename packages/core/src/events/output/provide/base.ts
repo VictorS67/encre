@@ -1,4 +1,4 @@
-import { GenerationChunk } from './generation.js';
+import { type GenerationChunk } from './generation.js';
 
 /**
  * Defines the contract for a source provider responsible for supplying a readable source and its associated generation information.

@@ -1,7 +1,7 @@
-import { RecordId } from '../../../../load/keymap';
-import { Serializable } from '../../../../load/serializable';
-import { SerializedRuleCollection } from '../../../../studio/serde';
-import { BaseRule } from '../../../inference/validate/guardrails/base';
+import { type RecordId } from '../../../../load/keymap.js';
+import { Serializable } from '../../../../load/serializable.js';
+import { type SerializedRuleCollection } from '../../../../serde.js';
+import { BaseRule } from '../../../inference/validate/guardrails/index.js';
 
 /**
  * Defines the structure for initializing a BaseRuleCollection.

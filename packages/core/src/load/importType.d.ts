@@ -29,8 +29,8 @@ export interface OptionalImportMap {
     | typeof import('./events/input/load/prompts/chat.js')
     | Promise<typeof import('./events/input/load/prompts/chat.js')>;
   'events/input/load/rules'?:
-    | typeof import('./events/input/load/rules/base.js')
-    | Promise<typeof import('./events/input/load/rules/base.js')>;
+    | typeof import('./events/input/load/rules/index.js')
+    | Promise<typeof import('./events/input/load/rules/index.js')>;
   'events/input/load/vectorstore/chroma'?:
     | typeof import('./events/input/load/vectorstore/chroma.js')
     | Promise<typeof import('./events/input/load/vectorstore/chroma.js')>;
@@ -53,8 +53,8 @@ export interface OptionalImportMap {
     | typeof import('./events/inference/validate/guardrails/string.js')
     | Promise<typeof import('./events/inference/validate/guardrails/string.js')>;
   'events/inference/validate/validator'?:
-    | typeof import('./events/inference/validate/validators/variable.js')
-    | Promise<typeof import('./events/inference/validate/validators/variable.js')>;
+    | typeof import('./events/inference/validate/validators/index.js')
+    | Promise<typeof import('./events/inference/validate/validators/index.js')>;
   'events/inference/chat/llms/openai'?:
     | typeof import('./events/inference/chat/llms/openai/text.js')
     | Promise<typeof import('./events/inference/chat/llms/openai/text.js')>;

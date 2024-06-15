@@ -6,7 +6,7 @@ import {
 import { OpenAICallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
 import { OpenAI } from '../../../../events/inference/chat/llms/openai/text.js';
 import { Gemini } from '../../../../events/inference/chat/llms/vertexai/gemini/text.js';
-import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
+import { type GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
 import { Generation } from '../../../../events/output/provide/generation.js';
 import { LLMResult } from '../../../../events/output/provide/llmresult.js';
 import { load } from '../../../../load/index.js';

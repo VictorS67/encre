@@ -10,8 +10,8 @@ import {
 import { v4 as uuid } from 'uuid';
 
 import { maximalMarginalRelevance } from '../../../../utils/math.js';
-import { Context } from '../docs/context.js';
-import { BaseVectorStore, BaseVectorStoreField } from './base.js';
+import { Context } from '../docs/index.js';
+import { BaseVectorStore, type BaseVectorStoreField } from './base.js';
 
 /**
  * Defines the fields for the ChromaVectorStore class.

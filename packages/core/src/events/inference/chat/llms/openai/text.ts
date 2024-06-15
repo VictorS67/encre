@@ -12,15 +12,20 @@ import {
   Completions,
 } from 'openai/resources';
 
-import { SecretFields, SerializedFields } from '../../../../../load/keymap.js';
-import { getEnvironmentVariables } from '../../../../../utils/environment.js';
-import { Generation } from '../../../../output/provide/generation.js';
-import { LLMResult } from '../../../../output/provide/llmresult.js';
-import { BaseLLM, BaseLLMParams, calculateMaxToken } from '../../base.js';
-import { TokenUsage } from '../../index.js';
 import {
-  OpenAIInput,
-  OpenAITextCallOptions,
+  type SecretFields,
+  type SerializedFields,
+} from '../../../../../load/keymap.js';
+import { getEnvironmentVariables } from '../../../../../utils/environment.js';
+import {
+  type Generation,
+  type LLMResult,
+} from '../../../../output/provide/index.js';
+import { BaseLLM, type BaseLLMParams, calculateMaxToken } from '../../base.js';
+import { type TokenUsage } from '../../index.js';
+import {
+  type OpenAIInput,
+  type OpenAITextCallOptions,
   wrapOpenAIClientError,
 } from './index.js';
 

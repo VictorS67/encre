@@ -1,13 +1,13 @@
-import { Context } from '../../../input/load/docs/context.js';
-import { BaseVectorStore } from '../../../input/load/vectorstore/base.js';
+import { type Context } from '../../../input/load/docs/index.js';
+import { type BaseVectorStore } from '../../../input/load/vectorstore/index.js';
 import {
   BaseEmbeddingRetriever,
-  BaseEmbeddingRetrieverParams,
+  type BaseEmbeddingRetrieverParams,
 } from '../base.js';
 import {
-  MaxMarginalRelevanceSearch,
-  SimilaritySearch,
-  VectorStoreRetrieverSearch,
+  type MaxMarginalRelevanceSearch,
+  type SimilaritySearch,
+  type VectorStoreRetrieverSearch,
 } from './index.js';
 
 /**
