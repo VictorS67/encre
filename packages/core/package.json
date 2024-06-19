@@ -1,14 +1,21 @@
 {
-  "name": "@encre/core",
-  "version": "0.0.3",
+  "name": "@encrejs/core",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=20"
+  },
   "main": "./index.js",
-  "repository": "https://github.com/VictorS67/encre",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VictorS67/encre.git",
+    "directory": "packages/core"
+  },
   "author": "Encre",
   "license": "MIT",
-  "private": true,
   "type": "module",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "scripts": {
     "release": "release-it --only-version --config .release-it.json",
