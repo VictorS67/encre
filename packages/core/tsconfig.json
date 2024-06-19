@@ -32,7 +32,9 @@
   ],
   "exclude": [
     "node_modules",
-    "build"
+    "build",
+    "docs",
+    "**/tests"
   ],
   "typedocOptions": {
     "entryPoints": [

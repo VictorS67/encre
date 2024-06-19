@@ -228,7 +228,7 @@ export abstract class Serializable {
    * Initializes a new instance of the `Serializable` class.
    *
    * @param kwargs Optional parameters for initializing the serializable properties.
-   * @param _args Additional parameters that are never used, demonstrating variable argument handling in constructors.
+   * @param _args Additional optional variable argument handling in constructors, this is used outside the serializable.
    */
   constructor(kwargs?: object, ..._args: never[]) {
     this._kwargs = toSerializedFields(kwargs || {});
