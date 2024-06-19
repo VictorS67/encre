@@ -1,12 +1,15 @@
 {
   "name": "@encre/core",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "./index.js",
   "repository": "https://github.com/VictorS67/encre",
   "author": "Encre",
   "license": "MIT",
   "private": true,
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "release": "release-it --only-version --config .release-it.json",
     "build": "yarn clean && yarn build:esm && yarn build:cjs && node scripts/create-entrypoints.js && node scripts/check-tree-shaking.js",
