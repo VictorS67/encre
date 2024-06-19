@@ -16,7 +16,7 @@ import {
   CallableWithFallbacksArg,
   CallableLambda,
   CallableIf,
-} from '../callable.js';
+} from '../index.js';
 
 test('test custom callable', async () => {
   type TestInput = {

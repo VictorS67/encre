@@ -1,13 +1,13 @@
 import { Serializable } from '../../../../load/serializable.js';
-import { CallableLambda } from '../../../../record/callable.js';
+import { CallableLambda } from '../../../../record/index.js';
 import {
   convertLambdaFuncFromStr,
   formatLambdaFuncStr,
   isValidLambdaFunc,
 } from '../../../../record/utils.js';
-import { SerializedRule } from '../../../../studio/serde.js';
+import { type SerializedRule } from '../../../../serde.js';
 import { isRecordStringUnknown } from '../../../../utils/safeTypes.js';
-import { ValidateFunc } from '../index.js';
+import { type ValidateFunc } from '../index.js';
 import { swapVariableNameInDescription, wrapDescription } from '../utils.js';
 
 export type RuleMetadata = {
@@ -16,14 +16,40 @@ export type RuleMetadata = {
   conjunction: 'and' | 'or';
 };
 
+/**
+ * Defines the structure for the base fields of a rule, including a description, variables, function, and metadata.
+ * These fields are used to configure the rule's behavior and how it evaluates input data.
+ *
+ * @template T The type of data the rule will operate upon.
+ */
 export interface BaseRuleFields<T> {
+  /**
+   * A human-readable description of what the rule checks or enforces.
+   */
   description: string;
+
+  /**
+   * An optional set of variables that can be used within the rule's validation function.
+   */
   variables?: Record<string, unknown>;
+
+  /**
+   * The function that performs the validation. It can be a string (to be converted to a function) or a direct function reference.
+   */
   func: string | ValidateFunc<T>;
 
+  /**
+   * Optional metadata related to the rule, often used for rules that combine other rules.
+   */
   metadata?: RuleMetadata;
 }
 
+/**
+ * An abstract class that serves as the base for creating rules within the system.
+ * A rule is a logical construct that evaluates whether a piece of data meets a specified criterion.
+ *
+ * @template T The type of input data the rule will validate.
+ */
 export abstract class BaseRule<T = any>
   extends Serializable
   implements BaseRuleFields<T>
@@ -38,18 +64,38 @@ export abstract class BaseRule<T = any>
     this._ruleType(),
   ];
 
+  /**
+   * A human-readable description of what the rule checks or enforces.
+   */
   description: string;
 
+  /**
+   * An optional set of variables that can be used within the rule's validation function.
+   */
   variables: Record<string, unknown> | undefined;
 
+  /**
+   * Optional track-back metadata of rules that are used for merging to the current rule.
+   */
   metadata: RuleMetadata | undefined;
 
-  _func: ValidateFunc<T>;
+  /**
+   * The function that performs the validation, stored as a callable function.
+   * @hidden
+   * @internal
+   */
+  private _func: ValidateFunc<T>;
 
+  /**
+   * Gets the validation function.
+   */
   get func(): ValidateFunc<T> {
     return this._func;
   }
 
+  /**
+   * Sets the validation function, with conversion from string format if necessary.
+   */
   set func(newVal: ValidateFunc<T> | string) {
     let funcStr: string | undefined;
 
@@ -64,6 +110,9 @@ export abstract class BaseRule<T = any>
     this._func = convertLambdaFuncFromStr(funcStr) as ValidateFunc<T>;
   }
 
+  /**
+   * Constructs a new instance of a rule with the specified fields.
+   */
   constructor(fields: BaseRuleFields<T>) {
     let funcStr: string | undefined;
 
@@ -88,6 +137,14 @@ export abstract class BaseRule<T = any>
     this._func = convertLambdaFuncFromStr(funcStr) as ValidateFunc<T>;
   }
 
+  /**
+   * Deserializes a SerializedRule back into a BaseRule object (based on their rule types).
+   * This function is essential for reconstructing rule instances from their serialized forms.
+   *
+   * @param serialized A SerializedRule object containing the serialized data.
+   * @param values Variable values to the rules. If not provided, it will use the variable values in the serialized data.
+   * @returns A BaseRule object reconstructed from the serialized data.
+   */
   static async deserialize(
     serialized: SerializedRule,
     values: Record<string, unknown> = {}
@@ -126,6 +183,10 @@ export abstract class BaseRule<T = any>
     }
   }
 
+  /**
+   * Serializes the rule into a structured format for storage or transmission.
+   * @returns A `SerializedRule` object containing the serialized state.
+   */
   serialize(): SerializedRule {
     return {
       _type: 'rule',
@@ -144,6 +205,10 @@ export abstract class BaseRule<T = any>
     };
   }
 
+  /**
+   * Cleans and formats the rule description by replacing variable placeholders with actual values.
+   * @returns A formatted description with variable values substituted.
+   */
   getCleanDescription(): string {
     const variablePattern = /\{\{([^}]+)\}\}/g;
     let match: RegExpExecArray | null;
@@ -192,10 +257,20 @@ export abstract class BaseRule<T = any>
     return formattedDescription;
   }
 
+  /**
+   * Converts the rule's validation function into a `CallableLambda`.
+   * @returns A new `CallableLambda` based on the rule's validation function.
+   */
   toCallableLambda(): CallableLambda<T, boolean> {
     return CallableLambda.from(this.func);
   }
 
+  /**
+   * Validates an input against the rule.
+   * @param input The data to validate.
+   * @param variables Optional additional variables for the validation.
+   * @returns A promise that resolves to true if the input is valid according to the rule.
+   */
   async validate(
     input: T,
     variables?: Record<string, unknown>
@@ -207,13 +282,33 @@ export abstract class BaseRule<T = any>
     }
   }
 
+  /**
+   * Abstract method to concatenate two rules with a specified logical conjunction.
+   * @template U The type of input data the other rule will validate.
+   * @param rule The rule to concatenate with this rule.
+   * @param conjunction The type of logical conjunction ('and' | 'or').
+   * @returns A new `BaseRule` that represents the combination of this rule and the other rule.
+   */
   abstract concat<U>(
     rule: BaseRule<U>,
     conjunction: 'and' | 'or'
   ): BaseRule<T | U>;
 
+  /**
+   * Abstract method to determine the rule's type.
+   * @returns The type of the rule as a string.
+   */
   abstract _ruleType(): string;
 
+  /**
+   * Internal method for merging two rule description.
+   *
+   * @param left left rule
+   * @param right right rule
+   * @param conjunction conjunction can be either 'or' or 'and'
+   * @returns merged rule description.
+   * @internal
+   */
   protected static _mergeDescription(
     left: BaseRule<unknown>,
     right: BaseRule<unknown>,
@@ -258,6 +353,14 @@ export abstract class BaseRule<T = any>
     return newDescription;
   }
 
+  /**
+   * Internal method for merging two rule variables.
+   *
+   * @param left left rule
+   * @param right right rule
+   * @returns merged rule variables.
+   * @internal
+   */
   protected static _mergeVariables(
     left: BaseRule<unknown>,
     right: BaseRule<unknown>
@@ -273,6 +376,15 @@ export abstract class BaseRule<T = any>
     return newVariables;
   }
 
+  /**
+   * Internal method for merging two rule functions.
+   *
+   * @param left left rule
+   * @param right right rule
+   * @param conjunction conjunction can be either 'or' or 'and'
+   * @returns merged rule functions.
+   * @internal
+   */
   protected static _mergeFunc(
     left: BaseRule<unknown>,
     right: BaseRule<unknown>,
@@ -301,6 +413,15 @@ export abstract class BaseRule<T = any>
 }`;
   }
 
+  /**
+   * Internal method for creating the trace-back metadata.
+   *
+   * @param left left rule
+   * @param right right rule
+   * @param conjunction conjunction can be either 'or' or 'and'
+   * @returns the trace-back metadata..
+   * @internal
+   */
   protected static _mergeMetadata(
     left: BaseRule<unknown>,
     right: BaseRule<unknown>,
@@ -313,6 +434,16 @@ export abstract class BaseRule<T = any>
     };
   }
 
+  /**
+   * Validate if function is formatted correctly as a callable rule function.
+   *
+   * A correct formatted rule function should:
+   * - include `input` in the arguments;
+   * - if any variables are included in the rule, those variable names should in the arguments;
+   *
+   * @param funcStr function string
+   * @param variables variables in the function
+   */
   protected _validateFuncStr(
     funcStr: string,
     variables: Record<string, unknown> | undefined
@@ -344,6 +475,22 @@ export abstract class BaseRule<T = any>
   }
 }
 
+/**
+ * A general-purpose rule class that extends the BaseRule abstract class.
+ * This class is intended to be used for rules where the specific type or category
+ * might not be known or when a rule does not fit into a specific category.
+ *
+ * @template T The type of input data the rule will validate.
+ * 
+ * @example
+ * ```typescript
+ * const rule = new GeneralRule({
+ *   description: 'is greater than {{value}}',
+ *   variables: { value: 1 },
+ *   func: await (input: number, variables: { value: number }) => input > variables.value
+ * });
+ * ```
+ */
 export class GeneralRule<T = unknown> extends BaseRule<T> {
   _isSerializable = true;
 
@@ -351,10 +498,23 @@ export class GeneralRule<T = unknown> extends BaseRule<T> {
     return 'GeneralRule';
   }
 
+  /**
+   * Specifies the rule type. For `GeneralRule`, the type is "unknown" as it can handle general cases.
+   * @returns The type identifier for this class, used in classification and serialization.
+   */
   _ruleType(): string {
     return 'unknown';
   }
 
+    /**
+   * Concatenates this rule with another rule using a specified logical conjunction.
+   * This method effectively merges two rules into a new `GeneralRule` instance, combining their logic.
+   *
+   * @template U The type of input data the other rule will validate.
+   * @param rule The other rule to concatenate with this rule.
+   * @param conjunction The logical conjunction to apply ("and" | "or").
+   * @returns A new `GeneralRule` instance that represents the logical combination of this rule and the other rule.
+   */
   concat<U>(rule: BaseRule<U>, conjunction: 'and' | 'or'): BaseRule<T | U> {
     return new GeneralRule<T | U>({
       description: GeneralRule._mergeDescription(
@@ -379,6 +539,14 @@ export class GeneralRule<T = unknown> extends BaseRule<T> {
     });
   }
 
+    /**
+   * Deserializes a `SerializedRule` object into a `GeneralRule` instance.
+   * This static method provides a mechanism to reconstruct a `GeneralRule` from its serialized form.
+   *
+   * @param serialized The serialized rule data.
+   * @param values Optional additional variables that may be needed for rule initialization.
+   * @returns A promise that resolves to a new `GeneralRule` instance based on the serialized data.
+   */
   static async deserialize(
     serialized: SerializedRule,
     values?: Record<string, unknown>

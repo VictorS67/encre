@@ -1,10 +1,10 @@
-import { NumberRule } from '../../../events/inference/validate/guardrails/number.js';
+import { NumberRule } from '../../../events/inference/validate/guardrails/index.js';
 import { getRecordId } from '../../../utils/nanoid.js';
-import { Data } from '../../data.js';
-import { ProcessContext } from '../../processor.js';
+import { type Data } from '../../data.js';
+import { type ProcessContext } from '../../processor.js';
 import { coerceToData, expectTypeOptional } from '../../utils/coerce.js';
 import { GuardrailImpl } from '../base.js';
-import { Guardrail } from '../index.js';
+import { type Guardrail } from '../index.js';
 
 export type NumberGuard = Guardrail<'number', number, NumberRule>;
 

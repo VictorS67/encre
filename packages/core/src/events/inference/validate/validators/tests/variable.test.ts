@@ -43,8 +43,8 @@ describe('test VariableValidator', () => {
 
   test('validate with specific rule', async () => {
     validator.addSpecificRule('age', isPositiveRule);
-    expect(await validator.validate({ age: 5 })).toEqual({ isValid: true });
-    expect(await validator.validate({ age: -3 })).toEqual({
+    expect(await validator.invoke({ age: 5 })).toEqual({ isValid: true });
+    expect(await validator.invoke({ age: -3 })).toEqual({
       isValid: false,
       errorMessage: "Validation failed in variable 'age'",
     });
@@ -53,11 +53,11 @@ describe('test VariableValidator', () => {
   test('validate with default rule', async () => {
     validator.addDefaultRule(isStringRule);
 
-    expect(await validator.validate({ age: '25', name: 'John' })).toEqual({
+    expect(await validator.invoke({ age: '25', name: 'John' })).toEqual({
       isValid: true,
     });
 
-    expect(await validator.validate({ age: 25, name: 'John' })).toEqual({
+    expect(await validator.invoke({ age: 25, name: 'John' })).toEqual({
       isValid: false,
       errorMessage: "Validation failed in variable 'age'",
     });
@@ -73,7 +73,7 @@ describe('test VariableValidator', () => {
     // However, since we already exclude 'age' from validation, this specific rule won't apply to it
     validator.addSpecificRule('age', isPositiveRule);
 
-    expect(await validator.validate({ age: -5 })).toEqual({ isValid: true });
+    expect(await validator.invoke({ age: -5 })).toEqual({ isValid: true });
   });
 
   test('validate a specific variable', async () => {

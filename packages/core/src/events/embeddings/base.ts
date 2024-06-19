@@ -1,13 +1,16 @@
-import { BaseCache } from '../../cache/base.js';
+import { type BaseCache } from '../../cache/index.js';
 import { MemoryCache } from '../../cache/index.js';
-import { CallableConfig } from '../../record/callable.js';
+import { type CallableConfig } from '../../record/index.js';
 import {
   AsyncCaller,
   type AsyncCallerParams,
 } from '../../utils/asyncCaller.js';
-import { BaseEvent, BaseEventParams } from '../base.js';
-import { EmbedResult } from '../output/provide/embedresult.js';
+import { BaseEvent, type BaseEventParams } from '../base.js';
+import { type EmbedResult } from '../output/provide/index.js';
 
+/**
+ * Options for base embeddings call.
+ */
 export interface BaseEmbeddingsCallOptions extends BaseEventParams {
   /**
    * Abort signal for the call.
@@ -16,12 +19,24 @@ export interface BaseEmbeddingsCallOptions extends BaseEventParams {
   signal?: AbortSignal;
 }
 
+/**
+ * Parameters for base embeddings, combining asynchronous caller parameters with
+ * base event parameters.
+ */
 export interface BaseEmbeddingsParams
   extends AsyncCallerParams,
     BaseEventParams {
+  /**
+   * Optional cache to use for storing results, can be a cache instance or a boolean
+   * to use a global cache.
+   */
   cache?: BaseCache<number[]> | boolean;
 }
 
+/**
+ * Abstract class providing base functionality for embeddings.
+ * Manages event handling and asynchronous calling with optional caching.
+ */
 export abstract class BaseEmbeddings<
     CallOptions extends BaseEmbeddingsCallOptions = BaseEmbeddingsCallOptions,
   >
@@ -30,6 +45,7 @@ export abstract class BaseEmbeddings<
 {
   /**
    * Represents the type for call options without some specified properties.
+   * @hidden
    */
   declare SerializedCallOptions: Omit<CallOptions, keyof CallableConfig>;
 
@@ -45,8 +61,13 @@ export abstract class BaseEmbeddings<
   cache?: BaseCache<number[]>;
 
   _eventNamespace(): string[] {
-    return ['embeddings'];
+    return ['embeddings', this._embeddingsType()];
   }
+
+  /**
+   * Returns the type of the embeddings.
+   */
+  abstract _embeddingsType(): string;
 
   constructor({ callbacks, ...params }: BaseEmbeddingsParams) {
     super({ callbacks, ...params });
@@ -80,11 +101,12 @@ export abstract class BaseEmbeddings<
   }
 
   /**
-   * Provides the core logic to interface with the language model, handling both cached and uncached embeddings.
-   * @param {string} document - A string.
-   * @param options - Optional call options.
-   * @param callbacks - Optional callbacks.
-   * @returns {Promise<EmbedResult>} The result from the language model embeddings.
+   * Provides the core logic to interface with the language model, handling both
+   * cached and uncached embeddings.
+   * @param document A string.
+   * @param options Optional call options.
+   * @param callbacks Optional callbacks.
+   * @returns The result from the language model embeddings.
    */
   async embed(
     document: string,
@@ -126,9 +148,10 @@ export abstract class BaseEmbeddings<
   /**
    * An abstract method that takes a single document as input and returns a
    * promise that resolves to a vector for the query document.
-   * @param {string} document - A single document to be embedded.
-   * @param options - Additional options for embeddings.
-   * @returns {Promise<LLMResult>} A promise that resolves to a vector for the query document.
+   * @param document A single document to be embedded.
+   * @param options Additional options for embeddings.
+   * @returns A promise that resolves to a vector for the query document.
+   * @internal
    */
   abstract _embed(
     document: string,
@@ -137,9 +160,10 @@ export abstract class BaseEmbeddings<
 
   /**
    * Handles uncached document and calls the `_embed` method.
-   * @param {string} document - A document.
-   * @param serializedCallOptions - Serialized call options.
-   * @returns {Promise<EmbedResult>} The result from the language model embeddings.
+   * @param document A document.
+   * @param serializedCallOptions Serialized call options.
+   * @returns The result from the language model embeddings.
+   * @internal
    */
   protected async _embedUncached(
     document: string,
@@ -161,6 +185,7 @@ export abstract class BaseEmbeddings<
     options?: this['SerializedCallOptions']
   ): Record<string, unknown>;
 
+  /** @hidden */
   protected _splitCallableOptionsFromCallOptions(
     options: Partial<CallOptions> = {}
   ): [CallableConfig, this['SerializedCallOptions']] {
@@ -182,7 +207,8 @@ export abstract class BaseEmbeddings<
 
   /**
    * Method to identify additional parameters specific to implementations.
-   * @returns {Record<string, any>} A record of identified parameters.
+   * @returns A record of identified parameters.
+   * @internal
    */
   protected _identifyParams(): Record<string, any> {
     return {};
@@ -190,8 +216,9 @@ export abstract class BaseEmbeddings<
 
   /**
    * Constructs a string key based on the given call options for caching purposes.
-   * @param {CallOptions} callOptions - The call options.
-   * @returns {string} The generated key.
+   * @param callOptions The call options.
+   * @returns The generated key.
+   * @internal
    */
   protected _getLLMStrKey(callOptions: CallOptions): string {
     const params: Record<string, any> = {

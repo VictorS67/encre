@@ -10,31 +10,149 @@ import {
 import { v4 as uuid } from 'uuid';
 
 import { maximalMarginalRelevance } from '../../../../utils/math.js';
-import { Context } from '../docs/context.js';
-import { BaseVectorStore, BaseVectorStoreField } from './base.js';
+import { Context } from '../docs/index.js';
+import { BaseVectorStore, type BaseVectorStoreField } from './base.js';
 
+/**
+ * Defines the fields for the ChromaVectorStore class.
+ *
+ * @example
+ * ```typescript
+ * const vectorStoreConfig: ChromaVectorStoreField = {
+ *   url: 'my-chroma-instance-url',
+ *   numDimensions: 128,
+ *   collectionName: 'myCollection',
+ *   collectionMetadata: { createdBy: 'Data Science Team' },
+ *   filter: {
+ *     where: { field: 'category', value: 'technology', operation: 'EQUAL' },
+ *     includeEmbeddings: true
+ *   }
+ * };
+ * ```
+ */
 export interface ChromaVectorStoreField extends BaseVectorStoreField {
+  /**
+   * Base URL of the Chroma backend service.
+   */
   url: string;
 
+  /**
+   * Number of dimensions for each embedding vector.
+   */
   numDimensions?: number;
 
+  /**
+   * Name of the collection within Chroma where vectors are stored.
+   */
   collectionName?: string;
 
+  /**
+   * Additional metadata related to the collection.
+   */
   collectionMetadata?: ChromaCollectionMetadata;
 
+  /**
+   * Optional filter settings that can be applied during search operations.
+   */
   filter?: ChromaVectorStoreFilterType;
 }
 
+/**
+ * Specifies the parameters for deleting vectors from a Chroma vector store.
+ *
+ * @example
+ * ```typescript
+ * // Example of deleting specific vectors by IDs
+ * const deleteParams: ChromaDeleteParams<ChromaVectorStoreFilterType> = {
+ *   ids: ['id1', 'id2']
+ * };
+ *
+ * // Example of deleting vectors by a custom filter
+ * const deleteParamsWithFilter: ChromaDeleteParams<ChromaVectorStoreFilterType> = {
+ *   filter: {
+ *     where: { field: 'age', value: 25, operation: 'LESS_THAN' }
+ *   }
+ * };
+ * ```
+ */
 export interface ChromaDeleteParams<T> {
+  /**
+   * Optional. Array of vector IDs to delete.
+   */
   ids?: string[];
+
+  /**
+   * Optional. A filter defining which vectors to delete based on their metadata and content.
+   */
   filter?: T;
 }
 
+/**
+ * Defines the filter type used in ChromaVectorStore operations to refine search and deletion operations.
+ *
+ * @example
+ * ```typescript
+ * // Example filter to include embeddings and filter based on metadata
+ * const filter: ChromaVectorStoreFilterType = {
+ *   where: { field: 'status', value: 'active', operation: 'EQUAL' },
+ *   includeEmbeddings: true
+ * };
+ * ```
+ */
 export type ChromaVectorStoreFilterType = {
+  /**
+   * Optional. Specifies conditions used to filter vectors based on their metadata.
+   */
   where?: Where;
+
+  /**
+   * Optional. Indicates whether to include vector embeddings in the results.
+   */
   includeEmbeddings?: boolean;
 };
 
+/**
+ * The ChromaVectorStore class provides an in-memory vector store that integrates
+ * with a Chroma backend service for storing and retrieving vector embeddings associated with content.
+ * It supports operations like adding vectors, deleting vectors based on IDs or filters, and conducting
+ * similarity and maximal marginal relevance searches.
+ *
+ * @example
+ * ```typescript
+ * // Instantiate the ChromaVectorStore
+ * const vectorStore = new ChromaVectorStore({
+ *   url: 'my-chroma-instance-url',
+ *   collectionName: 'myVectorCollection'
+ * });
+ *
+ * // Example embeddings and associated contexts
+ * const embeddings = [
+ *   [0.1, 0.2, 0.3],
+ *   [0.4, 0.5, 0.6]
+ * ];
+ * const contexts = [
+ *   new Context({ pageContent: "Content about AI", metadata: { topic: "AI" }}),
+ *   new Context({ pageContent: "Content about ML", metadata: { topic: "ML" }})
+ * ];
+ *
+ * // Add vectors to the store
+ * await vectorStore.addVectors(embeddings, contexts);
+ *
+ * // Perform a similarity search
+ * const queryEmbedding = [0.15, 0.25, 0.35];
+ * const topK = 1;
+ * const similarityResults = await vectorStore.similaritySearch(queryEmbedding, topK);
+ *
+ * // Display the results
+ * console.log("Similarity Search Results:", similarityResults.map(r => ({
+ *   content: r[0].pageContent,
+ *   similarityScore: r[1]
+ * })));
+ *
+ * // Optionally, delete vectors
+ * await vectorStore.deleteVectors({ ids: [similarityResults[0][0].id] });
+ * ```
+ */
 export class ChromaVectorStore
   extends BaseVectorStore
   implements ChromaVectorStoreField
@@ -43,16 +161,35 @@ export class ChromaVectorStore
 
   _isSerializable = true;
 
+  /**
+   * Base URL of the Chroma backend service.
+   */
   url: string;
 
+  /**
+   * Number of dimensions for each embedding vector.
+   */
   numDimensions?: number | undefined;
 
+  /**
+   * Name of the collection within Chroma where vectors are stored.
+   */
   collectionName?: string | undefined;
 
+  /**
+   * Additional metadata related to the collection.
+   */
   collectionMetadata?: ChromaCollectionMetadata | undefined;
 
+  /**
+   * Optional filter settings that can be applied during search operations.
+   */
   filter?: ChromaVectorStoreFilterType | undefined;
 
+  /**
+   * Chroma API Client.
+   * @internal
+   */
   private _client: ChromaClient;
 
   _vectorstoreType(): string {
@@ -210,13 +347,13 @@ export class ChromaVectorStore
         queryEmbeddings: query,
         nResults: topK,
         where: { ..._filter.where },
-        include
+        include,
       });
     } else {
       result = await collection.query({
         queryEmbeddings: query,
         nResults: topK,
-        include
+        include,
       });
     }
 
@@ -303,6 +440,28 @@ export class ChromaVectorStore
     });
   }
 
+  /**
+   * Retrieves a collection from the Chroma backend. If the collection does not exist, it creates a new one using
+   * the specified collection name and optional metadata. This method ensures that the required collection is available
+   * for storing and retrieving vector embeddings.
+   *
+   * @returns A promise that resolves to the ChromaCollection object, allowing for further interaction with the collection.
+   * @throws An error if the Chroma service fails to create or retrieve the collection.
+   * @internal
+   * @example
+   * ```typescript
+   * const vectorStore = new ChromaVectorStore({
+   *   url: 'my-chroma-instance-url',
+   *   collectionName: 'myVectorCollection'
+   * });
+   * try {
+   *   const collection = await vectorStore._getCollection();
+   *   console.log('Collection ready for use:', collection);
+   * } catch (error) {
+   *   console.error('Failed to access or create the collection:', error);
+   * }
+   * ```
+   */
   async _getCollection(): Promise<ChromaCollection> {
     if (!this._client) {
       this._client = new ChromaClient({
@@ -323,6 +482,14 @@ export class ChromaVectorStore
     }
   }
 
+  /**
+   * Generates a unique collection name based on the `collectionName` field. If `collectionName` is not set,
+   * it generates a random UUID as the collection name. This method ensures a consistent naming strategy for
+   * collections used within the Chroma service.
+   *
+   * @returns The name of the collection as a string.
+   * @internal
+   */
   private _getCollectionName(): string {
     if (!this.collectionName) {
       return `encre-chroma-${uuid()}`;

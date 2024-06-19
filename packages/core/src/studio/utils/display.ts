@@ -1,45 +1,47 @@
 import { match } from 'ts-pattern';
-import { ContentLike, MessageRole } from '../../events/input/load/msgs/base.js';
-import { SecretFields } from '../../load/keymap.js';
 import {
-  ConditionField,
-  ConditionFieldVariables,
-  ElseConditionField,
-  IfConditionField,
+  type ContentLike,
+  type MessageRole,
+} from '../../events/input/load/msgs/index.js';
+import { type SecretFields } from '../../load/keymap.js';
+import {
+  type ConditionField,
+  type ElseConditionField,
+  type IfConditionField,
 } from '../condition.js';
 import {
-  BlobData,
-  BooleanData,
-  ChatMessageData,
-  ContextData,
-  Data,
-  DataFields,
-  JSONObjectData,
-  NumberData,
-  ScalarDataType,
-  StringData,
-  UnknownData,
+  type BlobData,
+  type BooleanData,
+  type ChatMessageData,
+  type ContextData,
+  type Data,
+  type DataFields,
+  type JSONObjectData,
+  type NumberData,
+  type ScalarDataType,
+  type StringData,
+  type UnknownData,
   arrayizeData,
   getScalarTypeOf,
   isArrayDataType,
 } from '../data.js';
 import {
-  AudioUIContext,
-  BlobUIContext,
-  CodeUIContext,
-  ContextUIContext,
-  FileUIContext,
-  ImageUIContext,
-  MarkdownUIContext,
-  MessageUIContext,
-  PlainUIContext,
-  UIContext,
+  type AudioUIContext,
+  type BlobUIContext,
+  type CodeUIContext,
+  type ContextUIContext,
+  type FileUIContext,
+  type ImageUIContext,
+  type MarkdownUIContext,
+  type MessageUIContext,
+  type PlainUIContext,
+  type UIContext,
   UIDataTypesMap,
   audioTypes,
   fileTypes,
   imageTypes,
-  ConditionUIContext,
-  ConditionUI,
+  type ConditionUIContext,
+  type ConditionUI,
 } from '../ui.js';
 
 export async function displayConditionUI(
@@ -53,18 +55,21 @@ export async function displayConditionUI(
   const uiContexts = [] as ConditionUIContext[];
   for (const [target, conditionFields] of conditionGrp) {
     const conditions: ConditionUI[] = [];
-    for (let i = 0; i < conditionFields.length; i++) { 
+    for (let i = 0; i < conditionFields.length; i++) {
       const cond: ConditionField = conditionFields[i];
-      const condUI: ConditionUI = cond.type === 'otherwise' ? {
-        type: cond.type,
-        source: cond.source,
-      } :{
-        type: cond.type,
-        description: cond.ruleCollection.getCleanDescription(),
-        metadata: cond.ruleCollection.serialize(),
-        source: cond.source,
-      };
-      
+      const condUI: ConditionUI =
+        cond.type === 'otherwise'
+          ? {
+              type: cond.type,
+              source: cond.source,
+            }
+          : {
+              type: cond.type,
+              description: cond.ruleCollection.getCleanDescription(),
+              metadata: cond.ruleCollection.serialize(),
+              source: cond.source,
+            };
+
       conditions.push(condUI);
     }
 
@@ -72,12 +77,12 @@ export async function displayConditionUI(
       type: 'condition',
       target,
       sources,
-      conditions
+      conditions,
     });
   }
 
   return uiContexts;
-};
+}
 
 export async function displayUIFromDataFields(
   dataFields: DataFields

@@ -3,15 +3,18 @@ import {
   ClientOptions as OpenAIClientOptions,
 } from 'openai';
 import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
-import { SecretFields, SerializedFields } from '../../load/keymap.js';
+import { type SecretFields, type SerializedFields } from '../../load/keymap.js';
 import { getEnvironmentVariables } from '../../utils/environment.js';
-import { EmbedResult } from '../output/provide/embedresult.js';
+import { type EmbedResult } from '../output/provide/index.js';
 import {
   BaseEmbeddings,
-  BaseEmbeddingsCallOptions,
-  BaseEmbeddingsParams,
+  type BaseEmbeddingsCallOptions,
+  type BaseEmbeddingsParams,
 } from './base.js';
 
+/**
+ * Parameters for the OpenAI embeddings, including model and API key specifics.
+ */
 export interface OpenAIEmbeddingsParams extends BaseEmbeddingsParams {
   /**
    * ID of the model to use. You can use the [List models]({@link https://platform.openai.com/docs/api-reference/models/list}}
@@ -40,10 +43,19 @@ export interface OpenAIEmbeddingsParams extends BaseEmbeddingsParams {
    */
   openAIApiKey?: string;
 
+  /**
+   * Timeout for the API requests.
+   */
   timeout?: number;
 }
 
+/**
+ * Call options for OpenAI embeddings, including format and additional request options.
+ */
 export interface OpenAIEmbeddingsCallOptions extends BaseEmbeddingsCallOptions {
+  /**
+   * Format of the encoding for the embeddings, either as 'float' or 'base64'.
+   */
   encondingFormat?: 'float' | 'base64';
 
   /**
@@ -52,6 +64,17 @@ export interface OpenAIEmbeddingsCallOptions extends BaseEmbeddingsCallOptions {
   options?: OpenAIClientRequestOptions;
 }
 
+/**
+ * Class to handle embeddings via the OpenAI API, extending the base embeddings functionality.
+ *
+ * @example
+ * ```typescript
+ * const embeddings = new OpenAIEmbeddings({ modelName: 'text-embedding-ada-002' });
+ * const options = { encondingFormat: 'float' };
+ * const response = await embeddings.invoke('Hello!', options);
+ * console.log(response);
+ * ```
+ */
 export class OpenAIEmbeddings<
     CallOptions extends
       OpenAIEmbeddingsCallOptions = OpenAIEmbeddingsCallOptions,
@@ -79,24 +102,68 @@ export class OpenAIEmbeddings<
     return 'OpenAI';
   }
 
+  _embeddingsType(): string {
+    return 'openai';
+  }
+
+  /**
+   * ID of the model to use. You can use the [List models]({@link https://platform.openai.com/docs/api-reference/models/list}}
+   * API to see all of your avaliable models, or see our
+   * [Model overview]({@link https://platform.openai.com/docs/models/overview}) for description of them.
+   */
   modelName = 'text-embedding-ada-002';
 
+  /**
+   * The number of dimensions the resulting output embeddings should have.
+   * Only supported in `text-embedding-3` and later models.
+   */
   dimensions?: number | undefined;
 
+  /**
+   * A unique identifier representing your end-user, which can help OpenAI to monitor
+   * and detect abuse.
+   *
+   * [Learn more]({@link https://platform.openai.com/docs/guides/safety-best-practices})
+   */
   user?: string | undefined;
 
+  /**
+   * The max number of concurrent calls that can be made.
+   * Defaults to 2.
+   */
   maxConcurrency?: number | undefined;
 
+  /**
+   * The max number of retries that can be made for a single call.
+   */
   maxRetries?: number | undefined;
 
+  /**
+   * Timeout for the API requests.
+   */
   timeout?: number;
 
+  /**
+   * API key to use when making requests to OpenAI. Defaults to the value of
+   * `OPENAI_API_KEY` environment variable.
+   */
   openAIApiKey?: string;
 
+  /**
+   * Identifier for organization sometimes used in API requests。
+   */
   organization?: string;
 
+  /**
+   * OpenAI API Client.
+   * @internal
+   */
   private _client: OpenAIClient;
 
+  /**
+   * OpenAI API request options.
+   * @internal
+   */
   private _clientOptions: OpenAIClientOptions;
 
   constructor(
@@ -146,6 +213,15 @@ export class OpenAIEmbeddings<
     };
   }
 
+  /**
+   * Retrieves the parameters required for creating an embedding with the OpenAI API.
+   * This method extracts and prepares the parameters based on the model configurations
+   * and any additional options specified in the call.
+   *
+   * @param options Optional serialized call options which may override default model settings.
+   * @returns An object containing the necessary parameters for the OpenAI API request,
+   *          excluding the 'input' parameter which is handled separately.
+   */
   getParams(
     options?: this['SerializedCallOptions']
   ): Omit<OpenAIClient.EmbeddingCreateParams, 'input'> {
@@ -167,6 +243,19 @@ export class OpenAIEmbeddings<
     };
   }
 
+  /**
+   * Embeds a document using the OpenAI API.
+   * @param document The document to embed.
+   * @param options Serialized call options.
+   * @returns A promise resolving to the embedding result.
+   * @internal
+   * @example
+   * ```typescript
+   * const embeddings = new OpenAIEmbeddings({ modelName: 'text-embedding-ada-002' });
+   * const result = await embeddings._embed("Hello, world!", {});
+   * console.log(result.embedding);
+   * ```
+   */
   async _embed(
     document: string,
     options: this['SerializedCallOptions']
@@ -196,10 +285,17 @@ export class OpenAIEmbeddings<
   }
 
   /**
-   * Attempts to get embeddings from the OpenAIClient and retries if an error occurs.
-   *
-   * @param {OpenAIClient.EmbeddingCreateParams} request The request parameters.
-   * @param {OpenAIClientRequestOptions} [options] Optional client request configurations.
+   * Handles retries for the embedding creation in case of failures.
+   * @param request The embedding creation parameters.
+   * @param options Optional client request configurations.
+   * @returns A promise resolving to the embedding creation response.
+   * @example
+   * ```typescript
+   * const embeddings = new OpenAIEmbeddings({ modelName: 'text-embedding-ada-002' });
+   * const requestParams = { input: "Example document", model: "text-embedding-ada-002" };
+   * const response = await embeddings.completionWithRetry(requestParams);
+   * console.log(response.data[0].embedding);
+   * ```
    */
   async completionWithRetry(
     request: OpenAIClient.EmbeddingCreateParams,
@@ -213,6 +309,13 @@ export class OpenAIEmbeddings<
     });
   }
 
+  /**
+   * Builds request options for the API call, merging default client options with
+   * method-specific options.
+   * @param options Optional additional request configurations.
+   * @returns The combined request options.
+   * @internal
+   */
   private _getRequestOptions(
     options?: OpenAIClientRequestOptions
   ): OpenAIClientRequestOptions {

@@ -1,35 +1,74 @@
-import { RecordId } from '../../../load/keymap.js';
+import { load } from '../../../load/index.js';
+import { type RecordId } from '../../../load/keymap.js';
+import { globalImportMap, globalSecretMap } from '../../../load/registration.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { isNotNull } from '../../../utils/safeTypes.js';
 import {
-  DataFields,
-  DataType,
+  type DataFields,
+  type DataType,
   dataTypes,
   getDefaultValue,
 } from '../../data.js';
 import { BaseInput } from '../../input.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../processor.js';
+import { type SerializedNode } from '../../serde.js';
 import { displayUIFromDataFields } from '../../utils/display.js';
 import { NodeImpl } from '../base.js';
 import {
-  NodeBody,
-  NodeConnection,
-  NodeInputPortDef,
-  NodePortFields,
-  SerializableNode,
+  type NodeBody,
+  type NodeConnection,
+  type NodeInputPortDef,
+  type NodePortFields,
+  type SerializableNode,
 } from '../index.js';
 
+/**
+ * A type alias for a specialized node focused on input operations.
+ * This node type is specialized for handling user or automated inputs, making it a
+ * fundamental part of user-interactive or data-driven workflows.
+ */
 export type InputNode = SerializableNode<'input', BaseInput>;
 
+/**
+ * An implementation class for InputNode. This class extends the basic node implementation to provide
+ * specialized functionalities for input handling. It supports dynamic definition of inputs and outputs
+ * based on connected node configurations and the data types defined in the serialized data.
+ *
+ * ### Node Properties
+ *
+ * | Field       | Type           | Description                                                                  |
+ * |-------------|----------------|------------------------------------------------------------------------------|
+ * | `type`      | `'input'`      | Indicates the node's role in handling inputs.                                |
+ * | `subtype`   | `'input'`      | Further specifies the nature of input handling, typically not varying much.  |
+ * | `data`      | {@link BaseInput} | Encapsulates the data and configuration specific to input handling.       |
+ *
+ * ### Input Ports
+ *
+ * None in default. Input ports are dynamically configured based on the node's current connections and may vary.
+ *
+ * ### Output Ports
+ *
+ * Output ports in an input node are from `dataTypes` of {@link BaseInput}.
+ *
+ */
 export class InputNodeImpl extends NodeImpl<InputNode> {
+  /**
+   * Sets new input definitions for the node. Allows dynamic configuration of node inputs based on external factors.
+   * @param newVal A structure defining the input ports and their data types, or undefined to clear inputs.
+   */
   set inputs(newVal: NodePortFields | undefined) {
     this.node.inputs = newVal;
   }
 
+  /**
+   * Factory method to create an InputNode from a serializable instance of BaseInput.
+   * @param serializable An instance of BaseInput that defines the structure and capabilities of the input node.
+   * @returns A fully configured InputNode.
+   */
   static nodeFrom(serializable: BaseInput): InputNode {
     return {
       id: getRecordId(),
@@ -51,6 +90,12 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
     };
   }
 
+  /**
+   * Factory method to create a new instance of InputNode with default settings.
+   * The instance is initialized with default data types for outputs, typically used at the start of node creation.
+   *
+   * @returns An instance of InputNode initialized with default settings for data inputs.
+   */
   static create(): InputNode {
     const input = new BaseInput({
       dataTypes: {
@@ -61,6 +106,64 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
     return InputNodeImpl.nodeFrom(input);
   }
 
+  /**
+   * Deserializes a serialized input node representation into an executable input node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized input node.
+   */
+  static async deserialize(
+    serialized: SerializedNode,
+  ): Promise<InputNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'input') {
+      throw new Error(`CANNOT deserialize this type in input node: ${type}`);
+    }
+
+    const userInputStr = JSON.stringify(data);
+    const userInput = await load<BaseInput>(
+      userInputStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: userInput,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
+
+  /**
+   * Derives the input port definitions based on connections to this node.
+   * This method dynamically adjusts input ports based on the connected nodes and the data types they provide.
+   *
+   * @param connections Array of node connections that connect to this node.
+   * @param nodeMap A mapping from node IDs to SerializableNode instances, to fetch output definitions.
+   * @returns An array of input port definitions with potential data types they can accept.
+   */
   getInputPortDefs(
     connections: NodeConnection[],
     nodeMap: Record<RecordId, SerializableNode>
@@ -82,11 +185,11 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
         : [possibleType];
 
       if (portName in ports) {
-        const dataTypes: DataType[] = Array.isArray(ports[portName])
+        const dataTypes = Array.isArray(ports[portName])
           ? [...ports[portName], ...possibleTypes]
           : [ports[portName], ...possibleTypes];
 
-        ports[portName] = [...new Set(dataTypes)];
+        ports[portName] = [...new Set(dataTypes as DataType[])];
       } else {
         ports[portName] = possibleType ?? [];
       }
@@ -115,6 +218,15 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
     });
   }
 
+  /**
+   * Processes inputs to produce outputs based on the current configuration of the node.
+   * This method takes user inputs or automated inputs and generates outputs accordingly,
+   * maintaining the state in `data`.
+   *
+   * @param inputs A map containing input data for the node.
+   * @param context The processing context, providing additional data and operations for processing.
+   * @returns A map of process outputs keyed by their output port names.
+   */
   async process(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -139,6 +251,10 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
     return output;
   }
 
+  /**
+   * Retrieves the body of the node, typically used for UI rendering or further processing.
+   * @returns A promise that resolves to the node's body, suitable for rendering in UIs or other outputs.
+   */
   async getBody(): Promise<NodeBody> {
     const dataFields: DataFields = Object.fromEntries(
       Object.entries(this.data.dataTypes).map(([k, v]) => [

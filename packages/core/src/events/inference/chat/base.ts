@@ -1,62 +1,74 @@
 import { TiktokenModel } from 'js-tiktoken/lite';
-import { BaseCache } from '../../../cache/base.js';
-import { MemoryCache } from '../../../cache/index.js';
-import { type CallableConfig } from '../../../record/callable.js';
+
+import { type BaseCache, MemoryCache } from '../../../cache/index.js';
+import { type CallableConfig } from '../../../record/index.js';
 import {
   AsyncCallError,
   AsyncCaller,
   baseFailedAttemptHandler,
   type AsyncCallerParams,
 } from '../../../utils/asyncCaller.js';
-import {
-  encodingForModel,
-  getNumTokens,
-  getTiktokenModel,
-} from '../../../utils/tokenizer.js';
-import { BaseEvent, BaseEventParams } from '../../base.js';
+import { getNumTokens, getTiktokenModel } from '../../../utils/tokenizer.js';
+import { BaseEvent, type BaseEventParams } from '../../base.js';
 import {
   type BaseMessageLike,
   BaseMessage,
-} from '../../input/load/msgs/base.js';
-import { convertMessageLikeToMessage, isMessageLike } from '../../input/load/msgs/utils.js';
-import { BasePrompt } from '../../input/load/prompts/base.js';
-import { ChatPrompt } from '../../input/load/prompts/chat.js';
-import { StringPrompt } from '../../input/load/prompts/text.js';
-import { Generation } from '../../output/provide/generation.js';
-import { LLMResult } from '../../output/provide/llmresult.js';
+} from '../../input/load/msgs/index.js';
+import {
+  convertMessageLikeToMessage,
+  isMessageLike,
+} from '../../input/load/msgs/utils.js';
+import {
+  BasePrompt,
+  ChatPrompt,
+  StringPrompt,
+} from '../../input/load/prompts/index.js';
+import { type Generation, type LLMResult } from '../../output/provide/index.js';
 
+/**
+ * Options for language model invocation.
+ */
 export interface BaseLMCallOptions extends BaseEventParams {
   /**
-   * Stop tokens in the LM call.
-   * If not provided, default stop tokens are used for the LM.
+   * Optional array of tokens that should stop the language model's generation.
    */
   stopWords?: string[];
 
   /**
-   * Timeout for the LM cal in milliseconds;
+   * Maximum time in milliseconds to wait for a response from the language model.
    */
   timeout?: number;
 
   /**
-   * Abort signal for the call.
-   * If provided, the call will be aborted when the signal is aborted.
+   * Optional abort signal to cancel the request prematurely.
    */
   signal?: AbortSignal;
 }
 
+/**
+ * Type for inputs acceptable by the language model which can be a prompt, message like
+ * array, or a string.
+ */
 export type BaseLMInput = BasePrompt | BaseMessageLike[] | string;
 
+/**
+ * Parameters for base language model operations, including caching.
+ */
 export interface BaseLMParams extends AsyncCallerParams, BaseEventParams {
+  /**
+   * Cache instance to store and retrieve results for given prompts.
+   * If cache is boolean and is `true`, then we use a {@link MemoryCache}.
+   */
   cache?: BaseCache | boolean;
 }
 
 /**
- * Abstract class representing the BaseLM (Base Language Model).
- * This class offers core functionalities for interfacing with a language model, including caching,
- * token counting, and transforming inputs to prompts.
+ * Abstract class for base language model handling.
+ * Provides core functionality for interacting with a language model including caching,
+ * input transformation, and asynchronous execution.
  *
- * @template CallOutput - Represents the call output type. Default is unknown.
- * @template CallOptions - Represents the call options type. By default, it extends from {@link BaseLMCallOptions}.
+ * @template CallOutput - Type of the output from a language model call.
+ * @template CallOptions - Type for options to pass during a call.
  */
 export abstract class BaseLM<
     CallOutput = unknown,
@@ -67,6 +79,7 @@ export abstract class BaseLM<
 {
   /**
    * Represents the type for call options.
+   * @hidden
    */
   declare CallOptions: CallOptions;
 
@@ -82,7 +95,7 @@ export abstract class BaseLM<
 
   /**
    * Constructor for the BaseLM class.
-   * @param {BaseLMParams} params - Parameters to initialize the base language model.
+   * @param params Parameters to initialize the base language model.
    */
   constructor({ callbacks, ...params }: BaseLMParams) {
     super({ callbacks, ...params });
@@ -101,22 +114,22 @@ export abstract class BaseLM<
   }
 
   /**
-   * Abstract method to get the LLM type. Must be implemented by subclasses.
-   * @returns {string} The type of LLM.
+   * Returns the LLM type.
+   * @returns The type of LLM.
    */
   abstract _llmType(): string;
 
   /**
-   * Abstract method to get the model type. Must be implemented by subclasses.
-   * @returns {string} The type of the model.
+   * Returns the model type.
+   * @returns The type of the model.
    */
   abstract _modelType(): string;
 
   /**
    * Abstract method to invoke the language model with a given input and options.
-   * @param input - The input for the language model.
-   * @param options - Optional call options.
-   * @returns {Promise<LLMResult>} The output llm result from the language model.
+   * @param input The input for the language model.
+   * @param options Optional call options.
+   * @returns The output llm result from the language model.
    */
   abstract invoke(
     input: BaseLMInput,
@@ -126,10 +139,10 @@ export abstract class BaseLM<
   /**
    * Abstract method to provide the core logic to interface with the language model,
    * handling both cached and uncached predictions.
-   * @param {unknown} input - A given input to the language model, can be a prompt or an array of messages.
-   * @param {string[] | CallOptions} [options] - Optional call options or an array of stop words.
-   * @param {any} [callbacks] - Optional callbacks.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param input A given input to the language model, can be a prompt or an array of messages.
+   * @param options Optional call options or an array of stop words.
+   * @param callbacks Optional callbacks.
+   * @returns The result from the language model.
    */
   abstract provide(
     input: unknown,
@@ -139,8 +152,9 @@ export abstract class BaseLM<
 
   /**
    * Converts a given {@link BaseLMInput} to a {@link BasePrompt}.
-   * @param {BaseLMInput} input - The input for the language model.
-   * @returns {BasePrompt} The corresponding prompt.
+   * @param input The input for the language model.
+   * @returns The corresponding prompt.
+   * @internal
    */
   protected static _convertInputToPrompt(input: BaseLMInput): BasePrompt {
     if (typeof input === 'string') {
@@ -156,7 +170,8 @@ export abstract class BaseLM<
 
   /**
    * Method to identify additional parameters specific to implementations.
-   * @returns {Record<string, any>} A record of identified parameters.
+   * @returns A record of identified parameters.
+   * @internal
    */
   protected _identifyParams(): Record<string, any> {
     return {};
@@ -164,8 +179,9 @@ export abstract class BaseLM<
 
   /**
    * Constructs a string key based on the given call options for caching purposes.
-   * @param {CallOptions} callOptions - The call options.
-   * @returns {string} The generated key.
+   * @param callOptions The call options.
+   * @returns The generated key.
+   * @internal
    */
   protected _getLLMStrKey(callOptions: CallOptions): string {
     const params: Record<string, any> = {
@@ -187,6 +203,11 @@ export abstract class BaseLM<
     return llmStrKey;
   }
 
+  /**
+   * Custom handler for failed asynchronous attempts.
+   *
+   * @param e - The error encountered during an attempt.
+   */
   protected _failedAttemptHandler(e: Error) {
     baseFailedAttemptHandler(e as AsyncCallError);
   }
@@ -207,6 +228,7 @@ export abstract class BaseLLM<
 > extends BaseLM<LLMResult, CallOptions> {
   /**
    * Represents the type for call options without some specified properties.
+   * @hidden
    */
   declare SerializedCallOptions: Omit<
     CallOptions,
@@ -222,7 +244,7 @@ export abstract class BaseLLM<
 
   /**
    * Constructor for the BaseLLM class.
-   * @param fields - Parameters to initialize the base language model.
+   * @param fields Parameters to initialize the base language model.
    */
   constructor(fields: BaseLLMParams) {
     super(fields);
@@ -230,21 +252,25 @@ export abstract class BaseLLM<
 
   /**
    * Returns the type of the model.
-   * @returns {string} The type of the model.
+   * @returns The type of the model.
    */
   _modelType(): string {
     return 'base_llm';
   }
 
+  /**
+   * Returns the parameters of the model.
+   * @returns The parameters of the model.
+   */
   abstract getParams(
     options?: this['SerializedCallOptions']
   ): Record<string, unknown>;
 
   /**
    * Invokes the language model with a given input and options.
-   * @param input - The input for the language model.
-   * @param options - Optional call options.
-   * @returns {Promise<LLMResult>} The output llm result from the language model.
+   * @param input The input for the language model.
+   * @param options Optional call options.
+   * @returns The output llm result from the language model.
    */
   async invoke(input: BaseLMInput, options?: CallOptions): Promise<LLMResult> {
     const prompt: BasePrompt = BaseLLM._convertInputToPrompt(input);
@@ -259,10 +285,10 @@ export abstract class BaseLLM<
 
   /**
    * Provides the core logic to interface with the language model, handling both cached and uncached predictions.
-   * @param {string} prompt - A prompt.
-   * @param options - Optional call options or an array of stop words.
-   * @param callbacks - Optional callbacks.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param prompt A prompt.
+   * @param options Optional call options or an array of stop words.
+   * @param callbacks Optional callbacks.
+   * @returns The result from the language model.
    */
   async provide(
     prompt: string,
@@ -307,9 +333,9 @@ export abstract class BaseLLM<
 
   /**
    * Abstract method that interfaces with the underlying language model. Must be implemented by subclasses.
-   * @param {string} prompt - A prompt.
-   * @param options - Call options.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param prompt A prompt.
+   * @param options Call options.
+   * @returns The result from the language model.
    */
   abstract _provide(
     prompt: string,
@@ -318,9 +344,9 @@ export abstract class BaseLLM<
 
   /**
    * Handles uncached prompts and calls the `_provide` method.
-   * @param {string} prompt - A prompt.
-   * @param serializedCallOptions - Serialized call options.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param prompt A prompt.
+   * @param serializedCallOptions Serialized call options.
+   * @returns The result from the language model.
    */
   protected async _provideUncached(
     prompt: string,
@@ -377,6 +403,7 @@ export abstract class BaseChatLM<
 > extends BaseLM<LLMResult, CallOptions> {
   /**
    * Represents the type for call options without some specified properties.
+   * @hidden
    */
   declare SerializedCallOptions: Omit<
     CallOptions,
@@ -396,21 +423,25 @@ export abstract class BaseChatLM<
 
   /**
    * Returns the type of the model.
-   * @returns {string} The type of the model.
+   * @returns The type of the model.
    */
   _modelType(): string {
     return 'base_chatlm';
   }
 
+  /**
+   * Returns the parameters of the model.
+   * @returns The parameters of the model.
+   */
   abstract getParams(
     options?: this['SerializedCallOptions']
   ): Record<string, unknown>;
 
   /**
    * Invokes the chat language model with a given input and options.
-   * @param input - The input for the chat language model.
-   * @param options - Optional call options.
-   * @returns {Promise<LLMResult>} The output llm result from the language model.
+   * @param input The input for the chat language model.
+   * @param options Optional call options.
+   * @returns The output llm result from the language model.
    */
   async invoke(input: BaseLMInput, options?: CallOptions): Promise<LLMResult> {
     const prompt: BasePrompt = BaseChatLM._convertInputToPrompt(input);
@@ -425,10 +456,10 @@ export abstract class BaseChatLM<
 
   /**
    * Provides the core logic to interface with the chat language model, handling both cached and uncached predictions.
-   * @param {BaseMessageLike[]} messages - An array of messages.
-   * @param options - Optional call options or an array of stop words.
-   * @param callbacks - Optional callbacks.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param messages An array of messages.
+   * @param options Optional call options or an array of stop words.
+   * @param callbacks Optional callbacks.
+   * @returns The result from the language model.
    */
   async provide(
     messages: BaseMessageLike[],
@@ -479,9 +510,9 @@ export abstract class BaseChatLM<
 
   /**
    * Abstract method that interfaces with the underlying language model. Must be implemented by subclasses.
-   * @param {BaseMessage[]} messages - An array of messages.
-   * @param options - Call options.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param messages An array of messages.
+   * @param options Call options.
+   * @returns The result from the language model.
    */
   abstract _provide(
     messages: BaseMessage[],
@@ -490,9 +521,9 @@ export abstract class BaseChatLM<
 
   /**
    * Handles uncached prompts and calls the `_provide` method.
-   * @param {BaseMessage[]} messages - An array of messages.
-   * @param serializedCallOptions - Serialized call options.
-   * @returns {Promise<LLMResult>} The result from the language model.
+   * @param messages An array of messages.
+   * @param serializedCallOptions Serialized call options.
+   * @returns The result from the language model.
    */
   protected async _provideUncached(
     messages: BaseMessage[],
@@ -512,7 +543,7 @@ export abstract class BaseChatLM<
 
   /**
    * Splits the provided call options into callable options and serialized options.
-   * @param options - Call options.
+   * @param options Call options.
    * @returns A tuple containing callable options and serialized options.
    */
   protected _splitCallableOptionsFromCallOptions(
@@ -534,6 +565,19 @@ export abstract class BaseChatLM<
   }
 }
 
+/**
+ * Utility function to calculate the maximum number of tokens that can be sent to the model
+ * after accounting for the tokens in the prompt.
+ *
+ * @param prompt The text to be sent to the model.
+ * @param modelName The model's name, which determines the total context size.
+ * @returns Maximum number of tokens that can be added to the prompt.
+ * @example
+ * ```typescript
+ * const remainingTokens = await calculateMaxToken("Example prompt", "gpt-3.5-turbo-16k");
+ * console.log(remainingTokens);
+ * ```
+ */
 export async function calculateMaxToken(
   prompt: string,
   modelName: TiktokenModel
@@ -544,6 +588,12 @@ export async function calculateMaxToken(
   return maxTokens - numTokens;
 }
 
+/**
+ * Retrieves the context size for a given model.
+ *
+ * @param modelName Model's name.
+ * @returns Total number of tokens that the model can handle in a single prompt.
+ */
 export function getModelContextSize(modelName: string): number {
   switch (getTiktokenModel(modelName)) {
     case 'gpt-3.5-turbo-16k':
@@ -571,6 +621,18 @@ export function getModelContextSize(modelName: string): number {
   }
 }
 
+/**
+ * Type guard to check if a value is a valid BaseLMInput.
+ *
+ * @param value Value to check.
+ * @returns True if the value is a BaseLMInput, false otherwise.
+ * @example
+ * ```typescript
+ * if (isLMInput(someInput)) {
+ *   console.log("Valid input for language model.");
+ * }
+ * ```
+ */
 export function isLMInput(value: unknown): value is BaseLMInput {
   if (Array.isArray(value)) {
     return value.every((v) => isMessageLike(v));

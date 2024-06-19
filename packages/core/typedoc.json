@@ -1,0 +1,11 @@
+{
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+  "entryFileName": "index",
+  "navigationModel": {
+    "excludeGroups": true,
+    "excludeCategories": true,
+    "excludeFolders": true
+  },
+  "mergeReadme": true,
+  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-no-inherit"]
+}

@@ -3,6 +3,9 @@ import { BaseLMCallOptions } from '../../base.js';
 
 export type GeminiContentRole = 'model' | 'user';
 
+/**
+ * Options specific to Vertex AI calls, extending the base language model call options.
+ */
 export interface VertexAICallOptions extends BaseLMCallOptions {
   /**
    * The base Vertex AI endpoint to use for the request.
@@ -12,6 +15,16 @@ export interface VertexAICallOptions extends BaseLMCallOptions {
   apiEndpoint?: string;
 }
 
+/**
+ * Settings to manage safety thresholds for content generated or processed by the model.
+ * @example
+ * ```typescript
+ * const safetySetting: GeminiSafetySetting = {
+ *   category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+ *   threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
+ * };
+ * ```
+ */
 export interface GeminiSafetySetting {
   /**
    * The safety category to configure a threshold for.
@@ -25,6 +38,28 @@ export interface GeminiSafetySetting {
   threshold: HarmBlockThreshold;
 }
 
+/**
+ * Defines a function that can be called by the model during its execution. Functions
+ * allow the model to perform actions or fetch data as needed.
+ * @example
+ * ```typescript
+ * const function: GeminiFunction = {
+ *   name: 'get_current_weather',
+ *   description: 'get weather in a given location',
+ *   parameters: {
+ *     type: FunctionDeclarationSchemaType.OBJECT,
+ *     properties: {
+ *       location: {type: FunctionDeclarationSchemaType.STRING},
+ *       unit: {
+ *         type: FunctionDeclarationSchemaType.STRING,
+ *         enum: ['celsius', 'fahrenheit'],
+ *       }
+ *     },
+ *     required: ['location']
+ *   }
+ * };
+ * ```
+ */
 export interface GeminiFunction {
   /**
    * The name of the function to call. Must start with a letter or an
@@ -51,6 +86,31 @@ export interface GeminiFunction {
   };
 }
 
+/**
+ * Represents a collection of Gemini functions that can be utilized by the model.
+ * @example
+ * ```typescript
+ * const tools: GeminiTool = {
+ *   functionDeclarations: [
+ *     {
+ *       name: 'get_current_weather',
+ *       description: 'get weather in a given location',
+ *       parameters: {
+ *         type: FunctionDeclarationSchemaType.OBJECT,
+ *         properties: {
+ *           location: {type: FunctionDeclarationSchemaType.STRING},
+ *           unit: {
+ *             type: FunctionDeclarationSchemaType.STRING,
+ *             enum: ['celsius', 'fahrenheit'],
+ *           }
+ *         },
+ *         required: ['location']
+ *       }
+ *     }
+ *   ]
+ * };
+ * ```
+ */
 export interface GeminiTool {
   /**
    * One or more function declarations. Each function declaration contains
@@ -59,6 +119,10 @@ export interface GeminiTool {
   functionDeclarations: Array<GeminiFunction>;
 }
 
+/**
+ * Configuration options for making calls to the Gemini model, including tools and
+ * safety settings.
+ */
 export interface GeminiCallOptions extends VertexAICallOptions {
   /**
    * A piece of code that enables the system to interact with external systems
@@ -74,6 +138,10 @@ export interface GeminiCallOptions extends VertexAICallOptions {
   safetySettings: Array<GeminiSafetySetting>;
 }
 
+/**
+ * Base configuration options for calls to the Vertex AI models. This includes
+ * settings that control how the AI generates responses, such as temperature and top-k.
+ */
 export interface VertexAIBaseInput {
   /**
    * The temperature is used for sampling during the response generation,
@@ -107,19 +175,19 @@ export interface VertexAIBaseInput {
   topP: number;
 
   /**
-   * Top-K changes how the model selects tokens for output. A top-K of 1 means 
-   * the next selected token is the most probable among all tokens in the model's 
-   * vocabulary (also called greedy decoding), while a top-K of 3 means that 
-   * the next token is selected from among the three most probable tokens by 
+   * Top-K changes how the model selects tokens for output. A top-K of 1 means
+   * the next selected token is the most probable among all tokens in the model's
+   * vocabulary (also called greedy decoding), while a top-K of 3 means that
+   * the next token is selected from among the three most probable tokens by
    * using temperature.
-   * 
-   * For each token selection step, the top-K tokens with the highest probabilities 
-   * are sampled. Then tokens are further filtered based on top-P with the final 
+   *
+   * For each token selection step, the top-K tokens with the highest probabilities
+   * are sampled. Then tokens are further filtered based on top-P with the final
    * token selected using temperature sampling.
-   * 
-   * Specify a lower value for less random responses and a higher value for more 
+   *
+   * Specify a lower value for less random responses and a higher value for more
    * random responses.
-   * 
+   *
    * Range: 1 - 40
    */
   topK: number;
@@ -167,6 +235,10 @@ export interface VertexAIBaseInput {
    */
   stopSequences?: string[];
 
+  /**
+   * API key to use when making requests to Gemini. Defaults to the value of
+   * `GOOGLE_API_KEY` environment variable.
+   */
   googleApiKey?: string;
 
   /**
@@ -176,6 +248,12 @@ export interface VertexAIBaseInput {
   additionalKwargs?: Record<string, unknown>;
 }
 
+/**
+ * Enum representing supported MIME types for media files used in Gemini model interactions.
+ * This includes various image and video formats.
+ *
+ * @enum
+ */
 export enum GeminiMimeType {
   PNG = 'image/png',
   JPEG = 'image/jpeg',
@@ -184,6 +262,17 @@ export enum GeminiMimeType {
   HEIF = 'image/heif',
 }
 
+/**
+ * Represents inline media data, such as images or videos, to be included directly in model
+ * inputs. It includes the media type and the base64-encoded data.
+ * @example
+ * ```typescript
+ * const inlineData: GeminiInlineData = {
+ *   mimeType: GeminiMimeType.PNG,
+ *   data: 'iVBORw0KGgoAAAANSUhEUgAAAAUA...'
+ * };
+ * ```
+ */
 export interface GeminiInlineData {
   /**
    * The media type of the image or video specified in the `data` fields.
@@ -204,9 +293,21 @@ export interface GeminiInlineData {
 }
 
 /**
- * Union field data can be only one of the following:
- * - text
- * - inlineData
+ * Defines a part of the input for a Gemini model call, which can be either text
+ * or inline data like images.
+ * @example
+ * ```typescript
+ * const textData: GeminiInputPart = {
+ *   text: "this is a text prompt"
+ * };
+ *
+ * const imageData: GeminiInputPart = {
+ *   inlineData: {
+ *     mimeType: GeminiMimeType.PNG,
+ *     data: 'iVBORw0KGgoAAAANSUhEUgAAAAUA...'
+ *   }
+ * };
+ * ```
  */
 export interface GeminiInputPart {
   /**
@@ -222,6 +323,27 @@ export interface GeminiInputPart {
   inlineData?: GeminiInlineData;
 }
 
+/**
+ * Describes the content to be processed by the Gemini model, specifying the role
+ * associated with the content and the parts that make up the input.
+ * @example
+ * ```typescript
+ * const content: GeminiContent = {
+ *   role: "user",
+ *   parts: [
+ *     {
+ *       text: "please describe the picture."
+ *     },
+ *     {
+ *       inlineData: {
+ *         mimeType: GeminiMimeType.PNG,
+ *         data: 'iVBORw0KGgoAAAANSUhEUgAAAAUA...'
+ *       }
+ *     }
+ *   ]
+ * };
+ * ```
+ */
 export interface GeminiContent {
   /**
    * The role in a conversation associated with the content. Specifying a
@@ -239,11 +361,21 @@ export interface GeminiContent {
   parts: Array<GeminiInputPart>;
 }
 
+/**
+ * Overall input structure for a Gemini model call, incorporating various elements
+ * like temperature, topP, and specific contents.
+ */
 export interface GeminiInput extends VertexAIBaseInput {
   /** Gemini contents to pass as a prefix to the prompt */
   contents: Array<GeminiContent>;
 }
 
+/**
+ * Checks if a given model name is suitable for Gemini.
+ *
+ * @param modelName - The model name to check.
+ * @returns True if the model is compatible with Gemini, false otherwise.
+ */
 export function checkModelForGemini(modelName?: string): boolean {
   return (
     modelName !== undefined &&
@@ -252,16 +384,18 @@ export function checkModelForGemini(modelName?: string): boolean {
   );
 }
 
+/**
+ * Checks if a given model supports vision capabilities within the Gemini.
+ *
+ * @param modelName - The model name to check.
+ * @returns True if the model supports vision features, false otherwise.
+ */
 export function checkModelForGeminiVision(modelName?: string): boolean {
   return (
     modelName !== undefined &&
     modelName.startsWith('gemini') &&
     modelName.includes('vision')
   );
-}
-
-export function checkModelForVertexAIChat(modelName?: string): boolean {
-  return modelName !== undefined && modelName.startsWith('chat-bison');
 }
 
 /**

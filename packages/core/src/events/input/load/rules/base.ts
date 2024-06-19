@@ -1,13 +1,31 @@
-import { RecordId } from '../../../../load/keymap';
-import { Serializable } from '../../../../load/serializable';
-import { SerializedRuleCollection } from '../../../../studio/serde';
-import { BaseRule } from '../../../inference/validate/guardrails/base';
+import { type RecordId } from '../../../../load/keymap.js';
+import { Serializable } from '../../../../load/serializable.js';
+import { type SerializedRuleCollection } from '../../../../serde.js';
+import { BaseRule } from '../../../inference/validate/guardrails/index.js';
 
+/**
+ * Defines the structure for initializing a BaseRuleCollection.
+ * It specifies a collection of rules and optionally a conjunction to define how
+ * the rules should be evaluated.
+ */
 export interface BaseRuleCollectionField {
+  /**
+   * A collection of rules, each identified by a string key. The value can be
+   * either a BaseRule or another BaseRuleCollection.
+   */
   collection: Record<string, BaseRule | BaseRuleCollection>;
-  conjunction?: 'and' | 'or'; // default is AND
+
+  /**
+   * The logical conjunction used to evaluate the rules. Default is "and".
+   * Possible values are 'and' or 'or'.
+   */
+  conjunction?: 'and' | 'or';
 }
 
+/**
+ * A collection of rules that can be evaluated together. This provides functionality
+ * to validate a set of inputs against the rules defined in the collection.
+ */
 export class BaseRuleCollection
   extends Serializable
   implements BaseRuleCollectionField
@@ -16,10 +34,23 @@ export class BaseRuleCollection
 
   _namespace: string[] = ['events', 'input', 'load', 'rules'];
 
+  /**
+   * A collection of rules, each identified by a string key. The value can be
+   * either a BaseRule or another BaseRuleCollection.
+   */
   collection: Record<string, BaseRule | BaseRuleCollection>;
 
+  /**
+   * The logical conjunction used to evaluate the rules. Default is "and".
+   * Possible values are 'and' or 'or'.
+   */
   conjunction: 'and' | 'or';
 
+  /**
+   * Initializes a new instance of BaseRuleCollection with the specified rules
+   * and conjunction.
+   * @param fields The fields required to initialize the rule collection.
+   */
   constructor(fields: BaseRuleCollectionField) {
     super(fields);
 
@@ -27,6 +58,10 @@ export class BaseRuleCollection
     this.conjunction = fields.conjunction ?? 'and';
   }
 
+  /**
+   * Provides a human-readable description of the rule collection, detailing the
+   * rules and their logical relationship.
+   */
   get description(): string {
     return Object.entries(this.collection)
       .map(([subject, rule]) => {
@@ -48,6 +83,12 @@ export class BaseRuleCollection
       .join(` ${this.conjunction.toUpperCase()} `);
   }
 
+  /**
+   * Deserializes a given serialized rule collection into an instance of BaseRuleCollection.
+   * @param serialized The serialized rule collection.
+   * @param values Optional additional values for rule deserialization.
+   * @returns The deserialized rule collection.
+   */
   static async deserialize(
     serialized: SerializedRuleCollection,
     values: Record<string, unknown> = {}
@@ -85,6 +126,12 @@ export class BaseRuleCollection
     return new BaseRuleCollection(ruleCollectionField);
   }
 
+  /**
+   * Serializes the current state of the rule collection to a format suitable for storage or transmission.
+   * This method facilitates the conversion of the rule collection into a simplified JSON format,
+   * capturing essential properties like description, collection, and conjunction.
+   * @returns The serialized form of the rule collection.
+   */
   serialize(): SerializedRuleCollection {
     return {
       _type: 'rule-collection',
@@ -99,6 +146,12 @@ export class BaseRuleCollection
     };
   }
 
+  /**
+   * Generates a simplified description of the rule collection without any special formatting.
+   * This method provides a clean, readable description of each rule's logic without including
+   * XML-like tags or additional decorators used in more complex descriptions.
+   * @returns A simplified string representation of the rule collection's logic.
+   */
   getCleanDescription(): string {
     return Object.entries(this.collection)
       .map(([subject, rule]) => {
@@ -116,6 +169,12 @@ export class BaseRuleCollection
       .join(` ${this.conjunction.toUpperCase()} `);
   }
 
+  /**
+   * Validates the provided inputs against the rules in the collection.
+   * @param input Inputs to validate.
+   * @param variables Optional variables for rule validation.
+   * @returns The result of the validation.
+   */
   async validate(
     input: {
       [key in string]: unknown;
@@ -149,6 +208,12 @@ export class BaseRuleCollection
     });
   }
 
+  /**
+   * Combines two rule collections into a new rule collection with a specified conjunction.
+   * @param ruleCollection Another rule collection to combine with this one.
+   * @param conjunction The conjunction to use for the new combined rule collection.
+   * @returns The new combined rule collection.
+   */
   concat(
     ruleCollection: BaseRuleCollection,
     conjunction: 'and' | 'or'
@@ -162,6 +227,18 @@ export class BaseRuleCollection
     });
   }
 
+  /**
+   * Validates a specific input against a specific rule within the rule collection.
+   * This protected method is used internally by the `validate` method to apply individual
+   * rules  to corresponding parts of the input data.
+   * @param subject The key representing the specific part of input data to validate.
+   * @param rule The rule or rule collection to apply.
+   * @param recordHistory A set of record IDs to track rule application and prevent recursion.
+   * @param input The entire input data.
+   * @param variables Optional additional variables needed for validation.
+   * @returns The result of the validation for the specific input part.
+   * @internal
+   */
   protected async _validate(
     subject: string,
     rule: BaseRule | BaseRuleCollection,
@@ -225,10 +302,27 @@ export class BaseRuleCollection
     return true;
   }
 
+  /**
+   * Determines whether a given description represents a composite rule.
+   * This method checks if the description includes logical operators such as 'AND' or 'OR',
+   * indicating a composite of multiple rules.
+   * @param description The rule description to check.
+   * @returns True if the description includes composite rule indicators, false otherwise.
+   * @internal
+   */
   protected _isCompositeRule(description: string): boolean {
     return description.includes('AND') || description.includes('OR');
   }
 
+  /**
+   * Extracts the outermost logical conjunction ('AND' or 'OR') from a rule description.
+   * This method analyzes the rule description to determine the highest-level logical operator
+   * governing its logic.
+   * @param description The rule description to analyze.
+   * @returns The outermost logical conjunction ('AND' or 'OR').
+   * @throws Throws if the description does not contain a clear outermost conjunction.
+   * @internal
+   */
   protected _getOutermostConjunction(description: string): string {
     const isMatchingParentheses = (expression: string): boolean => {
       let balance = 0;
@@ -279,6 +373,15 @@ export class BaseRuleCollection
     );
   }
 
+  /**
+   * Checks if the logic of a rule description is inverted relative to a given conjunction.
+   * This method is used to determine if the description's logic needs to be presented 
+   * differently based on the specified conjunction.
+   * @param description The description of the rule.
+   * @param conjunction The conjunction to compare against.
+   * @returns True if the rule's logic is inverted relative to the conjunction, false otherwise.
+   * @internal
+   */
   protected _isInvertLogic(
     description: string,
     conjunction: 'and' | 'or'
