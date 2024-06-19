@@ -1,6 +1,6 @@
 {
   "name": "@encre/core",
-  "version": "0.1.1",
+  "version": "0.0.1",
   "main": "./index.js",
   "repository": "https://github.com/VictorS67/encre",
   "author": "Encre",
