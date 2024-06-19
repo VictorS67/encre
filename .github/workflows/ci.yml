@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable --mode=skip-build
       - name: Check linting
-        run: yarn workspace @encre/studio lint
+        run: yarn workspace @encrejs/studio lint
 
   test:
     name: Integration Tests
@@ -46,6 +46,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --unsafe-perm --immutable --network-timeout 500000
       - name: Install sharp
-        run: yarn workspace @encre/core add sharp --ignore-engines
+        run: yarn workspace @encrejs/core add sharp --ignore-engines
       - name: Test
-        run: yarn workspace @encre/core run test
+        run: yarn workspace @encrejs/core run test

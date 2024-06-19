@@ -1,7 +1,4 @@
 {
-  "git": {
-    "requireCleanWorkingDir": false
-  },
   "github": {
     "release": true,
     "autoGenerate": true,

@@ -11,11 +11,11 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "yarn workspace @encre/studio run electron-dev",
-    "build": "yarn workspace @encre/studio run build && yarn workspace @encre/core run build",
+    "dev": "yarn workspace @encrejs/studio run electron-dev",
+    "build": "yarn workspace @encrejs/studio run build && yarn workspace @encrejs/core run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "yarn workspace @encre/studio run lint && yarn workspace @encre/core run lint",
-    "publish:core": "bash ./release-branch.sh && turbo run --filter @encre/core build lint-fix lint test --concurrency 1 && yarn workspace @encre/core run release"
+    "lint": "yarn workspace @encrejs/studio run lint && yarn workspace @encrejs/core run lint",
+    "publish:core": "bash ./release-branch.sh && turbo run --filter @encrejs/core lint-fix && turbo run --filter @encrejs/core build lint test --concurrency 1 && yarn workspace @encrejs/core run release"
   },
   "repository": {
     "type": "git",
