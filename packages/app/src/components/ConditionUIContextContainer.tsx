@@ -9,6 +9,14 @@ import React, {
 
 import { DN100, DN0, N0, N10 } from '@atlaskit/theme/colors';
 import styled from '@emotion/styled';
+import { SerializedRule, SerializedRuleCollection } from '@encrejs/core/serde';
+import { Guardrail } from '@encrejs/core/studio/guardrails';
+import {
+  SerializableNode as Node,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '@encrejs/core/studio/nodes';
+import { UIContext } from '@encrejs/core/studio/ui';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { css } from '@mui/material';
@@ -26,15 +34,6 @@ import {
   registeredGuardrailsState,
   selectingGuardrailIdsState,
 } from '../state/guardrail';
-import {
-  Guardrail,
-  Node,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  SerializedRule,
-  SerializedRuleCollection,
-  UIContext,
-} from '../types/studio.type';
 import {
   ConditionUIContextContainerProps,
   ConditionUIContextItemProps,
@@ -531,14 +530,14 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
           text: '',
           language: 'encre-code',
           keywords: ['AND', 'OR'],
-          properties: sources,
+          // properties: sources, TODO: add this to CodeUIContext
         }
       : {
           type: 'code',
           text: condition.description ?? '',
           language: 'encre-code',
           keywords: ['AND', 'OR'],
-          properties: sources,
+          // properties: sources,
         };
 
   const onDropDownMenuClick = useStableCallback((e: React.MouseEvent) => {

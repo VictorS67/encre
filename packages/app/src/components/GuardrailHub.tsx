@@ -1,6 +1,8 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+import { globalGuardrailRegistry } from '@encrejs/core/build/studio/registration/guardrails';
+import { Guardrail } from '@encrejs/core/studio/guardrails';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { GurdrailCard } from './GuardrailCard';
@@ -9,7 +11,7 @@ import {
   selectingGuardrailIdsState,
 } from '../state/guardrail';
 import { GuardrailHubProps } from '../types/guardrail.type';
-import { Guardrail } from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
 
 const GuardrailHubContainer = styled.div`
@@ -59,7 +61,7 @@ export const GuardrailHub: FC<GuardrailHubProps> = ({
   return (
     <GuardrailHubContainer>
       {Object.values(registeredGuardrails).map((g) => {
-        const gId: string = g.id;
+        const gId: RecordId = g.id;
         const selectingGuardrailIndex: number =
           selectingGuardrailIds.indexOf(gId);
         const selectedIndex: number | undefined =

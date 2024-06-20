@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { useDebounceFn, useLatest } from 'ahooks';
 
 import {
   CodeEditorContent,
   DefaultNodeEditorProps,
 } from '../../types/editor.type';
-import { Node } from '../../types/studio.type';
 
 export const DefaultCodeEditor: FC<
   DefaultNodeEditorProps & {

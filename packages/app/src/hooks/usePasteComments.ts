@@ -1,10 +1,12 @@
+import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { useCanvasPosition } from './useCanvasPosition';
 import { clipboardState } from '../state/clipboard';
 import { commentsState, selectingCommentIdsState } from '../state/comment';
-import { fakeId } from '../utils/fakeId';
+import { RecordId } from '../types/studio.type';
+// import { fakeId } from '../utils/fakeId';
 
 export function usePasteComments() {
   const clipboard = useRecoilValue(clipboardState);
@@ -52,12 +54,11 @@ export function usePasteComments() {
       },
     );
 
-    const oldNewCommentIdMap: Record<string, string> = {};
+    const oldNewCommentIdMap: Record<string, RecordId> = {};
 
     const newComments = clipboard.comments.map((comment) => {
       return produce(comment, (draft) => {
-        // TODO: change this to generate a new random RecordId from core
-        const newCommentId = fakeId(17);
+        const newCommentId = getRecordId();
         oldNewCommentIdMap[comment.id] = newCommentId;
 
         draft.id = newCommentId;

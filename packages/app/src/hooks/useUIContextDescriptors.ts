@@ -1,3 +1,5 @@
+import { UIContext } from '@encrejs/core/studio/ui';
+
 import { audioDescriptor } from '../components/descriptors/AudioDescriptor';
 import { blobDescriptor } from '../components/descriptors/BlobDescriptor';
 import { codeDescriptor } from '../components/descriptors/CodeDescriptor';
@@ -8,7 +10,6 @@ import { imageDescriptor } from '../components/descriptors/ImageDescriptor';
 import { markdownDescriptor } from '../components/descriptors/MarkdownDescriptor';
 import { messageDescriptor } from '../components/descriptors/MessageDescriptor';
 import { plainTextDescriptor } from '../components/descriptors/PlainTextDescriptor';
-import { UIContext } from '../types/studio.type';
 import {
   UIContextDescriptor,
   UIContextDescriptors,

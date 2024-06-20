@@ -6,13 +6,14 @@ import {
   commentContentMapState,
   updateCommentContentState,
 } from '../state/comment';
+import { RecordId } from '../types/studio.type';
 
 export function useChangeCommentContent() {
   const commentContentMap = useRecoilValue(commentContentMapState);
   const updateCommentContent = useSetRecoilState(updateCommentContentState);
 
   const updateCommentColor = useCallback(
-    (commentId: string, color: string) => {
+    (commentId: RecordId, color: string) => {
       const commentContent = commentContentMap[commentId];
 
       updateCommentContent({
@@ -24,7 +25,7 @@ export function useChangeCommentContent() {
   );
 
   const updateCommentVAlignment = useCallback(
-    (commentId: string, vAlign: string) => {
+    (commentId: RecordId, vAlign: string) => {
       const commentContent = commentContentMap[commentId];
 
       updateCommentContent({
@@ -36,7 +37,7 @@ export function useChangeCommentContent() {
   );
 
   const updateCommentHAlignment = useCallback(
-    (commentId: string, hAlign: string) => {
+    (commentId: RecordId, hAlign: string) => {
       const commentContent = commentContentMap[commentId];
 
       updateCommentContent({

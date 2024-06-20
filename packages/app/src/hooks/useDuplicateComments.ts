@@ -1,3 +1,5 @@
+import { GraphComment } from '@encrejs/core/studio/comments';
+import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import {
@@ -5,8 +7,8 @@ import {
   commentsState,
   selectingCommentIdsState,
 } from '../state/comment';
-import { GraphComment } from '../types/studio.type';
-import { fakeId } from '../utils/fakeId';
+// import { fakeId } from '../utils/fakeId';
+import { RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
 
 export function useDuplicateComments() {
@@ -16,16 +18,16 @@ export function useDuplicateComments() {
     selectingCommentIdsState,
   );
 
-  return (commentId: string) => {
+  return (commentId: RecordId) => {
     // const comment = commentMap[commentId];
 
-    const commentIds: string[] = (
+    const commentIds: RecordId[] = (
       selectingCommentIds.length > 0
         ? [...new Set([...selectingCommentIds, commentId])]
         : [commentId]
     ).filter(isNotNull);
 
-    const oldNewCommentIdMap: Record<string, string> = {};
+    const oldNewCommentIdMap: Record<RecordId, RecordId> = {};
     const newComments = commentIds
       .map((nId) => {
         const comment = commentMap[nId];
@@ -35,7 +37,7 @@ export function useDuplicateComments() {
         }
 
         // TODO: change this to globalCommentRegistry.create() from core
-        const newCommentId: string = fakeId(17);
+        const newCommentId: RecordId = getRecordId();
         oldNewCommentIdMap[nId] = newCommentId;
 
         const newComment: GraphComment = {

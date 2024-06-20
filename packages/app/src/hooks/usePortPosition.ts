@@ -1,11 +1,11 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { useRecoilValue } from 'recoil';
 
 import { useStableCallback } from './useStableCallback';
 import { nodeMapState } from '../state/node';
 import { PortPositons } from '../types/port.type';
-import { Node } from '../types/studio.type';
 
 export function useNodePortPositions() {
   const [portPositions, setPortPositions] = useState<PortPositons>({});

@@ -15,6 +15,11 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 import { css } from '@emotion/react';
+import { GraphComment } from '@encrejs/core/studio/comments';
+import {
+  SerializableNode as Node,
+  NodeConnection,
+} from '@encrejs/core/studio/nodes';
 import {
   autoUpdate,
   offset,
@@ -63,7 +68,7 @@ import { draggingWireClosestPortState } from '../state/wire';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
 import { HighlightedPort } from '../types/port.type';
-import { GraphComment, Node, NodeConnection } from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 
 const styles = css`
   position: relative;
@@ -315,8 +320,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
           'node-',
           '',
         );
-        const nodeId: string = contextMenu.data.element.dataset
-          .nodeid as string;
+        const nodeId: RecordId = contextMenu.data.element.dataset
+          .nodeid as RecordId;
 
         const parts = nodeIdentifier.split('-');
         if (parts.length !== 2) {
@@ -359,9 +364,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
           type: 'wire',
           data: {
             wireId,
-            wireFromNodeId: fromNodeId,
+            wireFromNodeId: fromNodeId as RecordId,
             wireFromPortName: fromPortName,
-            wireToNodeId: toNodeId,
+            wireToNodeId: toNodeId as RecordId,
             wireToPortName: toPortName,
           },
           group: [],
@@ -651,7 +656,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   );
 
   const onNodeMouseOver = useStableCallback(
-    (event: React.MouseEvent, nodeId: string) => {
+    (event: React.MouseEvent, nodeId: RecordId) => {
       setHoveringNodeId(nodeId);
     },
   );

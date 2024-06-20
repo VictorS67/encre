@@ -1,5 +1,7 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
+import { GraphComment } from '@encrejs/core/studio/comments';
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -11,7 +13,7 @@ import { commentsState, selectingCommentIdsState } from '../state/comment';
 import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { selectingWireIdsState } from '../state/wire';
-import { GraphComment, Node } from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 
 export const NodeGraphBuilder: FC = () => {
   const [nodes, setNodes] = useRecoilState(nodesState);
@@ -33,7 +35,7 @@ export const NodeGraphBuilder: FC = () => {
   const onNodesSelect = useStableCallback(
     (newNodes: Node[], isMulti?: boolean) => {
       if (isMulti) {
-        setSelectingNodeIds((nodeIds: string[]) => [
+        setSelectingNodeIds((nodeIds: RecordId[]) => [
           ...new Set([...nodeIds, ...newNodes.map((n) => n.id)]),
         ]);
       } else {
@@ -47,7 +49,7 @@ export const NodeGraphBuilder: FC = () => {
   const onCommentsSelect = useStableCallback(
     (newComments: GraphComment[], isMulti?: boolean) => {
       if (isMulti) {
-        setSelectingCommentIds((commentIds: string[]) => [
+        setSelectingCommentIds((commentIds: RecordId[]) => [
           ...new Set([...commentIds, ...newComments.map((c) => c.id)]),
         ]);
       } else {

@@ -7,14 +7,15 @@ import React, {
   useEffect,
 } from 'react';
 
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { UIContext } from '@encrejs/core/studio/ui';
 import { useRecoilState } from 'recoil';
 
 import { useStableCallback } from '../../hooks/useStableCallback';
 import { editingCodeIdState } from '../../state/editor';
 import { editingNodeIdState } from '../../state/node';
-import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
-import { fakeId } from '../../utils/fakeId';
+// import { fakeId } from '../../utils/fakeId';
 import { LazyCodeEditor, LazySyntaxedText } from '../LazyComponents';
 
 /* eslint-disable react/prop-types */
@@ -31,8 +32,8 @@ export const CodeNodeContentBody: FC<
     text,
     language,
     keywords,
-    properties,
-    variables,
+    // properties,
+    // variables,
     onEditClick,
   }) => {
     const [editingNodeId, setEditingNodeId] =
@@ -85,8 +86,8 @@ export const CodeNodeContentBody: FC<
               text={text}
               language={language}
               keywords={keywords}
-              properties={properties}
-              variables={variables}
+              // properties={properties} // TODO: add properties to CodeUIContext
+              // variables={variables} // TODO: add variables to CodeUIContext
             />
           )}
           {(!isEditing || onEditClick) && (
@@ -95,8 +96,8 @@ export const CodeNodeContentBody: FC<
                 text={text}
                 language={language}
                 keywords={keywords}
-                properties={properties}
-                variables={variables}
+                // properties={properties} // TODO: add properties to CodeUIContext
+                // variables={variables} // TODO: add variables to CodeUIContext
               />
             </div>
           )}

@@ -2,9 +2,10 @@ import React, { FC, memo, useEffect, useMemo, useState } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { UIContext, extMap } from '@encrejs/core/studio/ui';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-import { Node, UIContext, extMap } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';
 import { Icon } from '../Icon';

@@ -1,4 +1,8 @@
-import { GraphComment, Node, NodeConnection } from './studio.type';
+import { GraphComment } from '@encrejs/core/studio/comments';
+import {
+  SerializableNode as Node,
+  NodeConnection,
+} from '@encrejs/core/studio/nodes';
 
 export type NodeGraph = {
   nodes: Node[];

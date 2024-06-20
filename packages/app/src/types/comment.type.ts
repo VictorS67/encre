@@ -1,7 +1,8 @@
 import { HTMLAttributes } from 'react';
 
+import { GraphComment } from '@encrejs/core/studio/comments';
+
 import { ColorCache } from './canvas.type';
-import { GraphComment } from './studio.type';
 
 export type DraggableCommentProps = {
   comment: GraphComment;

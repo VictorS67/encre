@@ -1,12 +1,15 @@
 import React, { FC, memo } from 'react';
 
 import styled from '@emotion/styled';
+import {
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '@encrejs/core/studio/nodes';
 
 import { Port } from './Port';
 import { useNodeIO } from '../hooks/useNodeIO';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { NodePortGroupProps } from '../types/port.type';
-import { NodeInputPortDef, NodeOutputPortDef } from '../types/studio.type';
 
 const NodePortGrp = styled.div<{
   isCollapsed?: boolean;

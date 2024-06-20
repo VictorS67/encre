@@ -1,3 +1,9 @@
+import {
+  NodeConnection,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '@encrejs/core/studio/nodes';
+import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -5,12 +11,8 @@ import { useCanvasPosition } from './useCanvasPosition';
 import { clipboardState } from '../state/clipboard';
 import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
-import {
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-} from '../types/studio.type';
-import { fakeId } from '../utils/fakeId';
+// import { fakeId } from '../utils/fakeId';
+import { RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
 
 export function usePasteNodes() {
@@ -60,12 +62,11 @@ export function usePasteNodes() {
       },
     );
 
-    const oldNewNodeIdMap: Record<string, string> = {};
+    const oldNewNodeIdMap: Record<RecordId, RecordId> = {};
 
     const newNodes = clipboard.nodes.map((node) => {
       return produce(node, (draft) => {
-        // TODO: change this to generate a new random RecordId from core
-        const newNodeId = fakeId(17);
+        const newNodeId = getRecordId();
         oldNewNodeIdMap[node.id] = newNodeId;
 
         draft.id = newNodeId;
@@ -78,29 +79,6 @@ export function usePasteNodes() {
         draft.visualInfo.position.y =
           canvasPosition.y +
           (node.visualInfo.position.y - boundingBoxOfCopiedNodes.minY);
-
-        // TODO: we don't need this when the core is ready
-        draft.getBody = node.getBody;
-        const inputDefs: NodeInputPortDef[] = node.getInputPortDefs([], {});
-        const outputDefs: NodeOutputPortDef[] = node.getOutputPortDefs([], {});
-        draft.getInputPortDefs = function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeInputPortDef[] {
-          return inputDefs.map((def) => ({
-            ...def,
-            nodeId: newNodeId,
-          }));
-        } as any;
-        draft.getOutputPortDefs = function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeOutputPortDef[] {
-          return outputDefs.map((def) => ({
-            ...def,
-            nodeId: newNodeId,
-          }));
-        } as any;
       });
     });
 

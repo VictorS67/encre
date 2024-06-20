@@ -1,23 +1,25 @@
 import { HTMLAttributes } from 'react';
 
+import { DataType } from '@encrejs/core/studio/data';
 import {
-  DataType,
-  Node,
+  SerializableNode as Node,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from './studio.type';
+} from '@encrejs/core/studio/nodes';
+
+import { RecordId } from './studio.type';
 import { DraggingWire } from './wire.type';
 
 export type DraggingWireClosestPort = {
-  nodeId: string;
+  nodeId: RecordId;
   portName: string;
   input: NodeInputPortDef;
   portEl: HTMLElement;
 };
 
 export type HighlightedPort = {
-  nodeId: string;
+  nodeId: RecordId;
   portName: string;
   definition: NodeInputPortDef | NodeOutputPortDef;
   isInput?: boolean;
@@ -26,7 +28,7 @@ export type HighlightedPort = {
 export type PortPositons = Record<string, { x: number; y: number }>;
 
 export type PortProps = {
-  nodeId: string;
+  nodeId: RecordId;
   title: string;
   definition: NodeInputPortDef | NodeOutputPortDef;
   attributeListeners?: HTMLAttributes<HTMLDivElement>;
@@ -54,7 +56,7 @@ export type NodePortGroupProps = {
   isCollapsed?: boolean;
   onWireStartDrag?: (
     event: React.MouseEvent<HTMLElement>,
-    fromNodeId: string,
+    fromNodeId: RecordId,
     fromPortName: string,
     isInput?: boolean,
   ) => void;

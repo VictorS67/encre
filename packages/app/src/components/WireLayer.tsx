@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 
 import styled from '@emotion/styled';
+import { NodeInputPortDef } from '@encrejs/core/studio/nodes';
 import { orderBy } from 'lodash-es';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -24,7 +25,7 @@ import {
   isSelectingMultiWiresState,
   selectingWireIdsState,
 } from '../state/wire';
-import { NodeInputPortDef } from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 import { WireLayerProps } from '../types/wire.type';
 
 const WireLayerContainer = styled.svg`
@@ -188,7 +189,7 @@ export const WireLayer: FC<WireLayerProps> = ({
           })[0] as HTMLElement;
 
           const nodeId = closestHoverEl!.parentElement!.dataset.nodeid as
-            | string
+            | RecordId
             | undefined;
           const portName = closestHoverEl!.parentElement!.dataset.portname as
             | string

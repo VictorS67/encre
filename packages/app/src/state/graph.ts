@@ -1,3 +1,15 @@
+import {
+  SerializableNode as Node,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+  NodeBody,
+  NodeConnection,
+} from '@encrejs/core/studio/nodes';
+import {
+  ProcessInputMap,
+  ProcessContext,
+  ProcessOutputMap,
+} from '@encrejs/core/studio/processor';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
@@ -9,16 +21,6 @@ import myOgg from '../assets/radio.ogg';
 import myMp3 from '../assets/sunflower.mp3';
 import myPng from '../assets/timetable.png';
 import { NodeGraph } from '../types/graph.type';
-import {
-  Node,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
-  NodeBody,
-  NodeConnection,
-} from '../types/studio.type';
 
 const { persistAtom } = recoilPersist({ key: 'graph' });
 
@@ -662,351 +664,324 @@ export const graphState = atom<NodeGraph>({
       //           throw new Error("Function not implemented.");
       //         },
       //       },
-      {
-        id: 'vyopwbzpnsanaan',
-        type: 'condition',
-        subType: 'if',
-        title: 'If',
-        name: 'If',
-        aliases: {},
-        secrets: {},
-        kwargs: {},
-        visualInfo: {
-          position: {
-            x: 500,
-            y: 100,
-            zIndex: 1,
-          },
-          size: {
-            width: 300,
-            height: 500,
-          },
-        },
-        inputs: {
-          A: ['unknown'],
-          B: ['unknown'],
-          C: ['unknown'],
-        },
-        outputs: {
-          D: ['unknown'],
-        },
-        setKwarg: function (key: string, value: unknown): void {
-          throw new Error('Function not implemented.');
-        },
-        getInputPortDefs: function (
-          connections: NodeConnection[],
-          nodes: Record<string, Node>,
-        ): NodeInputPortDef[] {
-          return [
-            {
-              nodeId: 'dnaofnaodbfuaol',
-              name: 'A',
-              type: ['unknown'],
-            },
-            {
-              nodeId: 'dnaofnaodbfuaol',
-              name: 'B',
-              type: ['unknown'],
-            },
-            {
-              nodeId: 'dnaofnaodbfuaol',
-              name: 'C',
-              type: ['unknown'],
-            },
-          ];
-        },
-        getOutputPortDefs: (
-          connections: NodeConnection[],
-          nodes: Record<string, Node>,
-        ): NodeOutputPortDef[] => {
-          return [
-            {
-              nodeId: 'dnaofnaodbfuaol',
-              name: 'D',
-              type: ['unknown'],
-            },
-            {
-              nodeId: 'dnaofnaodbfuaol',
-              name: 'E',
-              type: ['unknown'],
-            },
-          ];
-        },
-        getBody: async (): Promise<NodeBody> => {
-          return [
-            {
-              type: 'condition',
-              target: 'D',
-              sources: ['A', 'B', 'C'],
-              conditions: [
-                {
-                  type: 'if',
-                  description:
-                    '(A (exists AND is equal to 2) OR length greater than 2) AND B contains "Peter"',
-                  metadata: {
-                    _type: 'rule-collection',
-                    collection: {
-                      '0': {
-                        _type: 'rule-collection',
-                        collection: {
-                          A: {
-                            _ruleType: 'string',
-                            _type: 'rule',
-                            description:
-                              '(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}',
-                            func: `function anonymous(input,variables
-) {
-return (async function(input, variables) {
-
-  const leftFunc = async (input, variables) => {
-
-return (async function(input, variables) {
-
-  const leftFunc = async (input) => {
-
-return (async function(input) {
-                return input !== undefined;
-            }).apply(this, [input])
-
-};
-  const rightFunc = async (input, variables) => {
-
-return (async function(input, variables) {
-                return input === variables.value;
-            }).apply(this, [input, variables])
-
-};
-
-  const result1 = await leftFunc(input).catch(
-    (e) => false
-  );
-  const result2 = await rightFunc(input, variables.right).catch(
-    (e) => false
-  );
-
-  const results = await Promise.all([result1, result2]);
-
-  return results.every((result) => result === true);
-
-}).apply(this, [input, variables])
-
-};
-  const rightFunc = async (input, variables) => {
-
-return (async function(input, variables) {
-                return input.length > variables.value;
-            }).apply(this, [input, variables])
-
-};
-
-  const result1 = await leftFunc(input, variables.left).catch(
-    (e) => false
-  );
-  const result2 = await rightFunc(input, variables.right).catch(
-    (e) => false
-  );
-
-  const results = await Promise.all([result1, result2]);
-
-  return results.some((result) => result === true);
-
-}).apply(this, [input, variables])
-}`,
-                            metadata: {
-                              conjunction: 'or',
-                              left: {
-                                _ruleType: 'string',
-                                _type: 'rule',
-                                description:
-                                  'exists AND is equal to {{right.value}}',
-                                func: `function anonymous(input,variables
-) {
-return (async function(input, variables) {
-
-  const leftFunc = async (input) => {
-
-return (async function(input) {
-                return input !== undefined;
-            }).apply(this, [input])
-
-};
-  const rightFunc = async (input, variables) => {
-
-return (async function(input, variables) {
-                return input === variables.value;
-            }).apply(this, [input, variables])
-
-};
-
-  const result1 = await leftFunc(input).catch(
-    (e) => false
-  );
-  const result2 = await rightFunc(input, variables.right).catch(
-    (e) => false
-  );
-
-  const results = await Promise.all([result1, result2]);
-
-  return results.every((result) => result === true);
-
-}).apply(this, [input, variables])
-}`,
-                                metadata: {
-                                  conjunction: 'and',
-                                  left: {
-                                    _ruleType: 'string',
-                                    _type: 'rule',
-                                    description: 'exists',
-                                    func: `function anonymous(input
-) {
-return (async function(input) {
-                return input !== undefined;
-            }).apply(this, [input])
-}`,
-                                    metadata: undefined,
-                                    variables: undefined,
-                                  },
-                                  right: {
-                                    _ruleType: 'string',
-                                    _type: 'rule',
-                                    description: 'is equal to {{value}}',
-                                    func: `function anonymous(input,variables
-) {
-return (async function(input, variables) {
-                return input === variables.value;
-            }).apply(this, [input, variables])
-}`,
-                                    metadata: undefined,
-                                    variables: {
-                                      value: 'John',
-                                    },
-                                  },
-                                },
-                                variables: {
-                                  left: {},
-                                  right: {
-                                    value: 'John',
-                                  },
-                                },
-                              },
-                              right: {
-                                _ruleType: 'string',
-                                _type: 'rule',
-                                description: 'length greater than {{value}}',
-                                func: `function anonymous(input,variables
-) {
-return (async function(input, variables) {
-                return input.length > variables.value;
-            }).apply(this, [input, variables])
-}`,
-                                metadata: undefined,
-                                variables: {
-                                  value: 2,
-                                },
-                              },
-                            },
-                            variables: {
-                              left: {
-                                left: {},
-                                right: {
-                                  value: 'John',
-                                },
-                              },
-                              right: {
-                                value: 2,
-                              },
-                            },
-                          },
-                          B: {
-                            _ruleType: 'array',
-                            _type: 'rule',
-                            description: 'contains {{value}}',
-                            func: `function anonymous(input,variables
-) {
-return (async function(input, variables) {
-                return input.includes(variables.value);
-            }).apply(this, [input, variables])
-}`,
-                            metadata: undefined,
-                            variables: {
-                              value: 'Peter',
-                            },
-                          },
-                        },
-                        conjunction: 'and',
-                        description:
-                          '({{{A}}} <A>(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}</A>) AND {{{B}}} <B>contains {{value}}</B>',
-                      },
-                      '1': {
-                        _type: 'rule-collection',
-                        collection: {
-                          C: {
-                            _ruleType: 'string',
-                            _type: 'rule',
-                            description: 'length greater than {{value}}',
-                            func: `function anonymous(input,variables
-) {
-return (async function(input, variables) {
-                return input.length > variables.value;
-            }).apply(this, [input, variables])
-}`,
-                            metadata: undefined,
-                            variables: {
-                              value: 2,
-                            },
-                          },
-                        },
-                        conjunction: 'and',
-                        description:
-                          '{{{C}}} <C>length greater than {{value}}</C>',
-                      },
-                    },
-                    conjunction: 'or',
-                    description:
-                      '(<0>({{{A}}} <A>(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}</A>) AND {{{B}}} <B>contains {{value}}</B></0>) OR <1>{{{C}}} <C>length greater than {{value}}</C></1>',
-                  },
-                },
-                {
-                  type: 'else-if',
-                  description: "A is not string AND B is 'Bag'",
-                },
-                {
-                  type: 'otherwise',
-                },
-              ],
-            },
-            {
-              type: 'context',
-              text: [
-                {
-                  type: 'plain',
-                  text: '7',
-                },
-              ],
-              metadata: [
-                {
-                  type: 'code',
-                  text: 'sub1: 2',
-                  language: 'encre-code',
-                  keywords: ['sub1'],
-                  isHoldingValues: false,
-                },
-              ],
-            },
-          ];
-        },
-        validateInputs: function (
-          inputs?: ProcessInputMap | undefined,
-        ): boolean {
-          throw new Error('Function not implemented.');
-        },
-        process: function (
-          inputs: ProcessInputMap,
-          context: ProcessContext,
-        ): Promise<ProcessOutputMap> {
-          throw new Error('Function not implemented.');
-        },
-      },
+      //       {
+      //         id: "vyopwbzpnsanaan",
+      //         type: "condition",
+      //         subType: "if",
+      //         title: "If",
+      //         name: "If",
+      //         aliases: {},
+      //         secrets: {},
+      //         kwargs: {},
+      //         visualInfo: {
+      //           position: {
+      //             x: 500,
+      //             y: 100,
+      //             zIndex: 1,
+      //           },
+      //           size: {
+      //             width: 300,
+      //             height: 500,
+      //           },
+      //         },
+      //         inputs: {
+      //           A: ["unknown"],
+      //           B: ["unknown"],
+      //           C: ["unknown"],
+      //         },
+      //         outputs: {
+      //           D: ["unknown"],
+      //         },
+      //         setKwarg: function (key: string, value: unknown): void {
+      //           throw new Error("Function not implemented.");
+      //         },
+      //         getInputPortDefs: function (
+      //           connections: NodeConnection[],
+      //           nodes: Record<string, Node>
+      //         ): NodeInputPortDef[] {
+      //           return [
+      //             {
+      //               nodeId: "dnaofnaodbfuaol",
+      //               name: "A",
+      //               type: ["unknown"],
+      //             },
+      //             {
+      //               nodeId: "dnaofnaodbfuaol",
+      //               name: "B",
+      //               type: ["unknown"],
+      //             },
+      //             {
+      //               nodeId: "dnaofnaodbfuaol",
+      //               name: "C",
+      //               type: ["unknown"],
+      //             },
+      //           ];
+      //         },
+      //         getOutputPortDefs: (
+      //           connections: NodeConnection[],
+      //           nodes: Record<string, Node>
+      //         ): NodeOutputPortDef[] => {
+      //           return [
+      //             {
+      //               nodeId: "dnaofnaodbfuaol",
+      //               name: "D",
+      //               type: ["unknown"],
+      //             },
+      //             {
+      //               nodeId: "dnaofnaodbfuaol",
+      //               name: "E",
+      //               type: ["unknown"],
+      //             },
+      //           ];
+      //         },
+      //         getBody: async (): Promise<NodeBody> => {
+      //           return [
+      //             {
+      //               type: "condition",
+      //               target: "D",
+      //               sources: ["A", "B", "C"],
+      //               conditions: [
+      //                 {
+      //                   type: "if",
+      //                   description:
+      //                     '(A (exists AND is equal to 2) OR length greater than 2) AND B contains "Peter"',
+      //                   metadata: {
+      //                     _type: "rule-collection",
+      //                     collection: {
+      //                       "0": {
+      //                         _type: "rule-collection",
+      //                         collection: {
+      //                           A: {
+      //                             _ruleType: "string",
+      //                             _type: "rule",
+      //                             description:
+      //                               "(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}",
+      //                             func: `function anonymous(input,variables
+      // ) {
+      // return (async function(input, variables) {
+      //   const leftFunc = async (input, variables) => {
+      // return (async function(input, variables) {
+      //   const leftFunc = async (input) => {
+      // return (async function(input) {
+      //                 return input !== undefined;
+      //             }).apply(this, [input])
+      // };
+      //   const rightFunc = async (input, variables) => {
+      // return (async function(input, variables) {
+      //                 return input === variables.value;
+      //             }).apply(this, [input, variables])
+      // };
+      //   const result1 = await leftFunc(input).catch(
+      //     (e) => false
+      //   );
+      //   const result2 = await rightFunc(input, variables.right).catch(
+      //     (e) => false
+      //   );
+      //   const results = await Promise.all([result1, result2]);
+      //   return results.every((result) => result === true);
+      // }).apply(this, [input, variables])
+      // };
+      //   const rightFunc = async (input, variables) => {
+      // return (async function(input, variables) {
+      //                 return input.length > variables.value;
+      //             }).apply(this, [input, variables])
+      // };
+      //   const result1 = await leftFunc(input, variables.left).catch(
+      //     (e) => false
+      //   );
+      //   const result2 = await rightFunc(input, variables.right).catch(
+      //     (e) => false
+      //   );
+      //   const results = await Promise.all([result1, result2]);
+      //   return results.some((result) => result === true);
+      // }).apply(this, [input, variables])
+      // }`,
+      //                             metadata: {
+      //                               conjunction: "or",
+      //                               left: {
+      //                                 _ruleType: "string",
+      //                                 _type: "rule",
+      //                                 description:
+      //                                   "exists AND is equal to {{right.value}}",
+      //                                 func: `function anonymous(input,variables
+      // ) {
+      // return (async function(input, variables) {
+      //   const leftFunc = async (input) => {
+      // return (async function(input) {
+      //                 return input !== undefined;
+      //             }).apply(this, [input])
+      // };
+      //   const rightFunc = async (input, variables) => {
+      // return (async function(input, variables) {
+      //                 return input === variables.value;
+      //             }).apply(this, [input, variables])
+      // };
+      //   const result1 = await leftFunc(input).catch(
+      //     (e) => false
+      //   );
+      //   const result2 = await rightFunc(input, variables.right).catch(
+      //     (e) => false
+      //   );
+      //   const results = await Promise.all([result1, result2]);
+      //   return results.every((result) => result === true);
+      // }).apply(this, [input, variables])
+      // }`,
+      //                                 metadata: {
+      //                                   conjunction: "and",
+      //                                   left: {
+      //                                     _ruleType: "string",
+      //                                     _type: "rule",
+      //                                     description: "exists",
+      //                                     func: `function anonymous(input
+      // ) {
+      // return (async function(input) {
+      //                 return input !== undefined;
+      //             }).apply(this, [input])
+      // }`,
+      //                                     metadata: undefined,
+      //                                     variables: undefined,
+      //                                   },
+      //                                   right: {
+      //                                     _ruleType: "string",
+      //                                     _type: "rule",
+      //                                     description: "is equal to {{value}}",
+      //                                     func: `function anonymous(input,variables
+      // ) {
+      // return (async function(input, variables) {
+      //                 return input === variables.value;
+      //             }).apply(this, [input, variables])
+      // }`,
+      //                                     metadata: undefined,
+      //                                     variables: {
+      //                                       value: "John",
+      //                                     },
+      //                                   },
+      //                                 },
+      //                                 variables: {
+      //                                   left: {},
+      //                                   right: {
+      //                                     value: "John",
+      //                                   },
+      //                                 },
+      //                               },
+      //                               right: {
+      //                                 _ruleType: "string",
+      //                                 _type: "rule",
+      //                                 description: "length greater than {{value}}",
+      //                                 func: `function anonymous(input,variables
+      // ) {
+      // return (async function(input, variables) {
+      //                 return input.length > variables.value;
+      //             }).apply(this, [input, variables])
+      // }`,
+      //                                 metadata: undefined,
+      //                                 variables: {
+      //                                   value: 2,
+      //                                 },
+      //                               },
+      //                             },
+      //                             variables: {
+      //                               left: {
+      //                                 left: {},
+      //                                 right: {
+      //                                   value: "John",
+      //                                 },
+      //                               },
+      //                               right: {
+      //                                 value: 2,
+      //                               },
+      //                             },
+      //                           },
+      //                           B: {
+      //                             _ruleType: "array",
+      //                             _type: "rule",
+      //                             description: "contains {{value}}",
+      //                             func: `function anonymous(input,variables
+      // ) {
+      // return (async function(input, variables) {
+      //                 return input.includes(variables.value);
+      //             }).apply(this, [input, variables])
+      // }`,
+      //                             metadata: undefined,
+      //                             variables: {
+      //                               value: "Peter",
+      //                             },
+      //                           },
+      //                         },
+      //                         conjunction: "and",
+      //                         description:
+      //                           "({{{A}}} <A>(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}</A>) AND {{{B}}} <B>contains {{value}}</B>",
+      //                       },
+      //                       "1": {
+      //                         _type: "rule-collection",
+      //                         collection: {
+      //                           C: {
+      //                             _ruleType: "string",
+      //                             _type: "rule",
+      //                             description: "length greater than {{value}}",
+      //                             func: `function anonymous(input,variables
+      // ) {
+      // return (async function(input, variables) {
+      //                 return input.length > variables.value;
+      //             }).apply(this, [input, variables])
+      // }`,
+      //                             metadata: undefined,
+      //                             variables: {
+      //                               value: 2,
+      //                             },
+      //                           },
+      //                         },
+      //                         conjunction: "and",
+      //                         description:
+      //                           "{{{C}}} <C>length greater than {{value}}</C>",
+      //                       },
+      //                     },
+      //                     conjunction: "or",
+      //                     description:
+      //                       "(<0>({{{A}}} <A>(exists AND is equal to {{right.value}}) OR length greater than {{right.value}}</A>) AND {{{B}}} <B>contains {{value}}</B></0>) OR <1>{{{C}}} <C>length greater than {{value}}</C></1>",
+      //                   },
+      //                 },
+      //                 {
+      //                   type: "else-if",
+      //                   description: "A is not string AND B is 'Bag'",
+      //                 },
+      //                 {
+      //                   type: "otherwise",
+      //                 },
+      //               ],
+      //             },
+      //             {
+      //               type: "context",
+      //               text: [
+      //                 {
+      //                   type: "plain",
+      //                   text: "7",
+      //                 },
+      //               ],
+      //               metadata: [
+      //                 {
+      //                   type: "code",
+      //                   text: "sub1: 2",
+      //                   language: "encre-code",
+      //                   keywords: ["sub1"],
+      //                   isHoldingValues: false,
+      //                 },
+      //               ],
+      //             },
+      //           ];
+      //         },
+      //         validateInputs: function (
+      //           inputs?: ProcessInputMap | undefined
+      //         ): boolean {
+      //           throw new Error("Function not implemented.");
+      //         },
+      //         process: function (
+      //           inputs: ProcessInputMap,
+      //           context: ProcessContext
+      //         ): Promise<ProcessOutputMap> {
+      //           throw new Error("Function not implemented.");
+      //         },
+      //       },
     ],
     connections: [],
     comments: [

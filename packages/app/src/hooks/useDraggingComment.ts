@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 
 import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
+import { GraphComment } from '@encrejs/core/studio/comments';
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
@@ -18,7 +20,7 @@ import {
   nodeMapState,
   nodesState,
 } from '../state/node';
-import { GraphComment, Node } from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
 
 export function useDraggingComment(
@@ -47,10 +49,10 @@ export function useDraggingComment(
 
   const onCommentStartDrag = useCallback(
     (e: DragStartEvent) => {
-      const draggingCommentId: string = (e.active.id as string).replace(
+      const draggingCommentId = (e.active.id as string).replace(
         'comment-',
         '',
-      );
+      ) as RecordId;
 
       const commentsToDrag: GraphComment[] =
         isDraggingMultipleComments && selectingCommentIds.length > 0
@@ -58,11 +60,11 @@ export function useDraggingComment(
               .map((id) => commentMap[id])
               .filter(isNotNull)
           : [commentMap[draggingCommentId]].filter(isNotNull);
-      const commentIdsToDrag: string[] =
+      const commentIdsToDrag: RecordId[] =
         isDraggingMultipleComments && selectingCommentIds.length > 0
           ? [...selectingCommentIds, draggingCommentId]
           : [draggingCommentId];
-      const associatedCommentIds: string[] = [];
+      const associatedCommentIds: RecordId[] = [];
 
       comments.forEach((c) => {
         const isSurrounding: boolean = commentsToDrag.some((comment) => {
@@ -149,7 +151,7 @@ export function useDraggingComment(
 
       if (!isDraggingCommentsOnly) {
         const nodesToDragInComments: Node[] = [];
-        const nodeIdsToDragInComments: string[] = [];
+        const nodeIdsToDragInComments: RecordId[] = [];
         nodes.forEach((node) => {
           const intersects: boolean = commentsToDrag.some(
             (comment) =>
@@ -231,10 +233,10 @@ export function useDraggingComment(
     (e: DragEndEvent) => {
       if (draggingComments.length === 0) return;
 
-      const draggingCommentIds: string[] = draggingComments.map(
+      const draggingCommentIds: RecordId[] = draggingComments.map(
         (comment) => comment.id,
       );
-      const draggingNodeIds: string[] = draggingNodes.map((node) => node.id);
+      const draggingNodeIds: RecordId[] = draggingNodes.map((node) => node.id);
 
       const delta = {
         x: e.delta.x / canvasPosition.zoom,

@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useRef } from 'react';
 
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { useDebounceFn, useLatest } from 'ahooks';
 
 import {
   DefaultNodeEditorProps,
   StringEditorContent,
 } from '../../types/editor.type';
-import { Node } from '../../types/studio.type';
 import { type monaco } from '../../utils/monacoEditor';
 import { LazyCodeEditor } from '../LazyComponents';
 

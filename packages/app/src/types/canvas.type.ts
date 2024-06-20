@@ -1,8 +1,13 @@
+import { GraphComment } from '@encrejs/core/studio/comments';
+import {
+  SerializableNode as Node,
+  NodeConnection,
+} from '@encrejs/core/studio/nodes';
+
 import {
   ContextMenuConfigContext,
   ContextMenuConfigContextData,
 } from './contextmenu.type';
-import { GraphComment, Node, NodeConnection } from './studio.type';
 
 export type CanvasPosition = {
   x: number;

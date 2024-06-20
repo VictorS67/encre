@@ -2,6 +2,10 @@ import React, { FC, useEffect, useState } from 'react';
 
 import { DN100, DN0, N0, N10 } from '@atlaskit/theme/colors';
 import styled from '@emotion/styled';
+import {
+  SerializedRule,
+  SerializedRuleCollection,
+} from '@encrejs/core/studio/serde';
 import { match } from 'ts-pattern';
 
 import { DropdownButton } from './DropdownButton';
@@ -10,7 +14,6 @@ import {
   RuleCollectionEditorProps,
   RuleEditorProps,
 } from '../types/guardrail.type';
-import { SerializedRule, SerializedRuleCollection } from '../types/studio.type';
 
 export const RuleCollection = styled.div`
   display: flex;

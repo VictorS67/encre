@@ -1,8 +1,10 @@
 import React, { FC, memo } from 'react';
 
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { UIContext } from '@encrejs/core/studio/ui';
+
 import { useMarkdown } from '../../hooks/useMarkdown';
 import { useStableCallback } from '../../hooks/useStableCallback';
-import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 
 /* eslint-disable react/prop-types */

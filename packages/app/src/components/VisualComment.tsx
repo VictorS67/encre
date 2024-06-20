@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 
 import styled from '@emotion/styled';
+import { GraphComment } from '@encrejs/core/studio/comments';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -29,7 +30,6 @@ import {
   VisualCommentContentProps,
   VisualCommentProps,
 } from '../types/comment.type';
-import { GraphComment } from '../types/studio.type';
 
 const VisualCommentContainer = styled.div`
   border-radius: 7px;

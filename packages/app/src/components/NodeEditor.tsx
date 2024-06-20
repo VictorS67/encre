@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { produce } from 'immer';
 import { ErrorBoundary } from 'react-error-boundary';
 import {
@@ -14,7 +15,6 @@ import { useStableCallback } from '../hooks/useStableCallback';
 import { editingNodeIdState, nodeMapState, nodesState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { NodeEditorProps } from '../types/editor.type';
-import { Node } from '../types/studio.type';
 
 export const NodeEditorRenderer: FC = () => {
   const nodeMap = useRecoilValue(nodeMapState);

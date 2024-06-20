@@ -1,12 +1,13 @@
 import React, { CSSProperties, FC, memo, Suspense, useMemo } from 'react';
 
+import { GraphComment } from '@encrejs/core/studio/comments';
+import { UIContext } from '@encrejs/core/studio/ui';
 import { useRecoilValue } from 'recoil';
 
 import { LazySyntaxedText } from './LazyComponents';
 import { useMarkdown } from '../hooks/useMarkdown';
 import { commentContentFromCommentIdState } from '../state/comment';
 import { CommentContentBodyProps } from '../types/commentbody.type';
-import { GraphComment, UIContext } from '../types/studio.type';
 
 export const CommentContentBody: FC<CommentContentBodyProps> = memo(
   ({ comment }: CommentContentBodyProps) => {
@@ -127,31 +128,29 @@ export const CodeCommentContentBody: FC<
     UIContext,
     { type: 'code' }
   >
-> = memo(
-  ({ commentContent, text, language, keywords, properties, variables }) => {
-    const contentTextStyle = useMemo(() => {
-      const hAlign = commentContent?.horitontal ?? 'start';
+> = memo(({ commentContent, text, language, keywords }) => {
+  const contentTextStyle = useMemo(() => {
+    const hAlign = commentContent?.horitontal ?? 'start';
 
-      const styling: CSSProperties = {
-        textAlign: hAlign,
-      };
+    const styling: CSSProperties = {
+      textAlign: hAlign,
+    };
 
-      return styling;
-    }, [commentContent?.horitontal]);
+    return styling;
+  }, [commentContent?.horitontal]);
 
-    return (
-      <Suspense fallback={<div />}>
-        <LazySyntaxedText
-          text={text}
-          language={language}
-          keywords={keywords}
-          properties={properties}
-          variables={variables}
-          style={contentTextStyle}
-        />
-      </Suspense>
-    );
-  },
-);
+  return (
+    <Suspense fallback={<div />}>
+      <LazySyntaxedText
+        text={text}
+        language={language}
+        keywords={keywords}
+        // properties={properties} // TODO: add properties to CodeUIContext
+        // variables={variables} // TODO: add variables to CodeUIContext
+        style={contentTextStyle}
+      />
+    </Suspense>
+  );
+});
 
 CodeCommentContentBody.displayName = 'CodeCommentContentBody';

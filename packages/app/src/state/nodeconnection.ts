@@ -1,10 +1,11 @@
+import { NodeConnection } from '@encrejs/core/studio/nodes';
 import { DefaultValue, selector } from 'recoil';
 
 import { graphState } from './graph';
 import { NodeGraph } from '../types/graph.type';
-import { NodeConnection } from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 
-export const connectionsState = selector({
+export const connectionsState = selector<NodeConnection[]>({
   key: 'connections',
   get: ({ get }) => {
     return get(graphState).connections;
@@ -19,7 +20,7 @@ export const connectionsState = selector({
   },
 });
 
-export const connectionMapState = selector({
+export const connectionMapState = selector<Record<RecordId, NodeConnection[]>>({
   key: 'connectionMapState',
   get: ({ get }) => {
     return get(connectionsState).reduce(
@@ -32,7 +33,7 @@ export const connectionMapState = selector({
 
         return acc;
       },
-      {} as Record<string, NodeConnection[]>,
+      {} as Record<RecordId, NodeConnection[]>,
     );
   },
 });

@@ -2,6 +2,8 @@ import React, { FC, memo } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { UIContext, extMap } from '@encrejs/core/studio/ui';
 import AbcRoundedIcon from '@mui/icons-material/AbcRounded';
 import CssIcon from '@mui/icons-material/Css';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
@@ -11,7 +13,6 @@ import JavascriptRoundedIcon from '@mui/icons-material/JavascriptRounded';
 import { match } from 'ts-pattern';
 
 import { SVGIcon } from '../../types/icon.type';
-import { Node, UIContext, extMap } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';
 import { Icon } from '../Icon';

@@ -2,6 +2,7 @@ import React, { FC, memo, useState } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { UIContext } from '@encrejs/core/studio/ui';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import clsx from 'clsx';
 import { useSetRecoilState } from 'recoil';
@@ -11,7 +12,6 @@ import { KnownNodeContentBody } from './NodeContentBody';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
 import { editingCodeIdState } from '../state/editor';
 import { editingNodeIdState } from '../state/node';
-import { UIContext } from '../types/studio.type';
 import {
   UIContextContainerProps,
   UIContextDescriptor,

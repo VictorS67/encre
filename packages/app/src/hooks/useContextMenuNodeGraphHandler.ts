@@ -1,3 +1,18 @@
+import { GraphComment } from '@encrejs/core/studio/comments';
+import {
+  SerializableNode as Node,
+  NodeBody,
+  NodeConnection,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '@encrejs/core/studio/nodes';
+import {
+  ProcessContext,
+  ProcessInputMap,
+  ProcessOutputMap,
+} from '@encrejs/core/studio/processor';
+import { globalNodeRegistry } from '@encrejs/core/studio/registration/nodes';
+import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { match, P } from 'ts-pattern';
@@ -27,19 +42,9 @@ import {
 import { connectionsState } from '../state/nodeconnection';
 import { removeWireDataState, selectingWireIdsState } from '../state/wire';
 import { ContextMenuConfigContextData } from '../types/contextmenu.type';
-import {
-  GraphComment,
-  Node,
-  NodeBody,
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  ProcessContext,
-  ProcessInputMap,
-  ProcessOutputMap,
-} from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 import { WireData, WireType } from '../types/wire.type';
-import { fakeId } from '../utils/fakeId';
+// import { fakeId } from '../utils/fakeId';
 import { isNotNull } from '../utils/safeTypes';
 
 export function useContextMenuNodeGraphHandler() {
@@ -84,8 +89,7 @@ export function useContextMenuNodeGraphHandler() {
 
   const addComment = useStableCallback(
     (commentType: string, position: { x: number; y: number }) => {
-      // TODO: change this to globalNodeRegistry.create() from core
-      const newCommentId: string = fakeId(17);
+      const newCommentId: RecordId = getRecordId();
       const newComment: GraphComment = {
         id: newCommentId,
         title: 'This is a comment',
@@ -109,7 +113,7 @@ export function useContextMenuNodeGraphHandler() {
     },
   );
 
-  const addCommentAsNodeGroup = useStableCallback((...nodeIds: string[]) => {
+  const addCommentAsNodeGroup = useStableCallback((...nodeIds: RecordId[]) => {
     const boundingBoxOfCopiedNodes = nodeIds.reduce(
       (acc, nId) => {
         const node = nodeMap[nId];
@@ -135,8 +139,7 @@ export function useContextMenuNodeGraphHandler() {
       },
     );
 
-    // TODO: change this to globalNodeRegistry.create() from core
-    const newCommentId: string = fakeId(17);
+    const newCommentId: RecordId = getRecordId();
     const newComment: GraphComment = {
       id: newCommentId,
       title: 'Group',
@@ -169,105 +172,16 @@ export function useContextMenuNodeGraphHandler() {
       position: { x: number; y: number },
       registerArgs?: Record<string, unknown>,
     ) => {
-      // TODO: change this to globalNodeRegistry.create() from core
-      const newNodeId: string = fakeId(17);
-      const newNode: Node = {
-        id: newNodeId,
-        type: nodeType,
-        subType: nodeSubType,
-        registerArgs: registerArgs,
-        visualInfo: {
-          position: {
-            x: position.x,
-            y: position.y,
-            zIndex: 999,
-          },
-          size: {
-            width: 300,
-            height: 500,
-          },
-        },
-        title: 'new node',
-        name: 'new-node',
-        aliases: {},
-        secrets: {},
-        kwargs: {},
-        inputs: {
-          input1: ['string'],
-        },
-        outputs: {
-          output1: ['string'],
-        },
-        setKwarg: function (key: string, value: unknown): void {
-          throw new Error('Function not implemented.');
-        },
-        getBody: async (): Promise<NodeBody> => {
-          return [
-            {
-              type: 'code',
-              text: `attr1: "1"
-attr2: [2, 3]
-attr3: true
-attr4: [
-  {
-    "sub1": 1,
-    "sub2": "2"
-  },
-  {
-    "sub3": 3,
-    "sub4": "4"
-  }
-]
-attr6: `,
-              language: 'encre-code',
-              keywords: [
-                'attr1',
-                'attr2',
-                'attr3',
-                'attr4',
-                'attr5',
-                'attr6',
-                'attr7',
-                'attr8',
-              ],
-              isHoldingValues: true,
-            },
-          ];
-        },
-        getInputPortDefs: function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeInputPortDef[] {
-          return [
-            {
-              nodeId: newNodeId,
-              name: 'input1',
-              type: ['string'],
-            },
-          ];
-        },
-        getOutputPortDefs: function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeOutputPortDef[] {
-          return [
-            {
-              nodeId: newNodeId,
-              name: 'output1',
-              type: ['string'],
-            },
-          ];
-        },
-        validateInputs: function (
-          inputs?: ProcessInputMap | undefined,
-        ): boolean {
-          throw new Error('Function not implemented.');
-        },
-        process: function (
-          inputs: ProcessInputMap,
-          context: ProcessContext,
-        ): Promise<ProcessOutputMap> {
-          throw new Error('Function not implemented.');
+      const newNode: Node = globalNodeRegistry.createDynamic(
+        nodeType,
+        nodeSubType,
+        registerArgs,
+      );
+      newNode.visualInfo = {
+        ...newNode.visualInfo,
+        position: {
+          ...newNode.visualInfo.position,
+          ...position,
         },
       };
 
@@ -275,7 +189,7 @@ attr6: `,
     },
   );
 
-  const removeComments = useStableCallback((...commentIds: string[]) => {
+  const removeComments = useStableCallback((...commentIds: RecordId[]) => {
     const newComments = [...comments];
     for (const commentId of commentIds) {
       const commentIdx = newComments.findIndex((n) => n.id === commentId);
@@ -287,7 +201,7 @@ attr6: `,
     changeComments?.(newComments);
   });
 
-  const removeNodes = useStableCallback((...nodeIds: string[]) => {
+  const removeNodes = useStableCallback((...nodeIds: RecordId[]) => {
     const newNodes = [...nodes];
     let newConnections = [...connections];
     for (const nodeId of nodeIds) {
@@ -329,7 +243,7 @@ attr6: `,
     setConnections?.(newConnections);
   });
 
-  const moveToNode = useStableCallback((nodeId: string) => {
+  const moveToNode = useStableCallback((nodeId: RecordId) => {
     const node = nodeMap[nodeId];
 
     setCanvasPosition({
@@ -366,9 +280,9 @@ attr6: `,
           }
 
           const { commentId } = context.data as {
-            commentId: string;
+            commentId: RecordId;
           };
-          const commentIds: string[] = (
+          const commentIds: RecordId[] = (
             selectingCommentIds.length > 0
               ? [...new Set([...selectingCommentIds, commentId])]
               : [commentId]
@@ -386,7 +300,7 @@ attr6: `,
           }
 
           const { commentId } = context.data as {
-            commentId: string;
+            commentId: RecordId;
           };
 
           copyComments(commentId);
@@ -397,7 +311,7 @@ attr6: `,
           }
 
           const { commentId } = context.data as {
-            commentId: string;
+            commentId: RecordId;
           };
 
           duplicateComments(commentId);
@@ -408,14 +322,14 @@ attr6: `,
           }
 
           const { commentId } = context.data as {
-            commentId: string;
+            commentId: RecordId;
           };
 
           const { colorType } = data as {
             colorType: string;
           };
 
-          const commentIds: string[] = (
+          const commentIds: RecordId[] = (
             selectingCommentIds.length > 0
               ? [...new Set([...selectingCommentIds, commentId])]
               : [commentId]
@@ -462,9 +376,9 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]
@@ -482,7 +396,7 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
           copyNodes(nodeId);
@@ -493,13 +407,13 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
           duplicateNodes(nodeId);
         })
         .with('select-all-node', () => {
-          const allNodeIds = nodes.map((n) => n.id);
+          const allNodeIds: RecordId[] = nodes.map((n) => n.id);
 
           setSelectingNodeIds(allNodeIds);
         })
@@ -509,10 +423,10 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]
@@ -534,10 +448,10 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]
@@ -559,7 +473,7 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
           const maxZIndex: number = nodes.reduce((maxVal, node) => {
@@ -572,7 +486,7 @@ attr6: `,
             return Math.max(maxVal, zIndex);
           }, 0);
 
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]
@@ -601,7 +515,7 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
           const minZIndex: number = nodes.reduce((minVal, node) => {
@@ -614,7 +528,7 @@ attr6: `,
             return Math.min(minVal, zIndex);
           }, 0);
 
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]
@@ -643,10 +557,10 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]
@@ -660,7 +574,7 @@ attr6: `,
           }
 
           const { nodeId } = data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
           moveToNode(nodeId);
@@ -671,14 +585,14 @@ attr6: `,
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
 
           const { colorType } = data as {
             colorType: string;
           };
 
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]

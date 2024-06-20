@@ -1,19 +1,23 @@
 import React, { FC, memo, useState } from 'react';
 
 import styled from '@emotion/styled';
+import { SerializableNode as Node, NodeBody } from '@encrejs/core/studio/nodes';
+import { UIContext } from '@encrejs/core/studio/ui';
+import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';
+import { useRecoilValue } from 'recoil';
 
 import { useStableCallback } from '../hooks/useStableCallback';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
+import { nodeInstanceMapState } from '../state/node';
 import {
   KnownNodeContentBodyProps,
   NodeContentBodyProps,
   UnknownNodeContentBodyProps,
 } from '../types/nodebody.type';
-import { Node, NodeBody, UIContext } from '../types/studio.type';
 import { UIContextDescriptor } from '../types/uicontext.type';
-import { fakeId } from '../utils/fakeId';
+// import { fakeId } from '../utils/fakeId';
 
 const NodeContentBodyWrapper = styled.div<{
   fontSize: number;
@@ -33,6 +37,8 @@ const NodeContentBodyWrapper = styled.div<{
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
+    const nodeInstanceMap = useRecoilValue(nodeInstanceMapState);
+
     const {
       isPending,
       error,
@@ -40,7 +46,7 @@ export const NodeContentBody: FC<NodeContentBodyProps> = memo(
       isFetching,
     } = useQuery({
       queryKey: ['nodeBody', node.id],
-      queryFn: () => node.getBody(),
+      queryFn: () => nodeInstanceMap[node.id]?.getBody(),
     });
 
     if (isPending) return <></>;
@@ -99,7 +105,7 @@ export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
       style={{ height: '100%', flex: 1, flexDirection: 'column' }}
     >
       {renderedBodies.map(({ style, Body }, i) => {
-        const editingId: string = fakeId(14);
+        const editingId: string = getRecordId();
 
         const onBodyClick = onEditorClick
           ? useStableCallback((n: Node, id: string) => {

@@ -12,6 +12,7 @@ import React, {
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
 import { useMergeRefs } from '@floating-ui/react';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
@@ -42,7 +43,6 @@ import {
   VisualNodeContentProps,
   VisualNodeProps,
 } from '../types/node.type';
-import { Node } from '../types/studio.type';
 import { getColorMode } from '../utils/colorMode';
 
 const VisualNodeContainer = styled.div<{
@@ -385,7 +385,7 @@ export const VisualNode = memo(
       node.visualInfo.size.width,
       node.visualInfo.size.height,
       node.visualInfo.position.zIndex,
-      node.state,
+      // node.state,
       node.visualInfo.content?.color,
       content,
       isDragging,
@@ -620,13 +620,13 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
           <div className={'node-card'}>
             {!isCollapsed && (
               <div className={clsx('node-header', { minimized: isMinimized })}>
-                <div className="node-tag-grp">
+                {/* <div className="node-tag-grp">
                   {node.tags?.map((t) => (
                     <div className="node-tag" key={t}>
                       {t}
                     </div>
                   ))}
-                </div>
+                </div> */}
                 <div className="node-tooling">
                   <div
                     className={clsx('pin-tooling', {

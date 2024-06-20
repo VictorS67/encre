@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect } from 'react';
 
+import {
+  SerializableNode as Node,
+  NodeConnection,
+  NodeInputPortDef,
+  NodeOutputPortDef,
+} from '@encrejs/core/studio/nodes';
 import { useLatest } from 'ahooks';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -12,12 +18,7 @@ import {
   updateWireDataState,
   wireDataMapState,
 } from '../state/wire';
-import {
-  Node,
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-} from '../types/studio.type';
+import { RecordId } from '../types/studio.type';
 import { DefaultWireOptions, WireData } from '../types/wire.type';
 
 export const defaultWireOptions: DefaultWireOptions = {
@@ -75,7 +76,7 @@ export const useDraggingWire = (
   const onWireStartDrag = useCallback(
     (
       e: React.MouseEvent<HTMLElement>,
-      fromNodeId: string,
+      fromNodeId: RecordId,
       fromPortName: string,
       isInput?: boolean,
     ) => {

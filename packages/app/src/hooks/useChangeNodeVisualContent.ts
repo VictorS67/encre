@@ -6,6 +6,7 @@ import {
   nodeVisualContentDataMapState,
   updateNodeVisualContentDataState,
 } from '../state/node';
+import { RecordId } from '../types/studio.type';
 
 export function useChangeNodeVisualContent() {
   const nodeVisualContentDataMap = useRecoilValue(
@@ -16,7 +17,7 @@ export function useChangeNodeVisualContent() {
   );
 
   const updateNodeColor = useCallback(
-    (nodeId: string, color: string) => {
+    (nodeId: RecordId, color: string) => {
       const nodeVisualContentData = nodeVisualContentDataMap[nodeId];
 
       updateNodeVisualContentData({

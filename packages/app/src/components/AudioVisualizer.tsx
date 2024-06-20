@@ -13,6 +13,7 @@ import React, {
 } from 'react';
 
 import styled from '@emotion/styled';
+import { extMap } from '@encrejs/core/studio/ui';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { css } from '@mui/material';
 
@@ -22,7 +23,6 @@ import {
   LiveAudioVisualizerProps,
   AudioDataPoint,
 } from '../types/audiovisualizer.type';
-import { extMap } from '../types/studio.type';
 import {
   calculateBarData,
   calculateLiveBarData,

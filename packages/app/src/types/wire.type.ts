@@ -1,15 +1,21 @@
 import { CSSProperties } from 'react';
 
+import { Data, DataType, ValueOf } from '@encrejs/core/studio/data';
+import {
+  SerializableNode as Node,
+  NodeConnection,
+} from '@encrejs/core/studio/nodes';
+
 import { PartialConnection } from './nodeconnection.type';
 import { HighlightedPort, PortPositons } from './port.type';
-import { Data, DataType, Node, NodeConnection, ValueOf } from './studio.type';
+import { RecordId } from './studio.type';
 
 export type Wire = {
-  fromNodeId: string;
+  fromNodeId: RecordId;
   fromPortName: string;
   fromPortIsInput: boolean;
 
-  toNodeId?: string;
+  toNodeId?: RecordId;
   toPortName?: string;
 };
 
@@ -27,7 +33,7 @@ export type WireLayerProps = {
   portPositions: PortPositons;
   draggingWire?: Wire;
   isDraggingFromNode?: boolean;
-  highlightedNodeIds?: string[];
+  highlightedNodeIds?: RecordId[];
   highlightedPort?: HighlightedPort;
   // selectingWireIds?: string[];
   onWiresSelect?: (wireId: string[], isMulti?: boolean) => void;
@@ -35,7 +41,7 @@ export type WireLayerProps = {
 
 export type RenderedWireProps = {
   connection: NodeConnection;
-  nodeMap: Record<string, Node>;
+  nodeMap: Record<RecordId, Node>;
   portPositions: PortPositons;
   isSelecting?: boolean;
   isHighlighted?: boolean;

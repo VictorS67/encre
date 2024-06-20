@@ -2,6 +2,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { clipboardState } from '../state/clipboard';
 import { commentMapState, selectingCommentIdsState } from '../state/comment';
+import { RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
 
 export function useCopyComments() {
@@ -9,7 +10,7 @@ export function useCopyComments() {
   const commentMap = useRecoilValue(commentMapState);
   const setClipboard = useSetRecoilState(clipboardState);
 
-  return (additionalCommentId?: string) => {
+  return (additionalCommentId?: RecordId) => {
     const commentIds = (
       selectingCommentIds.length > 0
         ? [...new Set([...selectingCommentIds, additionalCommentId])]
