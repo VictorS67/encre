@@ -6,7 +6,7 @@ import { isDeepEqual } from '../../../../utils/equal.js';
 import {
   type SerializedMessage,
   type SerializedMessageData,
-} from '../../../output/provide/index.js';
+} from '../../../output/provide/serde.js';
 
 /**
  * Represents the role of a message within a system, which helps in identifying the purpose and the origin of the message.
