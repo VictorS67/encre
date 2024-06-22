@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { SerializableNode as Node } from '@encrejs/core';
 import { useDebounceFn, useLatest } from 'ahooks';
 
 import {

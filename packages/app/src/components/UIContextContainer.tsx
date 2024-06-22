@@ -2,7 +2,7 @@ import React, { FC, memo, useState } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { UIContext } from '@encrejs/core/studio/ui';
+import { UIContext } from '@encrejs/core';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import clsx from 'clsx';
 import { useSetRecoilState } from 'recoil';

@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 
 import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
-import { GraphComment } from '@encrejs/core/studio/comments';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { GraphComment } from '@encrejs/core';
+import { SerializableNode as Node } from '@encrejs/core';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 

@@ -1,12 +1,12 @@
 import React, { FC, memo, Suspense, useMemo } from 'react';
 
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { SerializableNode as Node } from '@encrejs/core';
 import {
   UIContext,
   ElseIfConditionUI,
   IfConditionUI,
   OtherwiseConditionUI,
-} from '@encrejs/core/studio/ui';
+} from '@encrejs/core';
 
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { ConditionUIContextContainer } from '../ConditionUIContextContainer';

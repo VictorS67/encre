@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-import { GraphComment } from '@encrejs/core/studio/comments';
+import { GraphComment } from '@encrejs/core';
 
 import { ColorCache } from './canvas.type';
 

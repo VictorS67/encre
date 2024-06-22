@@ -1,4 +1,4 @@
-import { GraphComment } from '@encrejs/core/studio/comments';
+import { GraphComment } from '@encrejs/core';
 import { atom, DefaultValue, selector, selectorFamily } from 'recoil';
 
 import { graphState } from './graph';

@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, MutableRefObject } from 'react';
 
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
-import { UIContext } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node } from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
 
 import { ModalProps } from './modal.type';
 import { type monaco } from '../utils/monacoEditor';

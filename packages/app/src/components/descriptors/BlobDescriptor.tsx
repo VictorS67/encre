@@ -1,7 +1,7 @@
 import React, { FC, Suspense, memo, useMemo, useState } from 'react';
 
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
-import { UIContext } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node } from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
 
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';

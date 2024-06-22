@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo } from 'react';
 
-import { GraphComment } from '@encrejs/core/studio/comments';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { GraphComment } from '@encrejs/core';
+import { SerializableNode as Node } from '@encrejs/core';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 

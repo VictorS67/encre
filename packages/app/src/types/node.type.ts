@@ -1,9 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-import {
-  SerializableNode as Node,
-  NodeConnection,
-} from '@encrejs/core/studio/nodes';
+import { SerializableNode as Node, NodeConnection } from '@encrejs/core';
 
 import { ColorCache } from './canvas.type';
 import { RecordId } from './studio.type';

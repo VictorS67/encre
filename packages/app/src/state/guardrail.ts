@@ -1,5 +1,5 @@
-import { globalGuardrailRegistry } from '@encrejs/core/build/studio/registration/guardrails';
-import { Guardrail } from '@encrejs/core/studio/guardrails';
+import { globalGuardrailRegistry } from '@encrejs/core';
+import { Guardrail } from '@encrejs/core';
 import { atom } from 'recoil';
 
 import { RecordId } from '../types/studio.type';

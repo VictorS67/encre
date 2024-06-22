@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
-import { ConditionUIContext } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node } from '@encrejs/core';
+import { ConditionUIContext } from '@encrejs/core';
 
 export type BaseModalProps = {
   open: boolean;

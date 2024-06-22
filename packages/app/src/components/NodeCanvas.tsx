@@ -15,11 +15,8 @@ import {
   useDroppable,
 } from '@dnd-kit/core';
 import { css } from '@emotion/react';
-import { GraphComment } from '@encrejs/core/studio/comments';
-import {
-  SerializableNode as Node,
-  NodeConnection,
-} from '@encrejs/core/studio/nodes';
+import { GraphComment } from '@encrejs/core';
+import { SerializableNode as Node, NodeConnection } from '@encrejs/core';
 import {
   autoUpdate,
   offset,

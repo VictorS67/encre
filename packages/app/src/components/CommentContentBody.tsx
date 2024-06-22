@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, memo, Suspense, useMemo } from 'react';
 
-import { GraphComment } from '@encrejs/core/studio/comments';
-import { UIContext } from '@encrejs/core/studio/ui';
+import { GraphComment } from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
 import { useRecoilValue } from 'recoil';
 
 import { LazySyntaxedText } from './LazyComponents';

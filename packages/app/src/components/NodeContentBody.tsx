@@ -1,8 +1,8 @@
 import React, { FC, memo, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { SerializableNode as Node, NodeBody } from '@encrejs/core/studio/nodes';
-import { UIContext } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node, NodeBody } from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
 import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';

@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 
 import styled from '@emotion/styled';
-import { GraphComment } from '@encrejs/core/studio/comments';
+import { GraphComment } from '@encrejs/core';
 import clsx from 'clsx';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue, useSetRecoilState } from 'recoil';

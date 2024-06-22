@@ -12,7 +12,7 @@ import React, {
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { SerializableNode as Node } from '@encrejs/core';
 import { useMergeRefs } from '@floating-ui/react';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';

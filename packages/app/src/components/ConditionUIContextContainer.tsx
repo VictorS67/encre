@@ -9,14 +9,14 @@ import React, {
 
 import { DN100, DN0, N0, N10 } from '@atlaskit/theme/colors';
 import styled from '@emotion/styled';
-import { SerializedRule, SerializedRuleCollection } from '@encrejs/core/serde';
-import { Guardrail } from '@encrejs/core/studio/guardrails';
+import { SerializedRule, SerializedRuleCollection } from '@encrejs/core';
+import { Guardrail } from '@encrejs/core';
 import {
   SerializableNode as Node,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
-import { UIContext } from '@encrejs/core/studio/ui';
+} from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { css } from '@mui/material';

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import { DragEndEvent, DragMoveEvent, DragStartEvent } from '@dnd-kit/core';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { SerializableNode as Node } from '@encrejs/core';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 

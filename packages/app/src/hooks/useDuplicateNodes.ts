@@ -3,8 +3,8 @@ import {
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
-import { globalNodeRegistry } from '@encrejs/core/studio/registration/nodes';
+} from '@encrejs/core';
+import { globalNodeRegistry } from '@encrejs/core';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';

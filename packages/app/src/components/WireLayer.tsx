@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import styled from '@emotion/styled';
-import { NodeInputPortDef } from '@encrejs/core/studio/nodes';
+import { NodeInputPortDef } from '@encrejs/core';
 import { orderBy } from 'lodash-es';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';

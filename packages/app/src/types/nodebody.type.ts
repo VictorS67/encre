@@ -1,5 +1,5 @@
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
-import { UIContext } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node } from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
 
 export type NodeContentBodyProps = {
   node: Node;

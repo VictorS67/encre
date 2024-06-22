@@ -1,13 +1,13 @@
 import { FC } from 'react';
 
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { SerializableNode as Node } from '@encrejs/core';
 import {
   UIContext,
   IfConditionUI,
   ConditionUI,
   ElseIfConditionUI,
   OtherwiseConditionUI,
-} from '@encrejs/core/studio/ui';
+} from '@encrejs/core';
 
 export type UIContextDescriptor<T extends UIContext['type']> = {
   Body?: FC<

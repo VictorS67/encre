@@ -1,5 +1,5 @@
-import { GraphComment } from '@encrejs/core/studio/comments';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
+import { GraphComment } from '@encrejs/core';
+import { SerializableNode as Node } from '@encrejs/core';
 import { useRecoilValue } from 'recoil';
 
 import { nodesToDragInCommentsState } from '../state/node';

@@ -1,4 +1,4 @@
-import { GraphComment } from '@encrejs/core/studio/comments';
+import { GraphComment } from '@encrejs/core';
 import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { useRecoilState, useRecoilValue } from 'recoil';
 

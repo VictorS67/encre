@@ -10,8 +10,8 @@ import React, {
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
-import { UIContext, extMap } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node } from '@encrejs/core';
+import { UIContext, extMap } from '@encrejs/core';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { useThrottleFn } from 'ahooks';
 

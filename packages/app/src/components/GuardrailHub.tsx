@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
-import { globalGuardrailRegistry } from '@encrejs/core/build/studio/registration/guardrails';
-import { Guardrail } from '@encrejs/core/studio/guardrails';
+import { globalGuardrailRegistry } from '@encrejs/core';
+import { Guardrail } from '@encrejs/core';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { GurdrailCard } from './GuardrailCard';

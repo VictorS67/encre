@@ -1,4 +1,4 @@
-import { SerializedRuleMetadata } from '@encrejs/core/serde';
+import { SerializedRuleMetadata } from '@encrejs/core';
 
 export function ruleSplit(
   ruleMetadata: SerializedRuleMetadata,

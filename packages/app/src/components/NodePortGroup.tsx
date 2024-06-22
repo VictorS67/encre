@@ -1,10 +1,7 @@
 import React, { FC, memo } from 'react';
 
 import styled from '@emotion/styled';
-import {
-  NodeInputPortDef,
-  NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
+import { NodeInputPortDef, NodeOutputPortDef } from '@encrejs/core';
 
 import { Port } from './Port';
 import { useNodeIO } from '../hooks/useNodeIO';

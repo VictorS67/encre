@@ -1,10 +1,7 @@
 import { CSSProperties } from 'react';
 
-import { Data, DataType, ValueOf } from '@encrejs/core/studio/data';
-import {
-  SerializableNode as Node,
-  NodeConnection,
-} from '@encrejs/core/studio/nodes';
+import { Data, DataType, ValueOf } from '@encrejs/core';
+import { SerializableNode as Node, NodeConnection } from '@encrejs/core';
 
 import { PartialConnection } from './nodeconnection.type';
 import { HighlightedPort, PortPositons } from './port.type';

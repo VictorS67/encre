@@ -1,12 +1,12 @@
 import { HTMLAttributes } from 'react';
 
-import { DataType } from '@encrejs/core/studio/data';
+import { DataType } from '@encrejs/core';
 import {
   SerializableNode as Node,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
+} from '@encrejs/core';
 
 import { RecordId } from './studio.type';
 import { DraggingWire } from './wire.type';

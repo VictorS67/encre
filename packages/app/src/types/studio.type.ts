@@ -1,5 +1,5 @@
-import { GraphComment } from '@encrejs/core/studio/comments';
-import { SerializableNode } from '@encrejs/core/studio/nodes';
+import { GraphComment } from '@encrejs/core';
+import { SerializableNode } from '@encrejs/core';
 import type { Opaque } from 'type-fest';
 
 export type RecordId = Opaque<string, 'RecordId'>;

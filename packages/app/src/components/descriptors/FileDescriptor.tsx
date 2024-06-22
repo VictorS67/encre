@@ -2,8 +2,9 @@ import React, { FC, memo } from 'react';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { SerializableNode as Node } from '@encrejs/core/studio/nodes';
-import { UIContext, extMap } from '@encrejs/core/studio/ui';
+import { SerializableNode as Node } from '@encrejs/core';
+import { UIContext } from '@encrejs/core';
+import { extMap } from '@encrejs/core/studio/ui';
 import AbcRoundedIcon from '@mui/icons-material/AbcRounded';
 import CssIcon from '@mui/icons-material/Css';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';

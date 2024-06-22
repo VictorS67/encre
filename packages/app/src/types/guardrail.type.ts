@@ -1,5 +1,5 @@
-import { SerializedRule, SerializedRuleCollection } from '@encrejs/core/serde';
-import { Guardrail } from '@encrejs/core/studio/guardrails';
+import { SerializedRule, SerializedRuleCollection } from '@encrejs/core';
+import { Guardrail } from '@encrejs/core';
 
 export type GuardrailHubProps = {
   onGuardrailSelect?: (guardrail: Guardrail) => void;

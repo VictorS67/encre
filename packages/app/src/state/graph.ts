@@ -4,12 +4,12 @@ import {
   NodeOutputPortDef,
   NodeBody,
   NodeConnection,
-} from '@encrejs/core/studio/nodes';
+} from '@encrejs/core';
 import {
   ProcessInputMap,
   ProcessContext,
   ProcessOutputMap,
-} from '@encrejs/core/studio/processor';
+} from '@encrejs/core';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 

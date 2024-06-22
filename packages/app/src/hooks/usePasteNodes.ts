@@ -2,7 +2,7 @@ import {
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
+} from '@encrejs/core';
 import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';

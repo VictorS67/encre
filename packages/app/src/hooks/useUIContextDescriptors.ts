@@ -1,4 +1,4 @@
-import { UIContext } from '@encrejs/core/studio/ui';
+import { UIContext } from '@encrejs/core';
 
 import { audioDescriptor } from '../components/descriptors/AudioDescriptor';
 import { blobDescriptor } from '../components/descriptors/BlobDescriptor';

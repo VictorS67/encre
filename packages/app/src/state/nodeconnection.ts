@@ -1,4 +1,4 @@
-import { NodeConnection } from '@encrejs/core/studio/nodes';
+import { NodeConnection } from '@encrejs/core';
 import { DefaultValue, selector } from 'recoil';
 
 import { graphState } from './graph';

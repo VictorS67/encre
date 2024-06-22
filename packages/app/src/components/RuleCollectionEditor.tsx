@@ -2,10 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 
 import { DN100, DN0, N0, N10 } from '@atlaskit/theme/colors';
 import styled from '@emotion/styled';
-import {
-  SerializedRule,
-  SerializedRuleCollection,
-} from '@encrejs/core/studio/serde';
+import { SerializedRule, SerializedRuleCollection } from '@encrejs/core';
 import { match } from 'ts-pattern';
 
 import { DropdownButton } from './DropdownButton';

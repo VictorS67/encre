@@ -1,4 +1,4 @@
-import { GraphComment } from '@encrejs/core/studio/comments';
+import { GraphComment } from '@encrejs/core';
 
 export type CommentContentBodyProps = {
   comment: GraphComment;

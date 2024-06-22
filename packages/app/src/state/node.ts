@@ -1,12 +1,12 @@
-import { NodeImpl } from '@encrejs/core/build/studio/nodes/base';
-import { GraphComment } from '@encrejs/core/studio/comments';
+import { GraphComment } from '@encrejs/core';
 import {
   SerializableNode as Node,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
-import { globalNodeRegistry } from '@encrejs/core/studio/registration/nodes';
+} from '@encrejs/core';
+import { globalNodeRegistry } from '@encrejs/core';
+import { NodeImpl } from '@encrejs/core/studio/nodes/base';
 import { mapValues } from 'lodash-es';
 import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
 

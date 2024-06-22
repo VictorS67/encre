@@ -5,7 +5,7 @@ import {
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
+} from '@encrejs/core';
 import { useLatest } from 'ahooks';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 

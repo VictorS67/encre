@@ -1,16 +1,16 @@
-import { GraphComment } from '@encrejs/core/studio/comments';
 import {
   SerializableNode as Node,
   NodeBody,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '@encrejs/core/studio/nodes';
+} from '@encrejs/core';
 import {
   ProcessContext,
   ProcessInputMap,
   ProcessOutputMap,
-} from '@encrejs/core/studio/processor';
+} from '@encrejs/core';
+import { GraphComment } from '@encrejs/core';
 import { globalNodeRegistry } from '@encrejs/core/studio/registration/nodes';
 import { getRecordId } from '@encrejs/core/utils/nanoid';
 import { produce } from 'immer';
