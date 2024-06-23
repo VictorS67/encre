@@ -94,14 +94,12 @@ const entrypoints = {
   "events/inference/chat/base": "events/inference/chat/base",
   "events/inference/chat": "events/inference/chat/index",
   // events/inference/chat/llms/openai
-  "events/inference/chat/llms/openai":
-    "events/inference/chat/llms/openai/index",
+  "events/inference/chat/openai": "events/inference/chat/llms/openai/index",
   "events/inference/chat/llms/openai": "events/inference/chat/llms/openai/text",
   "events/inference/chat/chatlms/openai":
     "events/inference/chat/llms/openai/chat",
   // events/inference/chat/llms/vertexai
-  "events/inference/chat/llms/vertexai":
-    "events/inference/chat/llms/vertexai/index",
+  "events/inference/chat/vertexai": "events/inference/chat/llms/vertexai/index",
   // events/inference/chat/llms/vertexai/gemini
   "events/inference/chat/llms/gemini":
     "events/inference/chat/llms/vertexai/gemini/text",
@@ -147,7 +145,8 @@ const entrypoints = {
     "studio/nodes/inference/chat/chatlm.node",
   "studio/nodes/inference/chat/llm": "studio/nodes/inference/chat/llm.node",
   // studio/nodes/inference/validate
-  "studio/nodes/inference/validate": "studio/nodes/inference/validate/validator.node",
+  "studio/nodes/inference/validate":
+    "studio/nodes/inference/validate/validator.node",
   // studio/nodes/input
   "studio/nodes/input/loader": "studio/nodes/input/loader.node",
   "studio/nodes/input/message": "studio/nodes/input/message.node",
