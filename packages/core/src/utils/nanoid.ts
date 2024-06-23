@@ -1,5 +1,5 @@
 import { nanoid, customAlphabet, customRandom } from 'nanoid';
-import { RecordId } from '../load/keymap';
+import { RecordId } from '../load/keymap.js';
 
 /**
  * Provides a mechanism for generating unique identifiers using the `nanoid` library.

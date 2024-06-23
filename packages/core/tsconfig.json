@@ -87,6 +87,7 @@
       "src/events/inference/validate/validators/index.ts",
       "src/events/inference/chat/base.ts",
       "src/events/inference/chat/index.ts",
+      "src/events/inference/chat/llms/openai/index.ts",
       "src/events/inference/chat/llms/openai/text.ts",
       "src/events/inference/chat/llms/openai/chat.ts",
       "src/events/inference/chat/llms/vertexai/index.ts",
