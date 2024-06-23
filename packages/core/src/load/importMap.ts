@@ -35,7 +35,8 @@ export * as events_inference_validate_guardrails from '../events/inference/valid
 export * as events_inference_validate_guardrails_base from '../events/inference/validate/guardrails/base.js';
 export * as events_inference_chat_base from '../events/inference/chat/base.js';
 export * as events_inference_chat from '../events/inference/chat/index.js';
-export * as events_inference_chat_llms_vertexai from '../events/inference/chat/llms/vertexai/index.js';
+export * as events_inference_chat_openai from '../events/inference/chat/llms/openai/index.js';
+export * as events_inference_chat_vertexai from '../events/inference/chat/llms/vertexai/index.js';
 export * as events_inference_retrieve_base from '../events/inference/retrieve/base.js';
 export * as events_inference_retrieve_text_remote_base from '../events/inference/retrieve/text/remote/base.js';
 export * as events_inference_retrieve_text_remote from '../events/inference/retrieve/text/remote/index.js';
