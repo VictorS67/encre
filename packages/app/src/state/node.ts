@@ -1,3 +1,5 @@
+import type { NodeImpl } from '@encrejs/core/build/studio/nodes/base';
+import { mapValues } from 'lodash-es';
 import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
 
 import { graphState } from './graph';
@@ -5,6 +7,8 @@ import { connectionMapState } from './nodeconnection';
 import { NodeGraph } from '../types/graph.type';
 import { NodeVisualContentData } from '../types/node.type';
 import {
+  globalNodeRegistry,
+  RecordId,
   CommentVisualInfo,
   GraphComment,
   Node,
@@ -13,7 +17,7 @@ import {
   NodeOutputPortDef,
 } from '../types/studio.type';
 
-export const nodesState = selector({
+export const nodesState = selector<Node[]>({
   key: 'nodes',
   get: ({ get }) => {
     return get(graphState).nodes;
@@ -28,7 +32,7 @@ export const nodesState = selector({
   },
 });
 
-export const nodeMapState = selector({
+export const nodeMapState = selector<Record<RecordId, Node>>({
   key: 'nodeMapState',
   get: ({ get }) => {
     return get(nodesState).reduce(
@@ -36,29 +40,47 @@ export const nodeMapState = selector({
         acc[node.id] = node;
         return acc;
       },
-      {} as Record<string, Node>,
+      {} as Record<RecordId, Node>,
     );
   },
 });
 
+export const nodeInstanceMapState = selector<
+  Record<RecordId, NodeImpl<Node> | undefined>
+>({
+  key: 'nodeInstanceMapState',
+  get: ({ get }) => {
+    const nodeMap = get(nodeMapState);
+
+    return mapValues(nodeMap, (node) => {
+      try {
+        return globalNodeRegistry.createDynamicImpl(node);
+        // return undefined;
+      } catch (e) {
+        return undefined;
+      }
+    });
+  },
+});
+
 export const nodeVisualContentDataMapState = atom<
-  Record<string, NodeVisualContentData>
+  Record<RecordId, NodeVisualContentData>
 >({
   key: 'nodeVisualContentDataMapState',
   default: {},
 });
 
-export const selectingNodeIdsState = atom<string[]>({
+export const selectingNodeIdsState = atom<RecordId[]>({
   key: 'selectingNodeIdsState',
   default: [],
 });
 
-export const editingNodeIdState = atom<string | undefined>({
+export const editingNodeIdState = atom<RecordId | undefined>({
   key: 'selectingNodeIdState',
   default: undefined,
 });
 
-export const hoveringNodeIdState = atom<string | undefined>({
+export const hoveringNodeIdState = atom<RecordId | undefined>({
   key: 'hoveringNodeIdState',
   default: undefined,
 });
@@ -73,27 +95,27 @@ export const draggingNodesInCommentsState = atom<Node[]>({
   default: [],
 });
 
-export const pinningNodeIdsState = atom<string[]>({
+export const pinningNodeIdsState = atom<RecordId[]>({
   key: 'pinningNodeIdsState',
   default: [],
 });
 
-export const collapsingNodeIdsState = atom<string[]>({
+export const collapsingNodeIdsState = atom<RecordId[]>({
   key: 'collapsingNodeIdsState',
   default: [],
 });
 
-export const isPinnedState = selectorFamily<boolean, string>({
+export const isPinnedState = selectorFamily<boolean, RecordId>({
   key: 'isPinnedState',
   get:
-    (nodeId: string) =>
+    (nodeId: RecordId) =>
     ({ get }) =>
       get(pinningNodeIdsState).includes(nodeId),
 });
 
 export const nodeIODefState = selector<
   Record<
-    string,
+    RecordId,
     {
       inputDefs: NodeInputPortDef[];
       outputDefs: NodeOutputPortDef[];
@@ -102,21 +124,17 @@ export const nodeIODefState = selector<
 >({
   key: 'nodeIODefState',
   get: ({ get }) => {
-    // TODO: instead of getting it from the node, get it from nodeImpl
     const nodeMap = get(nodeMapState);
+    const nodeInstanceMap = get(nodeInstanceMapState);
     const connectionMap = get(connectionMapState);
 
     const getIOFromNode = (node: Node) => {
       const connections: NodeConnection[] = connectionMap[node.id] ?? [];
 
-      const inputDefs: NodeInputPortDef[] = node?.getInputPortDefs(
-        connections,
-        nodeMap,
-      );
-      const outputDefs: NodeOutputPortDef[] = node?.getOutputPortDefs(
-        connections,
-        nodeMap,
-      );
+      const inputDefs: NodeInputPortDef[] =
+        nodeInstanceMap[node.id]?.getInputPortDefs(connections, nodeMap) ?? [];
+      const outputDefs: NodeOutputPortDef[] =
+        nodeInstanceMap[node.id]?.getOutputPortDefs(connections, nodeMap) ?? [];
 
       return inputDefs && outputDefs
         ? {
@@ -137,11 +155,11 @@ export const nodeIODefState = selector<
 
 export const nodeFromNodeIdState = selectorFamily<
   Node | undefined,
-  string | undefined
+  RecordId | undefined
 >({
   key: 'nodeFromNodeIdState',
   get:
-    (nodeId: string | undefined) =>
+    (nodeId: RecordId | undefined) =>
     ({ get }) => {
       return nodeId ? get(nodeMapState)[nodeId] : undefined;
     },
@@ -149,11 +167,11 @@ export const nodeFromNodeIdState = selectorFamily<
 
 export const nodeVisualContentDataFromNodeIdState = selectorFamily<
   NodeVisualContentData | undefined,
-  string | undefined
+  RecordId | undefined
 >({
   key: 'nodeVisualContentDataFromNodeIdState',
   get:
-    (nodeId: string | undefined) =>
+    (nodeId: RecordId | undefined) =>
     ({ get }) => {
       return nodeId ? get(nodeVisualContentDataMapState)[nodeId] : undefined;
     },
@@ -164,11 +182,11 @@ export const ioDefFromNodeIdState = selectorFamily<
     inputDefs: NodeInputPortDef[];
     outputDefs: NodeOutputPortDef[];
   },
-  string | undefined
+  RecordId | undefined
 >({
   key: 'ioDefFromNodeIdState',
   get:
-    (nodeId: string | undefined) =>
+    (nodeId: RecordId | undefined) =>
     ({ get }) => {
       return nodeId
         ? get(nodeIODefState)[nodeId]!
@@ -211,7 +229,7 @@ export const nodesToDragInCommentsState = selectorFamily<
 });
 
 export const updateNodeVisualContentDataState = selector<{
-  id: string;
+  id: RecordId;
   nodeVisualContentData: NodeVisualContentData;
 }>({
   key: 'updateNodeVisualContentDataState',
@@ -222,7 +240,7 @@ export const updateNodeVisualContentDataState = selector<{
   },
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
-    const id: string = newVal.id;
+    const id: RecordId = newVal.id;
     const nodeVisualContentData: NodeVisualContentData =
       newVal.nodeVisualContentData;
 
@@ -232,7 +250,7 @@ export const updateNodeVisualContentDataState = selector<{
   },
 });
 
-export const removeNodeVisualContentDataState = selector<string>({
+export const removeNodeVisualContentDataState = selector<RecordId>({
   key: 'removeNodeVisualContentDataState',
   get: ({ get }) => {
     throw new Error(
@@ -242,7 +260,7 @@ export const removeNodeVisualContentDataState = selector<string>({
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
 
-    const id: string = newVal;
+    const id: RecordId = newVal;
     const currMap = get(nodeVisualContentDataMapState);
 
     if (currMap[id]) {

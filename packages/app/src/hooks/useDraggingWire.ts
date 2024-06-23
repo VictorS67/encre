@@ -17,6 +17,7 @@ import {
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
+  RecordId,
 } from '../types/studio.type';
 import { DefaultWireOptions, WireData } from '../types/wire.type';
 
@@ -75,7 +76,7 @@ export const useDraggingWire = (
   const onWireStartDrag = useCallback(
     (
       e: React.MouseEvent<HTMLElement>,
-      fromNodeId: string,
+      fromNodeId: RecordId,
       fromPortName: string,
       isInput?: boolean,
     ) => {

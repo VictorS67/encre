@@ -3,10 +3,12 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import {
+  RecordId,
   Node,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
+  // getRecordId,
 } from '../types/studio.type';
 import { fakeId } from '../utils/fakeId';
 import { isNotNull } from '../utils/safeTypes';
@@ -20,16 +22,16 @@ export function useDuplicateNodes() {
     selectingNodeIdsState,
   );
 
-  return (nodeId: string) => {
+  return (nodeId: RecordId) => {
     // const node = nodeMap[nodeId];
 
-    const nodeIds: string[] = (
+    const nodeIds: RecordId[] = (
       selectingNodeIds.length > 0
         ? [...new Set([...selectingNodeIds, nodeId])]
         : [nodeId]
     ).filter(isNotNull);
 
-    const oldNewNodeIdMap: Record<string, string> = {};
+    const oldNewNodeIdMap: Record<RecordId, RecordId> = {};
     const newNodes = nodeIds
       .map((nId) => {
         const node = nodeMap[nId];
@@ -38,55 +40,11 @@ export function useDuplicateNodes() {
           return;
         }
 
-        // TODO: change this to globalNodeRegistry.create() from core
-        const inputDefs: NodeInputPortDef[] = node.getInputPortDefs([], {});
-        const outputDefs: NodeOutputPortDef[] = node.getOutputPortDefs([], {});
-        const newNodeId: string = fakeId(17);
+        const newNodeId: RecordId = fakeId(17) as RecordId;
         oldNewNodeIdMap[nId] = newNodeId;
 
-        const newNode: Node = {
-          id: newNodeId,
-          type: node.type,
-          subType: node.subType,
-          registerArgs: node.registerArgs,
-          visualInfo: {
-            ...node.visualInfo,
-            position: {
-              ...node.visualInfo.position,
-              x: node.visualInfo.position.x + 100,
-              y: node.visualInfo.position.y + 100,
-            },
-          },
-          title: node.title,
-          name: node.name,
-          aliases: node.aliases,
-          secrets: node.secrets,
-          kwargs: node.kwargs,
-          inputs: node.inputs,
-          outputs: node.outputs,
-          setKwarg: node.setKwarg,
-          getBody: node.getBody,
-          getInputPortDefs: function (
-            cs: NodeConnection[],
-            ns: Record<string, Node>,
-          ): NodeInputPortDef[] {
-            return inputDefs.map((def) => ({
-              ...def,
-              nodeId: newNodeId,
-            }));
-          },
-          getOutputPortDefs: function (
-            cs: NodeConnection[],
-            ns: Record<string, Node>,
-          ): NodeOutputPortDef[] {
-            return outputDefs.map((def) => ({
-              ...def,
-              nodeId: newNodeId,
-            }));
-          },
-          validateInputs: node.validateInputs,
-          process: node.process,
-        };
+        const newNode: Node = node;
+        newNode.id = newNodeId;
 
         return newNode;
       })

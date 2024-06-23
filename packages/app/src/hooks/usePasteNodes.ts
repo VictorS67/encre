@@ -6,6 +6,8 @@ import { clipboardState } from '../state/clipboard';
 import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import {
+  RecordId,
+  // getRecordId,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
@@ -60,12 +62,11 @@ export function usePasteNodes() {
       },
     );
 
-    const oldNewNodeIdMap: Record<string, string> = {};
+    const oldNewNodeIdMap: Record<RecordId, RecordId> = {};
 
     const newNodes = clipboard.nodes.map((node) => {
       return produce(node, (draft) => {
-        // TODO: change this to generate a new random RecordId from core
-        const newNodeId = fakeId(17);
+        const newNodeId = fakeId(17) as RecordId;
         oldNewNodeIdMap[node.id] = newNodeId;
 
         draft.id = newNodeId;
@@ -78,29 +79,6 @@ export function usePasteNodes() {
         draft.visualInfo.position.y =
           canvasPosition.y +
           (node.visualInfo.position.y - boundingBoxOfCopiedNodes.minY);
-
-        // TODO: we don't need this when the core is ready
-        draft.getBody = node.getBody;
-        const inputDefs: NodeInputPortDef[] = node.getInputPortDefs([], {});
-        const outputDefs: NodeOutputPortDef[] = node.getOutputPortDefs([], {});
-        draft.getInputPortDefs = function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeInputPortDef[] {
-          return inputDefs.map((def) => ({
-            ...def,
-            nodeId: newNodeId,
-          }));
-        } as any;
-        draft.getOutputPortDefs = function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeOutputPortDef[] {
-          return outputDefs.map((def) => ({
-            ...def,
-            nodeId: newNodeId,
-          }));
-        } as any;
       });
     });
 

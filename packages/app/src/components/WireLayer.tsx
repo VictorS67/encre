@@ -24,7 +24,7 @@ import {
   isSelectingMultiWiresState,
   selectingWireIdsState,
 } from '../state/wire';
-import { NodeInputPortDef } from '../types/studio.type';
+import { NodeInputPortDef, RecordId } from '../types/studio.type';
 import { WireLayerProps } from '../types/wire.type';
 
 const WireLayerContainer = styled.svg`
@@ -188,7 +188,7 @@ export const WireLayer: FC<WireLayerProps> = ({
           })[0] as HTMLElement;
 
           const nodeId = closestHoverEl!.parentElement!.dataset.nodeid as
-            | string
+            | RecordId
             | undefined;
           const portName = closestHoverEl!.parentElement!.dataset.portname as
             | string
