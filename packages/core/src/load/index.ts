@@ -1,4 +1,4 @@
-import { getEnvironmentVariables } from '../utils/environment';
+import { getEnvironmentVariables } from '../utils/environment.js';
 import { optionalImportEndpoints } from './importEndpoints.js';
 /*eslint import/namespace: ['error', { allowComputed: true }]*/
 import * as importMap from './importMap.js';
@@ -196,7 +196,7 @@ async function reviveSecretRecord(
     secretsMap: SecretMap;
     path?: string[];
   },
-  value: unknown,
+  value: unknown
 ) {
   const { secretsMap, path = ['$'] } = this;
   const pathStr = path.join('.');
@@ -351,15 +351,15 @@ async function reviver(
  * This string must conform to the expected serialization structure with `_grp`, `_type`, `_id`, and optionally `_recordId` (deprecated).
  *
  * @param secretsMap An optional map of secrets where keys are secret identifiers used in the serialized form,
- * and values are the actual secrets (such as API keys). This map is used to replace placeholders in the serialized 
+ * and values are the actual secrets (such as API keys). This map is used to replace placeholders in the serialized
  * data with actual secrets during the deserialization process.
  *
  * @param optionalImportsMap An optional map that provides instances of modules or constructors not available globally.
  * This is particularly useful for deserializing objects requiring custom handling or instantiation logic that
  * depends on runtime conditions or configurations.
  *
- * @returns A Promise resolving to the deserialized {@link Serializable} object of type T. The actual type of T depends 
- * on the serialized data and the constructors available in the optionalImportsMap. The function ensures that the returned 
+ * @returns A Promise resolving to the deserialized {@link Serializable} object of type T. The actual type of T depends
+ * on the serialized data and the constructors available in the optionalImportsMap. The function ensures that the returned
  * object is fully constructed and initialized according to the rules defined by its class and the provided serialized data.
  *
  * @throws Errors in several scenarios:

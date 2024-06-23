@@ -5,7 +5,7 @@ import {
   TiktokenModel,
   getEncodingNameForModel,
 } from 'js-tiktoken/lite';
-import { AsyncCaller } from './asyncCaller';
+import { AsyncCaller } from './asyncCaller.js';
 
 const cache: Record<string, Promise<TiktokenBPE>> = {};
 

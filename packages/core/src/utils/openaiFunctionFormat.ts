@@ -1,5 +1,5 @@
 import { OpenAI as OpenAIClient } from 'openai';
-import { OpenAIFunctionDef } from '../events/inference/chat/llms/openai';
+import { OpenAIFunctionDef } from '../events/inference/chat/llms/openai/index.js';
 
 // Types representing the OpenAI function definitions. While the OpenAI client library
 // does have types for function definitions, the properties are just Record<string, unknown>,
