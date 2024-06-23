@@ -2,9 +2,7 @@
   "compilerOptions": {
     "target": "ESNEXT",
     "module": "ESNext",
-    "lib": [
-      "ESNext"
-    ],
+    "lib": ["ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "declaration": true,
@@ -17,14 +15,13 @@
     "strictPropertyInitialization": false,
     "noImplicitThis": false,
     "moduleResolution": "node",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "inlineSourceMap": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "composite": true
   },
   "include": [
     "src/**/*"
