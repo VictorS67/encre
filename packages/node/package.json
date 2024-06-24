@@ -27,7 +27,7 @@
     "lint:dpdm": "dpdm --skip-dynamic-imports circular --no-warning --no-tree -T src/*.ts src/**/*.ts",
     "lint-fix": "eslint --fix src/*.ts src/**/*.ts",
     "clean": "rimraf build/**",
-    "test": "jest --testPathIgnorePatterns=\\.int\\.test.ts --testTimeout 30000 --maxWorkers=50%"
+    "test": "jest --testPathIgnorePatterns=\\.int\\.test.ts --testTimeout 30000 --maxWorkers=50% --silent"
   },
   "packageManager": "yarn@1.22.21",
   "devDependencies": {
@@ -62,7 +62,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@encrejs/core": "workspace:^",
+    "@encrejs/core": "^0.0.5",
     "@types/object-hash": "^3.0.5",
     "emittery": "^1.0.3",
     "nanoid": "^5.0.2",
