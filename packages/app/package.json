@@ -7,7 +7,7 @@
   "private": true,
   "type": "module",
   "packageManager": "yarn@1.22.19",
-  "main": "./main/electron.js",
+  "main": "dist/main/electron.js",
   "devDependencies": {
     "@atlaskit/eslint-plugin-design-system": "^4.11.2",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

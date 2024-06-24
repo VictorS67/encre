@@ -4,7 +4,6 @@ import {
   ClientOptions as OpenAIClientOptions,
 } from 'openai';
 import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
-import sharp from 'sharp';
 
 import {
   type SecretFields,
@@ -959,11 +958,13 @@ export class OpenAIChat<
               if (part.image_url.url.startsWith('data:')) {
                 // base64
                 try {
+                  const sizeOf = await import('image-size');
+
                   let b64: string = part.image_url.url;
                   b64 = b64.split(';base64,').pop()!;
 
                   const image = Buffer.from(b64, 'base64');
-                  const metadata = await sharp(image).metadata();
+                  const metadata = sizeOf.imageSize(image);
 
                   if (!metadata.width || !metadata.height) {
                     throw new Error(
@@ -979,13 +980,15 @@ export class OpenAIChat<
               } else {
                 // image url
                 try {
+                  const sizeOf = await import('image-size');
+
                   const res = await axios({
                     url: part.image_url.url,
                     responseType: 'arraybuffer',
                   });
 
                   const image = Buffer.from(res.data, 'base64');
-                  const metadata = await sharp(image).metadata();
+                  const metadata = sizeOf.imageSize(image);
                   if (!metadata.width || !metadata.height) {
                     throw new Error(
                       `image from base64 has invalid width and height: ${metadata.width}, ${metadata.height}`
