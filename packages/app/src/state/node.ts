@@ -1,13 +1,13 @@
 import type { NodeImpl } from '@encrejs/core/build/studio/nodes/base';
-import { mapValues } from 'lodash-es';
-import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
+import { mapValues, keys, map } from "lodash-es";
+import { DefaultValue, atom, selector, selectorFamily } from "recoil";
 
-import { graphState } from './graph';
-import { connectionMapState } from './nodeconnection';
-import { NodeGraph } from '../types/graph.type';
-import { NodeVisualContentData } from '../types/node.type';
+import { graphState } from "./graph";
+import { connectionMapState } from "./nodeconnection";
+import { NodeGraph } from "../types/graph.type";
+import { NodeVisualContentData } from "../types/node.type";
 import {
-  globalNodeRegistry,
+  // globalNodeRegistry,
   RecordId,
   CommentVisualInfo,
   GraphComment,
@@ -15,7 +15,28 @@ import {
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-} from '../types/studio.type';
+  NodeRegistration,
+} from "../types/studio.type";
+
+export const nodeRegistryState = atom<NodeRegistration | undefined>({
+  key: "nodeRegistryState",
+  default: selectorFamily({
+    key: "nodeRegistryState/default",
+    get: () => async () => {
+      // const { ipcRenderer } = window.require('electron');
+      // try {
+      //   const globalNodeRegistry =
+      //     await ipcRenderer.invoke('globalNodeRegistry');
+      //   return globalNodeRegistry;
+      // } catch (e) {
+      //   console.log(`failed to get globalNodeRegistry: ${e}`);
+      //   return undefined;
+      // }
+
+      return undefined;
+    },
+  })(undefined),
+});
 
 export const nodesState = selector<Node[]>({
   key: 'nodes',
@@ -45,21 +66,52 @@ export const nodeMapState = selector<Record<RecordId, Node>>({
   },
 });
 
+export const nodeInstanceState = selectorFamily<
+  NodeImpl<Node> | undefined,
+  RecordId
+>({
+  key: "nodeInstanceState",
+  get: (nodeId) => async () => {
+    // const { ipcRenderer } = window.require("electron");
+
+    // try {
+    //   const globalNodeRegistry = await ipcRenderer.invoke("globalNodeRegistry");
+
+    //   return globalNodeRegistry.createDynamicImpl(nodeId) as NodeImpl<Node>;
+    // } catch (e) {
+    //   return undefined;
+    // }
+
+    return undefined;
+  },
+});
+
 export const nodeInstanceMapState = selector<
   Record<RecordId, NodeImpl<Node> | undefined>
 >({
-  key: 'nodeInstanceMapState',
+  key: "nodeInstanceMapState",
   get: ({ get }) => {
     const nodeMap = get(nodeMapState);
 
-    return mapValues(nodeMap, (node) => {
-      try {
-        return globalNodeRegistry.createDynamicImpl(node);
-        // return undefined;
-      } catch (e) {
-        return undefined;
-      }
-    });
+    return mapValues(nodeMap, (node) => undefined);
+
+    // return Object.fromEntries(
+    //   await Promise.all(
+    //     Object.entries(nodeMap).map(async ([k, v]) => {
+    // try {
+    //   const globalNodeRegistry =
+    //     await ipcRenderer.invoke('globalNodeRegistry');
+
+    //   return [
+    //     k,
+    //     globalNodeRegistry.createDynamicImpl(v) as NodeImpl<Node>,
+    //   ];
+    // } catch (e) {
+    //   return [k, undefined];
+    // }
+    //     }),
+    //   ),
+    // );
   },
 });
 
@@ -125,16 +177,18 @@ export const nodeIODefState = selector<
   key: 'nodeIODefState',
   get: ({ get }) => {
     const nodeMap = get(nodeMapState);
-    const nodeInstanceMap = get(nodeInstanceMapState);
+    // const nodeInstanceMap = get(nodeInstanceMapState);
     const connectionMap = get(connectionMapState);
 
     const getIOFromNode = (node: Node) => {
       const connections: NodeConnection[] = connectionMap[node.id] ?? [];
 
+      const nodeInstance = get(nodeInstanceState(node.id));
+
       const inputDefs: NodeInputPortDef[] =
-        nodeInstanceMap[node.id]?.getInputPortDefs(connections, nodeMap) ?? [];
+        nodeInstance?.getInputPortDefs(connections, nodeMap) ?? [];
       const outputDefs: NodeOutputPortDef[] =
-        nodeInstanceMap[node.id]?.getOutputPortDefs(connections, nodeMap) ?? [];
+        nodeInstance?.getOutputPortDefs(connections, nodeMap) ?? [];
 
       return inputDefs && outputDefs
         ? {
@@ -148,7 +202,7 @@ export const nodeIODefState = selector<
       Object.entries(nodeMap).map(([nodeId, node]) => [
         nodeId,
         getIOFromNode(node),
-      ]),
+      ])
     );
   },
 });

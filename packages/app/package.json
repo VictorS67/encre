@@ -5,9 +5,9 @@
   "author": "Encre",
   "license": "MIT",
   "private": true,
-  "type": "commonjs",
-  "packageManager": "yarn@1.22.21",
-  "main": "build/electron/electron.js",
+  "type": "module",
+  "packageManager": "yarn@1.22.19",
+  "main": "./main/electron.js",
   "devDependencies": {
     "@atlaskit/eslint-plugin-design-system": "^4.11.2",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -25,7 +25,8 @@
     "@typescript-eslint/eslint-plugin": "^6.7.0",
     "@typescript-eslint/parser": "^6.7.0",
     "concurrently": "^8.2.1",
-    "electron": "^26.3.0",
+    "css-loader": "^7.1.2",
+    "electron": "^28.0.0",
     "eslint": "^8.49.0",
     "eslint-cjs-to-esm": "^2.2.0",
     "eslint-config-prettier": "^9.0.0",
@@ -35,12 +36,16 @@
     "eslint-plugin-n": "^16.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-promise": "^6.1.1",
+    "esm": "^3.2.25",
     "node-polyfill-webpack-plugin": "^4.0.0",
     "prettier": "^3.0.3",
     "react-app-rewired": "^2.2.1",
     "react-scripts": "5.0.1",
     "recoil-persist": "^5.1.0",
-    "wait-on": "^7.0.1"
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "wait-on": "^7.0.1",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@atlaskit/css-reset": "^6.5.4",
@@ -79,6 +84,9 @@
     "ws": "^8.14.1",
     "yaml": "^2.3.2"
   },
+  "imports": {
+    "@encrejs/core": "./node_modules/@encrejs/core/*.js"
+  },
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-scripts build",
@@ -86,6 +94,11 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.{ts,tsx} --quiet --fix",
     "lint-fix": "eslint --fix src/**/*.{ts,tsx} src/**/**/*.{ts,tsx}",
+    "build:react": "webpack --config webpack.config.cjs",
+    "build:electron": "tsc -p electron/tsconfig.json",
+    "start:dev": "concurrently \"yarn start:react\" \"wait-on http://localhost:8000 && yarn start:electron\"",
+    "start:react": "webpack serve --config webpack.config.cjs --mode development",
+    "start:electron": "electron .",
     "electron-build": "tsc -p electron/tsconfig.json",
     "electron-start": "yarn electron-build && electron .",
     "electron-dev": "concurrently \"yarn start\" \"wait-on http://localhost:3000 && yarn electron-start\""

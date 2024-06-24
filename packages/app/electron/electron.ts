@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import url from "url";
 
@@ -26,7 +26,22 @@ function createWindow() {
   //   );
   // }
 
-  mainWindow.loadURL(process.env.ELECTRON_START_URL || "http://localhost:3000");
+  mainWindow.loadURL(process.env.ELECTRON_START_URL || "http://localhost:8080");
+  // mainWindow.loadFile(path.join(__dirname, "public", "index.html"));
+
+  // ipcMain.handle("globalNodeRegistry", async (event, arg) => {
+  //   const encre = await import("@encrejs/core");
+
+  //   return encre.globalNodeRegistry;
+  // });
+
+  mainWindow.webContents.on("before-input-event", (_, input) => {
+    if (input.type === "keyDown" && input.key === "F12") {
+      mainWindow?.webContents.isDevToolsOpened()
+        ? mainWindow?.webContents.closeDevTools()
+        : mainWindow?.webContents.openDevTools({ mode: "left" });
+    }
+  });
 
   mainWindow.on("closed", () => {
     mainWindow = null;

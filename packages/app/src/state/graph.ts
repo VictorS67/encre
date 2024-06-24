@@ -10,7 +10,7 @@ import myMp3 from '../assets/sunflower.mp3';
 import myPng from '../assets/timetable.png';
 import { NodeGraph } from '../types/graph.type';
 import {
-  globalNodeRegistry,
+  // globalNodeRegistry,
   Node,
   NodeInputPortDef,
   NodeOutputPortDef,
@@ -660,7 +660,7 @@ export const graphState = atom<NodeGraph>({
       //           throw new Error("Function not implemented.");
       //         },
       //       },
-      globalNodeRegistry.createDynamic('prompt', 'string'),
+      // globalNodeRegistry.createDynamic('prompt', 'string'),
     ],
     connections: [],
     comments: [

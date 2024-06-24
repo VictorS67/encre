@@ -20,6 +20,7 @@ import { showContextMenuState } from '../state/contextmenu';
 import {
   collapsingNodeIdsState,
   nodeMapState,
+  nodeRegistryState,
   nodesState,
   pinningNodeIdsState,
   selectingNodeIdsState,
@@ -28,7 +29,7 @@ import { connectionsState } from '../state/nodeconnection';
 import { removeWireDataState, selectingWireIdsState } from '../state/wire';
 import { ContextMenuConfigContextData } from '../types/contextmenu.type';
 import {
-  globalNodeRegistry,
+  // globalNodeRegistry,
   GraphComment,
   Node,
   NodeBody,
@@ -52,6 +53,7 @@ export function useContextMenuNodeGraphHandler() {
   const [selectingCommentIds, setSelectingCommentIds] = useRecoilState(
     selectingCommentIdsState,
   );
+  const nodeRegistry = useRecoilValue(nodeRegistryState);
   const nodeMap = useRecoilValue(nodeMapState);
   const [selectingWireIds, setSelectingWireIds] = useRecoilState(
     selectingWireIdsState,
@@ -168,22 +170,22 @@ export function useContextMenuNodeGraphHandler() {
       position: { x: number; y: number },
       registerArgs?: Record<string, unknown>,
     ) => {
-      const newNode: Node = globalNodeRegistry.createDynamic(
-        nodeType,
-        nodeSubType,
-        registerArgs,
-      );
-      newNode.visualInfo = {
-        ...newNode.visualInfo,
-        position: {
-          ...newNode.visualInfo.position,
-          ...position,
-        },
-      };
+      if (nodeRegistry) {
+        const newNode: Node = nodeRegistry.createDynamic(
+          nodeType,
+          nodeSubType,
+          registerArgs,
+        );
+        newNode.visualInfo = {
+          ...newNode.visualInfo,
+          position: {
+            ...newNode.visualInfo.position,
+            ...position,
+          },
+        };
 
-      changeNodes?.([...nodes, newNode]);
-
-      // changeNodes?.([...nodes]);
+        changeNodes?.([...nodes, newNode]);
+      }
     },
   );
 

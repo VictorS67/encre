@@ -7,7 +7,7 @@ import { useRecoilValue } from 'recoil';
 
 import { useStableCallback } from '../hooks/useStableCallback';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
-import { nodeInstanceMapState } from '../state/node';
+import { nodeInstanceState } from '../state/node';
 import {
   KnownNodeContentBodyProps,
   NodeContentBodyProps,
@@ -35,7 +35,7 @@ const NodeContentBodyWrapper = styled.div<{
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
-    const nodeInstanceMap = useRecoilValue(nodeInstanceMapState);
+    const nodeInstance = useRecoilValue(nodeInstanceState(node.id));
 
     const {
       isPending,
@@ -44,7 +44,7 @@ export const NodeContentBody: FC<NodeContentBodyProps> = memo(
       isFetching,
     } = useQuery({
       queryKey: ['nodeBody', node.id],
-      queryFn: () => nodeInstanceMap[node.id]?.getBody(),
+      queryFn: () => nodeInstance?.getBody(),
     });
 
     if (isPending) return <></>;
