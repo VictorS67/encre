@@ -46,4 +46,4 @@ jobs:
       - name: Install dependencies
         run: yarn install --unsafe-perm --immutable --network-timeout 500000
       - name: Test
-        run: yarn workspace @encrejs/core run test
+        run: yarn workspace @encrejs/core run test && yarn workspace @encrejs/api run test
