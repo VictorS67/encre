@@ -3,9 +3,11 @@ import React, { FC, memo, useState } from 'react';
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';
+import { useRecoilValue } from 'recoil';
 
 import { useStableCallback } from '../hooks/useStableCallback';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
+import { nodeInstanceState } from '../state/node';
 import {
   KnownNodeContentBodyProps,
   NodeContentBodyProps,
@@ -33,6 +35,8 @@ const NodeContentBodyWrapper = styled.div<{
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
+    const nodeInstance = useRecoilValue(nodeInstanceState(node.id));
+
     const {
       isPending,
       error,
@@ -40,7 +44,7 @@ export const NodeContentBody: FC<NodeContentBodyProps> = memo(
       isFetching,
     } = useQuery({
       queryKey: ['nodeBody', node.id],
-      queryFn: () => node.getBody(),
+      queryFn: () => nodeInstance?.getBody(),
     });
 
     if (isPending) return <></>;

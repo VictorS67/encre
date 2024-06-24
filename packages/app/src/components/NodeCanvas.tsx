@@ -63,7 +63,12 @@ import { draggingWireClosestPortState } from '../state/wire';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
 import { HighlightedPort } from '../types/port.type';
-import { GraphComment, Node, NodeConnection } from '../types/studio.type';
+import {
+  GraphComment,
+  Node,
+  NodeConnection,
+  RecordId,
+} from '../types/studio.type';
 
 const styles = css`
   position: relative;
@@ -651,7 +656,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   );
 
   const onNodeMouseOver = useStableCallback(
-    (event: React.MouseEvent, nodeId: string) => {
+    (event: React.MouseEvent, nodeId: RecordId) => {
       setHoveringNodeId(nodeId);
     },
   );

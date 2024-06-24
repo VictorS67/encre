@@ -11,7 +11,7 @@ import { commentsState, selectingCommentIdsState } from '../state/comment';
 import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { selectingWireIdsState } from '../state/wire';
-import { GraphComment, Node } from '../types/studio.type';
+import { GraphComment, Node, RecordId } from '../types/studio.type';
 
 export const NodeGraphBuilder: FC = () => {
   const [nodes, setNodes] = useRecoilState(nodesState);
@@ -33,7 +33,7 @@ export const NodeGraphBuilder: FC = () => {
   const onNodesSelect = useStableCallback(
     (newNodes: Node[], isMulti?: boolean) => {
       if (isMulti) {
-        setSelectingNodeIds((nodeIds: string[]) => [
+        setSelectingNodeIds((nodeIds: RecordId[]) => [
           ...new Set([...nodeIds, ...newNodes.map((n) => n.id)]),
         ]);
       } else {

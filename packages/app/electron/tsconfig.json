@@ -2,12 +2,12 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "noEmit": false,
-    "outDir": "../build/electron",
+    "outDir": "../dist/main",
     "rootDir": ".",
-    "module": "commonjs"
-    // "module": "ESNext",
-    // "moduleResolution": "node",
-    // "target": "ESNext"
+    "target": "ESNEXT",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true
   },
-  "include": ["./**/*.ts"]
+  "include": ["electron.ts"]
 }

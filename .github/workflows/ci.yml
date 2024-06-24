@@ -45,7 +45,5 @@ jobs:
           cache: "yarn"
       - name: Install dependencies
         run: yarn install --unsafe-perm --immutable --network-timeout 500000
-      - name: Install sharp
-        run: yarn workspace @encrejs/core add sharp --ignore-engines && yarn workspace @encrejs/api add sharp --ignore-engines
       - name: Test
-        run: yarn workspace @encrejs/core run test && yarn workspace @encrejs/api run test
+        run: yarn workspace @encrejs/core run test

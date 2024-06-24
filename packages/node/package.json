@@ -67,13 +67,7 @@
     "emittery": "^1.0.3",
     "nanoid": "^5.0.2",
     "p-queue": "^7.4.1",
-    "release-it": "^17.3.0",
-    "sharp": "^0.33.4"
-  },
-  "peerDependenciesMeta": {
-    "sharp": {
-      "optional": true
-    }
+    "release-it": "^17.3.0"
   },
   "exports": {
     "./api": {

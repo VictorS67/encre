@@ -7,7 +7,7 @@ export function useContextMenuMoveToNodeConfigContexts() {
 
   return nodes.map((node) => ({
     id: `move-to-node:${node.id}`,
-    name: node.title,
+    name: node.title ?? (node.data._id[node.data._id.length - 1] as string),
     data: {
       nodeId: node.id,
     },

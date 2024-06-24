@@ -14,6 +14,7 @@ import { useContextMenuMoveToNodeConfigContexts } from './useContextMenuMoveToNo
 import { useHotKeyDisplay } from './useHotKeyDisplay';
 import { ContextMenuConfigContexts } from '../types/contextmenu.type';
 import { HOTKEY } from '../types/hotkey.type';
+import { RecordId } from '../types/studio.type';
 import { typeOf } from '../utils/safeTypes';
 
 export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
@@ -132,7 +133,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
       },
       node: {
         contextType: typeOf<{
-          nodeId: string;
+          nodeId: RecordId;
           nodeType: string;
           nodeSubType: string;
           registerArgs?: Record<string, unknown>;
