@@ -21,8 +21,8 @@
   "scripts": {
     "release": "yarn lint-fix && release-it --only-version --config .release-it.json",
     "build": "yarn clean && yarn build:esm && yarn build:cjs && node scripts/create-entrypoints.js && node scripts/check-tree-shaking.js",
-    "build:esm": "tsc --outDir build/ && rimraf build/tests build/**/tests/",
-    "build:cjs": "tsc --outDir build-cjs/ -p tsconfig.cjs.json && node scripts/move-cjs-to-build.js && rimraf build-cjs build/tests build/**/tests",
+    "build:esm": "tsc --outDir build/ --composite false && rimraf build/tests/ build/**/tests/",
+    "build:cjs": "tsc --outDir build-cjs/ --composite false -p tsconfig.cjs.json && node scripts/move-cjs-to-build.js && rimraf build-cjs build/tests/ build/**/tests/",
     "build:watch": "node scripts/create-entrypoints.js && tsc --outDir build/ --watch",
     "clean": "rimraf build/ && node scripts/create-entrypoints.js pre",
     "lint": "eslint src/*.ts src/**/*.ts && yarn lint:dpdm",
