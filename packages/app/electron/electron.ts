@@ -35,6 +35,22 @@ function createWindow() {
   //   return encre.globalNodeRegistry;
   // });
 
+  ipcMain.handle("nodeCreateDynamic", async (event, arg) => {
+    const encre = await import("@encrejs/core");
+
+    const { nodeType, nodeSubType, registerArgs } = arg as {
+      nodeType: string;
+      nodeSubType: string;
+      registerArgs?: string;
+    };
+
+    return encre.globalNodeRegistry.createDynamic(
+      nodeType,
+      nodeSubType,
+      registerArgs ? JSON.parse(registerArgs) : undefined
+    );
+  });
+
   mainWindow.webContents.on("before-input-event", (_, input) => {
     if (input.type === "keyDown" && input.key === "F12") {
       mainWindow?.webContents.isDevToolsOpened()

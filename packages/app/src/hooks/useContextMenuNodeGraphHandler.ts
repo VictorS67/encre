@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { match, P } from 'ts-pattern';
@@ -19,8 +21,9 @@ import { commentsState, selectingCommentIdsState } from '../state/comment';
 import { showContextMenuState } from '../state/contextmenu';
 import {
   collapsingNodeIdsState,
+  // nodeCreateDynamicState,
   nodeMapState,
-  nodeRegistryState,
+  // nodeRegistryState,
   nodesState,
   pinningNodeIdsState,
   selectingNodeIdsState,
@@ -53,7 +56,7 @@ export function useContextMenuNodeGraphHandler() {
   const [selectingCommentIds, setSelectingCommentIds] = useRecoilState(
     selectingCommentIdsState,
   );
-  const nodeRegistry = useRecoilValue(nodeRegistryState);
+  // const nodeRegistry = useRecoilValue(nodeRegistryState);
   const nodeMap = useRecoilValue(nodeMapState);
   const [selectingWireIds, setSelectingWireIds] = useRecoilState(
     selectingWireIdsState,
@@ -163,19 +166,35 @@ export function useContextMenuNodeGraphHandler() {
     setSelectingNodeIds([]);
   });
 
-  const addNode = useStableCallback(
-    (
+  const addNode = useCallback(
+    async (
       nodeType: string,
       nodeSubType: string,
       position: { x: number; y: number },
       registerArgs?: Record<string, unknown>,
     ) => {
-      if (nodeRegistry) {
-        const newNode: Node = nodeRegistry.createDynamic(
+      const { ipcRenderer } = window.require('electron');
+
+      let newNode: Node | undefined;
+      try {
+        newNode = await ipcRenderer.invoke('nodeCreateDynamic', {
           nodeType,
           nodeSubType,
-          registerArgs,
-        );
+          registerArgs: registerArgs ? JSON.stringify(registerArgs) : undefined,
+        });
+      } catch (e) {
+        console.log(`failed to get create node dynamic: ${e}`);
+      }
+
+      // const newNode: Node | undefined = useRecoilValue(
+      //   nodeCreateDynamicState({
+      //     nodeType,
+      //     nodeSubType,
+      //     registerArgs: registerArgs ? JSON.stringify(registerArgs) : undefined,
+      //   })
+      // );
+
+      if (newNode) {
         newNode.visualInfo = {
           ...newNode.visualInfo,
           position: {
@@ -186,7 +205,25 @@ export function useContextMenuNodeGraphHandler() {
 
         changeNodes?.([...nodes, newNode]);
       }
+
+      // if (nodeRegistry) {
+      //   const newNode: Node = nodeRegistry.createDynamic(
+      //     nodeType,
+      //     nodeSubType,
+      //     registerArgs,
+      //   );
+      //   newNode.visualInfo = {
+      //     ...newNode.visualInfo,
+      //     position: {
+      //       ...newNode.visualInfo.position,
+      //       ...position,
+      //     },
+      //   };
+
+      //   changeNodes?.([...nodes, newNode]);
+      // }
     },
+    [],
   );
 
   const removeComments = useStableCallback((...commentIds: string[]) => {

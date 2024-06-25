@@ -10,10 +10,10 @@ import type {
   NodeRegistration as INodeRegistration,
   BuiltInNodeTypes as IBuiltInNodeTypes,
   BuiltInNodeTypePairs as IBuiltInNodeTypePairs,
-} from "@encrejs/core";
+} from '@encrejs/core';
 // import { globalNodeRegistry as coreGlobalNodeRegistry } from '@encrejs/core/studio/registration/nodes';
-import { extMap as coreExtMap } from "@encrejs/core/studio/ui";
-import { getRecordId as coreGetRecordId } from "@encrejs/core/utils/nanoid";
+import { extMap as coreExtMap } from '@encrejs/core/studio/ui';
+import { getRecordId as coreGetRecordId } from '@encrejs/core/utils/nanoid';
 
 // export const globalNodeRegistry = coreGlobalNodeRegistry;
 
@@ -41,44 +41,44 @@ export type VisualInfo = {
   };
   content?: {
     color?:
-      | "red"
-      | "orange"
-      | "gold"
-      | "yellow"
-      | "palmera"
-      | "green"
-      | "meadow"
-      | "cyan"
-      | "blue"
-      | "cornflower"
-      | "purple"
-      | "pink"
-      | "razzmatazz"
-      | "silver"
-      | "dark";
+      | 'red'
+      | 'orange'
+      | 'gold'
+      | 'yellow'
+      | 'palmera'
+      | 'green'
+      | 'meadow'
+      | 'cyan'
+      | 'blue'
+      | 'cornflower'
+      | 'purple'
+      | 'pink'
+      | 'razzmatazz'
+      | 'silver'
+      | 'dark';
   };
 };
 
 export type CommentVisualInfo = VisualInfo & {
   content?: {
-    horitontal?: "center" | "start" | "end" | "justify";
-    vertical?: "center" | "start" | "end";
+    horitontal?: 'center' | 'start' | 'end' | 'justify';
+    vertical?: 'center' | 'start' | 'end';
     color?:
-      | "red"
-      | "orange"
-      | "gold"
-      | "yellow"
-      | "palmera"
-      | "green"
-      | "meadow"
-      | "cyan"
-      | "blue"
-      | "cornflower"
-      | "purple"
-      | "pink"
-      | "razzmatazz"
-      | "silver"
-      | "dark";
+      | 'red'
+      | 'orange'
+      | 'gold'
+      | 'yellow'
+      | 'palmera'
+      | 'green'
+      | 'meadow'
+      | 'cyan'
+      | 'blue'
+      | 'cornflower'
+      | 'purple'
+      | 'pink'
+      | 'razzmatazz'
+      | 'silver'
+      | 'dark';
   };
 };
 
@@ -115,17 +115,17 @@ export interface BaseComment {
 }
 
 export interface PlainTextComment extends BaseComment {
-  type: "plain";
+  type: 'plain';
   text: string;
 }
 
 export interface MarkdownComment extends BaseComment {
-  type: "markdown";
+  type: 'markdown';
   text: string;
 }
 
 export interface CodeComment extends BaseComment {
-  type: "code";
+  type: 'code';
   text: string;
 
   language?: string;
@@ -133,6 +133,12 @@ export interface CodeComment extends BaseComment {
 }
 
 export type GraphComment = PlainTextComment | MarkdownComment | CodeComment;
+
+export type NodeCreateDynamicFields = {
+  nodeType: Node['type'];
+  nodeSubType: Node['subType'];
+  registerArgs?: string;
+};
 
 export type NodePortSizes = {
   [key: string]: number;
@@ -152,21 +158,21 @@ export interface Node {
     };
     content?: {
       color?:
-        | "red"
-        | "orange"
-        | "gold"
-        | "yellow"
-        | "palmera"
-        | "green"
-        | "meadow"
-        | "cyan"
-        | "blue"
-        | "cornflower"
-        | "purple"
-        | "pink"
-        | "razzmatazz"
-        | "silver"
-        | "dark";
+        | 'red'
+        | 'orange'
+        | 'gold'
+        | 'yellow'
+        | 'palmera'
+        | 'green'
+        | 'meadow'
+        | 'cyan'
+        | 'blue'
+        | 'cornflower'
+        | 'purple'
+        | 'pink'
+        | 'razzmatazz'
+        | 'silver'
+        | 'dark';
     };
   };
   inputs: NodePortFields | undefined;
@@ -183,7 +189,7 @@ export interface Node {
   data: any;
 
   tags?: Array<string>;
-  state?: "init" | "pending" | "success" | "failed";
+  state?: 'init' | 'pending' | 'success' | 'failed';
   isDebug?: boolean;
 }
 
@@ -200,11 +206,11 @@ export interface Context<Metadata = Record<string, unknown>> {
 }
 
 export type MessageRole =
-  | "human"
-  | "assistant"
-  | "system"
-  | "function"
-  | "general";
+  | 'human'
+  | 'assistant'
+  | 'system'
+  | 'function'
+  | 'general';
 
 export type ContentLike =
   | string
@@ -222,13 +228,13 @@ export interface BaseMessage {
 
 export type BaseMessageLike = BaseMessage | [MessageRole, string] | string;
 
-export type StringData = DataDef<"string", string>;
-export type NumberData = DataDef<"number", number>;
-export type BooleanData = DataDef<"boolean", boolean>;
-export type UnknownData = DataDef<"unknown", unknown>;
-export type JSONObjectData = DataDef<"object", Record<never, never>>;
-export type BlobData = DataDef<"blob", Blob>;
-export type ContextData = DataDef<"context", Context>;
+export type StringData = DataDef<'string', string>;
+export type NumberData = DataDef<'number', number>;
+export type BooleanData = DataDef<'boolean', boolean>;
+export type UnknownData = DataDef<'unknown', unknown>;
+export type JSONObjectData = DataDef<'object', Record<never, never>>;
+export type BlobData = DataDef<'blob', Blob>;
+export type ContextData = DataDef<'context', Context>;
 // export type ChatMessageData = DataDef<'chat-message', BaseMessageLike>;
 
 export type ScalarData =
@@ -247,12 +253,12 @@ export type DataDef<T extends string, RuntimeType> = {
 };
 
 export type ArrayOf<T extends ScalarData> = DataDef<
-  `${T["type"]}[]`,
-  T["value"][]
+  `${T['type']}[]`,
+  T['value'][]
 >;
 
 export type ArrayData = {
-  [P in ScalarData["type"]]: ArrayOf<
+  [P in ScalarData['type']]: ArrayOf<
     Extract<
       ScalarData,
       {
@@ -260,7 +266,7 @@ export type ArrayData = {
       }
     >
   >;
-}[ScalarData["type"]];
+}[ScalarData['type']];
 
 export type Data = ScalarData | ArrayData;
 
@@ -285,22 +291,22 @@ export type NodeBody = string | UIContext | UIContext[] | undefined;
 
 export type BaseUIContext = {
   fontSize?: number;
-  fontFamily?: "monospace" | "sans-serif";
+  fontFamily?: 'monospace' | 'sans-serif';
   isReadOnly?: boolean;
 };
 
 export type PlainUIContext = {
-  type: "plain";
+  type: 'plain';
   text: string;
 };
 
 export type MarkdownUIContext = {
-  type: "markdown";
+  type: 'markdown';
   text: string;
 };
 
 export type CodeUIContext = {
-  type: "code";
+  type: 'code';
   text: string;
 
   language?: string;
@@ -311,20 +317,20 @@ export type CodeUIContext = {
 };
 
 export type BlobUIContext = {
-  type: "blob";
+  type: 'blob';
   blob: Array<ImageUIContext | AudioUIContext | FileUIContext>;
   size: number;
   blobType: string;
 };
 
 export type ContextUIContext = {
-  type: "context";
+  type: 'context';
   text: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
   metadata: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
 };
 
 export type MessageUIContext = {
-  type: "message";
+  type: 'message';
   content: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
   kwargs: Array<PlainUIContext | MarkdownUIContext | CodeUIContext>;
   role: string;
@@ -333,38 +339,38 @@ export type MessageUIContext = {
 };
 
 export type ImageUIContext = {
-  type: "image";
-  mimeType: "image/png" | "image/jpeg" | "image/gif" | "image/svg+xml";
+  type: 'image';
+  mimeType: 'image/png' | 'image/jpeg' | 'image/gif' | 'image/svg+xml';
   data: Uint8Array;
 };
 
 export type AudioUIContext = {
-  type: "audio";
-  mimeType: "audio/mp3" | "audio/wav" | "audio/ogg";
+  type: 'audio';
+  mimeType: 'audio/mp3' | 'audio/wav' | 'audio/ogg';
   data: Uint8Array;
 };
 
 export type FileUIContext = {
-  type: "file";
+  type: 'file';
   mimeType:
-    | "text/plain"
-    | "text/html"
-    | "text/javascript"
-    | "text/css"
-    | "application/json"
-    | "application/pdf"
-    | "application/xml";
+    | 'text/plain'
+    | 'text/html'
+    | 'text/javascript'
+    | 'text/css'
+    | 'application/json'
+    | 'application/pdf'
+    | 'application/xml';
   data: Uint8Array;
 };
 
 export type SerializedRuleMetadata = {
   left: SerializedRule;
   right?: SerializedRule;
-  conjunction: "and" | "or";
+  conjunction: 'and' | 'or';
 };
 
 export type SerializedRule = {
-  _type: "rule";
+  _type: 'rule';
   _ruleType: string;
   description: string;
   func: string;
@@ -373,28 +379,28 @@ export type SerializedRule = {
 };
 
 export type SerializedRuleCollection = {
-  _type: "rule-collection";
+  _type: 'rule-collection';
   description: string;
   collection: Record<string, SerializedRule | SerializedRuleCollection>;
-  conjunction: "and" | "or";
+  conjunction: 'and' | 'or';
 };
 
 export type IfConditionUI = {
-  type: "if";
+  type: 'if';
   description?: string;
   metadata?: SerializedRuleCollection;
   source?: string;
 };
 
 export type ElseIfConditionUI = {
-  type: "else-if";
+  type: 'else-if';
   description?: string;
   metadata?: SerializedRuleCollection;
   source?: string;
 };
 
 export type OtherwiseConditionUI = {
-  type: "otherwise";
+  type: 'otherwise';
   source?: string;
 };
 
@@ -404,7 +410,7 @@ export type ConditionUI =
   | OtherwiseConditionUI;
 
 export type ConditionUIContext = {
-  type: "condition";
+  type: 'condition';
   target: string;
   sources: string[];
   conditions: ConditionUI[];
@@ -425,8 +431,8 @@ export type UIContext = BaseUIContext &
   );
 
 export const extMap: Record<
-  | ImageUIContext["mimeType"]
-  | AudioUIContext["mimeType"]
-  | FileUIContext["mimeType"],
+  | ImageUIContext['mimeType']
+  | AudioUIContext['mimeType']
+  | FileUIContext['mimeType'],
   string
 > = coreExtMap;

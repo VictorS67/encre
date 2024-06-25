@@ -1,11 +1,11 @@
 import type { NodeImpl } from '@encrejs/core/build/studio/nodes/base';
-import { mapValues, keys, map } from "lodash-es";
-import { DefaultValue, atom, selector, selectorFamily } from "recoil";
+import { mapValues, keys, map } from 'lodash-es';
+import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
 
-import { graphState } from "./graph";
-import { connectionMapState } from "./nodeconnection";
-import { NodeGraph } from "../types/graph.type";
-import { NodeVisualContentData } from "../types/node.type";
+import { graphState } from './graph';
+import { connectionMapState } from './nodeconnection';
+import { NodeGraph } from '../types/graph.type';
+import { NodeVisualContentData } from '../types/node.type';
 import {
   // globalNodeRegistry,
   RecordId,
@@ -16,27 +16,45 @@ import {
   NodeInputPortDef,
   NodeOutputPortDef,
   NodeRegistration,
-} from "../types/studio.type";
+  NodeCreateDynamicFields,
+} from '../types/studio.type';
 
-export const nodeRegistryState = atom<NodeRegistration | undefined>({
-  key: "nodeRegistryState",
-  default: selectorFamily({
-    key: "nodeRegistryState/default",
-    get: () => async () => {
-      // const { ipcRenderer } = window.require('electron');
-      // try {
-      //   const globalNodeRegistry =
-      //     await ipcRenderer.invoke('globalNodeRegistry');
-      //   return globalNodeRegistry;
-      // } catch (e) {
-      //   console.log(`failed to get globalNodeRegistry: ${e}`);
-      //   return undefined;
-      // }
+// export const nodeRegistryState = atom<NodeRegistration | undefined>({
+//   key: 'nodeRegistryState',
+//   default: selectorFamily({
+//     key: 'nodeRegistryState/default',
+//     get: () => async () => {
+//       const { ipcRenderer } = window.require('electron');
+//       try {
+//         const globalNodeRegistry =
+//           await ipcRenderer.invoke('globalNodeRegistry');
+//         return globalNodeRegistry;
+//       } catch (e) {
+//         console.log(`failed to get globalNodeRegistry: ${e}`);
+//         return undefined;
+//       }
 
-      return undefined;
-    },
-  })(undefined),
-});
+//       // return undefined;
+//     },
+//   })(undefined),
+// });
+
+// export const nodeCreateDynamicState = selectorFamily<
+//   Node | undefined,
+//   NodeCreateDynamicFields
+// >({
+//   key: 'nodeCreateDynamicState',
+//   get: (args: NodeCreateDynamicFields) => async () => {
+//     const { ipcRenderer } = window.require('electron');
+//     try {
+//       const node = await ipcRenderer.invoke('nodeCreateDynamic', args);
+//       return node;
+//     } catch (e) {
+//       console.log(`failed to get create node dynamic: ${e}`);
+//       return undefined;
+//     }
+//   },
+// });
 
 export const nodesState = selector<Node[]>({
   key: 'nodes',
@@ -70,7 +88,7 @@ export const nodeInstanceState = selectorFamily<
   NodeImpl<Node> | undefined,
   RecordId
 >({
-  key: "nodeInstanceState",
+  key: 'nodeInstanceState',
   get: (nodeId) => async () => {
     // const { ipcRenderer } = window.require("electron");
 
@@ -89,7 +107,7 @@ export const nodeInstanceState = selectorFamily<
 export const nodeInstanceMapState = selector<
   Record<RecordId, NodeImpl<Node> | undefined>
 >({
-  key: "nodeInstanceMapState",
+  key: 'nodeInstanceMapState',
   get: ({ get }) => {
     const nodeMap = get(nodeMapState);
 
@@ -202,7 +220,7 @@ export const nodeIODefState = selector<
       Object.entries(nodeMap).map(([nodeId, node]) => [
         nodeId,
         getIOFromNode(node),
-      ])
+      ]),
     );
   },
 });
