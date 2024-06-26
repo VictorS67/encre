@@ -28,16 +28,53 @@ yarn add pdf-parse
 
 #### Creating with Parameters
 
-Here's an example of how to create `** Your Component Name **` with parameters:
+Here's an example of how to create `PDFLoader` with parameters:
 
 ```typescript
-import { ** Your Component Name ** } from '** package name **';
+import path from 'path';
+import url from 'url';
+import { FileProvider } from './path/to/file/provider'; // Adjust the import path accordingly
+import { PDFLoader } from './path/to/pdf'; // Adjust the import path accordingly
 
-** how to initialize your component **
+async function runPDFLoader() {
+  // Define the file path to the PDF document
+  const filePath = path.resolve(
+    path.dirname(url.fileURLToPath(import.meta.url)),
+    './path/to/your/pdf-file.pdf' // Adjust the file path accordingly
+  );
+
+  // Initialize the FileProvider with the PDF file path
+  const provider = new FileProvider(filePath);
+
+  // Initialize the PDFLoader with default options
+  const loader = new PDFLoader();
+
+  // Serialize the loader and log it
+  const serializedStr = JSON.stringify(loader, null, 2);
+  console.log('Serialized Loader:', serializedStr);
+
+  // Load the documents
+  const docs = await loader.load(provider.provide());
+
+  // Log some checks
+  console.log('Number of Documents:', docs.length);
+  console.log('First Document Content:', docs[0].pageContent);
+
+  // Invoke the loader and compare with docs
+  const invokedDocs = await loader.invoke(provider.provide());
+  console.log('Invoked Documents match loaded documents:', JSON.stringify(invokedDocs) === JSON.stringify(docs));
+}
+
+// Run the PDFLoader
+runPDFLoader().catch((error) => {
+  console.error('Error running PDFLoader:', error);
+});
+
+
 ```
 
 Component parameters:
 
 | Parameter | Runtime Type | Description |
 | --- | --- | --- |
-| ** parameter name ** | ** runtime type ** | ** parameter description ** |
+| 'shouldsplit' | boolean | Indicates whether the PDF should be split into individual pages or not. Default is true. |
