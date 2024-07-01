@@ -1,3 +1,5 @@
+import { load } from '../../load/index.js';
+import { globalImportMap, globalSecretMap } from '../../load/registration.js';
 import { type Serializable } from '../../load/serializable.js';
 import { type NodeImpl } from '../nodes/base.js';
 import { type SerializableNode } from '../nodes/index.js';
@@ -261,7 +263,7 @@ export class NodeRegistration<
    * @returns A new node implementation instance.
    * @throws an error if the node's type-subtype pair is unknown.
    */
-  createImpl<T extends Nodes>(node: T): NodeImpl<T> {
+  async createImpl<T extends Nodes>(node: T): Promise<NodeImpl<T>> {
     const key = [node.type, node.subType].join('-');
 
     const nodeImpl = this.info[key] as {
@@ -275,6 +277,9 @@ export class NodeRegistration<
     }
 
     const { impl: Impl } = nodeImpl;
+
+    const data = await load<Serializable>(JSON.stringify(node.data), globalSecretMap, globalImportMap);
+    node.data = data;
 
     const newNodeImpl = new Impl(node as any) as unknown as NodeImpl<T>;
 
@@ -340,7 +345,7 @@ export class NodeRegistration<
    * @throws An error if no implementation is registered for the node's type and subtype.
    * @returns An instance of `NodeImpl` for the given node, enabling further interaction and processing.
    */
-  createDynamicImpl(node: SerializableNode): NodeImpl<SerializableNode> {
+  async createDynamicImpl(node: SerializableNode): Promise<NodeImpl<SerializableNode>> {
     const { type, subType } = node;
     const implClass = this.dynamicImplsMap[`${type}-${subType}`];
     if (!implClass) {
@@ -348,6 +353,9 @@ export class NodeRegistration<
         `createDynamicImpl: Unknown node - type: ${type}, subType: ${subType}`
       );
     }
+
+    const data = await load<Serializable>(JSON.stringify(node.data), globalSecretMap, globalImportMap);
+    node.data = data;
 
     const newNodeImpl = new implClass.impl(node);
     if (!newNodeImpl) {
