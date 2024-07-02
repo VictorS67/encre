@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "node dist",
-    "build": "tsc",
+    "build": "rimraf dist/** && tsc && cp .env dist",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint-fix": "eslint --fix \"**/*.{js,jsx,ts,tsx}\""
   },

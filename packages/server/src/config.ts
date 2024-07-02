@@ -2,6 +2,7 @@ import { ServerOptions } from 'https';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
 import { strToNum } from './utils/safeTypes.js';
 
 export interface Config {
@@ -35,6 +36,8 @@ function parseJSON(path: string, allowMissing = false) {
   return JSON.parse(text);
 }
 
+dotenv.config({ path: path.join(projectRoot, '.env') });
+
 let userConfig: Config;
 if (process.env.ENCRE_CONFIG_PATH) {
   userConfig = parseJSON(process.env.ENCRE_CONFIG_PATH);
@@ -47,7 +50,7 @@ if (process.env.ENCRE_CONFIG_PATH) {
 let defaultConfig: Omit<Config, 'mode'> = {
   port: 5127,
   hostname: '::',
-  webRoot: path.join(projectRoot, '../node_modules', '@encrejs', 'app', 'build'),
+  webRoot: path.join(projectRoot, '..', 'node_modules', '@encrejs', 'app', 'build'),
   upload: {
     fileSizeSyncLimitMB: 20,
     fileSizeLimitMB: 20,
