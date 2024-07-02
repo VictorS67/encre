@@ -1,8 +1,9 @@
 import React, { CSSProperties, FC, MutableRefObject } from 'react';
 
+import { type monaco } from '../utils/monacoEditor';
+
 import { ModalProps } from './modal.type';
 import { Node, UIContext } from './studio.type';
-import { type monaco } from '../utils/monacoEditor';
 
 export type SyntaxedEditor =
   | EditorGroupContent

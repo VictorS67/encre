@@ -6,16 +6,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import clsx from 'clsx';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { AdaptiveBezierWire } from './wires/AdaptiveBezierWire';
-import { BaseWire } from './wires/BaseWire';
-import { BezierWire } from './wires/BezierWire';
-import { SmoothStepWire } from './wires/SmoothStepWire';
-import { StraightWire } from './wires/StraightWire';
 import { defaultWireOptions } from '../hooks/useDraggingWire';
 import { getPortPosition } from '../hooks/usePortPosition';
 import { nodeFromNodeIdState } from '../state/node';
@@ -32,6 +27,12 @@ import {
   WireOptions,
   WireType,
 } from '../types/wire.type';
+
+import { AdaptiveBezierWire } from './wires/AdaptiveBezierWire';
+import { BaseWire } from './wires/BaseWire';
+import { BezierWire } from './wires/BezierWire';
+import { SmoothStepWire } from './wires/SmoothStepWire';
+import { StraightWire } from './wires/StraightWire';
 
 export const RenderedWire: FC<RenderedWireProps> = ({
   connection,

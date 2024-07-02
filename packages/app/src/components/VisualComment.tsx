@@ -8,14 +8,12 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import styled from '@emotion/styled';
 import clsx from 'clsx';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { CommentContentBody } from './CommentContentBody';
-import { ResizeBox } from './ResizeBox';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useRandomColor } from '../hooks/useRandomColor';
 import { useStableCallback } from '../hooks/useStableCallback';
@@ -30,6 +28,9 @@ import {
   VisualCommentProps,
 } from '../types/comment.type';
 import { GraphComment } from '../types/studio.type';
+
+import { CommentContentBody } from './CommentContentBody';
+import { ResizeBox } from './ResizeBox';
 
 const VisualCommentContainer = styled.div`
   border-radius: 7px;

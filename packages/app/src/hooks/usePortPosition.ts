@@ -2,10 +2,11 @@ import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
-import { useStableCallback } from './useStableCallback';
 import { nodeMapState } from '../state/node';
 import { PortPositons } from '../types/port.type';
 import { Node } from '../types/studio.type';
+
+import { useStableCallback } from './useStableCallback';
 
 export function useNodePortPositions() {
   const [portPositions, setPortPositions] = useState<PortPositons>({});

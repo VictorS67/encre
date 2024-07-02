@@ -19,7 +19,7 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "project": "./tsconfig.json"
+    "project": "../../tsconfig.json"
   },
   "plugins": ["prettier", "react", "import", "@atlaskit/design-system"],
   "rules": {
@@ -66,12 +66,17 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal"],
+        "groups": ["builtin", "external", "parent", "sibling", "index"],
         "pathGroups": [
           {
-            "pattern": "react",
-            "group": "external",
+            "pattern": "react?(-*)",
+            "group": "builtin",
             "position": "before"
+          },
+          {
+            "group": "external",
+            "pattern": "internal/**/*",
+            "position": "after"
           }
         ],
         "pathGroupsExcludedImportTypes": ["react"],

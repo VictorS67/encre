@@ -141,3 +141,5 @@ packages/core/src/utils/.DS_Store
 
 .turbo
 .env
+.yarnrc
+.yarn/**/*

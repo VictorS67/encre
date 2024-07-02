@@ -1,13 +1,28 @@
+import './browser-preload';
+
 import React from 'react';
 
 import ReactDOM from 'react-dom/client';
+
+import { send } from 'internal/src/fetch';
 
 import './colors.css';
 import './index.css';
 import './scrollbar.css';
 import './animation.css';
 import App from './App';
+import { handleGlobalEvents } from './global-events';
 import reportWebVitals from './reportWebVitals';
+
+handleGlobalEvents();
+
+declare global {
+  interface Window {
+    $send: typeof send;
+  }
+}
+
+window.$send = send;
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

@@ -1,0 +1,42 @@
+#!/bin/bash -e
+
+cd `dirname "$0"`
+ROOT=`pwd -P`
+WEBPACK_ARGS=""
+
+PUBLIC_DIR="$ROOT"/../../app/public
+
+OUTPUT_HASH="[contenthash]"
+if [ $NODE_ENV == 'development' ]; then
+    # Use a constant filename in development mode to make it easier to
+    # rebuild the backend without having to rebuild the frontend
+    OUTPUT_HASH="dev"
+fi
+
+rm -f "$ROOT"/../lib-dist/browser/*
+rm -rf "$ROOT"/../../app/public/kcab
+
+if [ $NODE_ENV == 'development' ]; then
+  # In dev mode, always enable watch mode and symlink the build files.
+  # Make sure to do this before starting the build since watch mode
+  # will block
+  WEBPACK_ARGS="$WEBPACK_ARGS --watch"
+  if [ "$OSTYPE" == "msys" ]; then
+    # Ensure symlinks are created as native Windows symlinks.
+    export MSYS=winsymlinks:nativestrict
+  fi
+  ln -snf "$ROOT"/../lib-dist/browser "$ROOT"/../../app/public/kcab
+fi
+
+yarn webpack --config "$ROOT"/../webpack/webpack.browser.config.js \
+  --target "webworker" \
+  --output-filename "kcab.worker.$OUTPUT_HASH.js" \
+  --output-chunk-filename "[id].[name].kcab.worker.$OUTPUT_HASH.js" \
+  --progress \
+  $WEBPACK_ARGS
+
+if [ $NODE_ENV == 'production' ]; then
+  # In production, just copy the built files
+  mkdir "$ROOT"/../../app/public/kcab
+  cp -r "$ROOT"/../lib-dist/browser/* "$ROOT"/../../app/public/kcab
+fi

@@ -4,13 +4,14 @@ import { DN100, DN0, N0, N10 } from '@atlaskit/theme/colors';
 import styled from '@emotion/styled';
 import { match } from 'ts-pattern';
 
-import { DropdownButton } from './DropdownButton';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   RuleCollectionEditorProps,
   RuleEditorProps,
 } from '../types/guardrail.type';
 import { SerializedRule, SerializedRuleCollection } from '../types/studio.type';
+
+import { DropdownButton } from './DropdownButton';
 
 export const RuleCollection = styled.div`
   display: flex;

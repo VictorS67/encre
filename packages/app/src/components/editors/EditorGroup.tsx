@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 
-import { DefaultNodeEditorField } from './DefaultNodeEditorField';
 import {
   DefaultNodeEditorProps,
   EditorGroupContent,
 } from '../../types/editor.type';
+
+import { DefaultNodeEditorField } from './DefaultNodeEditorField';
 
 export const EditorGroup: FC<
   DefaultNodeEditorProps & { editor: EditorGroupContent }

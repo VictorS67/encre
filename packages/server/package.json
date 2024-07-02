@@ -1,0 +1,57 @@
+{
+  "name": "@encrejs/studio",
+  "version": "0.0.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "node dist",
+    "build": "rimraf dist/** && tsc && cp .env dist",
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "lint-fix": "eslint --fix \"**/*.{js,jsx,ts,tsx}\""
+  },
+  "dependencies": {
+    "@encrejs/core": "0.0.5",
+    "axios": "1.6.2",
+    "cors": "^2.8.5",
+    "express": "4.19.2",
+    "express-actuator": "1.8.4",
+    "express-rate-limit": "^6.7.0",
+    "express-response-size": "^0.0.3",
+    "http-status-codes": "^2.3.0",
+    "p-retry": "^6.2.0",
+    "uuid": "^9.0.0",
+    "yaml": "^2.4.5"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.20.2",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/express-actuator": "^1.8.0",
+    "@types/jest": "^29.2.3",
+    "@types/node": "^17.0.45",
+    "@types/uuid": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "@typescript-eslint/typescript-estree": "^5.39.0",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.49.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-markdown": "^3.0.0",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "jest": "^29.3.1",
+    "prettier": "^2.8.3",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "yarn@1.22.22"
+}

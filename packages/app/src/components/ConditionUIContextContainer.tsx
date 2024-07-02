@@ -15,12 +15,6 @@ import { css } from '@mui/material';
 import clsx from 'clsx';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { DropdownButton } from './DropdownButton';
-import { GuardrailHub } from './GuardrailHub';
-import { Icon } from './Icon';
-import { Modal } from './Modal';
-import { KnownNodeContentBody } from './NodeContentBody';
-import { RuleCollectionEditor } from './RuleCollectionEditor';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   registeredGuardrailsState,
@@ -40,6 +34,13 @@ import {
   ConditionUIContextItemProps,
 } from '../types/uicontext.type';
 import { isNotNull } from '../utils/safeTypes';
+
+import { DropdownButton } from './DropdownButton';
+import { GuardrailHub } from './GuardrailHub';
+import { Icon } from './Icon';
+import { Modal } from './Modal';
+import { KnownNodeContentBody } from './NodeContentBody';
+import { RuleCollectionEditor } from './RuleCollectionEditor';
 
 const ConditionUIContainer = styled.div`
   align-self: stretch;

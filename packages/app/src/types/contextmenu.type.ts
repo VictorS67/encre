@@ -1,5 +1,7 @@
 import { IconProps } from '../types/icon.type';
 
+import { BuiltInNodeTypePairs } from './studio.type';
+
 export type ContextMenuData = {
   type: string;
   element: HTMLElement;

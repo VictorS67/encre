@@ -1,7 +1,8 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 
-import { useCanvasPosition } from './useCanvasPosition';
 import { CanvasPosition, CanvasViewBounds } from '../types/canvas.type';
+
+import { useCanvasPosition } from './useCanvasPosition';
 
 /**
  * Custom React hook that calculates and returns the bounds of a canvas view.

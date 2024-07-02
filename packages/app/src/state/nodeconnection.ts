@@ -1,8 +1,9 @@
 import { DefaultValue, selector } from 'recoil';
 
-import { graphState } from './graph';
 import { NodeGraph } from '../types/graph.type';
 import { NodeConnection } from '../types/studio.type';
+
+import { graphState } from './graph';
 
 export const connectionsState = selector({
   key: 'connections',

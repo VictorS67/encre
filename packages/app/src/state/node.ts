@@ -1,42 +1,17 @@
-import type { NodeImpl } from '@encrejs/core/build/studio/nodes/base';
-import { mapValues, keys, map } from "lodash-es";
-import { DefaultValue, atom, selector, selectorFamily } from "recoil";
+import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
 
-import { graphState } from "./graph";
-import { connectionMapState } from "./nodeconnection";
-import { NodeGraph } from "../types/graph.type";
-import { NodeVisualContentData } from "../types/node.type";
+import { NodeGraph } from '../types/graph.type';
+import { NodeVisualContentData } from '../types/node.type';
 import {
-  // globalNodeRegistry,
   RecordId,
   CommentVisualInfo,
-  GraphComment,
   Node,
-  NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
-  NodeRegistration,
-} from "../types/studio.type";
+  UIContext,
+} from '../types/studio.type';
 
-export const nodeRegistryState = atom<NodeRegistration | undefined>({
-  key: "nodeRegistryState",
-  default: selectorFamily({
-    key: "nodeRegistryState/default",
-    get: () => async () => {
-      // const { ipcRenderer } = window.require('electron');
-      // try {
-      //   const globalNodeRegistry =
-      //     await ipcRenderer.invoke('globalNodeRegistry');
-      //   return globalNodeRegistry;
-      // } catch (e) {
-      //   console.log(`failed to get globalNodeRegistry: ${e}`);
-      //   return undefined;
-      // }
-
-      return undefined;
-    },
-  })(undefined),
-});
+import { graphState } from './graph';
 
 export const nodesState = selector<Node[]>({
   key: 'nodes',
@@ -66,52 +41,62 @@ export const nodeMapState = selector<Record<RecordId, Node>>({
   },
 });
 
-export const nodeInstanceState = selectorFamily<
-  NodeImpl<Node> | undefined,
-  RecordId
+export const nodeBodyMapState = atom<Record<RecordId, UIContext[]>>({
+  key: 'nodeBodyMapState',
+  default: {},
+});
+
+export const nodeBodyFromNodeIdState = selectorFamily<
+  UIContext[] | undefined,
+  RecordId | undefined
 >({
-  key: "nodeInstanceState",
-  get: (nodeId) => async () => {
-    // const { ipcRenderer } = window.require("electron");
+  key: 'nodeBodyFromNodeIdState',
+  get:
+    (nodeId: RecordId | undefined) =>
+    ({ get }) => {
+      return nodeId ? get(nodeBodyMapState)[nodeId] : undefined;
+    },
+});
 
-    // try {
-    //   const globalNodeRegistry = await ipcRenderer.invoke("globalNodeRegistry");
+export const updateNodeBodyState = selector<{
+  id: RecordId;
+  nodeBody: UIContext[];
+}>({
+  key: 'updateNodeBodyState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateNodeBodyState should only be used to update nodeBody map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+    const id: RecordId = newVal.id;
+    const nodeBody: UIContext[] = newVal.nodeBody;
 
-    //   return globalNodeRegistry.createDynamicImpl(nodeId) as NodeImpl<Node>;
-    // } catch (e) {
-    //   return undefined;
-    // }
-
-    return undefined;
+    const currMap = get(nodeBodyMapState);
+    const updatedMap = { ...currMap, [id]: nodeBody };
+    set(nodeBodyMapState, updatedMap);
   },
 });
 
-export const nodeInstanceMapState = selector<
-  Record<RecordId, NodeImpl<Node> | undefined>
->({
-  key: "nodeInstanceMapState",
+export const removeNodeBodyState = selector<RecordId>({
+  key: 'removeNodeBodyState',
   get: ({ get }) => {
-    const nodeMap = get(nodeMapState);
+    throw new Error(
+      'removeNodeBodyState should only be used to remove body from nodeBody map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
 
-    return mapValues(nodeMap, (node) => undefined);
+    const id: RecordId = newVal;
+    const currMap = get(nodeBodyMapState);
 
-    // return Object.fromEntries(
-    //   await Promise.all(
-    //     Object.entries(nodeMap).map(async ([k, v]) => {
-    // try {
-    //   const globalNodeRegistry =
-    //     await ipcRenderer.invoke('globalNodeRegistry');
-
-    //   return [
-    //     k,
-    //     globalNodeRegistry.createDynamicImpl(v) as NodeImpl<Node>,
-    //   ];
-    // } catch (e) {
-    //   return [k, undefined];
-    // }
-    //     }),
-    //   ),
-    // );
+    if (currMap[id]) {
+      const updatedMap = { ...currMap };
+      delete updatedMap[id];
+      set(nodeBodyMapState, updatedMap);
+    }
   },
 });
 
@@ -165,7 +150,7 @@ export const isPinnedState = selectorFamily<boolean, RecordId>({
       get(pinningNodeIdsState).includes(nodeId),
 });
 
-export const nodeIODefState = selector<
+export const nodeIODefState = atom<
   Record<
     RecordId,
     {
@@ -175,36 +160,7 @@ export const nodeIODefState = selector<
   >
 >({
   key: 'nodeIODefState',
-  get: ({ get }) => {
-    const nodeMap = get(nodeMapState);
-    // const nodeInstanceMap = get(nodeInstanceMapState);
-    const connectionMap = get(connectionMapState);
-
-    const getIOFromNode = (node: Node) => {
-      const connections: NodeConnection[] = connectionMap[node.id] ?? [];
-
-      const nodeInstance = get(nodeInstanceState(node.id));
-
-      const inputDefs: NodeInputPortDef[] =
-        nodeInstance?.getInputPortDefs(connections, nodeMap) ?? [];
-      const outputDefs: NodeOutputPortDef[] =
-        nodeInstance?.getOutputPortDefs(connections, nodeMap) ?? [];
-
-      return inputDefs && outputDefs
-        ? {
-            inputDefs,
-            outputDefs,
-          }
-        : { inputDefs: [], outputDefs: [] };
-    };
-
-    return Object.fromEntries(
-      Object.entries(nodeMap).map(([nodeId, node]) => [
-        nodeId,
-        getIOFromNode(node),
-      ])
-    );
-  },
+  default: {},
 });
 
 export const nodeFromNodeIdState = selectorFamily<
@@ -217,6 +173,51 @@ export const nodeFromNodeIdState = selectorFamily<
     ({ get }) => {
       return nodeId ? get(nodeMapState)[nodeId] : undefined;
     },
+});
+
+export const updateNodeIODefState = selector<{
+  id: RecordId;
+  io: {
+    inputDefs: NodeInputPortDef[];
+    outputDefs: NodeOutputPortDef[];
+  };
+}>({
+  key: 'updateNodeIODefState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateNodeIODefState should only be used to update nodeIODef map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+    const id: RecordId = newVal.id;
+    const io = newVal.io;
+
+    const currMap = get(nodeIODefState);
+    const updatedMap = { ...currMap, [id]: io };
+    set(nodeIODefState, updatedMap);
+  },
+});
+
+export const removeNodeIODefState = selector<RecordId>({
+  key: 'removeNodeIODefState',
+  get: ({ get }) => {
+    throw new Error(
+      'removeNodeIODefState should only be used to remove io from nodeIODef map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+
+    const id: RecordId = newVal;
+    const currMap = get(nodeIODefState);
+
+    if (currMap[id]) {
+      const updatedMap = { ...currMap };
+      delete updatedMap[id];
+      set(nodeIODefState, updatedMap);
+    }
+  },
 });
 
 export const nodeVisualContentDataFromNodeIdState = selectorFamily<

@@ -1,8 +1,9 @@
 import React, { FC, memo } from 'react';
 
-import { BaseWire } from './BaseWire';
 import { StraightWireProps, WireProps } from '../../types/wire.type';
 import { getStraightPath } from '../../utils/wires/straight';
+
+import { BaseWire } from './BaseWire';
 
 export const StraightWire: FC<WireProps<'straight'>> = memo(
   ({

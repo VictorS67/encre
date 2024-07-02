@@ -6,8 +6,6 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import clsx from 'clsx';
 import { useSetRecoilState } from 'recoil';
 
-import { Icon } from './Icon';
-import { KnownNodeContentBody } from './NodeContentBody';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
 import { editingCodeIdState } from '../state/editor';
 import { editingNodeIdState } from '../state/node';
@@ -16,6 +14,9 @@ import {
   UIContextContainerProps,
   UIContextDescriptor,
 } from '../types/uicontext.type';
+
+import { Icon } from './Icon';
+import { KnownNodeContentBody } from './NodeContentBody';
 
 const UIContainer = styled.div`
   align-self: stretch;

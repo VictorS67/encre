@@ -16,7 +16,6 @@ import styled from '@emotion/styled';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { css } from '@mui/material';
 
-import { Icon } from './Icon';
 import {
   AudioVisualizerProps,
   LiveAudioVisualizerProps,
@@ -30,6 +29,8 @@ import {
   drawLive,
 } from '../utils/audioVisualizer';
 import { formatBytes } from '../utils/format';
+
+import { Icon } from './Icon';
 
 const AudioTrack = styled.div<{ width: number; height: number }>`
   position: relative;

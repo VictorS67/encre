@@ -2,9 +2,10 @@ import { useCallback } from 'react';
 
 import { useSetRecoilState } from 'recoil';
 
-import { defaultWireOptions } from './useDraggingWire';
 import { updateWireDataState } from '../state/wire';
 import { WireData, WireType } from '../types/wire.type';
+
+import { defaultWireOptions } from './useDraggingWire';
 
 export function useChangeWireType() {
   const updateWireData = useSetRecoilState(updateWireDataState);

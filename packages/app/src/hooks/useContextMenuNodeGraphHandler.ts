@@ -1,9 +1,37 @@
+import { useCallback } from 'react';
+
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { match, P } from 'ts-pattern';
 
+import {
+  useCreateNode,
+  useCreateNodeBody,
+  useCreateNodeIODefs,
+} from '../apis/node';
+import { canvasPositionState } from '../state/canvas';
+import { commentsState, selectingCommentIdsState } from '../state/comment';
+import { showContextMenuState } from '../state/contextmenu';
+import {
+  collapsingNodeIdsState,
+  nodeMapState,
+  nodesState,
+  pinningNodeIdsState,
+  removeNodeBodyState,
+  removeNodeIODefState,
+  selectingNodeIdsState,
+  updateNodeBodyState,
+  updateNodeIODefState,
+} from '../state/node';
+import { connectionsState } from '../state/nodeconnection';
+import { removeWireDataState, selectingWireIdsState } from '../state/wire';
+import { ContextMenuConfigContextData } from '../types/contextmenu.type';
+import { GraphComment, Node, RecordId } from '../types/studio.type';
+import { WireType } from '../types/wire.type';
+import { fakeId } from '../utils/fakeId';
+import { isNotNull } from '../utils/safeTypes';
+
 import { useCanvasPosition } from './useCanvasPosition';
-import { useCanvasViewBounds } from './useCanvasViewBounds';
 import { useChangeCommentContent } from './useChangeCommentContent';
 import { useChangeNodeVisualContent } from './useChangeNodeVisualContent';
 import { useChangeWireType } from './useChangeWireType';
@@ -14,33 +42,6 @@ import { useDuplicateNodes } from './useDuplicateNodes';
 import { usePasteComments } from './usePasteComments';
 import { usePasteNodes } from './usePasteNodes';
 import { useStableCallback } from './useStableCallback';
-import { canvasPositionState } from '../state/canvas';
-import { commentsState, selectingCommentIdsState } from '../state/comment';
-import { showContextMenuState } from '../state/contextmenu';
-import {
-  collapsingNodeIdsState,
-  nodeMapState,
-  nodeRegistryState,
-  nodesState,
-  pinningNodeIdsState,
-  selectingNodeIdsState,
-} from '../state/node';
-import { connectionsState } from '../state/nodeconnection';
-import { removeWireDataState, selectingWireIdsState } from '../state/wire';
-import { ContextMenuConfigContextData } from '../types/contextmenu.type';
-import {
-  // globalNodeRegistry,
-  GraphComment,
-  Node,
-  NodeBody,
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  RecordId,
-} from '../types/studio.type';
-import { WireData, WireType } from '../types/wire.type';
-import { fakeId } from '../utils/fakeId';
-import { isNotNull } from '../utils/safeTypes';
 
 export function useContextMenuNodeGraphHandler() {
   const setShowContextMenu = useSetRecoilState(showContextMenuState);
@@ -53,7 +54,7 @@ export function useContextMenuNodeGraphHandler() {
   const [selectingCommentIds, setSelectingCommentIds] = useRecoilState(
     selectingCommentIdsState,
   );
-  const nodeRegistry = useRecoilValue(nodeRegistryState);
+  // const nodeRegistry = useRecoilValue(nodeRegistryState);
   const nodeMap = useRecoilValue(nodeMapState);
   const [selectingWireIds, setSelectingWireIds] = useRecoilState(
     selectingWireIdsState,
@@ -74,6 +75,13 @@ export function useContextMenuNodeGraphHandler() {
   const duplicateComments = useDuplicateComments();
   const { updateCommentColor } = useChangeCommentContent();
   const { updateNodeColor } = useChangeNodeVisualContent();
+  const { createNode } = useCreateNode();
+  const { createNodeBody } = useCreateNodeBody();
+  const { createNodeIODefs } = useCreateNodeIODefs();
+  const updateNodeBody = useSetRecoilState(updateNodeBodyState);
+  const removeNodeBody = useSetRecoilState(removeNodeBodyState);
+  const updateNodeIODef = useSetRecoilState(updateNodeIODefState);
+  const removeNodeIODef = useSetRecoilState(removeNodeIODefState);
 
   const changeComments = useStableCallback((newComments: GraphComment[]) => {
     setComments?.(newComments);
@@ -86,7 +94,7 @@ export function useContextMenuNodeGraphHandler() {
   const addComment = useStableCallback(
     (commentType: string, position: { x: number; y: number }) => {
       // TODO: change this to globalNodeRegistry.create() from core
-      const newCommentId: string = fakeId(17);
+      const newCommentId: RecordId = fakeId(17) as RecordId;
       const newComment: GraphComment = {
         id: newCommentId,
         title: 'This is a comment',
@@ -137,7 +145,7 @@ export function useContextMenuNodeGraphHandler() {
     );
 
     // TODO: change this to globalNodeRegistry.create() from core
-    const newCommentId: string = fakeId(17);
+    const newCommentId: RecordId = fakeId(17) as RecordId;
     const newComment: GraphComment = {
       id: newCommentId,
       title: 'Group',
@@ -163,30 +171,41 @@ export function useContextMenuNodeGraphHandler() {
     setSelectingNodeIds([]);
   });
 
-  const addNode = useStableCallback(
-    (
+  const addNode = useCallback(
+    async (
       nodeType: string,
       nodeSubType: string,
       position: { x: number; y: number },
       registerArgs?: Record<string, unknown>,
     ) => {
-      if (nodeRegistry) {
-        const newNode: Node = nodeRegistry.createDynamic(
-          nodeType,
-          nodeSubType,
-          registerArgs,
-        );
-        newNode.visualInfo = {
-          ...newNode.visualInfo,
+      const node = await createNode(nodeType, nodeSubType, registerArgs);
+
+      if (node) {
+        const nodeBody = await createNodeBody({ node });
+        updateNodeBody({ id: node.id, nodeBody });
+
+        const io = await createNodeIODefs({ node });
+        updateNodeIODef({ id: node.id, io });
+
+        node.visualInfo = {
+          ...node.visualInfo,
           position: {
-            ...newNode.visualInfo.position,
+            ...node.visualInfo.position,
             ...position,
           },
         };
 
-        changeNodes?.([...nodes, newNode]);
+        changeNodes?.([...nodes, node]);
       }
     },
+    [
+      createNode,
+      createNodeBody,
+      createNodeIODefs,
+      changeNodes,
+      updateNodeBody,
+      updateNodeIODef,
+    ],
   );
 
   const removeComments = useStableCallback((...commentIds: string[]) => {
@@ -201,7 +220,7 @@ export function useContextMenuNodeGraphHandler() {
     changeComments?.(newComments);
   });
 
-  const removeNodes = useStableCallback((...nodeIds: string[]) => {
+  const removeNodes = useStableCallback((...nodeIds: RecordId[]) => {
     const newNodes = [...nodes];
     let newConnections = [...connections];
     for (const nodeId of nodeIds) {
@@ -213,6 +232,9 @@ export function useContextMenuNodeGraphHandler() {
       newConnections = newConnections.filter(
         (c) => c.fromNodeId !== nodeId && c.toNodeId !== nodeId,
       );
+
+      removeNodeBody(nodeId);
+      removeNodeIODef(nodeId);
     }
 
     changeNodes?.(newNodes);
@@ -376,9 +398,9 @@ export function useContextMenuNodeGraphHandler() {
           }
 
           const { nodeId } = context.data as {
-            nodeId: string;
+            nodeId: RecordId;
           };
-          const nodeIds: string[] = (
+          const nodeIds: RecordId[] = (
             selectingNodeIds.length > 0
               ? [...new Set([...selectingNodeIds, nodeId])]
               : [nodeId]

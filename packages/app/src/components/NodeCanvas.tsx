@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import {
   DndContext,
@@ -24,17 +25,8 @@ import {
 } from '@floating-ui/react';
 import { useBoolean, useThrottleFn } from 'ahooks';
 import { produce } from 'immer';
-import { CSSTransition } from 'react-transition-group';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { ContextMenu } from './ContextMenu';
-import { DebugObserver, TimeTravelObserver } from './DebugObserver';
-import { DraggableComment } from './DraggableComment';
-import { DraggableNode } from './DraggableNode';
-import { MouseIcon } from './MouseIcon';
-import { VisualComment } from './VisualComment';
-import { VisualNode } from './VisualNode';
-import { WireLayer } from './WireLayer';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingComment } from '../hooks/useDraggingComment';
@@ -69,6 +61,15 @@ import {
   NodeConnection,
   RecordId,
 } from '../types/studio.type';
+
+import { ContextMenu } from './ContextMenu';
+import { DebugObserver, TimeTravelObserver } from './DebugObserver';
+import { DraggableComment } from './DraggableComment';
+import { DraggableNode } from './DraggableNode';
+import { MouseIcon } from './MouseIcon';
+import { VisualComment } from './VisualComment';
+import { VisualNode } from './VisualNode';
+import { WireLayer } from './WireLayer';
 
 const styles = css`
   position: relative;

@@ -3,7 +3,6 @@ import React, { FC, useCallback, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { GurdrailCard } from './GuardrailCard';
 import {
   registeredGuardrailsState,
   selectingGuardrailIdsState,
@@ -11,6 +10,8 @@ import {
 import { GuardrailHubProps } from '../types/guardrail.type';
 import { Guardrail } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
+
+import { GurdrailCard } from './GuardrailCard';
 
 const GuardrailHubContainer = styled.div`
   display: grid;
