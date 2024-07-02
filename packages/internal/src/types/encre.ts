@@ -86,12 +86,10 @@ export type MarkdownComment = IMarkdownComment;
 export type CodeComment = ICodeComment;
 export type GraphComment = IGraphComment;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Context extends IContext {}
 export type MessageRole = IMessageRole;
 export type ContentLike = IContentLike;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface BaseMessage extends IBaseMessage {}
 export type BaseMessageLike = IBaseMessageLike;
 

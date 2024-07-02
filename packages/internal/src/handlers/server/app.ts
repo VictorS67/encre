@@ -7,7 +7,6 @@ import { ServerHandlers } from ".";
 
 export const app = createApp<ServerHandlers>();
 
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 app.method("get-server-url", async function () {
   return getServer() && getServer()!.BASE_SERVER;
 });

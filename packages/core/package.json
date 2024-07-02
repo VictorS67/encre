@@ -47,7 +47,7 @@
     "babel-jest": "^29.7.0",
     "docusaurus-plugin-typedoc": "^1.0.1",
     "dpdm": "^3.12.0",
-    "eslint": "8.48.0",
+    "eslint": "^8.49.0",
     "eslint-cjs-to-esm": "^2.2.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard-with-typescript": "^39.0.0",
