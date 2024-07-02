@@ -10,10 +10,11 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import clsx from 'clsx';
 
-import { Icon } from './Icon';
-import { LazyLiveAudioVisualizer } from './LazyComponents';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { AudioRecorderProps } from '../types/audiorecorder.type';
+
+import { Icon } from './Icon';
+import { LazyLiveAudioVisualizer } from './LazyComponents';
 
 const AudioRecorderContainer = styled.div`
   background-color: rgb(235, 235, 235);

@@ -16,7 +16,6 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
 import clsx from 'clsx';
 
-import { Icon } from './Icon';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   DropdownButtonProps,
@@ -24,6 +23,8 @@ import {
   DropdownMenuItemProps,
 } from '../types/dropdown.type';
 import { hexToRgba } from '../utils/colorConverter';
+
+import { Icon } from './Icon';
 
 const DropdownButtonContainer = styled.div<{
   width: number;

@@ -1,9 +1,8 @@
 import React, { FC, useCallback, useMemo } from 'react';
-
 import { ErrorBoundary } from 'react-error-boundary';
+
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { NodeCanvas } from './NodeCanvas';
 import { useContextMenuNodeGraphHandler } from '../hooks/useContextMenuNodeGraphHandler';
 import { useEditorClick } from '../hooks/useEditorClick';
 import { useStableCallback } from '../hooks/useStableCallback';
@@ -12,6 +11,8 @@ import { nodesState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { selectingWireIdsState } from '../state/wire';
 import { GraphComment, Node, RecordId } from '../types/studio.type';
+
+import { NodeCanvas } from './NodeCanvas';
 
 export const NodeGraphBuilder: FC = () => {
   const [nodes, setNodes] = useRecoilState(nodesState);
@@ -73,21 +74,22 @@ export const NodeGraphBuilder: FC = () => {
   );
 
   return (
-    <ErrorBoundary
-      fallback={<div>There is something wrong in NodeCanvas...</div>}
-    >
-      <NodeCanvas
-        nodes={nodes}
-        connections={connections}
-        comments={comments}
-        onNodesChange={onNodesChange}
-        onCommentsChange={onCommentsChange}
-        onConnectionsChange={setConnections}
-        onNodesSelect={onNodesSelect}
-        onCommentsSelect={onCommentsSelect}
-        onWiresSelect={onWiresSelect}
-        onContextMenuSelect={contextMenuNodeGraphHandler}
-      />
-    </ErrorBoundary>
+    // <ErrorBoundary
+    //   fallback={<div>There is something wrong in NodeCanvas...</div>}
+    // >
+
+    // </ErrorBoundary>
+    <NodeCanvas
+      nodes={nodes}
+      connections={connections}
+      comments={comments}
+      onNodesChange={onNodesChange}
+      onCommentsChange={onCommentsChange}
+      onConnectionsChange={setConnections}
+      onNodesSelect={onNodesSelect}
+      onCommentsSelect={onCommentsSelect}
+      onWiresSelect={onWiresSelect}
+      onContextMenuSelect={contextMenuNodeGraphHandler}
+    />
   );
 };

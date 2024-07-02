@@ -1,5 +1,6 @@
-import { dataTypes } from '@encrejs/core/studio/data';
 import * as monaco from 'monaco-editor';
+
+import { dataTypes } from 'internal/src/types/encre';
 
 export { monaco };
 

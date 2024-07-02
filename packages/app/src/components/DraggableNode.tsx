@@ -1,13 +1,14 @@
 import React, { FC } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { useDraggable } from '@dnd-kit/core';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
-import { VisualNode } from './VisualNode';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { DraggableNodeProps } from '../types/node.type';
+
+import { VisualNode } from './VisualNode';
 
 export const DraggableNode: FC<DraggableNodeProps> = ({
   node,

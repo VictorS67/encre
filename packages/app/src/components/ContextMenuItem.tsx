@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { FC, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import { P300, DN100, DN0, N0, N30A } from '@atlaskit/theme/colors';
 import { token } from '@atlaskit/tokens';
@@ -12,9 +13,7 @@ import {
   useMergeRefs,
 } from '@floating-ui/react';
 import clsx from 'clsx';
-import { CSSTransition } from 'react-transition-group';
 
-import { Icon } from './Icon';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
   ContextMenuConfigContext,
@@ -22,6 +21,8 @@ import {
   ContextMenuItemProps,
 } from '../types/contextmenu.type';
 import { hexToRgba } from '../utils/colorConverter';
+
+import { Icon } from './Icon';
 
 const subMenuStyles = css`
   postion: absolute;

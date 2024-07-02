@@ -1,9 +1,15 @@
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { useCanvasPosition } from './useCanvasPosition';
 import { clipboardState } from '../state/clipboard';
-import { nodesState, selectingNodeIdsState } from '../state/node';
+import {
+  nodeBodyMapState,
+  nodeIODefState,
+  nodesState,
+  selectingNodeIdsState,
+  updateNodeBodyState,
+  updateNodeIODefState,
+} from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import {
   RecordId,
@@ -15,11 +21,17 @@ import {
 import { fakeId } from '../utils/fakeId';
 import { isNotNull } from '../utils/safeTypes';
 
+import { useCanvasPosition } from './useCanvasPosition';
+
 export function usePasteNodes() {
   const clipboard = useRecoilValue(clipboardState);
   const [nodes, setNodes] = useRecoilState(nodesState);
+  const nodeIODef = useRecoilValue(nodeIODefState);
+  const nodeBodyMap = useRecoilValue(nodeBodyMapState);
   const setSelectingNodeIds = useSetRecoilState(selectingNodeIdsState);
   const setConnections = useSetRecoilState(connectionsState);
+  const updateNodeBody = useSetRecoilState(updateNodeBodyState);
+  const updateNodeIODef = useSetRecoilState(updateNodeIODefState);
 
   const { clientToCanvasPosition } = useCanvasPosition();
 
@@ -27,12 +39,6 @@ export function usePasteNodes() {
     if (clipboard?.type !== 'nodes') {
       return;
     }
-
-    console.log(
-      `paste: clipboard: nodes: ${JSON.stringify(
-        clipboard.nodes,
-      )}, connections: ${JSON.stringify(clipboard.connections)}`,
-    );
 
     const canvasPosition = clientToCanvasPosition(
       mousePosition.x,
@@ -79,10 +85,11 @@ export function usePasteNodes() {
         draft.visualInfo.position.y =
           canvasPosition.y +
           (node.visualInfo.position.y - boundingBoxOfCopiedNodes.minY);
+
+        updateNodeBody({ id: newNodeId, nodeBody: nodeBodyMap[node.id] });
+        updateNodeIODef({ id: newNodeId, io: nodeIODef[node.id] });
       });
     });
-
-    console.log(`paste: newNodes: ${JSON.stringify(newNodes)}`);
 
     setNodes((ns) => [...ns, ...newNodes]);
     setSelectingNodeIds(newNodes.map((node) => node.id));

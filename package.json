@@ -11,10 +11,10 @@
   ],
   "type": "module",
   "scripts": {
-    "dev": "yarn workspace @encrejs/studio run electron-dev",
-    "build": "yarn workspace @encrejs/studio run build && yarn workspace @encrejs/core run build",
+    "dev": "yarn workspace @encrejs/web run electron-dev",
+    "build": "yarn workspace @encrejs/web run build && yarn workspace @encrejs/core run build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "yarn workspace @encrejs/studio run lint && yarn workspace @encrejs/core run lint && yarn workspace @encrejs/api run lint",
+    "lint": "yarn workspace @encrejs/web run lint && yarn workspace @encrejs/core run lint && yarn workspace @encrejs/api run lint",
     "publish:core": "bash ./release-branch.sh && turbo run --filter @encrejs/core build test --concurrency 1 && yarn workspace @encrejs/core run release",
     "publish:api": "bash ./release-branch.sh && turbo run --filter @encrejs/api build test --concurrency 1 && yarn workspace @encrejs/api run release"
   },
@@ -32,7 +32,9 @@
     "*.md": "prettier --write"
   },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "turbo": "latest"
