@@ -223,6 +223,7 @@ attr4: {
   "sub1": 1,
   "sub2": "2"
 }
+attr5: undefined
 attr6: `,
         language,
         keywords,
@@ -486,6 +487,7 @@ attr4: [
     "sub4": "4"
   }
 ]
+attr5: undefined
 attr6: `,
         language,
         keywords,
