@@ -6,17 +6,13 @@ Use PDFLoader to load (read) PDF files, extract textual content from each page, 
 
 | Reference | Link |
 | --- | --- |
-| Encre Concept | [Encre Concept Diagram](**-a-link-to-the-corresponding-concept-documentation-**) |
-| Encre Node | [Node Documentation](**-a-link-to-the-corresponding-node-documentation-**) |
-| API | [API Documentation](**-a-link-to-the-corresponding-api-documentation-**) |
-
+| Encre Concept | [Callable](Callable) |
+| Encre Node | [PDF-Loader-Node](PDF-Loader-Node) |
+| API | [/docs/api/core/events/input/load/docs/pdf/](**-a-link-to-the-corresponding-api-documentation-**) |
 ### Overview
 
 The PDFLoader component is useful for processing PDF files to extract text content from each page, which can then be used for various text processing tasks. This component can be particularly beneficial for applications requiring PDF text extraction, such as data analysis, machine learning, and document management systems.
 
-Prior knowledge of the following is recommended:
-1. Basic understanding of PDF structure and text extraction concepts.
-2. Familiarity with JavaScript/TypeScript and npm/yarn for library management.
 
 ```bash
 npm install pdf-parse
@@ -78,3 +74,20 @@ Component parameters:
 | Parameter | Runtime Type | Description |
 | --- | --- | --- |
 | 'shouldsplit' | boolean | Indicates whether the PDF should be split into individual pages or not. Default is true. |
+
+Invoking details:
+
+<table>
+  <tr>
+    <td> <strong>Input variables</strong> </td> 
+    <td> The type of input this loader accepts, restricted to strings representing file paths or Blob objects. </td>
+  </tr>
+  <tr>
+    <td> <strong>Invoke options</strong> </td> 
+    <td> The options applicable to the loader, extending BaseDocLoaderCallOptions. </td>
+  </tr>
+  <tr>
+    <td> <strong>Output variables</strong> </td> 
+    <td> The type of output the loader produces, typically an array of Context objects. </td>
+  </tr>
+</table>
