@@ -1,6 +1,6 @@
 ## BaseMessage
 
-The `BaseMessage` component is essential for defining and managing messages within the system. It is useful for maintaining consistent message structures, enabling serialization, and providing methods for message concatenation and equality checks. Prior knowledge of TypeScript and basic concepts of message handling in systems is recommended before working with this component.
+The `BaseMessage` component is essential for defining and managing messages within the system. It is useful for maintaining consistent message structures, enabling serialization, and providing methods for message concatenation and equality checks.
 
 
 ---
