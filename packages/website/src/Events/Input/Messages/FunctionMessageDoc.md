@@ -1,36 +1,35 @@
-## SystemMessage
+## FunctionMessage
 
-The `SystemMessage` component stores messages related to system prompts within a conversation.
+The `FunctionMessage` component stores messages related to function calls or configurations within a conversation.
 
 ---
 
 | Reference | Link |
 | --- | --- |
 | Encre Concept | [Serializable, ContentLike, MessageRole, BaseMessageFields](**-a-link-to-the-corresponding-concept-documentation-**) |
-| Encre Node | [System Message Node](**-a-link-to-the-corresponding-node-documentation-**) |
+| Encre Node | [Function Message Node](**-a-link-to-the-corresponding-node-documentation-**) |
 | API | [** A reference to API Documentation **](**-a-link-to-the-corresponding-api-documentation-**) |
 
 ### Overview
 
-The `SystemMessage` component is crucial for handling messages that are related to system prompts in a conversation. It inherits from the `BaseMessage` class and provides additional methods specific to system messages.
+The `FunctionMessage` component is crucial for handling messages that relate to function calls or configurations in a conversation. It inherits from the `BaseMessage` class and provides additional methods specific to function messages.
 
 ### Usage
 
 #### Creating with Parameters
 
-Here's an example of how to create `SystemMessage` with parameters:
+Here's an example of how to create `FunctionMessage` with parameters:
 
 ```typescript
 
-import { SystemMessage} from 'path/to/your/SystemMessage.js';
+import { FunctionMessage} from 'path/to/your/FunctionMessage.js';
 
 
-const message1 = new SystemMessage({ content: 'System initialization.' });
-const message2 = new SystemMessage({ content: 'System configuration update.' });
+const message1 = new FunctionMessage({ content: 'Initialize function.' });
+const message2 = new FunctionMessage({ content: 'Update function parameters.' });
 
 const concatenatedMessage = message1.concat(message2);
 console.log(concatenatedMessage.toSerialized());
-
 
 ```
 
