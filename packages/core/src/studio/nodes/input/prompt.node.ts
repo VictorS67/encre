@@ -1,6 +1,8 @@
-import { BasePrompt } from '../../../events/input/load/prompts/base.js';
-import { ChatPrompt } from '../../../events/input/load/prompts/chat.js';
-import { StringPrompt } from '../../../events/input/load/prompts/text.js';
+import {
+  type BasePrompt,
+  ChatPrompt,
+  StringPrompt,
+} from '../../../events/input/load/prompts/index.js';
 import { load } from '../../../load/index.js';
 import {
   globalImportMap,
@@ -9,14 +11,14 @@ import {
 import { getRecordId } from '../../../utils/nanoid.js';
 import { scalarDefaults } from '../../data.js';
 import {
-  ProcessContext,
-  ProcessInputMap,
-  ProcessOutputMap,
+  type  ProcessContext,
+  type ProcessInputMap,
+  type ProcessOutputMap,
 } from '../../processor.js';
-import { SerializedNode } from '../../serde.js';
+import { type SerializedNode } from '../../serde.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { NodeImpl } from '../base.js';
-import { SerializableNode } from '../index.js';
+import { type SerializableNode } from '../index.js';
 
 /**
  * A type alias for a specialized serializable node focused on prompts.

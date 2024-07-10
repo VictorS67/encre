@@ -1,6 +1,6 @@
-import { Serializable } from '../../load/serializable.js';
-import { NodeImpl } from '../nodes/base.js';
-import { SerializableNode } from '../nodes/index.js';
+import { type Serializable } from '../../load/serializable.js';
+import { type NodeImpl } from '../nodes/base.js';
+import { type SerializableNode } from '../nodes/index.js';
 import {
   GeminiChatNodeImpl,
   OpenAIChatNodeImpl,

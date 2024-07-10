@@ -1,4 +1,4 @@
-import { SerializedRule } from '../../../../studio/serde.js';
+import { type SerializedRule } from '../../../../serde.js';
 import { BaseRule } from './base.js';
 
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */

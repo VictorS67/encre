@@ -1,7 +1,7 @@
-import { CallableConfig } from '../../../../record/callable.js';
-import { BaseEvent, BaseEventParams } from '../../../base.js';
-import { BaseRule } from '../guardrails/base.js';
-import { ValidateResult } from '../index.js';
+import { type CallableConfig } from '../../../../record/index.js';
+import { BaseEvent, type BaseEventParams } from '../../../base.js';
+import { type BaseRule } from '../guardrails/index.js';
+import { type ValidateResult } from '../index.js';
 
 /**
  * Defines the rules applied to variables including default rules,

@@ -1,21 +1,21 @@
-import { RecordId } from '../load/keymap.js';
-import { Serializable, Serialized } from '../load/serializable.js';
+import { type RecordId } from '../load/keymap.js';
+import { Serializable, type Serialized } from '../load/serializable.js';
 import { getRecordId } from '../utils/nanoid.js';
-import { isNotNull, Writeable } from '../utils/safeTypes.js';
-import { GraphComment } from './comments/index.js';
-import { DataType } from './data.js';
+import { isNotNull, type Writeable } from '../utils/safeTypes.js';
+import { type GraphComment } from './comments/index.js';
+import { type DataType } from './data.js';
 import { NodeImpl } from './nodes/base.js';
 import {
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  NodePortFields,
-  SerializableNode,
+  type NodeConnection,
+  type NodeInputPortDef,
+  type NodeOutputPortDef,
+  type NodePortFields,
+  type SerializableNode,
 } from './nodes/index.js';
-import { GuardrailRegistration } from './registration/guardrails.js';
-import { globalNodeRegistry, NodeRegistration } from './registration/nodes.js';
+import { type GuardrailRegistration } from './registration/guardrails.js';
+import { globalNodeRegistry, type NodeRegistration } from './registration/nodes.js';
 import { GraphScheduler } from './scheduler.js';
-import { SerializedGraph, SerializedNode } from './serde.js';
+import { type SerializedGraph, type SerializedNode } from './serde.js';
 
 export interface NodeGraph {
   /**

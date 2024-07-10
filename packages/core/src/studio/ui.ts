@@ -1,7 +1,7 @@
-import { MessageRole } from '../events/input/load/msgs/base.js';
+import { type MessageRole } from '../events/input/load/msgs/base.js';
 import { exhaustiveTuple } from '../utils/exhuastive.js';
-import { DataType } from './data.js';
-import { SerializedRuleCollection } from './serde.js';
+import { type DataType } from './data.js';
+import { type SerializedRuleCollection } from './serde.js';
 
 /**
  * Base UI context properties common to various UI elements.

@@ -1,32 +1,32 @@
 import {
-  Context,
-  ContextLike,
+  type Context,
+  type ContextLike,
   isContextLike,
-} from '../../../events/input/load/docs/context.js';
+} from '../../../events/input/load/docs/index.js';
 import {
-  ContextSplitter,
+  type ContextSplitter,
   RecursiveTextSplitter,
   SupportedLanguageForSplit,
   TextSplitter,
   TokenTextSplitter,
-} from '../../../events/input/transform/splitter.js';
+} from '../../../events/input/transform/index.js';
 import { load } from '../../../load/index.js';
 import {
   globalImportMap,
   globalSecretMap,
 } from '../../../load/registration.js';
-import { CallableConfig } from '../../../record/callable.js';
+import { type CallableConfig } from '../../../record/index.js';
 import { getRecordId } from '../../../utils/nanoid.js';
-import { Data, scalarDefaults } from '../../data.js';
+import { type Data, scalarDefaults } from '../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../processor.js';
-import { SerializedNode } from '../../serde.js';
+import { type SerializedNode } from '../../serde.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { CallableNodeImpl } from '../base.js';
-import { CallableNode } from '../index.js';
+import { type CallableNode } from '../index.js';
 
 /**
  * A type alias for a specialized callable node focused on splitting operations.

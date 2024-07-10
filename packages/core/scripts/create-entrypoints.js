@@ -12,25 +12,33 @@ import { identifySecrets } from "./identify-secrets.js";
 // This is used to generate the `exports` field in package.json.
 // Order is not important.
 const entrypoints = {
+  // serde
+  serde: "serde",
   // load
   load: "load/index",
   "load/serializable": "load/serializable",
+  "load/registration": "load/registration",
   // record
-  "record/callable": "record/callable",
+  "record/callable": "record/index",
   // cache
   cache: "cache/index",
   "cache/base": "cache/base",
+  "cache/memory": "cache/memory",
   // events
+  events: "events/index",
   "events/base": "events/base",
   // events/embeddings
+  "events/embeddings": "events/embeddings/index",
   "events/embeddings/base": "events/embeddings/base",
   "events/embeddings/openai": "events/embeddings/openai",
   // events/input/load/docs
+  "events/input/load/docs": "events/input/load/docs/index",
   "events/input/load/docs/base": "events/input/load/docs/base",
   "events/input/load/docs/buffer": "events/input/load/docs/buffer",
   "events/input/load/docs/context": "events/input/load/docs/context",
   "events/input/load/docs/pdf": "events/input/load/docs/pdf",
   // events/input/load/msgs
+  "events/input/load/msgs": "events/input/load/msgs/index",
   "events/input/load/msgs/base": "events/input/load/msgs/base",
   "events/input/load/msgs/bot": "events/input/load/msgs/bot",
   "events/input/load/msgs/human": "events/input/load/msgs/human",
@@ -38,12 +46,14 @@ const entrypoints = {
   "events/input/load/msgs/function": "events/input/load/msgs/function",
   "events/input/load/msgs/general": "events/input/load/msgs/chat",
   // events/input/load/prompts
+  "events/input/load/prompts": "events/input/load/prompts/index",
   "events/input/load/prompts/base": "events/input/load/prompts/base",
   "events/input/load/prompts/text": "events/input/load/prompts/text",
   "events/input/load/prompts/chat": "events/input/load/prompts/chat",
   // events/input/load/rules
-  "events/input/load/rules": "events/input/load/rules/base",
+  "events/input/load/rules": "events/input/load/rules/index",
   // events/input/load/vectorstore
+  "events/input/load/vectorstore": "events/input/load/vectorstore/index",
   "events/input/load/vectorstore/base": "events/input/load/vectorstore/base",
   "events/input/load/vectorstore/chroma":
     "events/input/load/vectorstore/chroma",
@@ -52,16 +62,19 @@ const entrypoints = {
   // events/input/transform
   "events/input/transform/splitter": "events/input/transform/splitter",
   // events/output/provide
+  "events/output/provide": "events/output/provide/index",
   "events/output/provide/base": "events/output/provide/base",
   "events/output/provide/embedresult": "events/output/provide/embedresult",
   "events/output/provide/file": "events/output/provide/file",
   "events/output/provide/generation": "events/output/provide/generation",
   "events/output/provide/llmresult": "events/output/provide/llmresult",
   "events/output/provide/message": "events/output/provide/message",
+  "events/output/provide/serde": "events/output/provide/serde",
   // events/inference/validate
-  "events/inference/validate/utils": "events/inference/validate/utils",
   "events/inference/validate": "events/inference/validate/index",
   // events/inference/validate/guardrails
+  "events/inference/validate/guardrails":
+    "events/inference/validate/guardrails/index",
   "events/inference/validate/guardrails/base":
     "events/inference/validate/guardrails/base",
   "events/inference/validate/guardrails/array":
@@ -76,7 +89,7 @@ const entrypoints = {
     "events/inference/validate/guardrails/string",
   // events/inference/validate/validators
   "events/inference/validate/validator":
-    "events/inference/validate/validators/variable",
+    "events/inference/validate/validators/index",
   // events/inference/chat
   "events/inference/chat/base": "events/inference/chat/base",
   "events/inference/chat": "events/inference/chat/index",
@@ -94,21 +107,23 @@ const entrypoints = {
     "events/inference/chat/llms/vertexai/gemini/text",
   "events/inference/chat/chatlms/gemini":
     "events/inference/chat/llms/vertexai/gemini/chat",
-  "events/inference/chat/llms/vertexai/gemini/utils":
-    "events/inference/chat/llms/vertexai/gemini/utils",
   // events/inference/retrieve
   "events/inference/retrieve/base": "events/inference/retrieve/base",
   // events/inference/retrieve/text
-  "events/inference/retrieve/text/remote/base": "events/inference/retrieve/text/remote/base",
-  "events/inference/retrieve/text/remote": "events/inference/retrieve/text/remote/index",
+  "events/inference/retrieve/text/remote/base":
+    "events/inference/retrieve/text/remote/base",
+  "events/inference/retrieve/text/remote":
+    "events/inference/retrieve/text/remote/index",
   // events/inference/retrieve/embedding
-  "events/inference/retrieve/embedding/vectorstore": "events/inference/retrieve/embedding/vectorstore",
-  "events/inference/retrieve/embedding": "events/inference/retrieve/embedding/index",
+  "events/inference/retrieve/embedding/vectorstore":
+    "events/inference/retrieve/embedding/vectorstore",
+  "events/inference/retrieve/embedding":
+    "events/inference/retrieve/embedding/index",
   // studio
   "studio/condition": "studio/condition",
-  "studio/data": "studio/data",
   "studio/graph": "studio/graph",
   "studio/input": "studio/input",
+  "studio/data": "studio/data",
   "studio/processor": "studio/processor",
   "studio/scheduler": "studio/scheduler",
   "studio/serde": "studio/serde",
@@ -131,6 +146,8 @@ const entrypoints = {
   "studio/nodes/inference/chat/chatlm":
     "studio/nodes/inference/chat/chatlm.node",
   "studio/nodes/inference/chat/llm": "studio/nodes/inference/chat/llm.node",
+  // studio/nodes/inference/validate
+  "studio/nodes/inference/validate": "studio/nodes/inference/validate/validator.node",
   // studio/nodes/input
   "studio/nodes/input/loader": "studio/nodes/input/loader.node",
   "studio/nodes/input/message": "studio/nodes/input/message.node",
@@ -141,6 +158,7 @@ const entrypoints = {
   "studio/nodes/utility/if": "studio/nodes/utility/if.node",
   "studio/nodes/utility/input": "studio/nodes/utility/input.node",
   // studio/registration
+  "studio/registration": "studio/registration/index",
   "studio/registration/guardrails": "studio/registration/guardrails",
   "studio/registration/nodes": "studio/registration/nodes",
   // studio/utils
@@ -194,6 +212,18 @@ const reuqiresOptionalDependency = [
   "studio/graph",
   "studio/condition",
   "studio/input",
+  "studio/nodes/inference/chat/chatlm",
+  "studio/nodes/inference/chat/llm",
+  "studio/nodes/inference/validate",
+  "studio/nodes/input/loader",
+  "studio/nodes/input/message",
+  "studio/nodes/input/prompt",
+  "studio/nodes/input/splitter",
+  "studio/nodes/utility/graph",
+  "studio/nodes/utility/if",
+  "studio/nodes/utility/input",
+  "studio/registration/nodes",
+  "studio/utils/load"
 ];
 
 // const testExports = [
@@ -306,7 +336,10 @@ const updateConfig = () => {
   });
 
   // Update .gitignore
-  fs.writeFileSync("./.gitignore", ['docs/', ...filenames].join("\n") + "\n");
+  fs.writeFileSync(
+    "./.gitignore",
+    ["docs/*.md", "docs/**/*.md", ...filenames].join("\n") + "\n"
+  );
 
   // Update test-exports-*/entrypoints.js
   // const entrypointsToTest = Object.keys(entrypoints)

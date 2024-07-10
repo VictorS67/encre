@@ -3,13 +3,13 @@ import {
   ClientOptions as OpenAIClientOptions,
 } from 'openai';
 import type { RequestOptions as OpenAIClientRequestOptions } from 'openai/core';
-import { SecretFields, SerializedFields } from '../../load/keymap.js';
+import { type SecretFields, type SerializedFields } from '../../load/keymap.js';
 import { getEnvironmentVariables } from '../../utils/environment.js';
-import { EmbedResult } from '../output/provide/embedresult.js';
+import { type EmbedResult } from '../output/provide/index.js';
 import {
   BaseEmbeddings,
-  BaseEmbeddingsCallOptions,
-  BaseEmbeddingsParams,
+  type BaseEmbeddingsCallOptions,
+  type BaseEmbeddingsParams,
 } from './base.js';
 
 /**

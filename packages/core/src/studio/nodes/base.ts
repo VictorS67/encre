@@ -1,42 +1,42 @@
 import {
-  RecordId,
-  SecretFields,
-  SerializedFields,
-  SerializedKeyAlias,
+  type RecordId,
+  type SecretFields,
+  type SerializedFields,
+  type SerializedKeyAlias,
 } from '../../load/keymap.js';
 import {
-  SerializedCallableFields,
-  CallableMap,
-  CallableSequence,
-} from '../../record/callable.js';
+  type SerializedCallableFields,
+  type CallableMap,
+  type CallableSequence,
+} from '../../record/index.js';
 import { isNotNull } from '../../utils/safeTypes.js';
-import { DataFields, DataType } from '../data.js';
-import { NodeProcessInfo } from '../graph.js';
+import { type DataFields, type DataType } from '../data.js';
+import { type NodeProcessInfo } from '../graph.js';
 import {
-  ProcessContext,
-  ProcessInputMap,
-  ProcessOutputMap,
+  type ProcessContext,
+  type ProcessInputMap,
+  type ProcessOutputMap,
   validateProcessDataFromPorts,
 } from '../processor.js';
-import { GuardrailRegistration } from '../registration/guardrails.js';
-import { NodeRegistration } from '../registration/nodes.js';
-import { SerializedNode } from '../serde.js';
-import { UIContext } from '../ui.js';
+import { type GuardrailRegistration } from '../registration/guardrails.js';
+import { type NodeRegistration } from '../registration/nodes.js';
+import { type SerializedNode } from '../serde.js';
+import { type UIContext } from '../ui.js';
 import { coerceToData } from '../utils/coerce.js';
 import {
   displayUIFromDataFields,
   displayUIFromSecretFields,
 } from '../utils/display.js';
 import {
-  CallableNode,
-  NodeBody,
-  NodeConnection,
-  NodeInputPortDef,
-  NodeOutputPortDef,
-  NodePortDef,
-  NodePortFields,
-  NodePortSizes,
-  SerializableNode,
+  type CallableNode,
+  type NodeBody,
+  type NodeConnection,
+  type NodeInputPortDef,
+  type NodeOutputPortDef,
+  type NodePortDef,
+  type NodePortFields,
+  type NodePortSizes,
+  type SerializableNode,
 } from './index.js';
 
 /**

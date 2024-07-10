@@ -1,6 +1,6 @@
-import { BaseRule } from '../../events/inference/validate/guardrails/base.js';
-import { RecordId } from '../../load/keymap.js';
-import { DataType } from '../data.js';
+import { type BaseRule } from '../../events/inference/validate/guardrails/index.js';
+import { type RecordId } from '../../load/keymap.js';
+import { type DataType } from '../data.js';
 
 export interface BaseGuardrail {
   id: RecordId;

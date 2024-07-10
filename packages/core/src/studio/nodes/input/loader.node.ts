@@ -1,26 +1,25 @@
 import {
-  BaseDocLoaderCallOptions,
-  BaseLoader,
-} from '../../../events/input/load/docs/base.js';
-import { Context } from '../../../events/input/load/docs/context.js';
-import { PDFLoader } from '../../../events/input/load/docs/pdf.js';
+  type BaseDocLoaderCallOptions,
+  type BaseLoader,
+  type Context,
+  PDFLoader,
+} from '../../../events/input/load/docs/index.js';
 import { load } from '../../../load/index.js';
-// import {
-//   // globalImportMap,
-//   globalSecretMap,
-// } from '../../../load/registration.js';
-import { getRecordId } from '../../../utils/nanoid.js';
-import { Data, scalarDefaults } from '../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  globalImportMap,
+  globalSecretMap,
+} from '../../../load/registration.js';
+import { getRecordId } from '../../../utils/nanoid.js';
+import { type Data, scalarDefaults } from '../../data.js';
+import {
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../processor.js';
-// import { globalImportMap } from '../../registration/nodes.js';
-import { SerializedNode } from '../../serde.js';
+import { type SerializedNode } from '../../serde.js';
 import { coerceToData } from '../../utils/coerce.js';
 import { CallableNodeImpl } from '../base.js';
-import { CallableNode } from '../index.js';
+import { type CallableNode } from '../index.js';
 
 /**
  * A type alias for a specialized callable node focused on loading operations.
@@ -147,7 +146,11 @@ export class PDFLoaderNodeImpl extends LoaderNodeImpl {
     }
 
     const pdfLoaderStr = JSON.stringify(data);
-    const pdfLoader = await load<PDFLoader>(pdfLoaderStr);
+    const pdfLoader = await load<PDFLoader>(
+      pdfLoaderStr,
+      globalSecretMap,
+      globalImportMap
+    );
 
     return {
       id,

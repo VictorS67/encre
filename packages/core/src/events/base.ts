@@ -1,9 +1,9 @@
-import { SerializedFields } from '../load/keymap.js';
+import { type SerializedFields } from '../load/keymap.js';
 import {
   Callable,
-  CallableConfigFields,
-  CallableConfig,
-} from '../record/callable.js';
+  type CallableConfigFields,
+  type CallableConfig,
+} from '../record/index.js';
 
 /**
  * Extends the CallableConfig to include parameters specific to event handling.

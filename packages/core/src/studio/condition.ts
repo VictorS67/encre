@@ -1,8 +1,8 @@
-import { BaseRuleCollection } from '../events/input/load/rules/base.js';
-import { Callable, CallableConfig } from '../record/callable.js';
+import { BaseRuleCollection } from '../events/input/load/rules/index.js';
+import { Callable, type CallableConfig } from '../record/index.js';
 import {
   globalGuardrailRegistry,
-  GuardrailRegistration,
+  type GuardrailRegistration,
 } from './registration/guardrails.js';
 
 /**

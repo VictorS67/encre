@@ -1,11 +1,11 @@
 import { OpenAI as OpenAIClient } from 'openai';
 
 import {
-  BaseMessage,
-  ContentLike,
+  type BaseMessage,
+  type ContentLike,
   MessageRole,
-} from '../../../../input/load/msgs/base.js';
-import { ChatMessage } from '../../../../input/load/msgs/chat.js';
+  ChatMessage,
+} from '../../../../input/load/msgs/index.js';
 
 /**
  * Determines if a message requires multi-modal handling based on its content. Multi-modal
@@ -292,10 +292,10 @@ export function formatJSONStringInContent(content: string): string {
 
 /**
  * Formats a JSON string representing arguments into a more readable and properly indented string format.
- * This function is useful when you need to display or log the structured arguments in a human-readable 
+ * This function is useful when you need to display or log the structured arguments in a human-readable
  * form, especially for debugging or presentation purposes.
  *
- * The function parses the JSON string to an object, iterates over its properties, and constructs a 
+ * The function parses the JSON string to an object, iterates over its properties, and constructs a
  * formatted string with each property on a new line and indented for clarity.
  *
  * @param args - A JSON string representing the arguments that need formatting.

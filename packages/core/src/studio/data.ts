@@ -1,8 +1,8 @@
-import { Context } from '../events/input/load/docs/context.js';
+import { Context } from '../events/input/load/docs/index.js';
 import {
-  BaseMessageLike,
-} from '../events/input/load/msgs/base.js';
-import { HumanMessage } from '../events/input/load/msgs/human.js';
+  type BaseMessageLike,
+  HumanMessage,
+} from '../events/input/load/msgs/index.js';
 import { exhaustiveTuple } from '../utils/exhuastive.js';
 
 /**

@@ -1,12 +1,12 @@
-import { BaseCache } from '../../cache/base.js';
+import { type BaseCache } from '../../cache/index.js';
 import { MemoryCache } from '../../cache/index.js';
-import { CallableConfig } from '../../record/callable.js';
+import { type CallableConfig } from '../../record/index.js';
 import {
   AsyncCaller,
   type AsyncCallerParams,
 } from '../../utils/asyncCaller.js';
-import { BaseEvent, BaseEventParams } from '../base.js';
-import { EmbedResult } from '../output/provide/embedresult.js';
+import { BaseEvent, type BaseEventParams } from '../base.js';
+import { type EmbedResult } from '../output/provide/index.js';
 
 /**
  * Options for base embeddings call.

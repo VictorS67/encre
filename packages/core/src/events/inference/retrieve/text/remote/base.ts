@@ -3,9 +3,12 @@ import {
   AsyncCaller,
   AsyncCallerParams,
 } from '../../../../../utils/asyncCaller.js';
-import { Context } from '../../../../input/load/docs/context.js';
-import { BaseTextRetriever, BaseTextRetrieverParams } from '../../base.js';
-import { RemoteRetrieverAuth, RemoteRetrieverValues } from './index.js';
+import { type Context } from '../../../../input/load/docs/index.js';
+import { BaseTextRetriever, type BaseTextRetrieverParams } from '../../base.js';
+import {
+  type RemoteRetrieverAuth,
+  type RemoteRetrieverValues,
+} from './index.js';
 
 export interface RemoteRetrieverParams
   extends AsyncCallerParams,

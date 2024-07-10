@@ -1,15 +1,17 @@
 import {
-  BaseChatLM,
-  BaseLMInput,
+  type BaseChatLM,
+  type BaseLMInput,
   isLMInput,
-} from '../../../../events/inference/chat/base.js';
+} from '../../../../events/inference/chat/index.js';
 import { OpenAIChat } from '../../../../events/inference/chat/llms/openai/chat.js';
-import { OpenAIChatCallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
+import { type OpenAIChatCallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
 import { GeminiChat } from '../../../../events/inference/chat/llms/vertexai/gemini/chat.js';
-import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
-import { BaseMessage } from '../../../../events/input/load/msgs/base.js';
-import { LLMResult } from '../../../../events/output/provide/llmresult.js';
-import { ChatGenerationChunk } from '../../../../events/output/provide/message.js';
+import { type GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
+import { type BaseMessage } from '../../../../events/input/load/msgs/index.js';
+import {
+  type LLMResult,
+  type ChatGenerationChunk,
+} from '../../../../events/output/provide/index.js';
 import { load } from '../../../../load/index.js';
 import {
   globalImportMap,
@@ -18,14 +20,14 @@ import {
 import { getRecordId } from '../../../../utils/nanoid.js';
 import { Data } from '../../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../../processor.js';
-import { SerializedNode } from '../../../serde.js';
+import { type SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
-import { CallableNode } from '../../index.js';
+import { type CallableNode } from '../../index.js';
 
 /**
  * A type alias for a specialized callable node focused on chat language model (ChatLM) operations.

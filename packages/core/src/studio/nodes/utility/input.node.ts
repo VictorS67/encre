@@ -1,29 +1,29 @@
 import { load } from '../../../load/index.js';
-import { RecordId } from '../../../load/keymap.js';
+import { type RecordId } from '../../../load/keymap.js';
 import { globalImportMap, globalSecretMap } from '../../../load/registration.js';
 import { getRecordId } from '../../../utils/nanoid.js';
 import { isNotNull } from '../../../utils/safeTypes.js';
 import {
-  DataFields,
-  DataType,
+  type DataFields,
+  type DataType,
   dataTypes,
   getDefaultValue,
 } from '../../data.js';
 import { BaseInput } from '../../input.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../processor.js';
-import { SerializedNode } from '../../serde.js';
+import { type SerializedNode } from '../../serde.js';
 import { displayUIFromDataFields } from '../../utils/display.js';
 import { NodeImpl } from '../base.js';
 import {
-  NodeBody,
-  NodeConnection,
-  NodeInputPortDef,
-  NodePortFields,
-  SerializableNode,
+  type NodeBody,
+  type NodeConnection,
+  type NodeInputPortDef,
+  type NodePortFields,
+  type SerializableNode,
 } from '../index.js';
 
 /**

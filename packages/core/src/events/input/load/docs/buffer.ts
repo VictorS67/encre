@@ -1,6 +1,6 @@
 import { type readFile } from 'node:fs/promises';
 import { BaseLoader } from './base.js';
-import { Context } from './context.js';
+import { type Context } from './context.js';
 
 /**
  * An abstract class that extends `BaseLoader` to specifically handle the loading of documents from buffers.

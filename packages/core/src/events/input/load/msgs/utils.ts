@@ -1,5 +1,5 @@
 import { exhaustiveTuple } from '../../../../utils/exhuastive.js';
-import { BaseMessage, BaseMessageLike, MessageRole } from './base.js';
+import { BaseMessage, type BaseMessageLike, MessageRole } from './base.js';
 import { BotMessage } from './bot.js';
 import { ChatMessage } from './chat.js';
 import { HumanMessage } from './human.js';

@@ -1,13 +1,13 @@
 import { Serializable } from '../../../../load/serializable.js';
-import { CallableLambda } from '../../../../record/callable.js';
+import { CallableLambda } from '../../../../record/index.js';
 import {
   convertLambdaFuncFromStr,
   formatLambdaFuncStr,
   isValidLambdaFunc,
 } from '../../../../record/utils.js';
-import { SerializedRule } from '../../../../studio/serde.js';
+import { type SerializedRule } from '../../../../serde.js';
 import { isRecordStringUnknown } from '../../../../utils/safeTypes.js';
-import { ValidateFunc } from '../index.js';
+import { type ValidateFunc } from '../index.js';
 import { swapVariableNameInDescription, wrapDescription } from '../utils.js';
 
 export type RuleMetadata = {

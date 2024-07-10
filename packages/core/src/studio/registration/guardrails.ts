@@ -1,10 +1,10 @@
-import { GuardrailImpl } from '../guardrails/base.js';
+import { type GuardrailImpl } from '../guardrails/base.js';
 import { ArrayGuardrailImpl } from '../guardrails/data/array.guard.js';
 import { BooleanGuardrailImpl } from '../guardrails/data/boolean.guard.js';
 import { NumberGuardrailImpl } from '../guardrails/data/number.guard.js';
 import { JSONObjectGuardrailImpl } from '../guardrails/data/object.guard.js';
 import { StringGuardrailImpl } from '../guardrails/data/string.guard.js';
-import { Guardrail } from '../guardrails/index.js';
+import { type Guardrail } from '../guardrails/index.js';
 
 type ExtractType<T> = T extends `${infer U}-${any}` ? U : never;
 

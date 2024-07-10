@@ -11,7 +11,7 @@ import {
   CallableMap,
   CallableSequence,
   CallableWithFallbacks,
-} from '../callable.js';
+} from '../index.js';
 
 describe('information stored in serializable', () => {
   interface SimpleCallableParams {

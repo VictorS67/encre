@@ -2,8 +2,8 @@ import { similarity as mlDistanceSimilarity } from 'ml-distance';
 import { maximalMarginalRelevance } from '../../../../utils/math.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
 
-import { Context } from '../docs/context.js';
-import { BaseVectorStore, BaseVectorStoreField } from './base.js';
+import { Context } from '../docs/index.js';
+import { BaseVectorStore, type BaseVectorStoreField } from './base.js';
 
 /**
  * Represents the fields for the MemoryVectorStore which include a list of vectors and a

@@ -1,6 +1,6 @@
-import { RecordId } from '../load/keymap.js';
-import { Serialized } from '../load/serializable.js';
-import { NodePortFields, NodePortSizes } from './nodes/index.js';
+import { type RecordId } from '../load/keymap.js';
+import { type Serialized } from '../load/serializable.js';
+import { type NodePortFields, type NodePortSizes } from './nodes/index.js';
 
 /**
  * Represents a serialized version of a graph, including metadata and details about its nodes.
