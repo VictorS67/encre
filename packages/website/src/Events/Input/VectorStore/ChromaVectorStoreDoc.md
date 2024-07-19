@@ -1,6 +1,6 @@
-## ChromaVectorStore
+## Chroma Vector Store
 
-The ChromaVectorStore class provides an in-memory vector store that integrates with a [Chroma ](https://docs.trychroma.com/) backend service for storing and retrieving vector embeddings associated with content. It supports operations like adding vectors, deleting vectors based on IDs or filters, and conducting similarity and maximal marginal relevance searches.
+The Chroma Vector Store class provides an in-memory vector store that integrates with a [Chroma ](https://docs.trychroma.com/) backend service for storing and retrieving vector embeddings associated with content. It supports operations like adding vectors, deleting vectors based on IDs or filters, and conducting similarity and maximal marginal relevance searches.
 
 
 ---
