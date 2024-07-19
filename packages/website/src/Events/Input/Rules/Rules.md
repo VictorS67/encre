@@ -11,7 +11,7 @@ A collection of rules that can be evaluated together. This provides functionalit
 
 ### Overview
 
-TThe `BaseRuleCollection` class allows for the aggregation and evaluation of multiple rules. It provides a structured way to validate complex sets of input data against a collection of rules, supporting both "and" and "or" logical conjunctions.
+The `BaseRuleCollection` class allows for the aggregation and evaluation of multiple rules. It provides a structured way to validate complex sets of input data against a collection of rules, supporting both "and" and "or" logical conjunctions.
 
 
 ### Usage
@@ -43,3 +43,4 @@ Component parameters:
 | _namespace | string[] | Namespace array indicating the event related to the rule |
 | collection | Record<string, BaseRule | BaseRuleCollection> | A collection of rules, each identified by a string key. The value can be either a BaseRule or another BaseRuleCollection. |
 | conjunction | 'and' \| 'or' | The logical conjunction to use when evaluating the rules in the collection. If 'and', all rules must pass for the collection to pass. If 'or', only one rule must pass for the collection to pass. |
+
