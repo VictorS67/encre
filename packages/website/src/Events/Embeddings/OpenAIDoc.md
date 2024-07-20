@@ -71,5 +71,7 @@ Invoking details:
     <td> <strong>Output variables</strong> </td> 
     <td> The output is an instance of the `EmbedResult` interface, which contains the embedding vector and additional output details. </td>
   </tr>
+
+  
 </table>
 
