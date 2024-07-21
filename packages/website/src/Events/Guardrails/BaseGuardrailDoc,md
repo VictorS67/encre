@@ -1,0 +1,70 @@
+## BaseRule
+
+Use BaseRule to define and validate custom rules with specified logical conjunctions and serialization capabilities.
+
+---
+
+| Reference | Link |
+| --- | --- |
+| Encre Concept | [Serializable ](**-a-link-to-the-corresponding-concept-documentation-**) |
+| Encre Node | [** A reference to the node that uses this component **](**-a-link-to-the-corresponding-node-documentation-**) |
+| API | [** A reference to API Documentation **](**-a-link-to-the-corresponding-api-documentation-**) |
+
+### Overview
+
+The BaseRule component allows you to create custom validation rules with specified logical conjunctions ("and" | "or") and provides methods for serializing and deserializing these rules. This component is particularly beneficial for applications requiring dynamic rule definitions and validations, such as form validations, data integrity checks, and more.
+
+### Usage
+
+Here's an example of how to create `BaseRule` with parameters:
+
+``` typescript
+imort { BaseRule } from '@encre/core';
+
+class NewRule<T = unknown> extends BaseRule<T> {
+      _isSerializable = true;
+
+      static _name(): string {
+        return 'NewRule';
+      }
+
+      _ruleType(): string {
+        return 'unknown';
+      }
+
+      concat<U>(rule: BaseRule<U>, conjunction: 'or' | 'and'): BaseRule<T | U> {
+        return new NewRule<T | U>({
+          description: NewRule._mergeDescription(
+            this as BaseRule,
+            rule as BaseRule,
+            conjunction
+          ),
+          variables: NewRule._mergeVariables(
+            this as BaseRule,
+            rule as BaseRule
+          ),
+          func: NewRule._mergeFunc(
+            this as BaseRule,
+            rule as BaseRule,
+            conjunction
+          ),
+        });
+      }
+    }
+
+    const isStringRule = new NewRule({
+      description: 'is string',
+      func: async (input: unknown) => {
+        return typeof input === 'string';
+      },
+    });
+
+```
+
+Component parameters:
+
+| Parameter | Runtime Type | Description |
+| --- | --- | --- |
+| description | string | Template string used to generate prompts. |
+| variables | Record<string, unknown> | Variables required for the rule. |
+| func | ValidateFunc<T> | A function to validate the input data. |
