@@ -1,8 +1,9 @@
 import React, { FC, memo } from 'react';
 
-import { BaseWire } from './BaseWire';
 import { BezierWireProps, WireProps } from '../../types/wire.type';
 import { getBezierPath } from '../../utils/wires/bezier';
+
+import { BaseWire } from './BaseWire';
 
 export const BezierWire: FC<WireProps<'bezier'>> = memo(
   ({

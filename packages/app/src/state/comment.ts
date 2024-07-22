@@ -1,8 +1,9 @@
 import { atom, DefaultValue, selector, selectorFamily } from 'recoil';
 
-import { graphState } from './graph';
 import { NodeGraph } from '../types/graph.type';
-import { GraphComment } from '../types/studio.type';
+import { GraphComment, RecordId } from '../types/studio.type';
+
+import { graphState } from './graph';
 
 export const commentsState = selector({
   key: 'comments',
@@ -27,19 +28,19 @@ export const commentMapState = selector({
         acc[comment.id] = comment;
         return acc;
       },
-      {} as Record<string, GraphComment>,
+      {} as Record<RecordId, GraphComment>,
     );
   },
 });
 
 export const commentContentMapState = atom<
-  Record<string, GraphComment['visualInfo']['content']>
+  Record<RecordId, GraphComment['visualInfo']['content']>
 >({
   key: 'commentContentMapState',
   default: {},
 });
 
-export const selectingCommentIdsState = atom<string[]>({
+export const selectingCommentIdsState = atom<RecordId[]>({
   key: 'selectingCommentIdsState',
   default: [],
 });
@@ -104,18 +105,18 @@ export const commentColorsState = atom<{
 
 export const commentContentFromCommentIdState = selectorFamily<
   GraphComment['visualInfo']['content'] | undefined,
-  string | undefined
+  RecordId | undefined
 >({
   key: 'commentContentFromCommentIdState',
   get:
-    (commentId: string | undefined) =>
+    (commentId: RecordId | undefined) =>
     ({ get }) => {
       return commentId ? get(commentContentMapState)[commentId] : undefined;
     },
 });
 
 export const updateCommentContentState = selector<{
-  id: string;
+  id: RecordId;
   commentContent: GraphComment['visualInfo']['content'];
 }>({
   key: 'updateCommentContentState',
@@ -126,7 +127,7 @@ export const updateCommentContentState = selector<{
   },
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
-    const id: string = newVal.id;
+    const id: RecordId = newVal.id;
     const commentContent: GraphComment['visualInfo']['content'] =
       newVal.commentContent;
 
@@ -136,7 +137,7 @@ export const updateCommentContentState = selector<{
   },
 });
 
-export const removeCommentContentState = selector<string>({
+export const removeCommentContentState = selector<RecordId>({
   key: 'removeCommentContentState',
   get: ({ get }) => {
     throw new Error(
@@ -146,7 +147,7 @@ export const removeCommentContentState = selector<string>({
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
 
-    const id: string = newVal;
+    const id: RecordId = newVal;
     const currMap = get(commentContentMapState);
 
     if (currMap[id]) {

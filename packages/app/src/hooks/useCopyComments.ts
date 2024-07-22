@@ -16,8 +16,6 @@ export function useCopyComments() {
         : [additionalCommentId]
     ).filter(isNotNull);
 
-    console.log(`copy: commentIds: ${JSON.stringify(commentIds)}`);
-
     setClipboard({
       type: 'comments',
       comments: commentIds.map((id) => commentMap[id]).filter(isNotNull),

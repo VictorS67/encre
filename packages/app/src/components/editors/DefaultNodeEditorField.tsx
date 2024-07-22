@@ -2,11 +2,12 @@ import React, { FC } from 'react';
 
 import { match } from 'ts-pattern';
 
-import { DefaultStringEditor } from './DefaultStringEditor';
 import {
   DefaultNodeEditorProps,
   SyntaxedEditor,
 } from '../../types/editor.type';
+
+import { DefaultStringEditor } from './DefaultStringEditor';
 
 export const DefaultNodeEditorField: FC<
   DefaultNodeEditorProps & { editor: SyntaxedEditor }

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { showContextMenuState } from '../state/contextmenu';
 import { selectingNodeIdsState } from '../state/node';
@@ -115,7 +115,7 @@ export function useContextMenu() {
   };
 
   const handleContextMenu = useCallback(
-    (
+    async (
       event: Pick<
         React.MouseEvent<HTMLDivElement>,
         'clientX' | 'clientY' | 'target'

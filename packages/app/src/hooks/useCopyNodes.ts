@@ -23,12 +23,6 @@ export function useCopyNodes() {
       (c) => nodeIds.includes(c.fromNodeId) && nodeIds.includes(c.toNodeId),
     );
 
-    console.log(
-      `copy: nodeIds: ${JSON.stringify(
-        nodeIds,
-      )}, copiedConnections: ${JSON.stringify(copiedConnections)}`,
-    );
-
     setClipboard({
       type: 'nodes',
       nodes: nodeIds.map((id) => nodeMap[id]).filter(isNotNull),

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { produce } from 'immer';
-import { ErrorBoundary } from 'react-error-boundary';
 import {
   isRecoilValue,
   useRecoilState,
@@ -9,12 +9,13 @@ import {
   useSetRecoilState,
 } from 'recoil';
 
-import { DefaultNodeEditor } from './editors/DefaultNodeEditor';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { editingNodeIdState, nodeMapState, nodesState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import { NodeEditorProps } from '../types/editor.type';
 import { Node } from '../types/studio.type';
+
+import { DefaultNodeEditor } from './editors/DefaultNodeEditor';
 
 export const NodeEditorRenderer: FC = () => {
   const nodeMap = useRecoilValue(nodeMapState);
