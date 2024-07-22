@@ -12,6 +12,7 @@ import {
   globalSecretMap,
 } from '../../../load/registration.js';
 import { getRecordId } from '../../../utils/nanoid.js';
+import { isNotNull } from '../../../utils/safeTypes.js';
 import { scalarDefaults } from '../../data.js';
 import {
   type ProcessInputMap,
@@ -93,7 +94,12 @@ export abstract class MessageNodeImpl extends NodeImpl<MessageNode> {
  *
  * ### Input Ports
  *
- * None
+ * | Port Name   | Supported Types     | Description                                                          |
+ * |-------------|---------------------|----------------------------------------------------------------------|
+ * | `role`      | `string`, `unknown` | If provided, then user inputs a role to the chat message.            |
+ * | `name`      | `string`, `unknown` | If provided, then user inputs a name to the chat message role.       |
+ * | `content`   | `string`, `object`, `unknown` | If provided, then user inputs the chat message content.       |
+ * | `additionalKwargs`   | `object`, `unknown` | If provided, then user inputs the additional metadata to the chat message.       |
  *
  * ### Output Ports
  *
@@ -123,7 +129,12 @@ export class ChatMessageNodeImpl extends MessageNodeImpl {
           height: 500,
         },
       },
-      inputs: {},
+      inputs: {
+        role: ['string', 'unknown'],
+        name: ['string', 'unknown'],
+        content: ['string', 'object', 'unknown'],
+        additionalKwargs: ['object', 'unknown'],
+      },
       outputs: {
         message: 'chat-message',
       },
@@ -186,6 +197,21 @@ export class ChatMessageNodeImpl extends MessageNodeImpl {
       outputSizes,
     };
   }
+
+  async process(
+    inputs: ProcessInputMap | undefined,
+    context: ProcessContext
+  ): Promise<ProcessOutputMap> {
+    // If inputs are presented, then it means user provide the input
+    const filteredInputs = Object.entries(inputs ?? {}).filter(([k, v]) => isNotNull(v));
+    if (filteredInputs.length > 0) {
+      for (const [k, v] of filteredInputs) {
+        (this.data as ChatMessage)[k] = v!.value;
+      }
+    }
+
+    return { message: coerceToData(this.data) };
+  }
 }
 
 /**
@@ -203,7 +229,11 @@ export class ChatMessageNodeImpl extends MessageNodeImpl {
  *
  * ### Input Ports
  *
- * None
+ * | Port Name   | Supported Types     | Description                                                          |
+ * |-------------|---------------------|----------------------------------------------------------------------|
+ * | `name`      | `string`, `unknown` | If provided, then user inputs a name to the chat message role.       |
+ * | `content`   | `string`, `object`, `unknown` | If provided, then user inputs the chat message content.       |
+ * | `additionalKwargs`   | `object`, `unknown` | If provided, then user inputs the additional metadata to the chat message.       |
  *
  * ### Output Ports
  *
@@ -233,7 +263,11 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
           height: 500,
         },
       },
-      inputs: {},
+      inputs: {
+        name: ['string', 'unknown'],
+        content: ['string', 'object', 'unknown'],
+        additionalKwargs: ['object', 'unknown'],
+      },
       outputs: {
         message: 'chat-message',
       },
@@ -293,6 +327,21 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
       outputSizes,
     };
   }
+
+  async process(
+    inputs: ProcessInputMap | undefined,
+    context: ProcessContext
+  ): Promise<ProcessOutputMap> {
+    // If inputs are presented, then it means user provide the input
+    const filteredInputs = Object.entries(inputs ?? {}).filter(([k, v]) => isNotNull(v));
+    if (filteredInputs.length > 0) {
+      for (const [k, v] of filteredInputs) {
+        (this.data as ChatMessage)[k] = v!.value;
+      }
+    }
+
+    return { message: coerceToData(this.data) };
+  }
 }
 
 /**
@@ -310,7 +359,11 @@ export class HumanMessageNodeImpl extends MessageNodeImpl {
  *
  * ### Input Ports
  *
- * None
+ * | Port Name   | Supported Types     | Description                                                          |
+ * |-------------|---------------------|----------------------------------------------------------------------|
+ * | `name`      | `string`, `unknown` | If provided, then user inputs a name to the chat message role.       |
+ * | `content`   | `string`, `object`, `unknown` | If provided, then user inputs the chat message content.       |
+ * | `additionalKwargs`   | `object`, `unknown` | If provided, then user inputs the additional metadata to the chat message.       |
  *
  * ### Output Ports
  *
@@ -340,7 +393,11 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
           height: 500,
         },
       },
-      inputs: {},
+      inputs: {
+        name: ['string', 'unknown'],
+        content: ['string', 'object', 'unknown'],
+        additionalKwargs: ['object', 'unknown'],
+      },
       outputs: {
         message: 'chat-message',
       },
@@ -400,6 +457,21 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
       outputSizes,
     };
   }
+
+  async process(
+    inputs: ProcessInputMap | undefined,
+    context: ProcessContext
+  ): Promise<ProcessOutputMap> {
+    // If inputs are presented, then it means user provide the input
+    const filteredInputs = Object.entries(inputs ?? {}).filter(([k, v]) => isNotNull(v));
+    if (filteredInputs.length > 0) {
+      for (const [k, v] of filteredInputs) {
+        (this.data as ChatMessage)[k] = v!.value;
+      }
+    }
+
+    return { message: coerceToData(this.data) };
+  }
 }
 
 /**
@@ -417,7 +489,11 @@ export class BotMessageNodeImpl extends MessageNodeImpl {
  *
  * ### Input Ports
  *
- * None
+ * | Port Name   | Supported Types     | Description                                                          |
+ * |-------------|---------------------|----------------------------------------------------------------------|
+ * | `name`      | `string`, `unknown` | If provided, then user inputs a name to the chat message role.       |
+ * | `content`   | `string`, `object`, `unknown` | If provided, then user inputs the chat message content.       |
+ * | `additionalKwargs`   | `object`, `unknown` | If provided, then user inputs the additional metadata to the chat message.       |
  *
  * ### Output Ports
  *
@@ -447,7 +523,11 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
           height: 500,
         },
       },
-      inputs: {},
+      inputs: {
+        name: ['string', 'unknown'],
+        content: ['string', 'object', 'unknown'],
+        additionalKwargs: ['object', 'unknown'],
+      },
       outputs: {
         message: 'chat-message',
       },
@@ -509,6 +589,21 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
       outputSizes,
     };
   }
+
+  async process(
+    inputs: ProcessInputMap | undefined,
+    context: ProcessContext
+  ): Promise<ProcessOutputMap> {
+    // If inputs are presented, then it means user provide the input
+    const filteredInputs = Object.entries(inputs ?? {}).filter(([k, v]) => isNotNull(v));
+    if (filteredInputs.length > 0) {
+      for (const [k, v] of filteredInputs) {
+        (this.data as ChatMessage)[k] = v!.value;
+      }
+    }
+
+    return { message: coerceToData(this.data) };
+  }
 }
 
 /**
@@ -526,7 +621,11 @@ export class SystemMessageNodeImpl extends MessageNodeImpl {
  *
  * ### Input Ports
  *
- * None
+ * | Port Name   | Supported Types     | Description                                                          |
+ * |-------------|---------------------|----------------------------------------------------------------------|
+ * | `name`      | `string`, `unknown` | If provided, then user inputs a name to the chat message role.       |
+ * | `content`   | `string`, `object`, `unknown` | If provided, then user inputs the chat message content.       |
+ * | `additionalKwargs`   | `object`, `unknown` | If provided, then user inputs the additional metadata to the chat message.       |
  *
  * ### Output Ports
  *
@@ -540,7 +639,7 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
    * @param serializable - The function message to be serialized into node form.
    * @returns A fully configured MessageNode specialized for function messages.
    */
-  static nodeFrom(serializable: BotMessage): MessageNode {
+  static nodeFrom(serializable: FunctionMessage): MessageNode {
     return {
       id: getRecordId(),
       type: 'message',
@@ -556,7 +655,11 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
           height: 500,
         },
       },
-      inputs: {},
+      inputs: {
+        name: ['string', 'unknown'],
+        content: ['string', 'object', 'unknown'],
+        additionalKwargs: ['object', 'unknown'],
+      },
       outputs: {
         message: 'chat-message',
       },
@@ -620,5 +723,20 @@ export class FunctionMessageNodeImpl extends MessageNodeImpl {
       memory,
       outputSizes,
     };
+  }
+
+  async process(
+    inputs: ProcessInputMap | undefined,
+    context: ProcessContext
+  ): Promise<ProcessOutputMap> {
+    // If inputs are presented, then it means user provide the input
+    const filteredInputs = Object.entries(inputs ?? {}).filter(([k, v]) => isNotNull(v));
+    if (filteredInputs.length > 0) {
+      for (const [k, v] of filteredInputs) {
+        (this.data as ChatMessage)[k] = v!.value;
+      }
+    }
+
+    return { message: coerceToData(this.data) };
   }
 }
