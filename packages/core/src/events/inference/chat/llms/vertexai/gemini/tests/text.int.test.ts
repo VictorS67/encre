@@ -4,12 +4,13 @@ import { expect, test } from '@jest/globals';
 import { HumanMessage } from '../../../../../../input/load/msgs/human.js';
 import { Gemini } from '../text.js';
 
-const GOOGLE_API_KEY = 'you_should_get_this_api_from_google_cloud';
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 
 test('test Gemini simple text', async () => {
   const gemini = new Gemini({
     googleApiKey: GOOGLE_API_KEY,
     modelName: 'gemini-pro',
+    streaming: false,
   });
 
   const llmResult = await gemini.invoke(

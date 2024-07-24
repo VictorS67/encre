@@ -197,12 +197,11 @@ export class SubGraphNodeImpl extends GraphNodeImpl {
       throw new Error(`CANNOT deserialize this type in graph node: ${type}`);
     }
 
-    const { SubGraph } = await import('../../graph.js');
     (data as SerializedConstructor)._kwargs['registry'] = registry?.nodes;
     const subGraphStr = JSON.stringify(data);
     const subGraph = await load<SubGraph>(subGraphStr, globalSecretMap, {
       ...globalImportMap,
-      'studio/graph': SubGraph,
+      'studio/graph': await import('../../graph.js'),
     });
 
     return {

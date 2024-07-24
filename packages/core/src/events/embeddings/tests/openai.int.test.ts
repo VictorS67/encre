@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import { OpenAIEmbeddings } from '../openai';
 
 describe('OpenAIEmbeddings', () => {
-  const OPENAI_API_KEY = 'you_should_get_this_api_from_openai';
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
   test('test text-embedding-ada-002', async () => {
     const openaiEmbeddings = new OpenAIEmbeddings({
