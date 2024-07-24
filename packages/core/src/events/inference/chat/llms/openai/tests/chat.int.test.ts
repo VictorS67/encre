@@ -15,12 +15,12 @@ import {
 } from '../index.js';
 
 describe('OpenAIChat', () => {
-  const OPENAI_API_KEY = 'you_should_get_this_api_from_openai';
+  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
   test('test OpenAIChat text', async () => {
     const openaiChat = new OpenAIChat({
       openAIApiKey: OPENAI_API_KEY,
-      modelName: 'gpt-4-turbo-preview',
+      modelName: 'gpt-4o-mini',
     });
 
     const messages = [new HumanMessage('Hello! Who are you?')];
