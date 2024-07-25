@@ -69,9 +69,9 @@ const globalImportMap: OptionalImportMap = {
 };
 
 const globalSecretMap: SecretMap = {
-  GOOGLE_API_KEY: 'google-secret-placeholder',
-  OPENAI_API_KEY: 'openai-secret-placeholder',
-  OPENAI_ORGANIZATION: 'openai-org-placeholder',
+  // GOOGLE_API_KEY: 'google-secret-placeholder',
+  // OPENAI_API_KEY: 'openai-secret-placeholder',
+  // OPENAI_ORGANIZATION: 'openai-org-placeholder',
 };
 
 export { globalImportMap, globalSecretMap };
