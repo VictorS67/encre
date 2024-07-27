@@ -27,6 +27,7 @@
     "lint:dpdm": "dpdm --skip-dynamic-imports circular --no-warning --no-tree -T src/*.ts src/**/*.ts",
     "lint-fix": "eslint --fix src/*.ts src/**/*.ts",
     "clean": "rimraf build/**",
+    "test:debug": "jest .*.spec.test.ts --testTimeout 50000 --maxWorkers=50%",
     "test": "jest --testPathIgnorePatterns=\\.int\\.test.ts --testTimeout 30000 --maxWorkers=50%"
   },
   "packageManager": "yarn@1.22.21",
@@ -66,14 +67,18 @@
     "@types/object-hash": "^3.0.5",
     "emittery": "^1.0.3",
     "nanoid": "^5.0.2",
-    "p-queue": "^7.4.1",
-    "release-it": "^17.3.0"
+    "p-queue": "^7.4.1"
   },
   "exports": {
     "./api": {
       "types": "./api.d.ts",
       "import": "./api.js",
       "require": "./api.cjs"
+    },
+    "./streaming": {
+      "types": "./streaming.d.ts",
+      "import": "./streaming.js",
+      "require": "./streaming.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -82,6 +87,9 @@
     "api.cjs",
     "api.js",
     "api.d.ts",
+    "streaming.cjs",
+    "streaming.js",
+    "streaming.d.ts",
     "index.cjs",
     "index.js",
     "index.d.ts"

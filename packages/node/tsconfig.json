@@ -47,7 +47,8 @@
   ],
   "typedocOptions": {
     "entryPoints": [
-      "src/api.ts"
+      "src/api.ts",
+      "src/streaming.ts"
     ]
   }
 }
