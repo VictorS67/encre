@@ -17,7 +17,7 @@ import {
 describe('utils', () => {
   test('load graph', async () => {
     const testDir = dirname(fileURLToPath(import.meta.url));
-    const filePath = join(testDir, './Untitled Graph.encre');
+    const filePath = join(testDir, './examples/Untitled Graph.encre');
 
     const graph = await loadGraph(filePath);
 

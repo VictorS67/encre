@@ -13,6 +13,8 @@ import path from "path";
 const entrypoints = {
   // api
   api: "api",
+  // streaming
+  streaming: "streaming",
 };
 
 const deprecatedNodeOnly = [];
