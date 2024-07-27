@@ -19,6 +19,7 @@ export interface Config {
     fileSizeSyncLimitMB: number;
     fileSizeLimitMB: number;
   };
+  encreFilePath?: string;
 }
 
 const projectRoot: string = path.dirname(fileURLToPath(import.meta.url));
@@ -50,7 +51,14 @@ if (process.env.ENCRE_CONFIG_PATH) {
 let defaultConfig: Omit<Config, 'mode'> = {
   port: 5127,
   hostname: '::',
-  webRoot: path.join(projectRoot, '..', 'node_modules', '@encrejs', 'app', 'build'),
+  webRoot: path.join(
+    projectRoot,
+    '..',
+    'node_modules',
+    '@encrejs',
+    'app',
+    'build'
+  ),
   upload: {
     fileSizeSyncLimitMB: 20,
     fileSizeLimitMB: 20,
@@ -101,6 +109,7 @@ const finalConfig: Config = {
             config.upload!.fileSizeLimitMB,
         }
       : config.upload,
+  encreFilePath: process.env.ENCRE_FILE_PATH,
 };
 
 export default finalConfig;
