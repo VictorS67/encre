@@ -12,7 +12,7 @@ import { useRecoilState } from 'recoil';
 import { useStableCallback } from '../../hooks/useStableCallback';
 import { editingCodeIdState } from '../../state/editor';
 import { editingNodeIdState } from '../../state/node';
-import { Node, UIContext } from '../../types/studio.type';
+import { CodeUIContext, Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { fakeId } from '../../utils/fakeId';
 import { LazyCodeEditor, LazySyntaxedText } from '../LazyComponents';
@@ -23,7 +23,7 @@ export const CodeNodeContentBody: FC<
     node: Node;
     id: string;
     onEditClick?: (node: Node, editingId: string) => void;
-  } & Extract<UIContext, { type: 'code' }>
+  } & CodeUIContext
 > = memo(
   ({
     node,

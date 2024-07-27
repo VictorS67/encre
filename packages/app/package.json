@@ -53,11 +53,11 @@
     "eslint-plugin-n": "^16.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-promise": "^6.1.1",
-    "stream-browserify": "^3.0.0",
     "prettier": "^3.0.3",
     "react-scripts": "5.0.1",
     "recoil-persist": "^5.1.0",
     "rollup-plugin-visualizer": "^5.12.0",
+    "stream-browserify": "^3.0.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.11",
     "vite-plugin-pwa": "^0.20.0",
@@ -102,7 +102,7 @@
     "yaml": "^2.3.2"
   },
   "scripts": {
-    "start": "cross-env PORT=3001 vite",
+    "start": "cross-env PORT=3002 vite",
     "start:browser": "cross-env ./bin/watch-browser",
     "watch": "cross-env BROWSER=none yarn start",
     "build": "vite build",
