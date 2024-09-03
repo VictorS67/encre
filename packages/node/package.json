@@ -70,6 +70,11 @@
     "p-queue": "^7.4.1"
   },
   "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "require": "./index.cjs"
+    },
     "./api": {
       "types": "./api.d.ts",
       "import": "./api.js",
