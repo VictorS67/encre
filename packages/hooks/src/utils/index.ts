@@ -1,0 +1,1 @@
+export { coerceEncreData } from './coerce';
