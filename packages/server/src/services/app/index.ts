@@ -49,9 +49,25 @@ async function* run(
 
     const processor = _getProcessor(graph, options);
 
-    for await (const chunk of processor.sseStream(filter ?? {})) {
-      yield chunk;
+    const defaultFilter: ProcessStreamEventFilter = {
+      nodeStart: true,
+      nodeFinish: true,
+      error: true,
+      done: true,
+    };
+
+    const runPromise = processor.run();
+
+    const decoder = new TextDecoder('utf-8');
+    for await (const chunk of processor.sseStream(filter ?? defaultFilter)) {
+      const text = decoder.decode(chunk, { stream: true });
+
+      console.log(`sse: ${text}`);
+
+      yield text;
     }
+
+    await runPromise;
   } catch (error) {
     throw new InternalError(
       StatusCodes.INTERNAL_SERVER_ERROR,

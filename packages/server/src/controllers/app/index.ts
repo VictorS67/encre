@@ -37,6 +37,8 @@ const run = async (req: Request, res: Response, next: NextFunction) => {
         ...JSON.parse(data),
       };
 
+      console.log(`chunkData: ${JSON.stringify(chunkData)}`);
+
       res.write(`data: ${JSON.stringify(chunkData)}\n\n`);
     }
 
