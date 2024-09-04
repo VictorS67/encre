@@ -37,7 +37,7 @@
     "swc-loader": "^0.2.6",
     "typescript": "^5.0.2",
     "typescript-strict-plugin": "^2.2.2-beta.2",
-    "webpack": "^5.90.0",
+    "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
