@@ -170,7 +170,7 @@ function partitionDataGroup(
     const [key, data] = dataGrp[i];
 
     // skip if data is undefined
-    if (!data || !data.value) continue;
+    if (!data) continue;
 
     // if currGrp is empty or current element is of the same type as the previous one
     // (here we only care about whether the element can be displayed in the same UI (e.g.

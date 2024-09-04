@@ -1,4 +1,6 @@
-import { type Serializable } from '../../load/serializable.js';
+import { load } from '../../load/index.js';
+import { globalImportMap, globalSecretMap } from '../../load/registration.js';
+import { Serializable } from '../../load/serializable.js';
 import { type NodeImpl } from '../nodes/base.js';
 import { type SerializableNode } from '../nodes/index.js';
 import {
@@ -286,6 +288,40 @@ export class NodeRegistration<
   }
 
   /**
+   * Instantiates a node implementation for a given node object. The serializable data is re-loaded everytime.
+   *
+   * @param node The node instance to create an implementation for.
+   * @returns A new node implementation instance.
+   * @throws an error if the node's type-subtype pair is unknown.
+   */
+  async createLoadImpl<T extends Nodes>(node: T): Promise<NodeImpl<T>> {
+    const key = [node.type, node.subType].join('-');
+
+    const nodeImpl = this.info[key] as {
+      impl: NodeImplConstructor<
+        Extract<Nodes, { type: T['type']; subType: T['subType'] }>
+      >;
+    };
+
+    if (!nodeImpl) {
+      throw new Error(`Unknown node type pair: ${key}`);
+    }
+
+    const { impl: Impl } = nodeImpl;
+
+    const data = await load<Serializable>(JSON.stringify(node.data), globalSecretMap, globalImportMap);
+    node.data = data;
+
+    const newNodeImpl = new Impl(node as any) as unknown as NodeImpl<T>;
+
+    if (!newNodeImpl) {
+      throw new Error(`Unknown node type pair: ${key}`);
+    }
+
+    return newNodeImpl;
+  }
+
+  /**
    * Dynamically creates an instance of a node based on the specified type and subtype.
    * This method allows for node creation using dynamic type information, which is useful in scenarios where node types and subtypes are determined at runtime.
    * @param type The type of the node to create.
@@ -348,6 +384,35 @@ export class NodeRegistration<
         `createDynamicImpl: Unknown node - type: ${type}, subType: ${subType}`
       );
     }
+
+    const newNodeImpl = new implClass.impl(node);
+    if (!newNodeImpl) {
+      throw new Error(
+        `createDynamicImpl: Unknown node - type: ${type}, subType: ${subType}`
+      );
+    }
+
+    return newNodeImpl;
+  }
+
+  /**
+   * Creates a node implementation dynamically based on the type and subtype of the node. The serializable data is re-loaded everytime.
+   * This method is used to instantiate node implementations that are needed for node processing but are determined dynamically based on node data.
+   * @param node The node for which the implementation needs to be created.
+   * @throws An error if no implementation is registered for the node's type and subtype.
+   * @returns An instance of `NodeImpl` for the given node, enabling further interaction and processing.
+   */
+  async createDynamicLoadImpl(node: SerializableNode): Promise<NodeImpl<SerializableNode>> {
+    const { type, subType } = node;
+    const implClass = this.dynamicImplsMap[`${type}-${subType}`];
+    if (!implClass) {
+      throw new Error(
+        `createDynamicImpl: Unknown node - type: ${type}, subType: ${subType}`
+      );
+    }
+
+    const data = await load<Serializable>(JSON.stringify(node.data), globalSecretMap, globalImportMap);
+    node.data = data;
 
     const newNodeImpl = new implClass.impl(node);
     if (!newNodeImpl) {

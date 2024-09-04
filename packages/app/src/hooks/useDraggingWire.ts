@@ -3,7 +3,11 @@ import React, { useCallback, useEffect } from 'react';
 import { useLatest } from 'ahooks';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { nodeIODefState, nodeMapState } from '../state/node';
+import {
+  nodeIODefState,
+  nodeMapState,
+  updateNodeIODefState,
+} from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import {
   draggingWireClosestPortState,
@@ -52,6 +56,7 @@ export const useDraggingWire = (
   const wireDataMap = useRecoilValue(wireDataMapState);
   const updateWireData = useSetRecoilState(updateWireDataState);
   const removeWireData = useSetRecoilState(removeWireDataState);
+  const updateNodeIODef = useSetRecoilState(updateNodeIODefState);
 
   const isDragging = !!draggingWire;
 

@@ -6,9 +6,10 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { css, Fade } from '@mui/material';
 import clsx from 'clsx';
 
-import { Icon } from './Icon';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { BaseModalProps, ModalProps } from '../types/modal.type';
+
+import { Icon } from './Icon';
 
 const ModalContent = styled.div`
   text-align: start;

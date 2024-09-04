@@ -1,8 +1,9 @@
 import React, { FC, memo } from 'react';
 
-import { BaseWire } from './BaseWire';
 import { SmoothStepWireProps, WireProps } from '../../types/wire.type';
 import { getStepPath } from '../../utils/wires/step';
+
+import { BaseWire } from './BaseWire';
 
 export const SmoothStepWire: FC<WireProps<'smooth-step'>> = memo(
   ({

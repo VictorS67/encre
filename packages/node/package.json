@@ -1,6 +1,6 @@
 {
   "name": "@encrejs/api",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "engines": {
     "node": ">=20"
   },
@@ -27,6 +27,7 @@
     "lint:dpdm": "dpdm --skip-dynamic-imports circular --no-warning --no-tree -T src/*.ts src/**/*.ts",
     "lint-fix": "eslint --fix src/*.ts src/**/*.ts",
     "clean": "rimraf build/**",
+    "test:debug": "jest .*.spec.test.ts --testTimeout 50000 --maxWorkers=50%",
     "test": "jest --testPathIgnorePatterns=\\.int\\.test.ts --testTimeout 30000 --maxWorkers=50%"
   },
   "packageManager": "yarn@1.22.21",
@@ -43,7 +44,7 @@
     "babel-jest": "^29.7.0",
     "dotenv": "^16.4.5",
     "dpdm": "^3.12.0",
-    "eslint": "8.48.0",
+    "eslint": "^8.49.0",
     "eslint-cjs-to-esm": "^2.2.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard-with-typescript": "^39.0.0",
@@ -62,18 +63,22 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@encrejs/core": "workspace:^",
+    "@encrejs/core": "^0.0.6",
     "@types/object-hash": "^3.0.5",
     "emittery": "^1.0.3",
     "nanoid": "^5.0.2",
-    "p-queue": "^7.4.1",
-    "release-it": "^17.3.0"
+    "p-queue": "^7.4.1"
   },
   "exports": {
     "./api": {
       "types": "./api.d.ts",
       "import": "./api.js",
       "require": "./api.cjs"
+    },
+    "./streaming": {
+      "types": "./streaming.d.ts",
+      "import": "./streaming.js",
+      "require": "./streaming.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -82,6 +87,9 @@
     "api.cjs",
     "api.js",
     "api.d.ts",
+    "streaming.cjs",
+    "streaming.js",
+    "streaming.d.ts",
     "index.cjs",
     "index.js",
     "index.d.ts"

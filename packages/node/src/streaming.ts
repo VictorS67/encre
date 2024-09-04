@@ -136,6 +136,7 @@ export function getNodeStream(
         for await (const event of getProcessorEvents(processor, {
           nodeFinish: [nodeIdOrTitle],
         })) {
+          // TODO: add for partial output from node processing result
           if (
             event.type === 'nodeFinish' &&
             (event.nodeId === nodeIdOrTitle ||

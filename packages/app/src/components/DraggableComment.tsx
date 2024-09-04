@@ -1,14 +1,15 @@
 import React, { FC, useEffect, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { useDraggable } from '@dnd-kit/core';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
-import { VisualComment } from './VisualComment';
 import { useRandomColor } from '../hooks/useRandomColor';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { isOnlyDraggingCanvasState } from '../state/canvas';
 import { DraggableCommentProps } from '../types/comment.type';
+
+import { VisualComment } from './VisualComment';
 
 export const DraggableComment: FC<DraggableCommentProps> = ({
   comment,

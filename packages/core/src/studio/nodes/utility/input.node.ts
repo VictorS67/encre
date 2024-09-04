@@ -180,9 +180,11 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
       const node: SerializableNode = nodeMap[c.fromNodeId];
       const possibleType = node.outputs?.[c.fromPortName];
 
-      const possibleTypes: DataType[] = Array.isArray(possibleType)
-        ? possibleType
-        : [possibleType];
+      const possibleTypes: DataType[] = possibleType 
+        ? Array.isArray(possibleType)
+          ? possibleType
+          : [possibleType] 
+        : [];
 
       if (portName in ports) {
         const dataTypes = Array.isArray(ports[portName])
@@ -228,15 +230,17 @@ export class InputNodeImpl extends NodeImpl<InputNode> {
    * @returns A map of process outputs keyed by their output port names.
    */
   async process(
-    inputs: ProcessInputMap,
+    inputs: ProcessInputMap | undefined,
     context: ProcessContext
   ): Promise<ProcessOutputMap> {
+    const _inputs = inputs ?? {};
+
     // If inputs are presented, then it means user provide the input
-    if (Object.keys(inputs).length > 0) {
+    if (Object.keys(_inputs).length > 0) {
       const userInput: DataFields = {};
 
       for (const k of this.data.variables) {
-        userInput[k] = inputs[k];
+        userInput[k] = _inputs[k];
       }
 
       this.data.data = userInput;

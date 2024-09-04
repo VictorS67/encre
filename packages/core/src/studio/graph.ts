@@ -228,6 +228,10 @@ export abstract class BaseGraph extends Serializable implements NodeGraph {
     this.graphOutputNameMap = outputNameMap;
     this.graphEndNodeIds = endNodeIds;
 
+    this._loadLookUpTables();
+  }
+
+  private _loadLookUpTables(): void {
     // Create nodeImpl-map and node-map for future lookup
     for (const node of this.flattenNodes) {
       this.nodeMap[node.id] = node;

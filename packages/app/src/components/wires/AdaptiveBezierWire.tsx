@@ -1,8 +1,9 @@
 import React, { FC, memo } from 'react';
 
-import { BaseWire } from './BaseWire';
 import { AdaptiveBezierWireProps, WireProps } from '../../types/wire.type';
 import { getAdaptiveBezierPath } from '../../utils/wires/adaptiveBezier';
+
+import { BaseWire } from './BaseWire';
 
 export const AdaptiveBezierWire: FC<WireProps<'adaptive-bezier'>> = memo(
   ({

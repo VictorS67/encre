@@ -1,6 +1,14 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { nodeMapState, nodesState, selectingNodeIdsState } from '../state/node';
+import {
+  nodeBodyMapState,
+  nodeIODefState,
+  nodeMapState,
+  nodesState,
+  selectingNodeIdsState,
+  updateNodeBodyState,
+  updateNodeIODefState,
+} from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import {
   RecordId,
@@ -16,7 +24,11 @@ import { isNotNull } from '../utils/safeTypes';
 export function useDuplicateNodes() {
   const nodes = useRecoilValue(nodesState);
   const nodeMap = useRecoilValue(nodeMapState);
+  const nodeIODef = useRecoilValue(nodeIODefState);
+  const nodeBodyMap = useRecoilValue(nodeBodyMapState);
   const setNodes = useSetRecoilState(nodesState);
+  const updateNodeBody = useSetRecoilState(updateNodeBodyState);
+  const updateNodeIODef = useSetRecoilState(updateNodeIODefState);
   const [connections, setConnections] = useRecoilState(connectionsState);
   const [selectingNodeIds, setSelectingNodeIds] = useRecoilState(
     selectingNodeIdsState,
@@ -43,8 +55,17 @@ export function useDuplicateNodes() {
         const newNodeId: RecordId = fakeId(17) as RecordId;
         oldNewNodeIdMap[nId] = newNodeId;
 
-        const newNode: Node = node;
+        const newNode: Node = JSON.parse(JSON.stringify(node));
+
         newNode.id = newNodeId;
+        newNode.visualInfo.position = {
+          ...newNode.visualInfo.position,
+          x: newNode.visualInfo.position.x + 30,
+          y: newNode.visualInfo.position.y + 30,
+        };
+
+        updateNodeBody({ id: newNodeId, nodeBody: nodeBodyMap[nId] });
+        updateNodeIODef({ id: newNodeId, io: nodeIODef[nId] });
 
         return newNode;
       })

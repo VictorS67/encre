@@ -1,10 +1,11 @@
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { useCanvasPosition } from './useCanvasPosition';
 import { clipboardState } from '../state/clipboard';
 import { commentsState, selectingCommentIdsState } from '../state/comment';
 import { fakeId } from '../utils/fakeId';
+
+import { useCanvasPosition } from './useCanvasPosition';
 
 export function usePasteComments() {
   const clipboard = useRecoilValue(clipboardState);
@@ -17,10 +18,6 @@ export function usePasteComments() {
     if (clipboard?.type !== 'comments') {
       return;
     }
-
-    console.log(
-      `paste: clipboard: comments: ${JSON.stringify(clipboard.comments)}`,
-    );
 
     const canvasPosition = clientToCanvasPosition(
       mousePosition.x,
@@ -72,8 +69,6 @@ export function usePasteComments() {
           (comment.visualInfo.position.y - boundingBoxOfCopiedComments.minY);
       });
     });
-
-    console.log(`paste: newComments: ${JSON.stringify(newComments)}`);
 
     setComments((ns) => [...ns, ...newComments]);
     setSelectingCommentIds(newComments.map((comment) => comment.id));
