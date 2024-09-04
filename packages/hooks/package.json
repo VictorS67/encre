@@ -2,7 +2,7 @@
   "name": "@encrejs/hooks",
   "version": "0.0.0",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=20.0.0"
   },
   "author": "Encre",
   "license": "MIT",
@@ -79,6 +79,7 @@
     "clean": "rimraf '{lib,es,dist}'",
     "build": "gulp && webpack-cli",
     "lint": "eslint src/*.ts src/**/*.ts",
-    "lint-fix": "eslint --fix src/*.ts src/**/*.ts"
+    "lint-fix": "eslint --fix src/*.ts src/**/*.ts",
+    "test": "cross-env NODE_ENV=test jest"
   }
 }

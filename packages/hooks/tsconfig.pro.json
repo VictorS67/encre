@@ -5,8 +5,7 @@
     "lib",
     "es",
     "dist",
-    "**/__tests__",
-    "**/__test__",
+    "**/tests",
     "**/demo",
     "example",
     "gulpfile.js"
