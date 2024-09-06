@@ -1,20 +1,24 @@
 import { match } from 'ts-pattern';
-import { Context } from '../../events/input/load/docs/context.js';
+import { Context } from '../../events/input/load/docs/index.js';
 import {
-  BaseMessageLike,
-} from '../../events/input/load/msgs/base.js';
-import { HumanMessage } from '../../events/input/load/msgs/human.js';
-import { checkMessageRole, convertMessageLikeToMessage, isMessageLike } from '../../events/input/load/msgs/utils.js';
+  type BaseMessageLike,
+  HumanMessage,
+} from '../../events/input/load/msgs/index.js';
+import {
+  checkMessageRole,
+  convertMessageLikeToMessage,
+  isMessageLike,
+} from '../../events/input/load/msgs/utils.js';
 import {
   isSerializedMessage,
   mapSerializedMessageToChatMessage,
-} from '../../events/output/provide/message.js';
+} from '../../events/output/provide/index.js';
 import {
-  Data,
-  DataType,
-  ScalarData,
-  ScalarDataType,
-  ValueOf,
+  type Data,
+  type DataType,
+  type ScalarData,
+  type ScalarDataType,
+  type ValueOf,
   getScalarTypeOf,
   isArrayData,
   isArrayDataType,
@@ -22,6 +26,22 @@ import {
   toArrayFromScalar,
 } from '../data.js';
 
+/**
+ * Converts a value of unknown type into a structured `Data` type, which categorizes the value by a
+ * recognizable type tag for further processing or validation. This function helps in standardizing
+ * various input types into a predictable format that can be processed uniformly.
+ *
+ * @param value The input value of unknown type.
+ * @returns A `Data` object categorized by type.
+ *
+ * @example
+ * ```typescript
+ * const input = "example string";
+ * const structuredData = coerceToData(input);
+ * console.log(structuredData);
+ * // Outputs: { type: 'string', value: 'example string' }
+ * ```
+ */
 export function coerceToData(value: unknown): Data {
   const getScalarData = (value: unknown): ScalarData => {
     if (value === undefined) {
@@ -74,7 +94,10 @@ export function coerceToData(value: unknown): Data {
     }
 
     if (
-      value.every((item) => getScalarData(item)['type'] === getScalarData(value[0])['type'])
+      value.every(
+        (item) =>
+          getScalarData(item)['type'] === getScalarData(value[0])['type']
+      )
     ) {
       const scalarType: ScalarDataType = getScalarData(value[0])['type'];
 
@@ -87,6 +110,22 @@ export function coerceToData(value: unknown): Data {
   return getScalarData(value);
 }
 
+/**
+ * Attempts to convert a `Data` object to a specified type, optionally returning the coerced
+ * value or `undefined` if the coercion is not possible. This allows for type-safe operations
+ * across various data structures.
+ *
+ * @param data The `Data` object to be coerced.
+ * @param type The target `DataType` to convert to.
+ * @returns A promise that resolves to the coerced value or `undefined`.
+ *
+ * @example
+ * ```typescript
+ * const data = { type: 'number', value: 123 };
+ * const coercedString = await coerceTypeOptional(data, 'string');
+ * console.log(coercedString); // Outputs: '123'
+ * ```
+ */
 export async function coerceTypeOptional<T extends DataType>(
   data: Data | undefined,
   type: T
@@ -120,7 +159,7 @@ export async function coerceTypeOptional<T extends DataType>(
     .with('string', () => coerceToString(data))
     .with('boolean', () => coerceToBoolean(data))
     .with('number', () => coerceToNumber(data))
-    .with('context', () => coerceToContext(data)) // message, 
+    .with('context', () => coerceToContext(data)) // message,
     .with('chat-message', () => coerceToChatMessage(data))
     .with('object', () => coerceToJSONObject(data))
     .with('blob', () => coerceToBlob(data))
@@ -142,6 +181,22 @@ export async function coerceTypeOptional<T extends DataType>(
   return result as ValueOf<T>['value'] | undefined;
 }
 
+/**
+ * Strictly expects the `Data` object to match a specified type and returns the value if it matches,
+ * otherwise returns `undefined`. This is useful for validation scenarios where the data must match
+ * a specific format.
+ *
+ * @param data The `Data` object to validate.
+ * @param type The `DataType` expected.
+ * @returns A promise that resolves to the expected value or `undefined`.
+ *
+ * @example
+ * ```typescript
+ * const data = { type: 'number', value: 456 };
+ * const number = await expectTypeOptional(data, 'number');
+ * console.log(number); // Outputs: 456
+ * ```
+ */
 export async function expectTypeOptional<T extends DataType>(
   data: Data | undefined,
   type: T
@@ -162,10 +217,7 @@ export async function expectTypeOptional<T extends DataType>(
     return data.value as ValueOf<T>['value'] | undefined;
   }
 
-  if (
-    type === 'unknown[]' &&
-    isArrayData(data)
-  ) {
+  if (type === 'unknown[]' && isArrayData(data)) {
     return data.value as ValueOf<T>['value'] | undefined;
   }
 
@@ -179,7 +231,8 @@ export async function expectTypeOptional<T extends DataType>(
 async function coerceToString(
   data: Data | undefined
 ): Promise<string | undefined> {
-  if (!data || data.value===undefined || data.value===null) return undefined;
+  if (!data || data.value === undefined || data.value === null)
+    return undefined;
 
   if (isArrayData(data)) {
     return Promise.all(
@@ -235,7 +288,8 @@ async function coerceToString(
 async function coerceToBoolean(
   data: Data | undefined
 ): Promise<boolean | undefined> {
-  if (!data || data.value===undefined || data.value===null) return undefined;
+  if (!data || data.value === undefined || data.value === null)
+    return undefined;
 
   if (isArrayData(data)) {
     return Promise.all(
@@ -261,7 +315,8 @@ async function coerceToBoolean(
 
   if (data.type === 'context') {
     return (
-      data.value.pageContent.length > 0 && data.value.pageContent.toLowerCase() !== 'false'
+      data.value.pageContent.length > 0 &&
+      data.value.pageContent.toLowerCase() !== 'false'
     );
   }
 
@@ -286,7 +341,8 @@ async function coerceToBoolean(
 async function coerceToNumber(
   data: Data | undefined
 ): Promise<number | undefined> {
-  if (!data || data.value===undefined || data.value===null) return undefined;
+  if (!data || data.value === undefined || data.value === null)
+    return undefined;
 
   // Array of Data cannot be merged into one number Data.
   if (isArrayData(data)) {
@@ -299,7 +355,7 @@ async function coerceToNumber(
       return undefined;
     }
     return fl;
-  } 
+  }
 
   if (data.type === 'string') return helpParseFloat(data.value);
 
@@ -343,18 +399,22 @@ async function coerceToNumber(
 async function coerceToContext(
   data: Data | undefined
 ): Promise<Context | undefined> {
-  if (!data || data.value===undefined || data.value===null) return undefined;
+  if (!data || data.value === undefined || data.value === null)
+    return undefined;
 
   // Array of Data cannot be merged into one context Data.
   if (isArrayData(data)) {
     return undefined;
-  } 
+  }
 
-  if (data.type === 'string') return new Context({ pageContent: data.value.toString() });
+  if (data.type === 'string')
+    return new Context({ pageContent: data.value.toString() });
 
-  if (data.type === 'boolean') return new Context({ pageContent: data.value.toString() });
+  if (data.type === 'boolean')
+    return new Context({ pageContent: data.value.toString() });
 
-  if (data.type === 'number') return new Context({ pageContent: data.value.toString() });
+  if (data.type === 'number')
+    return new Context({ pageContent: data.value.toString() });
 
   if (data.type === 'context') return data.value;
 
@@ -362,17 +422,15 @@ async function coerceToContext(
 
   if (
     data.type === 'object' &&
-    'pageContent' in data.value && 
-    typeof data.value.pageContent==='string'
+    'pageContent' in data.value &&
+    typeof data.value.pageContent === 'string'
   ) {
-    if (
-      'metadata' in data.value && 
-      typeof data.value.metadata==='object'
-    ) {
-      return new Context({ pageContent: data.value.pageContent, metadata: data.value.metadata as Record<string, unknown> });
-    } else if (
-      !('metadata' in data.value)
-    ) {
+    if ('metadata' in data.value && typeof data.value.metadata === 'object') {
+      return new Context({
+        pageContent: data.value.pageContent,
+        metadata: data.value.metadata as Record<string, unknown>,
+      });
+    } else if (!('metadata' in data.value)) {
       return new Context({ pageContent: data.value.pageContent });
     }
   } // if pageContent, metadata exist and pageContent is string and metadata(optional/json object)
@@ -388,7 +446,8 @@ async function coerceToContext(
 async function coerceToChatMessage(
   data: Data | undefined
 ): Promise<BaseMessageLike | undefined> {
-  if (!data || data.value===undefined || data.value===null) return undefined;
+  if (!data || data.value === undefined || data.value === null)
+    return undefined;
 
   // Array of Data cannot be merged into one chat-message Data.
   if (isArrayData(data)) {
@@ -404,7 +463,8 @@ async function coerceToChatMessage(
   if (data.type === 'context') return new HumanMessage(data.value.pageContent);
 
   // if (data.type === 'chat-message') return data.value;
-  if (data.type === 'chat-message') return convertMessageLikeToMessage(data.value);
+  if (data.type === 'chat-message')
+    return convertMessageLikeToMessage(data.value);
 
   if (
     data.type === 'object' &&

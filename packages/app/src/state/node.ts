@@ -1,19 +1,19 @@
 import { DefaultValue, atom, selector, selectorFamily } from 'recoil';
 
-import { graphState } from './graph';
-import { connectionMapState } from './nodeconnection';
 import { NodeGraph } from '../types/graph.type';
 import { NodeVisualContentData } from '../types/node.type';
 import {
+  RecordId,
   CommentVisualInfo,
-  GraphComment,
   Node,
-  NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
+  UIContext,
 } from '../types/studio.type';
 
-export const nodesState = selector({
+import { graphState } from './graph';
+
+export const nodesState = selector<Node[]>({
   key: 'nodes',
   get: ({ get }) => {
     return get(graphState).nodes;
@@ -28,7 +28,7 @@ export const nodesState = selector({
   },
 });
 
-export const nodeMapState = selector({
+export const nodeMapState = selector<Record<RecordId, Node>>({
   key: 'nodeMapState',
   get: ({ get }) => {
     return get(nodesState).reduce(
@@ -36,29 +36,88 @@ export const nodeMapState = selector({
         acc[node.id] = node;
         return acc;
       },
-      {} as Record<string, Node>,
+      {} as Record<RecordId, Node>,
     );
   },
 });
 
+export const nodeBodyMapState = atom<Record<RecordId, UIContext[]>>({
+  key: 'nodeBodyMapState',
+  default: {},
+});
+
+export const nodeBodyFromNodeIdState = selectorFamily<
+  UIContext[] | undefined,
+  RecordId | undefined
+>({
+  key: 'nodeBodyFromNodeIdState',
+  get:
+    (nodeId: RecordId | undefined) =>
+    ({ get }) => {
+      return nodeId ? get(nodeBodyMapState)[nodeId] : undefined;
+    },
+});
+
+export const updateNodeBodyState = selector<{
+  id: RecordId;
+  nodeBody: UIContext[];
+}>({
+  key: 'updateNodeBodyState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateNodeBodyState should only be used to update nodeBody map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+    const id: RecordId = newVal.id;
+    const nodeBody: UIContext[] = newVal.nodeBody;
+
+    const currMap = get(nodeBodyMapState);
+    const updatedMap = { ...currMap, [id]: nodeBody };
+    set(nodeBodyMapState, updatedMap);
+  },
+});
+
+export const removeNodeBodyState = selector<RecordId>({
+  key: 'removeNodeBodyState',
+  get: ({ get }) => {
+    throw new Error(
+      'removeNodeBodyState should only be used to remove body from nodeBody map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+
+    const id: RecordId = newVal;
+    const currMap = get(nodeBodyMapState);
+
+    if (currMap[id]) {
+      const updatedMap = { ...currMap };
+      delete updatedMap[id];
+      set(nodeBodyMapState, updatedMap);
+    }
+  },
+});
+
 export const nodeVisualContentDataMapState = atom<
-  Record<string, NodeVisualContentData>
+  Record<RecordId, NodeVisualContentData>
 >({
   key: 'nodeVisualContentDataMapState',
   default: {},
 });
 
-export const selectingNodeIdsState = atom<string[]>({
+export const selectingNodeIdsState = atom<RecordId[]>({
   key: 'selectingNodeIdsState',
   default: [],
 });
 
-export const editingNodeIdState = atom<string | undefined>({
+export const editingNodeIdState = atom<RecordId | undefined>({
   key: 'selectingNodeIdState',
   default: undefined,
 });
 
-export const hoveringNodeIdState = atom<string | undefined>({
+export const hoveringNodeIdState = atom<RecordId | undefined>({
   key: 'hoveringNodeIdState',
   default: undefined,
 });
@@ -73,27 +132,27 @@ export const draggingNodesInCommentsState = atom<Node[]>({
   default: [],
 });
 
-export const pinningNodeIdsState = atom<string[]>({
+export const pinningNodeIdsState = atom<RecordId[]>({
   key: 'pinningNodeIdsState',
   default: [],
 });
 
-export const collapsingNodeIdsState = atom<string[]>({
+export const collapsingNodeIdsState = atom<RecordId[]>({
   key: 'collapsingNodeIdsState',
   default: [],
 });
 
-export const isPinnedState = selectorFamily<boolean, string>({
+export const isPinnedState = selectorFamily<boolean, RecordId>({
   key: 'isPinnedState',
   get:
-    (nodeId: string) =>
+    (nodeId: RecordId) =>
     ({ get }) =>
       get(pinningNodeIdsState).includes(nodeId),
 });
 
-export const nodeIODefState = selector<
+export const nodeIODefState = atom<
   Record<
-    string,
+    RecordId,
     {
       inputDefs: NodeInputPortDef[];
       outputDefs: NodeOutputPortDef[];
@@ -101,59 +160,73 @@ export const nodeIODefState = selector<
   >
 >({
   key: 'nodeIODefState',
-  get: ({ get }) => {
-    // TODO: instead of getting it from the node, get it from nodeImpl
-    const nodeMap = get(nodeMapState);
-    const connectionMap = get(connectionMapState);
-
-    const getIOFromNode = (node: Node) => {
-      const connections: NodeConnection[] = connectionMap[node.id] ?? [];
-
-      const inputDefs: NodeInputPortDef[] = node?.getInputPortDefs(
-        connections,
-        nodeMap,
-      );
-      const outputDefs: NodeOutputPortDef[] = node?.getOutputPortDefs(
-        connections,
-        nodeMap,
-      );
-
-      return inputDefs && outputDefs
-        ? {
-            inputDefs,
-            outputDefs,
-          }
-        : { inputDefs: [], outputDefs: [] };
-    };
-
-    return Object.fromEntries(
-      Object.entries(nodeMap).map(([nodeId, node]) => [
-        nodeId,
-        getIOFromNode(node),
-      ]),
-    );
-  },
+  default: {},
 });
 
 export const nodeFromNodeIdState = selectorFamily<
   Node | undefined,
-  string | undefined
+  RecordId | undefined
 >({
   key: 'nodeFromNodeIdState',
   get:
-    (nodeId: string | undefined) =>
+    (nodeId: RecordId | undefined) =>
     ({ get }) => {
       return nodeId ? get(nodeMapState)[nodeId] : undefined;
     },
 });
 
+export const updateNodeIODefState = selector<{
+  id: RecordId;
+  io: {
+    inputDefs: NodeInputPortDef[];
+    outputDefs: NodeOutputPortDef[];
+  };
+}>({
+  key: 'updateNodeIODefState',
+  get: ({ get }) => {
+    throw new Error(
+      'updateNodeIODefState should only be used to update nodeIODef map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+    const id: RecordId = newVal.id;
+    const io = newVal.io;
+
+    const currMap = get(nodeIODefState);
+    const updatedMap = { ...currMap, [id]: io };
+    set(nodeIODefState, updatedMap);
+  },
+});
+
+export const removeNodeIODefState = selector<RecordId>({
+  key: 'removeNodeIODefState',
+  get: ({ get }) => {
+    throw new Error(
+      'removeNodeIODefState should only be used to remove io from nodeIODef map',
+    );
+  },
+  set: ({ set, get }, newVal) => {
+    if (newVal instanceof DefaultValue) return;
+
+    const id: RecordId = newVal;
+    const currMap = get(nodeIODefState);
+
+    if (currMap[id]) {
+      const updatedMap = { ...currMap };
+      delete updatedMap[id];
+      set(nodeIODefState, updatedMap);
+    }
+  },
+});
+
 export const nodeVisualContentDataFromNodeIdState = selectorFamily<
   NodeVisualContentData | undefined,
-  string | undefined
+  RecordId | undefined
 >({
   key: 'nodeVisualContentDataFromNodeIdState',
   get:
-    (nodeId: string | undefined) =>
+    (nodeId: RecordId | undefined) =>
     ({ get }) => {
       return nodeId ? get(nodeVisualContentDataMapState)[nodeId] : undefined;
     },
@@ -164,11 +237,11 @@ export const ioDefFromNodeIdState = selectorFamily<
     inputDefs: NodeInputPortDef[];
     outputDefs: NodeOutputPortDef[];
   },
-  string | undefined
+  RecordId | undefined
 >({
   key: 'ioDefFromNodeIdState',
   get:
-    (nodeId: string | undefined) =>
+    (nodeId: RecordId | undefined) =>
     ({ get }) => {
       return nodeId
         ? get(nodeIODefState)[nodeId]!
@@ -211,7 +284,7 @@ export const nodesToDragInCommentsState = selectorFamily<
 });
 
 export const updateNodeVisualContentDataState = selector<{
-  id: string;
+  id: RecordId;
   nodeVisualContentData: NodeVisualContentData;
 }>({
   key: 'updateNodeVisualContentDataState',
@@ -222,7 +295,7 @@ export const updateNodeVisualContentDataState = selector<{
   },
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
-    const id: string = newVal.id;
+    const id: RecordId = newVal.id;
     const nodeVisualContentData: NodeVisualContentData =
       newVal.nodeVisualContentData;
 
@@ -232,7 +305,7 @@ export const updateNodeVisualContentDataState = selector<{
   },
 });
 
-export const removeNodeVisualContentDataState = selector<string>({
+export const removeNodeVisualContentDataState = selector<RecordId>({
   key: 'removeNodeVisualContentDataState',
   get: ({ get }) => {
     throw new Error(
@@ -242,7 +315,7 @@ export const removeNodeVisualContentDataState = selector<string>({
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
 
-    const id: string = newVal;
+    const id: RecordId = newVal;
     const currMap = get(nodeVisualContentDataMapState);
 
     if (currMap[id]) {

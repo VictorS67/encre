@@ -7,14 +7,16 @@ import ContentPasteRoundedIcon from '@mui/icons-material/ContentPasteRounded';
 import CropSquareOutlinedIcon from '@mui/icons-material/CropSquareOutlined';
 import SquareRoundedIcon from '@mui/icons-material/SquareRounded';
 
+import { ContextMenuConfigContexts } from '../types/contextmenu.type';
+import { HOTKEY } from '../types/hotkey.type';
+import { BuiltInNodeTypePairs, RecordId } from '../types/studio.type';
+import { typeOf } from '../utils/safeTypes';
+
 import { useContextMenuAddNodeConfigContexts } from './useContextMenuAddNodeConfigContexts';
 import { useContextMenuChangeCommentColorConfigContexts } from './useContextMenuChangeCommentColorConfigContexts';
 import { useContextMenuChangeNodeColorConfigContexts } from './useContextMenuChangeNodeColorConfigContexts';
 import { useContextMenuMoveToNodeConfigContexts } from './useContextMenuMoveToNodeConfigContexts';
 import { useHotKeyDisplay } from './useHotKeyDisplay';
-import { ContextMenuConfigContexts } from '../types/contextmenu.type';
-import { HOTKEY } from '../types/hotkey.type';
-import { typeOf } from '../utils/safeTypes';
 
 export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
   const avaliableNodes = useContextMenuAddNodeConfigContexts();
@@ -132,7 +134,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
       },
       node: {
         contextType: typeOf<{
-          nodeId: string;
+          nodeId: RecordId;
           nodeType: string;
           nodeSubType: string;
           registerArgs?: Record<string, unknown>;
@@ -429,7 +431,7 @@ export function useContextMenuConfigContexts(): ContextMenuConfigContexts {
         ],
       },
     }),
-    [],
+    [avaliableNodes, currentNodes, commentColors, nodeColors],
   );
 
   return contexts;

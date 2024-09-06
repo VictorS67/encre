@@ -1,11 +1,19 @@
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { useCanvasPosition } from './useCanvasPosition';
 import { clipboardState } from '../state/clipboard';
-import { nodesState, selectingNodeIdsState } from '../state/node';
+import {
+  nodeBodyMapState,
+  nodeIODefState,
+  nodesState,
+  selectingNodeIdsState,
+  updateNodeBodyState,
+  updateNodeIODefState,
+} from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
 import {
+  RecordId,
+  // getRecordId,
   NodeConnection,
   NodeInputPortDef,
   NodeOutputPortDef,
@@ -13,11 +21,17 @@ import {
 import { fakeId } from '../utils/fakeId';
 import { isNotNull } from '../utils/safeTypes';
 
+import { useCanvasPosition } from './useCanvasPosition';
+
 export function usePasteNodes() {
   const clipboard = useRecoilValue(clipboardState);
   const [nodes, setNodes] = useRecoilState(nodesState);
+  const nodeIODef = useRecoilValue(nodeIODefState);
+  const nodeBodyMap = useRecoilValue(nodeBodyMapState);
   const setSelectingNodeIds = useSetRecoilState(selectingNodeIdsState);
   const setConnections = useSetRecoilState(connectionsState);
+  const updateNodeBody = useSetRecoilState(updateNodeBodyState);
+  const updateNodeIODef = useSetRecoilState(updateNodeIODefState);
 
   const { clientToCanvasPosition } = useCanvasPosition();
 
@@ -25,12 +39,6 @@ export function usePasteNodes() {
     if (clipboard?.type !== 'nodes') {
       return;
     }
-
-    console.log(
-      `paste: clipboard: nodes: ${JSON.stringify(
-        clipboard.nodes,
-      )}, connections: ${JSON.stringify(clipboard.connections)}`,
-    );
 
     const canvasPosition = clientToCanvasPosition(
       mousePosition.x,
@@ -60,12 +68,11 @@ export function usePasteNodes() {
       },
     );
 
-    const oldNewNodeIdMap: Record<string, string> = {};
+    const oldNewNodeIdMap: Record<RecordId, RecordId> = {};
 
     const newNodes = clipboard.nodes.map((node) => {
       return produce(node, (draft) => {
-        // TODO: change this to generate a new random RecordId from core
-        const newNodeId = fakeId(17);
+        const newNodeId = fakeId(17) as RecordId;
         oldNewNodeIdMap[node.id] = newNodeId;
 
         draft.id = newNodeId;
@@ -79,32 +86,10 @@ export function usePasteNodes() {
           canvasPosition.y +
           (node.visualInfo.position.y - boundingBoxOfCopiedNodes.minY);
 
-        // TODO: we don't need this when the core is ready
-        draft.getBody = node.getBody;
-        const inputDefs: NodeInputPortDef[] = node.getInputPortDefs([], {});
-        const outputDefs: NodeOutputPortDef[] = node.getOutputPortDefs([], {});
-        draft.getInputPortDefs = function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeInputPortDef[] {
-          return inputDefs.map((def) => ({
-            ...def,
-            nodeId: newNodeId,
-          }));
-        } as any;
-        draft.getOutputPortDefs = function (
-          cs: NodeConnection[],
-          ns: Record<string, Node>,
-        ): NodeOutputPortDef[] {
-          return outputDefs.map((def) => ({
-            ...def,
-            nodeId: newNodeId,
-          }));
-        } as any;
+        updateNodeBody({ id: newNodeId, nodeBody: nodeBodyMap[node.id] });
+        updateNodeIODef({ id: newNodeId, io: nodeIODef[node.id] });
       });
     });
-
-    console.log(`paste: newNodes: ${JSON.stringify(newNodes)}`);
 
     setNodes((ns) => [...ns, ...newNodes]);
     setSelectingNodeIds(newNodes.map((node) => node.id));

@@ -4,6 +4,7 @@ import React, {
   ForwardedRef,
   forwardRef,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -18,7 +19,6 @@ import {
 } from '@floating-ui/react';
 import clsx from 'clsx';
 
-import { ContextMenuItem } from './ContextMenuItem';
 import { useContextMenuConfig } from '../hooks/useContextMenuConfig';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
@@ -28,6 +28,8 @@ import {
   type ContextMenuProps,
 } from '../types/contextmenu.type';
 import { hexToRgba } from '../utils/colorConverter';
+
+import { ContextMenuItem } from './ContextMenuItem';
 
 const styles = css`
   position: absolute;
@@ -86,8 +88,6 @@ export const ContextMenu = forwardRef<HTMLDivElement, ContextMenuProps>(
 
     const { contexts, commands } = useContextMenuConfig();
     const { type, data, group } = contexts[context['type']];
-
-    console.log(`contextMenu: type: ${type}, data: ${JSON.stringify(data)}`);
 
     useEffect(() => {
       update();

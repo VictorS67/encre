@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { showContextMenuState } from '../state/contextmenu';
 import { selectingNodeIdsState } from '../state/node';
 import { selectingWireIdsState } from '../state/wire';
 import { ContextMenuData, ContextMenu } from '../types/contextmenu.type';
+import { RecordId } from '../types/studio.type';
 
 /**
  * `useContextMenu` hook
@@ -114,7 +115,7 @@ export function useContextMenu() {
   };
 
   const handleContextMenu = useCallback(
-    (
+    async (
       event: Pick<
         React.MouseEvent<HTMLDivElement>,
         'clientX' | 'clientY' | 'target'
@@ -128,8 +129,8 @@ export function useContextMenu() {
       setContextMenu({ x: event.clientX, y: event.clientY, data });
 
       if (data?.type.startsWith('node-')) {
-        const nodeId: string = data.element.dataset.nodeid as string;
-        setSelectingNodeIds((nodeIds: string[]) => [
+        const nodeId: RecordId = data.element.dataset.nodeid as RecordId;
+        setSelectingNodeIds((nodeIds: RecordId[]) => [
           ...new Set([...nodeIds, nodeId]),
         ]);
       } else if (data?.type.startsWith('wire-')) {

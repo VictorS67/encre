@@ -2,11 +2,12 @@ import React, { CSSProperties, FC, memo, Suspense, useMemo } from 'react';
 
 import { useRecoilValue } from 'recoil';
 
-import { LazySyntaxedText } from './LazyComponents';
 import { useMarkdown } from '../hooks/useMarkdown';
 import { commentContentFromCommentIdState } from '../state/comment';
 import { CommentContentBodyProps } from '../types/commentbody.type';
-import { GraphComment, UIContext } from '../types/studio.type';
+import { CodeUIContext, GraphComment, UIContext } from '../types/studio.type';
+
+import { LazySyntaxedText } from './LazyComponents';
 
 export const CommentContentBody: FC<CommentContentBodyProps> = memo(
   ({ comment }: CommentContentBodyProps) => {
@@ -123,31 +124,32 @@ MarkdownCommentContentBody.displayName = 'MarkdownCommentContentBody';
 
 /* eslint-disable react/prop-types */
 export const CodeCommentContentBody: FC<
-  { commentContent: GraphComment['visualInfo']['content'] } & Extract<
-    UIContext,
-    { type: 'code' }
-  >
-> = memo(({ commentContent, text, language, keywords }) => {
-  const contentTextStyle = useMemo(() => {
-    const hAlign = commentContent?.horitontal ?? 'start';
+  { commentContent: GraphComment['visualInfo']['content'] } & CodeUIContext
+> = memo(
+  ({ commentContent, text, language, keywords, properties, variables }) => {
+    const contentTextStyle = useMemo(() => {
+      const hAlign = commentContent?.horitontal ?? 'start';
 
-    const styling: CSSProperties = {
-      textAlign: hAlign,
-    };
+      const styling: CSSProperties = {
+        textAlign: hAlign,
+      };
 
-    return styling;
-  }, [commentContent?.horitontal]);
+      return styling;
+    }, [commentContent?.horitontal]);
 
-  return (
-    <Suspense fallback={<div />}>
-      <LazySyntaxedText
-        text={text}
-        language={language ?? 'encre-code'}
-        keywords={keywords ?? []}
-        style={contentTextStyle}
-      />
-    </Suspense>
-  );
-});
+    return (
+      <Suspense fallback={<div />}>
+        <LazySyntaxedText
+          text={text}
+          language={language}
+          keywords={keywords}
+          properties={properties}
+          variables={variables}
+          style={contentTextStyle}
+        />
+      </Suspense>
+    );
+  },
+);
 
 CodeCommentContentBody.displayName = 'CodeCommentContentBody';

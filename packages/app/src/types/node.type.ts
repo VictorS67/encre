@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 
 import { ColorCache } from './canvas.type';
-import { Node, NodeConnection } from './studio.type';
+import { RecordId, Node, NodeConnection } from './studio.type';
 import { DraggingWire } from './wire.type';
 
 export type DraggableNodeProps = {
@@ -21,15 +21,15 @@ export type DraggableNodeProps = {
   onNodeSelect?: (node: Node) => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: RecordId,
   ) => void;
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: RecordId,
   ) => void;
   onWireStartDrag?: (
     event: React.MouseEvent<HTMLElement>,
-    fromNodeId: string,
+    fromNodeId: RecordId,
     fromPortName: string,
     isInput?: boolean,
   ) => void;
@@ -57,15 +57,15 @@ export type VisualNodeProps = {
   onNodeSelect?: () => void;
   onNodeMouseOver?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: RecordId,
   ) => void;
   onNodeMouseOut?: (
     event: React.MouseEvent<HTMLElement>,
-    nodeId: string,
+    nodeId: RecordId,
   ) => void;
   onWireStartDrag?: (
     event: React.MouseEvent<HTMLElement>,
-    fromNodeId: string,
+    fromNodeId: RecordId,
     fromPortName: string,
     isInput?: boolean,
   ) => void;
@@ -92,7 +92,7 @@ export type VisualNodeContentProps = {
   onNodeSizeChange?: (width?: number, height?: number) => void;
   onWireStartDrag?: (
     event: React.MouseEvent<HTMLElement>,
-    fromNodeId: string,
+    fromNodeId: RecordId,
     fromPortName: string,
     isInput?: boolean,
   ) => void;

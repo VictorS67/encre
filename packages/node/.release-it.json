@@ -1,0 +1,9 @@
+{
+  "git": {
+    "requireCleanWorkingDir": false,
+    "tag": false
+  },
+  "npm": {
+    "versionArgs": ["--workspaces-update=false"]
+  }
+}

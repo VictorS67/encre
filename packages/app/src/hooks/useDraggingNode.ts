@@ -4,7 +4,6 @@ import { DragEndEvent, DragMoveEvent, DragStartEvent } from '@dnd-kit/core';
 import { produce } from 'immer';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { useStableCallback } from './useStableCallback';
 import {
   canvasPositionState,
   isDraggingMultipleNodesState,
@@ -16,8 +15,10 @@ import {
   nodesState,
   selectingNodeIdsState,
 } from '../state/node';
-import { Node } from '../types/studio.type';
+import { Node, RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
+
+import { useStableCallback } from './useStableCallback';
 
 export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
   const isDraggingMultipleNodes = useRecoilValue(isDraggingMultipleNodesState);
@@ -32,9 +33,9 @@ export function useDraggingNode(onNodesChange: (ns: Node[]) => void) {
 
   const onNodeStartDrag = useCallback(
     (e: DragStartEvent) => {
-      const draggingNodeId: string = e.active.id as string;
+      const draggingNodeId: RecordId = e.active.id as RecordId;
 
-      const nodeIdsToDrag: string[] =
+      const nodeIdsToDrag: RecordId[] =
         isDraggingMultipleNodes && selectingNodeIds.length > 0
           ? [...new Set([...selectingNodeIds, draggingNodeId])]
           : [draggingNodeId];

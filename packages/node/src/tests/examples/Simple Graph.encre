@@ -1,0 +1,131 @@
+_type: graph
+id: xas8NsL@0lCzvkL@4
+title: Simple Graph
+description: simplest graph
+nodes:
+  - _type: node
+    id: 6uPYFmDX_Qncu4zXJ
+    type: message
+    subType: prompt
+    title: SystemMessage
+    description: ""
+    runtime: 0
+    memory: 0
+    data:
+      _grp: 1
+      _type: constructor
+      _id:
+        - events
+        - input
+        - load
+        - msgs
+        - system
+        - SystemMessage
+      _kwargs:
+        content: You are a comic character. Your name is SpongeBob.
+    visualInfo:
+      position:
+        x: 0
+        y: 0
+      size:
+        width: 300
+        height: 500
+    inputs:
+      name:
+        - string
+        - unknown
+      content:
+        - string
+        - object
+        - unknown
+      additionalKwargs:
+        - object
+        - unknown
+    outputs:
+      message: chat-message
+    outputSizes:
+      message: 0
+    outgoingConnections:
+      message:
+        toNodeId: SK5hp_tewolP4olLF
+        toPortName: input1
+  - _type: node
+    id: 3uAT_v1fC3Yx9i2rD
+    type: message
+    subType: human
+    title: HumanMessage
+    description: ""
+    runtime: 0
+    memory: 0
+    data:
+      _grp: 1
+      _type: constructor
+      _id:
+        - events
+        - input
+        - load
+        - msgs
+        - human
+        - HumanMessage
+      _kwargs:
+        content: ""
+    visualInfo:
+      position:
+        x: 0
+        y: 0
+      size:
+        width: 300
+        height: 500
+    inputs:
+      name:
+        - string
+        - unknown
+      content:
+        - string
+        - object
+        - unknown
+      additionalKwargs:
+        - object
+        - unknown
+    outputs:
+      message: chat-message
+    outputSizes:
+      message: 0
+    outgoingConnections:
+      message:
+        toNodeId: SK5hp_tewolP4olLF
+        toPortName: input2
+  - _type: node
+    id: SK5hp_tewolP4olLF
+    type: prompt
+    subType: chat
+    title: ChatPrompt
+    description: ""
+    runtime: 0
+    memory: 0
+    data:
+      _grp: 1
+      _type: constructor
+      _id:
+        - events
+        - input
+        - load
+        - prompts
+        - chat
+        - ChatPrompt
+      _kwargs:
+        messages: []
+    visualInfo:
+      position:
+        x: 0
+        y: 0
+      size:
+        width: 300
+        height: 500
+    outputs:
+      prompt:
+        - string
+        - chat-message[]
+    outputSizes:
+      prompt: 0
+    outgoingConnections: {}

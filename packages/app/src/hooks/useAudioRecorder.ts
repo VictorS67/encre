@@ -69,7 +69,6 @@ export function useAudioRecorder(
         });
       })
       .catch((err: DOMException) => {
-        console.log(err.name, err.message, err.cause);
         onNotAllowedOrFound?.(err);
       });
   }, [

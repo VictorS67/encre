@@ -3,6 +3,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { clipboardState } from '../state/clipboard';
 import { nodeMapState, selectingNodeIdsState } from '../state/node';
 import { connectionsState } from '../state/nodeconnection';
+import { RecordId } from '../types/studio.type';
 import { isNotNull } from '../utils/safeTypes';
 
 export function useCopyNodes() {
@@ -11,7 +12,7 @@ export function useCopyNodes() {
   const connections = useRecoilValue(connectionsState);
   const setClipboard = useSetRecoilState(clipboardState);
 
-  return (additionalNodeId?: string) => {
+  return (additionalNodeId?: RecordId) => {
     const nodeIds = (
       selectingNodeIds.length > 0
         ? [...new Set([...selectingNodeIds, additionalNodeId])]
@@ -20,12 +21,6 @@ export function useCopyNodes() {
 
     const copiedConnections = connections.filter(
       (c) => nodeIds.includes(c.fromNodeId) && nodeIds.includes(c.toNodeId),
-    );
-
-    console.log(
-      `copy: nodeIds: ${JSON.stringify(
-        nodeIds,
-      )}, copiedConnections: ${JSON.stringify(copiedConnections)}`,
     );
 
     setClipboard({

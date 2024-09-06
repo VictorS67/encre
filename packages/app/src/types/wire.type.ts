@@ -2,14 +2,14 @@ import { CSSProperties } from 'react';
 
 import { PartialConnection } from './nodeconnection.type';
 import { HighlightedPort, PortPositons } from './port.type';
-import { Data, DataType, Node, NodeConnection, ValueOf } from './studio.type';
+import { RecordId, DataType, Node, NodeConnection } from './studio.type';
 
 export type Wire = {
-  fromNodeId: string;
+  fromNodeId: RecordId;
   fromPortName: string;
   fromPortIsInput: boolean;
 
-  toNodeId?: string;
+  toNodeId?: RecordId;
   toPortName?: string;
 };
 
@@ -27,7 +27,7 @@ export type WireLayerProps = {
   portPositions: PortPositons;
   draggingWire?: Wire;
   isDraggingFromNode?: boolean;
-  highlightedNodeIds?: string[];
+  highlightedNodeIds?: RecordId[];
   highlightedPort?: HighlightedPort;
   // selectingWireIds?: string[];
   onWiresSelect?: (wireId: string[], isMulti?: boolean) => void;

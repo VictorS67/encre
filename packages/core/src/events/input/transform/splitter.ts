@@ -1,31 +1,52 @@
 import { Tiktoken } from 'js-tiktoken';
-import { CallableConfig } from '../../../record/callable.js';
+import { type CallableConfig } from '../../../record/index.js';
 import {
   encodingForModel,
   getTiktokenModel,
 } from '../../../utils/tokenizer.js';
-import { BaseEvent, BaseEventParams } from '../../base.js';
-import { Context, ContextLike } from '../load/docs/context.js';
+import { BaseEvent, type BaseEventParams } from '../../base.js';
+import { Context, type ContextLike } from '../load/docs/index.js';
 
+/**
+ * Defines the parameters for the context splitter.
+ *
+ * @example
+ * ```typescript
+ * const splitterParams: ContextSplitterParams = {
+ *   maxSize: 2048,
+ *   overlap: 200,
+ *   computeContextSize: async (text: string) => {
+ *     return text.length;  // Simple length-based computation.
+ *   }
+ * };
+ * ```
+ */
 export interface ContextSplitterParams extends BaseEventParams {
   /**
-   * Max context size in a single chunk
+   * The maximum size of a single context chunk.
    */
   maxSize: number;
 
   /**
-   * Overlap context in splitting chunks
+   * The number of characters to overlap between adjacent context chunks.
    */
   overlap: number;
 
   /**
-   * Function to compute context size
+   * Optional function to compute the size of a context, which can be asynchronous.
    */
   computeContextSize?:
     | ((text: string) => number)
     | ((text: string) => Promise<number>);
 }
 
+/**
+ * An abstract class for splitting large contexts into manageable chunks based on specified parameters.
+ *
+ * @typeparam CallInput - The type of the input received by the splitter.
+ * @typeparam CallOutput - The type of the output returned by the splitter.
+ * @typeparam CallOptions - The type of the options that can be passed to the splitter during invocation.
+ */
 export abstract class ContextSplitter<
     CallInput = ContextLike,
     CallOutput = Context[],
@@ -40,13 +61,19 @@ export abstract class ContextSplitter<
     return 'ContextSplitter';
   }
 
-  // Default value for the maximum size of a context chunk.
+  /**
+   * The maximum size of a single context chunk.
+   */
   maxSize = 2048;
 
-  // Default value for the overlap size between context chunks.
+  /**
+   * The number of characters to overlap between adjacent context chunks.
+   */
   overlap = 10;
 
-  // Function for computing the context size.
+  /**
+   * Optional function to compute the size of a context, which can be asynchronous.
+   */
   computeContextSize:
     | ((text: string) => number)
     | ((text: string) => Promise<number>);
@@ -83,7 +110,13 @@ export abstract class ContextSplitter<
   }
 
   /**
-   * Processes the input and returns the split contexts.
+   * Processes the input according to the splitter's logic and returns the split contexts.
+   * This method orchestrates the overall process of context splitting.
+   *
+   * @param input - The input to be processed. This can be a string, a Context, or an array of Contexts.
+   * @param options - Optional configuration and options for the call.
+   *
+   * @returns An array of Contexts, each representing a chunk of the original input.
    */
   async invoke(
     input: CallInput,
@@ -114,7 +147,13 @@ export abstract class ContextSplitter<
   }
 
   /**
-   * Splits the given texts into contexts using the splitter logic.
+   * Splits the given texts into smaller contexts based on the configured `maxSize` and `overlap`.
+   * This method should handle the actual logic of dividing the text, possibly using the `split` method.
+   *
+   * @param texts - Array of text strings to split.
+   * @param metadatas - Array of metadata corresponding to each text string.
+   *
+   * @returns An array of Contexts created from the split text chunks.
    */
   async provide(
     texts: string[],
@@ -215,15 +254,57 @@ export abstract class ContextSplitter<
   }
 
   /**
-   * Calculates the number of new lines in a given text.
+   * Calculates the number of newline characters in a given text segment.
+   * This method can be used to determine the number of lines within a specified portion of text.
+   * If start and end parameters are not provided, it counts new lines in the entire string.
+   *
+   * @param text - The text within which to count newline characters.
+   * @param start - The starting index from which to begin counting (inclusive).
+   * @param end - The ending index at which to stop counting (exclusive).
+   * @returns The count of newline characters found in the specified text segment.
+   *
+   * @example
+   * ```typescript
+   * const text = "Line one\nLine two\nLine three";
+   * const totalNewLines = splitter.getNumberOfNewLines(text);
+   * console.log(totalNewLines); // Outputs: 2
+   *
+   * // To count new lines in a substring
+   * const newLinesInSubstring = splitter.getNumberOfNewLines(text, 0, 15);
+   * console.log(newLinesInSubstring); // Outputs: 1 (only counts new lines up to "Line two")
+   * ```
    */
   getNumberOfNewLines(text: string, start?: number, end?: number): number {
     return (text.slice(start, end).match(/\n/g) || []).length;
   }
 
+  /**
+   * Abstract method that must be implemented to define how text is split into chunks.
+   * This method should return an array of strings, each representing a chunk of the original text.
+   *
+   * @param text - The text to split.
+   *
+   * @returns A promise that resolves to an array of string chunks.
+   */
   abstract split(text: string): Promise<string[]>;
 }
 
+/**
+ * Defines the parameters for the text splitter.
+ *
+ * @example
+ * ```typescript
+ * const splitterParams: ContextSplitterParams = {
+ *   separator: "\n\n",
+ *   keepSeparator: true,
+ *   maxSize: 2048,
+ *   overlap: 200,
+ *   computeContextSize: async (text: string) => {
+ *     return text.length;  // Simple length-based computation.
+ *   }
+ * };
+ * ```
+ */
 export interface TextSplitterParams extends ContextSplitterParams {
   /**
    * Separator in splitting text
@@ -236,6 +317,30 @@ export interface TextSplitterParams extends ContextSplitterParams {
   keepSeparator: boolean;
 }
 
+/**
+ * The TextSplitter class is responsible for splitting a given text into multiple contexts
+ * based on specified parameters. It extends the functionality of ContextSplitter by allowing
+ * the text to be split using a custom separator and controlling whether the separator should
+ * be retained in the outputs.
+ *
+ * @param CallInput - The type of input the splitter handles.
+ * @param CallOutput - The type of output returned after splitting.
+ * @param CallOptions - Configuration options passed to each call.
+ *
+ * @example
+ * ```typescript
+ * const textSplitter = new TextSplitter({
+ *   maxSize: 1024,
+ *   overlap: 50,
+ *   separator: "\n\n",
+ *   keepSeparator: true
+ * });
+ *
+ * const inputText = `First paragraph.\n\nSecond paragraph.\n\nThird paragraph.`;
+ * const contexts = await textSplitter.invoke(inputText);
+ * console.log(contexts); // Outputs the text split into contexts with separators included.
+ * ```
+ */
 export class TextSplitter<
     CallInput = ContextLike,
     CallOutput = Context[],
@@ -269,8 +374,13 @@ export class TextSplitter<
   }
 
   /**
-   * Splits text using the provided separator,
-   * includes separator in output if keepSeparator is true
+   * Splits the text into segments based on the defined separator.
+   * If `keepSeparator` is true, the separator is included in the output segments.
+   *
+   * @param text - The text to split.
+   * @param separator - The separator used to split the text.
+   * @returns An array of text segments.
+   * @internal
    */
   protected _splitWithSeparator(text: string, separator: string): string[] {
     let splits: string[];
@@ -298,7 +408,12 @@ export class TextSplitter<
 
   /**
    * Joins an array of strings into a single string with the provided separator,
-   * returns null if the result is empty
+   * returns null if the result is empty.
+   *
+   * @param texts - The array of text pieces to join.
+   * @param separator - The separator to use between text pieces.
+   * @returns The joined text or null if the resulting text is empty.
+   * @internal
    */
   protected _joinTextWithSeparator(
     texts: string[],
@@ -309,7 +424,13 @@ export class TextSplitter<
   }
 
   /**
-   * Merges text splits into chunks based on the maximum context size
+   * Merges smaller text splits into larger chunks based on the maximum context size.
+   * Ensures that the merged text does not exceed the specified size limits.
+   *
+   * @param splits - The text splits to merge.
+   * @param separator - The separator used between merged text pieces.
+   * @returns An array of merged text pieces.
+   * @internal
    */
   protected async _mergeSplits(
     splits: string[],
@@ -386,7 +507,10 @@ export class TextSplitter<
   }
 
   /**
-   * Split text based on the configured separator and merge strategy
+   * Split text based on the configured separator and merge strategy.
+   *
+   * @param text - The text to split.
+   * @returns A promise that resolves to an array of split text pieces.
    */
   async split(text: string): Promise<string[]> {
     // split the text using the existing method
@@ -397,14 +521,22 @@ export class TextSplitter<
   }
 }
 
+/**
+ * Parameters for configuring the RecursiveTextSplitter.
+ * Extends the basic TextSplitterParams with additional functionality to handle multiple separators.
+ */
 export interface RecursiveTextSplitterParams
   extends Partial<TextSplitterParams> {
   /**
-   * Multiple separators in splitting text
+   * An array of strings defining the multiple separators to be used for splitting text.
+   * The order of separators can influence the granularity of the resulting text splits.
    */
   separators: string[];
 }
 
+/**
+ * Enumerates supported languages for splitting, each potentially using language-specific separators.
+ */
 export type SupportedLanguageForSplit =
   | 'cpp'
   | 'go'
@@ -424,36 +556,40 @@ export type SupportedLanguageForSplit =
   | 'sol';
 
 /**
- * The {@link RecursiveTextSplitter} is an advanced text splitting utility designed to
- * handle complex splitting requirements. It leverages maxSize and overlap parameters
- * to ensure efficient and context-aware splitting.
+ * The {@link RecursiveTextSplitter} is an advanced text splitting utility designed to handle complex splitting requirements.
+ * It leverages maxSize and overlap parameters to ensure efficient and context-aware splitting.
  *
  * Features:
- * 1. Recursive Splitting Strategy: Unlike the basic {@link TextSplitter}, the
- *    {@link RecursiveTextSplitter} applies a depth-oriented approach, gradually 
- *    splitting text from higher to lower granularity.
+ * - **Recursive Splitting Strategy:** Unlike the basic {@link TextSplitter}, the {@link RecursiveTextSplitter} applies
+ *   a depth-oriented approach, gradually splitting text from higher to lower granularity.
+ * - **Dynamic Separator Selection:** Identifies the first applicable separator from the array and adjusts the array by removing
+ *   higher granularity separators in each recursive step.
+ * - **Good Splits Identification:** Focuses on finding 'good splits'—segments that maximize the number of splits while keeping
+ *   each segment's size under maxSize.
+ * - **Merging and Outputting:** Merges 'good splits' before adding them to the output array, maintaining textual coherence.
+ * - **Handling Nested Separators:** Recursively handles nested separators to manage complex texts, aiming to keep segments under maxSize.
+ * - **Context Preservation:** Enhances continuity between splits by incorporating overlapped sections from preceding segments.
  *
- * 2. Dynamic Separator Selection: Identifies the first applicable separator from the
- *    array and adjusts the array by removing higher granularity separators in each
- *    recursive step.
+ * Note: While the {@link RecursiveTextSplitter} reduces the likelihood of exceeding maxSize, it does not guarantee that all segments
+ * will always be smaller than maxSize.
  *
- * 3. Good Splits Identification: Focuses on finding 'good splits'—segments that
- *    maximize the number of splits while keeping each segment's size under maxSize.
+ * Usage: This splitter is ideal for complex and nuanced text processing tasks where granularity, context preservation, and size constraints are crucial.
  *
- * 4. Merging and Outputting: Merges 'good splits' before adding them to the output
- *    array, maintaining textual coherence.
+ * @example
+ * ```typescript
+ * // Assume we're processing a long document where logical breaks are represented by different separators like double newlines, single newlines, or punctuations.
+ * const longDocument = "Section 1: Introduction\n\nThis section introduces the main concepts...\nSection 2: Development\nThis section covers the development...";
+ * const splitter = new RecursiveTextSplitter({
+ *   maxSize: 1000,  // Maximum characters in a single chunk
+ *   overlap: 50,    // Characters to overlap between chunks
+ *   separators: ['\n\n', '.', '\n'],  // Order of separators to apply
+ *   keepSeparator: true
+ * });
  *
- * 5. Handling Nested Separators: Recursively handles nested separators to manage
- *    complex texts, aiming to keep segments under maxSize.
- *
- * 6. Context Preservation: Enhances continuity between splits by incorporating
- *    overlapped sections from preceding segments.
- *
- * Note: While the {@link RecursiveTextSplitter} reduces the likelihood of exceeding 
- * maxSize, it does not guarantee that all segments will always be smaller than maxSize.
- *
- * Usage: This splitter is ideal for complex and nuanced text processing tasks where
- * granularity, context preservation, and size constraints are crucial.
+ * const splitText = await splitter.invoke(longDocument);
+ * console.log(splitText);
+ * // Output will show the text split into manageable chunks, maintaining logical separations and sections where possible.
+ * ```
  */
 export class RecursiveTextSplitter
   extends TextSplitter
@@ -463,9 +599,12 @@ export class RecursiveTextSplitter
     return 'RecursiveTextSplitter';
   }
 
+  /**
+   * An array of strings defining the multiple separators to be used for splitting text.
+   * The order of separators can influence the granularity of the resulting text splits.
+   */
   separators: string[] = ['\n\n', '\n', ' ', ''];
 
-  // By default, the separator is kept in the output
   keepSeparator = true;
 
   constructor(fields?: Partial<RecursiveTextSplitterParams>) {
@@ -483,6 +622,15 @@ export class RecursiveTextSplitter
     };
   }
 
+  /**
+   * Recursively splits text using an array of separators, managing complex text structures.
+   * Each recursive call processes the text with the next separator in the array until the base case is reached.
+   *
+   * @param text - The text to split.
+   * @param separators - The array of separators used for recursive splitting.
+   * @returns A promise resolving to an array of split text segments.
+   * @internal
+   */
   private async _recursivelySplit(
     text: string,
     separators: string[]
@@ -556,13 +704,35 @@ export class RecursiveTextSplitter
     return newSplits;
   }
 
-  /**
-   * Split text based on the configured separator and merge strategy
-   */
   async split(text: string): Promise<string[]> {
     return this._recursivelySplit(text, this.separators);
   }
 
+  /**
+   * Retrieves an array of predefined separators tailored for the syntax and structure of a specified programming
+   * or markup language. This method is used to facilitate language-specific text splitting by recognizing
+   * patterns and structures unique to each language.
+   *
+   * @param language - A value from the SupportedLanguageForSplit enum, representing the programming or markup language.
+   * @returns An array of strings, each a separator used to split text based on the syntactical features of the specified language.
+   * @throws Error if the provided language is not supported, ensuring that callers handle or avoid unsupported languages.
+   *
+   * @example
+   * ```typescript
+   * // Example for JavaScript
+   * const jsSeparators = RecursiveTextSplitter.getSeparatorsFromLanguage("js");
+   * console.log(jsSeparators);
+   * // Output might include separators for functions, loops, etc., like "\nfunction ", "\nif(", etc.
+   * ```
+   *
+   * @example
+   * ```typescript
+   * // Example for HTML
+   * const htmlSeparators = RecursiveTextSplitter.getSeparatorsFromLanguage("html");
+   * console.log(htmlSeparators);
+   * // Output might include separators for different HTML tags like "<div>", "<p>", "<h1>", etc.
+   * ```
+   */
   static getSeparatorsFromLanguage(language: SupportedLanguageForSplit) {
     switch (language) {
       case 'cpp':
@@ -912,6 +1082,28 @@ export class RecursiveTextSplitter
     }
   }
 
+  /**
+   * Utility method to generate a RecursiveTextSplitter instance based on a supported programming language,
+   * applying predefined separators that are typical for the syntax of the specified language.
+   *
+   * @param language - A supported language for which the splitter will be configured.
+   * @param options - Optional parameters to override default configurations.
+   * @returns A configured RecursiveTextSplitter instance for the specified language.
+   *
+   * @example
+   * ```typescript
+   * // Creating a RecursiveTextSplitter instance for JavaScript code.
+   * const splitter = RecursiveTextSplitter.fromLanguage("js", {
+   *   maxSize: 2048,
+   *   overlap: 100,
+   *   keepSeparator: true
+   * });
+   *
+   * const jsCode = `function hello() {\\n  console.log("Hello, world!");\\n}\\nfunction bye() {\\n  console.log("Goodbye, world!");\\n}`;
+   * const splitCode = await splitter.invoke(jsCode);
+   * console.log(splitCode); // Outputs the code split into functions.
+   * ```
+   */
   static fromLanguage(
     language: SupportedLanguageForSplit,
     options?: Partial<RecursiveTextSplitterParams>
@@ -923,27 +1115,51 @@ export class RecursiveTextSplitter
   }
 }
 
+/**
+ * Defines parameters for the {@link TokenTextSplitter} that extends the {@link TextSplitterParams}.
+ */
 export interface TokenTextSplitterParams extends TextSplitterParams {
   /**
-   * The name of the model used for tokenization.
+   * The name of the model used for tokenization. This typically would be a name
+   * identifying a specific language model that understands how to tokenize the input text.
    */
   modelName: string;
 
   /**
-   * An array of allowed special characters or tokens.
-   * If set to "all", all special characters are allowed.
+   * An array of allowed special characters or tokens. This allows for the inclusion of
+   * specific characters or tokens in the tokenization process. If set to "all",
+   * it implies that all special characters are allowed during tokenization.
    */
   allowedSpecial: Array<string> | 'all';
 
   /**
-   * An array of disallowed special characters or tokens.
-   * If set to "all", all special characters are disallowed.
+   * An array of disallowed special characters or tokens. This parameter is used
+   * to explicitly exclude certain characters or tokens from the tokenization process.
+   * If set to "all", it implies that all special characters are disallowed.
    */
   disallowedSpecial: Array<string> | 'all';
 }
 
 /**
- * A text splitter class that tokenizes text based on a specific model.
+ * The `TokenTextSplitter` is a specialized text splitter that utilizes a tokenization
+ * model to split text. It is particularly useful for applications where precise control
+ * over the inclusion and exclusion of specific tokens or characters is necessary, such as
+ * in natural language processing or data sanitization tasks.
+ * 
+ * @example
+ * ```typescript
+ * const splitter = new TokenTextSplitter({
+ *   maxSize: 512,
+ *   overlap: 50,
+ *   modelName: "gpt3-3.5-turbo",
+ *   allowedSpecial: ["{", "}"], // Allow curly braces
+ *   disallowedSpecial: "all"   // Disallow all other special characters
+ * });
+ *
+ * const text = "Here is some text with {special characters} that need to be handled properly.";
+ * const chunks = await splitter.invoke(text);
+ * console.log(chunks);
+ * ```
  */
 export class TokenTextSplitter
   extends TextSplitter
@@ -953,12 +1169,29 @@ export class TokenTextSplitter
     return 'TokenTextSplitter';
   }
 
+  /**
+   * The name of the model used for tokenization. This typically would be a name
+   * identifying a specific language model that understands how to tokenize the input text.
+   */
   modelName: string;
 
+  /**
+   * An array of allowed special characters or tokens. This allows for the inclusion of
+   * specific characters or tokens in the tokenization process. If set to "all",
+   * it implies that all special characters are allowed during tokenization.
+   */
   allowedSpecial: string[] | 'all';
 
+  /**
+   * An array of disallowed special characters or tokens. This parameter is used
+   * to explicitly exclude certain characters or tokens from the tokenization process.
+   * If set to "all", it implies that all special characters are disallowed.
+   */
   disallowedSpecial: string[] | 'all';
 
+  /**
+   * Tiktokenizer used for encoding text.
+   */
   private tokenizer: Tiktoken;
 
   constructor(fields?: Partial<TokenTextSplitterParams>) {
@@ -980,7 +1213,7 @@ export class TokenTextSplitter
   }
 
   /**
-   * Splits the given text into tokens based on the tokenizer configuration..
+   * Splits the given text into tokens based on the tokenizer configuration.
    */
   async split(text: string): Promise<string[]> {
     if (!this.tokenizer) {

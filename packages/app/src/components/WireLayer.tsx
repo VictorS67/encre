@@ -6,13 +6,12 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import styled from '@emotion/styled';
 import { orderBy } from 'lodash-es';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { PartialWire, RenderedWire } from './Wire';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import { showContextMenuState } from '../state/contextmenu';
@@ -24,8 +23,10 @@ import {
   isSelectingMultiWiresState,
   selectingWireIdsState,
 } from '../state/wire';
-import { NodeInputPortDef } from '../types/studio.type';
+import { NodeInputPortDef, RecordId } from '../types/studio.type';
 import { WireLayerProps } from '../types/wire.type';
+
+import { PartialWire, RenderedWire } from './Wire';
 
 const WireLayerContainer = styled.svg`
   position: absolute;
@@ -188,7 +189,7 @@ export const WireLayer: FC<WireLayerProps> = ({
           })[0] as HTMLElement;
 
           const nodeId = closestHoverEl!.parentElement!.dataset.nodeid as
-            | string
+            | RecordId
             | undefined;
           const portName = closestHoverEl!.parentElement!.dataset.portname as
             | string

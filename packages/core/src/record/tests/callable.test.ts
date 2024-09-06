@@ -16,7 +16,7 @@ import {
   CallableWithFallbacksArg,
   CallableLambda,
   CallableIf,
-} from '../callable.js';
+} from '../index.js';
 
 test('test custom callable', async () => {
   type TestInput = {
@@ -888,5 +888,32 @@ test('test CallableIf', async () => {
   expect(await callableIf.invoke({ input: true })).toStrictEqual({
     'if input is a string': undefined,
     'if input is equal to "John"': undefined,
+  });
+
+  const callableIfWithDefault = CallableIf.from<TestInput>(
+    {
+      'if input is a string': isStringRule,
+      'if input is equal to "John"': isJohnRule,
+    },
+    {
+      'if input is a string': callableLambdaA,
+      'if input is equal to "John"': callableLambdaB,
+    },
+    callableLambdaB
+  );
+
+  expect(await callableIfWithDefault.invoke({ input: 'input' })).toStrictEqual({
+    'if input is a string': 'input',
+    'if input is equal to "John"': ['input'],
+  });
+
+  expect(await callableIfWithDefault.invoke({ input: 'John' })).toStrictEqual({
+    'if input is a string': 'John',
+    'if input is equal to "John"': ['John'],
+  });
+
+  expect(await callableIfWithDefault.invoke({ input: true })).toStrictEqual({
+    'if input is a string': ['true'],
+    'if input is equal to "John"': ['true'],
   });
 });

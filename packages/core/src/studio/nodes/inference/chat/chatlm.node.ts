@@ -1,29 +1,76 @@
 import {
-  BaseChatLM,
-  BaseLMInput,
+  type BaseChatLM,
+  type BaseLMInput,
   isLMInput,
-} from '../../../../events/inference/chat/base.js';
+} from '../../../../events/inference/chat/index.js';
 import { OpenAIChat } from '../../../../events/inference/chat/llms/openai/chat.js';
-import { OpenAIChatCallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
+import { type OpenAIChatCallOptions } from '../../../../events/inference/chat/llms/openai/index.js';
 import { GeminiChat } from '../../../../events/inference/chat/llms/vertexai/gemini/chat.js';
-import { GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
-import { BaseMessage } from '../../../../events/input/load/msgs/base.js';
-import { LLMResult } from '../../../../events/output/provide/llmresult.js';
-import { ChatGenerationChunk } from '../../../../events/output/provide/message.js';
+import { type GeminiCallOptions } from '../../../../events/inference/chat/llms/vertexai/index.js';
+import { type BaseMessage } from '../../../../events/input/load/msgs/index.js';
+import {
+  type LLMResult,
+  type ChatGenerationChunk,
+} from '../../../../events/output/provide/index.js';
+import { load } from '../../../../load/index.js';
+import {
+  globalImportMap,
+  globalSecretMap,
+} from '../../../../load/registration.js';
 import { getRecordId } from '../../../../utils/nanoid.js';
 import { Data } from '../../../data.js';
 import {
-  ProcessInputMap,
-  ProcessContext,
-  ProcessOutputMap,
+  type ProcessInputMap,
+  type ProcessContext,
+  type ProcessOutputMap,
 } from '../../../processor.js';
+import { type SerializedNode } from '../../../serde.js';
 import { coerceToData } from '../../../utils/coerce.js';
 import { CallableNodeImpl } from '../../base.js';
-import { CallableNode } from '../../index.js';
+import { type CallableNode } from '../../index.js';
 
+/**
+ * A type alias for a specialized callable node focused on chat language model (ChatLM) operations.
+ * This node type is specialized for handling interactions using a language model to generate chat responses.
+ */
 export type ChatLMNode = CallableNode<'chatlm', BaseChatLM>;
 
+/**
+ * An abstract class providing a base implementation for chat language model nodes.
+ * This class extends the callable node implementation to provide specialized
+ * functionalities for chat generation using language models.
+ */
 export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
+  /**
+   * Deserializes a serialized chatlm node representation into an executable chatlm node,
+   * reconstituting the node with its operational parameters and data.
+   *
+   * @param serialized The serialized node data.
+   * @returns A promise resolving to a deserialized chatlm node.
+   */
+  static async deserialize(serialized: SerializedNode): Promise<ChatLMNode> {
+    const subType: string = serialized.subType;
+
+    switch (subType) {
+      case 'openai':
+        return OpenAIChatNodeImpl.deserialize(serialized);
+      case 'gemini':
+        return GeminiChatNodeImpl.deserialize(serialized);
+      default:
+        throw new Error('Plugin node is unsupported for now');
+    }
+  }
+
+  /**
+   * Preprocesses the input data to ensure it is in a valid format for the language model.
+   * This step ensures that the input data is either a string or an array of chat messages.
+   *
+   * @param inputs The map containing input data for the node.
+   * @param context The processing context, not actively used here.
+   * @returns The validated and cast input data as BaseLMInput.
+   * @throws Error if the inputs are not valid.
+   * @internal
+   */
   protected async _preprocess(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -42,6 +89,15 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
     return prompt.value;
   }
 
+  /**
+   * Postprocesses the raw outputs from the language model, extracting the generated chat responses
+   * and any associated metadata.
+   *
+   * @param rawOutputs The raw outputs from the language model invocation.
+   * @param context The processing context, not actively used here.
+   * @returns A map of process outputs keyed by their output port names.
+   * @internal
+   */
   protected async _postprocess(
     rawOutputs: LLMResult,
     context: ProcessContext
@@ -58,9 +114,7 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
         output: coerceToData(output),
         message: coerceToData(message),
         info: coerceToData(info),
-        completionTokens: coerceToData(undefined),
-        promptTokens: coerceToData(undefined),
-        totalTokens: coerceToData(undefined),
+        tokenUsage: coerceToData(undefined),
       };
     }
 
@@ -68,12 +122,18 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
       output: coerceToData(output),
       message: coerceToData(message),
       info: coerceToData(info),
-      completionTokens: coerceToData(llmOutput['completionTokens']),
-      promptTokens: coerceToData(llmOutput['promptTokens']),
-      totalTokens: coerceToData(llmOutput['totalTokens']),
+      tokenUsage: coerceToData(llmOutput['tokenUsage']),
     };
   }
 
+  /**
+   * Invokes the language model with the given input under the provided options.
+   * This method directly interfaces with the language model's callable mechanism.
+   *
+   * @param input The input data for the language model, expected to be BaseLMInput.
+   * @param options Optional additional settings for the language model call.
+   * @returns The output from the language model as specified by the callable's output type.
+   */
   async invoke<CallInput, CallOutput, CallOptions>(
     input: CallInput,
     options?: Partial<CallOptions> | undefined
@@ -88,19 +148,47 @@ export abstract class ChatLMNodeImpl extends CallableNodeImpl<ChatLMNode> {
   }
 }
 
+/**
+ * Implementation of a ChatLMNode specifically using OpenAI's language models.
+ * This node handles the interaction with OpenAI's chat models like gpt-3.5-turbo,
+ * producing chat responses based on provided prompts.
+ *
+ * ### Node Properties
+ *
+ * | Field       | Type                | Description                                                                      |
+ * |-------------|---------------------|----------------------------------------------------------------------------------|
+ * | `type`      | `'chatlm'`          | The type of the node, indicating it handles chat interactions via language models.|
+ * | `subType`   | `'openai'`          | The subtype of the node, specifying that it uses OpenAI's language models.        |
+ * | `data`      | {@link OpenAIChat}  | The callable used for interacting with OpenAI's language models.                  |
+ *
+ * ### Input Ports
+ *
+ * | Port Name   | Supported Types          | Description                                                         |
+ * |-------------|--------------------------|---------------------------------------------------------------------|
+ * | `prompt`    | `string`, `chat-message[]` | Accepts a string or an array of chat messages as input to the model.|
+ *
+ * ### Output Ports
+ *
+ * | Port Name    | Supported Types           | Description                                                         |
+ * |--------------|---------------------------|---------------------------------------------------------------------|
+ * | `output`     | `string`                  | Outputs the string response from the chat model.                    |
+ * | `message`    | `chat-message`            | Outputs the chat message object as a structured response.           |
+ * | `info`       | `object`, `unknown`       | Outputs additional information about the generation, if available.  |
+ * | `tokenUsage` | `object`, `unknown`       | Outputs information on token usage during the generation process.   |
+ *
+ */
 export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
-  static create(): ChatLMNode {
-    const openaiChat = new OpenAIChat({
-      modelName: 'gpt-3.5-turbo',
-      openAIApiKey: 'openai-secret-placeholder',
-      maxTokens: 2048,
-    });
-
-    const node: ChatLMNode = {
+  /**
+   * Creates a ChatLMNode configuration from a OpenAIChat callable instance.
+   * @param callable An instance of OpenAIChat defining the openai chat model.
+   * @returns A fully configured ChatLMNode specialized for openai chat model.
+   */
+  static nodeFrom(callable: OpenAIChat): ChatLMNode {
+    return {
       id: getRecordId(),
       type: 'chatlm',
       subType: 'openai',
-      data: openaiChat,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -118,15 +206,79 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
         output: 'string',
         message: 'chat-message',
         info: ['object', 'unknown'],
-        completionTokens: ['number', 'unknown'],
-        promptTokens: ['number', 'unknown'],
-        totalTokens: ['number', 'unknown'],
+        tokenUsage: ['object', 'unknown'],
       },
     };
+  }
+
+  /**
+   * Factory method to create a new instance of ChatLMNode.
+   * This method provides a simple way to instantiate a chatlm node with default settings,
+   * preparing it for use in requesting openai chat model.
+   *
+   * @returns An instance of ChatLMNode prepared with a default OpenAIChat.
+   */
+  static create(): ChatLMNode {
+    const openaiChat = new OpenAIChat({
+      modelName: 'gpt-3.5-turbo',
+      maxTokens: 2048,
+    });
+
+    const node: ChatLMNode = OpenAIChatNodeImpl.nodeFrom(openaiChat);
 
     return node;
   }
 
+  static async deserialize(serialized: SerializedNode): Promise<ChatLMNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'chatlm') {
+      throw new Error(`CANNOT deserialize this type in chatlm node: ${type}`);
+    }
+
+    const openaiChatStr = JSON.stringify(data);
+    const openaiChat = await load<OpenAIChat>(
+      openaiChatStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: openaiChat,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
+
+  /**
+   * Main process method that orchestrates the full lifecycle of chat generation using a language model.
+   * This method integrates input validation, preprocessing, language model invocation, and postprocessing.
+   *
+   * @param inputs A map containing all inputs to the node.
+   * @param context The current processing context.
+   * @returns A map of outputs as processed by the node, including the generated output, any structured messages, and additional info.
+   * @throws Error if inputs are not valid or if any stage of processing fails.
+   */
   async process(
     inputs: ProcessInputMap,
     context: ProcessContext
@@ -147,19 +299,48 @@ export class OpenAIChatNodeImpl extends ChatLMNodeImpl {
   }
 }
 
+/**
+ * Implementation of a ChatLMNode specifically using Gemini's language models.
+ * This node handles interactions with Gemini's chat models, such as "gemini-pro-vision",
+ * to produce chat responses based on provided prompts. It is tailored to integrate with Gemini's
+ * API capabilities, including using a Google API key for certain integrations.
+ *
+ * ### Node Properties
+ *
+ * | Field       | Type             | Description                                                                      |
+ * |-------------|------------------|----------------------------------------------------------------------------------|
+ * | `type`      | `'chatlm'`       | The type of the node, indicating it handles chat interactions via language models.|
+ * | `subType`   | `'gemini'`       | The subtype of the node, specifying that it uses Gemini's language models.        |
+ * | `data`      | {@link GeminiChat} | The callable used for interacting with Gemini's language models.                 |
+ *
+ * ### Input Ports
+ *
+ * | Port Name   | Supported Types          | Description                                                         |
+ * |-------------|--------------------------|---------------------------------------------------------------------|
+ * | `prompt`    | `string`, `chat-message[]` | Accepts a string or an array of chat messages as input to the model.|
+ *
+ * ### Output Ports
+ *
+ * | Port Name    | Supported Types           | Description                                                         |
+ * |--------------|---------------------------|---------------------------------------------------------------------|
+ * | `output`     | `string`                  | Outputs the string response from the chat model.                    |
+ * | `message`    | `chat-message`            | Outputs the chat message object as a structured response.           |
+ * | `info`       | `object`, `unknown`       | Outputs additional information about the generation, if available.  |
+ * | `tokenUsage` | `object`, `unknown`       | Outputs information on token usage during the generation process.   |
+ *
+ */
 export class GeminiChatNodeImpl extends ChatLMNodeImpl {
-  static create(): ChatLMNode {
-    const geminiChat = new GeminiChat({
-      modelName: 'gemini-pro-vision',
-      googleApiKey: 'google-secret-placeholder',
-      maxOutputTokens: 2048,
-    });
-
-    const node: ChatLMNode = {
+  /**
+   * Creates a ChatLMNode configuration from a GeminiChat callable instance.
+   * @param callable An instance of GeminiChat defining the interaction logic with Gemini's chat models.
+   * @returns A fully configured ChatLMNode specialized for Gemini operations.
+   */
+  static nodeFrom(callable: GeminiChat): ChatLMNode {
+    return {
       id: getRecordId(),
       type: 'chatlm',
       subType: 'gemini',
-      data: geminiChat,
+      data: callable,
       visualInfo: {
         position: {
           x: 0,
@@ -177,15 +358,81 @@ export class GeminiChatNodeImpl extends ChatLMNodeImpl {
         output: 'string',
         message: 'chat-message',
         info: ['object', 'unknown'],
-        completionTokens: ['number', 'unknown'],
-        promptTokens: ['number', 'unknown'],
-        totalTokens: ['number', 'unknown'],
+        tokenUsage: ['object', 'unknown'],
       },
     };
+  }
+
+  /**
+   * Factory method to create a new instance of ChatLMNode.
+   * This method initializes a new node with a GeminiChat instance configured
+   * for a specific model and API integration, providing a tailored approach to chat generation.
+   *
+   * @returns An instance of ChatLMNode prepared with a GeminiChat configured for "gemini-pro-vision" model.
+   */
+  static create(): ChatLMNode {
+    const geminiChat = new GeminiChat({
+      modelName: 'gemini-pro-vision',
+      googleApiKey: 'google-secret-placeholder',
+      maxOutputTokens: 2048,
+    });
+
+    const node: ChatLMNode = GeminiChatNodeImpl.nodeFrom(geminiChat);
 
     return node;
   }
 
+  static async deserialize(serialized: SerializedNode): Promise<ChatLMNode> {
+    const {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    } = serialized;
+
+    if (type !== 'chatlm') {
+      throw new Error(`CANNOT deserialize this type in chatlm node: ${type}`);
+    }
+
+    const geminiChatStr = JSON.stringify(data);
+    const geminiChat = await load<GeminiChat>(
+      geminiChatStr,
+      globalSecretMap,
+      globalImportMap
+    );
+
+    return {
+      id,
+      type,
+      subType,
+      registerArgs,
+      data: geminiChat,
+      visualInfo,
+      inputs,
+      outputs,
+      runtime,
+      memory,
+      outputSizes,
+    };
+  }
+
+  /**
+   * Main process method that orchestrates the full lifecycle of chat generation using Gemini's language model.
+   * This method integrates input validation, preprocessing, language model invocation, and postprocessing,
+   * ensuring a seamless interaction tailored to the specifics of the Gemini model capabilities.
+   *
+   * @param inputs A map containing all inputs to the node.
+   * @param context The current processing context.
+   * @returns A map of outputs as processed by the node, including the generated output, any structured messages, and additional info.
+   * @throws Error if inputs are not valid or if any stage of processing fails.
+   */
   async process(
     inputs: ProcessInputMap,
     context: ProcessContext

@@ -1,6 +1,7 @@
 import { audioDescriptor } from '../components/descriptors/AudioDescriptor';
 import { blobDescriptor } from '../components/descriptors/BlobDescriptor';
 import { codeDescriptor } from '../components/descriptors/CodeDescriptor';
+import { conditionDescriptor } from '../components/descriptors/ConditionDescriptor';
 import { contextDescriptor } from '../components/descriptors/ContextDescriptor';
 import { fileDescriptor } from '../components/descriptors/FileDescriptor';
 import { imageDescriptor } from '../components/descriptors/ImageDescriptor';
@@ -23,6 +24,7 @@ const allUIContextDescriptors: UIContextDescriptors = {
   image: imageDescriptor,
   audio: audioDescriptor,
   file: fileDescriptor,
+  condition: conditionDescriptor,
 };
 
 export function useUIContextDescriptors(

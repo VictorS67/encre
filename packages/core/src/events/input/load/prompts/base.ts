@@ -1,13 +1,17 @@
 import { Serializable } from '../../../../load/serializable.js';
-import { CallableConfig } from '../../../../record/callable.js';
-import { BaseEvent, BaseEventParams } from '../../../base.js';
-import { ValidateResult } from '../../../inference/validate/index.js';
+import { type CallableConfig } from '../../../../record/index.js';
+import { BaseEvent, type BaseEventParams } from '../../../base.js';
+import { type ValidateResult } from '../../../inference/validate/index.js';
 import {
-  VariableRules,
+  type VariableRules,
   VariableValidator,
-} from '../../../inference/validate/validators/variable.js';
-import { BaseMessage } from '../msgs/base.js';
+} from '../../../inference/validate/validators/index.js';
+import { type BaseMessage } from '../msgs/index.js';
 
+/**
+ * Abstract base class representing a generic prompt. This class must be extended to provide specific types of prompts.
+ * The class is serializable and defines the namespace and type of the prompt.
+ */
 export abstract class BasePrompt extends Serializable {
   _isSerializable = false;
 
@@ -19,31 +23,57 @@ export abstract class BasePrompt extends Serializable {
     this._promptType(),
   ];
 
+  /**
+   * Abstract method to return the specific type of prompt.
+   * @returns The prompt type as a string.
+   */
   abstract _promptType(): string;
 
+  /**
+   * Converts the prompt to a string representation.
+   * @returns A string representing the prompt.
+   */
   abstract toString(): string;
 
+  /**
+   * Converts the prompt to an array of chat messages.
+   * @returns An array of BaseMessage instances representing the prompt in chat form.
+   */
   abstract toChatMessages(): BaseMessage[];
 }
 
+/**
+ * Interface defining the parameters for prompt templates.
+ */
 export interface PromptTemplateParams extends BaseEventParams {
   /**
-   * the template string
+   * Template string used to generate prompts.
    */
   template: string;
 
   /**
-   * Clearly declare the input variables inside the template
+   * List of input variables explicitly declared, used within the template.
    */
   inputVariables: string[];
 
+  /**
+   * Optional rules for validating the input variables.
+   */
   guardrails?: VariableRules;
 }
 
+/**
+ * Interface defining the template input, keys are the input names,
+ * values are corresponding input values.
+ */
 export interface BasePromptTemplateInput {
   [key: string]: unknown;
 }
 
+/**
+ * Abstract base class for prompt templates that generate specific types of prompts based on input data.
+ * This class extends BaseEvent to handle input-output operations with validation capabilities.
+ */
 export abstract class BasePromptTemplate<
     CallInput extends BasePromptTemplateInput = BasePromptTemplateInput,
     CallOutput extends BasePrompt = BasePrompt,
@@ -60,10 +90,19 @@ export abstract class BasePromptTemplate<
     return ['input', 'load', 'prompts', this._templateType()];
   }
 
+  /**
+   * Template string used to generate prompts.
+   */
   template = '';
 
+  /**
+   * List of input variables explicitly declared, used within the template.
+   */
   inputVariables: string[] = [];
 
+  /**
+   * Optional rules for validating the input variables.
+   */
   guardrails?: VariableRules;
 
   constructor(fields?: Partial<PromptTemplateParams>) {
@@ -80,12 +119,19 @@ export abstract class BasePromptTemplate<
     }
   }
 
+  /**
+   * Returns the specific template type.
+   * @returns The type of the template.
+   */
   abstract _templateType(): string;
 
   /**
-   * To validate whether the inputVariables is valid
-   * @param template
-   * @param inputVariables
+   * Ensures that all declared input variables are used in the template.
+   * Throws an error if a declared variable is not used.
+   * @param template The template string.
+   * @param inputVariables The list of declared input variables.
+   * @throws Error if a variable is declared but not used.
+   * @internal
    */
   private _isInputExists(template: string, inputVariables: string[]): void {
     const variablePattern = /\{\{([^}]+)\}\}/g;
@@ -105,6 +151,13 @@ export abstract class BasePromptTemplate<
     });
   }
 
+  /**
+   * Invokes the template processing with input validation. Returns the generated prompt.
+   * @param input The input data for generating the prompt.
+   * @param options Optional configuration.
+   * @returns A promise resolving to the generated prompt.
+   * @throws Error if input validation fails.
+   */
   async invoke(
     input: CallInput,
     options?: Partial<CallOptions>
@@ -120,6 +173,11 @@ export abstract class BasePromptTemplate<
     return this.formatPrompt(input);
   }
 
+  /**
+   * Validates the input data using any configured guardrails.
+   * @param input The input data to validate.
+   * @returns A promise resolving to a validation result.
+   */
   async validate(input: CallInput): Promise<ValidateResult> {
     if (!this.guardrails) return { isValid: true };
 
@@ -131,10 +189,25 @@ export abstract class BasePromptTemplate<
     return validator.invoke(input);
   }
 
+  /**
+   * Abstract method to format the provided input into a string.
+   * @param input The input data.
+   * @returns A promise resolving to the formatted string.
+   */
   abstract format(input: CallInput): Promise<string>;
 
+  /**
+   * Abstract method to format the provided input into a prompt.
+   * @param input The input data.
+   * @returns A promise resolving to the generated prompt.
+   */
   abstract formatPrompt(input: CallInput): Promise<CallOutput>;
 
+  /**
+   * Retrieves all unique variable names used in the input and guardrails.
+   * @returns An array of unique variable names.
+   * @internal
+   */
   private _getAllVariables(): string[] {
     return [...new Set(this.inputVariables)];
   }

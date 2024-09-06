@@ -1,25 +1,52 @@
-import { BaseEvent, BaseEventParams } from '../../../base.js';
-import { Context } from './context.js';
+import { BaseEvent, type BaseEventParams } from '../../../base.js';
+import { type Context } from './context.js';
 
 /**
- * Interface that defines the loader for loading readable source.
+ * Interface for defining a loader that is responsible for loading readable sources and returning them in a specified output format.
+ * This loader is typically used for processing input data and transforming it into a structured context suitable for further processing.
+ *
+ * @template Input The type of input that the loader accepts.
+ * @template Output The type of output that the loader produces, typically an array of Context objects.
  */
 export interface DocLoader<Input = unknown, Output = Context[]> {
+  /**
+   * Loads data from the provided source and returns it as structured output.
+   *
+   * @param source The source input to load.
+   * @returns A promise that resolves to the output, typically an array of contexts.
+   */
   load(source: Input): Promise<Output>;
 }
 
+/**
+ * Extends BaseEventParams to include options specific to document loaders, such as whether to split the context into chunks.
+ * This interface is designed to provide customizable options for document loading processes.
+ *
+ * @extends BaseEventParams
+ */
 export interface BaseDocLoaderCallOptions extends BaseEventParams {
   /**
-   * Whether the loader should split the context into chunks
+   * Optional flag indicating whether the loader should split the loaded context into separate chunks.
+   * This can be useful for handling large datasets or distributing processing load.
    */
   shouldSplit?: boolean;
 }
 
+/**
+ * Defines parameters for initializing BaseLoader instances, including all options from BaseDocLoaderCallOptions.
+ * This interface is typically used to pass configuration options when creating new loader instances.
+ *
+ * @extends BaseDocLoaderCallOptions
+ */
 export interface BaseLoaderParams extends BaseDocLoaderCallOptions {}
 
 /**
- * Abstract class that provides an abstract load() event from the Loader
- * interface.
+ * An abstract class that defines the framework for a document loader, capable of loading inputs and transforming them into a structured context.
+ * Subclasses are expected to implement the specific logic for loading and processing the data based on the defined abstract methods.
+ *
+ * @template CallInput The type of input the loader accepts, defaulting to unknown.
+ * @template CallOutput The type of output the loader produces, typically an array of Context objects.
+ * @template CallOptions The options applicable to the loader, extending BaseDocLoaderCallOptions.
  */
 export abstract class BaseLoader<
     CallInput = unknown,
@@ -29,12 +56,16 @@ export abstract class BaseLoader<
   extends BaseEvent<CallInput, CallOutput, CallOptions>
   implements DocLoader<CallInput, CallOutput>
 {
+  /** @hidden */
   declare CallOptions: CallOptions;
 
   _eventNamespace(): string[] {
     return ['input', 'load', 'docs', this._docType()];
   }
 
+  /**
+   * Whether the loader should split the output into chunks.
+   */
   shouldSplit?: boolean;
 
   constructor(fields?: BaseLoaderParams) {
@@ -43,6 +74,13 @@ export abstract class BaseLoader<
     this.shouldSplit = fields?.shouldSplit ?? false;
   }
 
+  /**
+   * Invokes the loading process with the given input and options.
+   *
+   * @param input The input data to load.
+   * @param options Optional settings to customize the loading process.
+   * @returns A Promise resolving to the output, typically an array of contexts.
+   */
   async invoke(
     input: CallInput,
     options?: Partial<CallOptions>
@@ -52,11 +90,18 @@ export abstract class BaseLoader<
     return this.load(input);
   }
 
+  /**
+   * Defines the document type that this loader handles.
+   *
+   * @returns A string representing the document type.
+   */
   abstract _docType(): string;
 
   /**
-   * Abstract method that loads the readable source.
-   * @returns A Promise that resolves with an array of `Context` instances.
+   * Define how sources are loaded.
+   *
+   * @param source The input source to be loaded.
+   * @returns A Promise that resolves with the loaded output, as defined by CallOutput.
    */
   abstract load(source: CallInput): Promise<CallOutput>;
 }

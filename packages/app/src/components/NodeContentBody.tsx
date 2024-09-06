@@ -1,17 +1,24 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
 import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';
+import { useRecoilValue } from 'recoil';
 
+import { useStableCallback } from '../hooks/useStableCallback';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
+// import { nodeBodyMapState } from '../state/node';
+import { nodeBodyMapState } from '../state/node';
 import {
   KnownNodeContentBodyProps,
   NodeContentBodyProps,
   UnknownNodeContentBodyProps,
 } from '../types/nodebody.type';
-import { NodeBody, UIContext } from '../types/studio.type';
+import { Node, NodeBody, UIContext } from '../types/studio.type';
 import { UIContextDescriptor } from '../types/uicontext.type';
+import { fakeId } from '../utils/fakeId';
+// import { useGetNodeBody } from '../apis/node';
+// import { useNodeBody } from '../hooks/useNodeBody';
 
 const NodeContentBodyWrapper = styled.div<{
   fontSize: number;
@@ -31,38 +38,45 @@ const NodeContentBodyWrapper = styled.div<{
 
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
+    const nodeBodyMap = useRecoilValue(nodeBodyMapState);
+
     const {
       isPending,
       error,
-      data: body,
+      data: uiContexts,
       isFetching,
     } = useQuery({
       queryKey: ['nodeBody', node.id],
-      queryFn: () => node.getBody(),
+      queryFn: () => {
+        const body = nodeBodyMap[node.id] ?? [];
+
+        const bodyStyle: UIContext | UIContext[] | undefined =
+          typeof body === 'string' ? { type: 'plain', text: body } : body;
+
+        let uis: UIContext[] = bodyStyle
+          ? Array.isArray(bodyStyle)
+            ? bodyStyle
+            : [bodyStyle]
+          : [];
+
+        uis = uis.map((ui) => {
+          if (ui.type === 'plain' && ui.text.startsWith('::markdown')) {
+            return {
+              type: 'markdown',
+              text: ui.text.replace(/^::markdown/, '').trim(),
+            };
+          }
+
+          return ui;
+        });
+
+        return uis;
+      },
     });
 
     if (isPending) return <></>;
 
     if (error) return <div>An error occurred: {error.message}</div>;
-
-    const bodyStyle: UIContext | UIContext[] | undefined =
-      typeof body === 'string' ? { type: 'plain', text: body } : body;
-
-    let uiContexts: UIContext[] = bodyStyle
-      ? Array.isArray(bodyStyle)
-        ? bodyStyle
-        : [bodyStyle]
-      : [];
-    uiContexts = uiContexts.map((ui) => {
-      if (ui.type === 'plain' && ui.text.startsWith('::markdown')) {
-        return {
-          type: 'markdown',
-          text: ui.text.replace(/^::markdown/, '').trim(),
-        };
-      }
-
-      return ui;
-    });
 
     return <KnownNodeContentBody node={node} uiContexts={uiContexts} />;
   },
@@ -73,6 +87,7 @@ NodeContentBody.displayName = 'NodeContentBody';
 export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
   node,
   uiContexts,
+  onEditorClick,
 }: KnownNodeContentBodyProps) => {
   const descriptors = useUIContextDescriptors(uiContexts);
 
@@ -96,8 +111,21 @@ export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
       style={{ height: '100%', flex: 1, flexDirection: 'column' }}
     >
       {renderedBodies.map(({ style, Body }, i) => {
+        const editingId: string = fakeId(14);
+
+        const onBodyClick = onEditorClick
+          ? useStableCallback((n: Node, id: string) => {
+              onEditorClick?.(n, style, id);
+            })
+          : undefined;
+
         const renderedBody = Body ? (
-          <Body node={node} {...style} />
+          <Body
+            node={node}
+            id={editingId}
+            onEditClick={onBodyClick}
+            {...style}
+          />
         ) : (
           <UnknownNodeContentBody node={node} />
         );

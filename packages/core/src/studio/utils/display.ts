@@ -1,38 +1,88 @@
 import { match } from 'ts-pattern';
-import { ContentLike, MessageRole } from '../../events/input/load/msgs/base.js';
-import { SecretFields } from '../../load/keymap.js';
 import {
-  BlobData,
-  BooleanData,
-  ChatMessageData,
-  ContextData,
-  Data,
-  DataFields,
-  JSONObjectData,
-  NumberData,
-  ScalarDataType,
-  StringData,
-  UnknownData,
+  type ContentLike,
+  type MessageRole,
+} from '../../events/input/load/msgs/index.js';
+import { type SecretFields } from '../../load/keymap.js';
+import {
+  type ConditionField,
+  type ElseConditionField,
+  type IfConditionField,
+} from '../condition.js';
+import {
+  type BlobData,
+  type BooleanData,
+  type ChatMessageData,
+  type ContextData,
+  type Data,
+  type DataFields,
+  type JSONObjectData,
+  type NumberData,
+  type ScalarDataType,
+  type StringData,
+  type UnknownData,
   arrayizeData,
   getScalarTypeOf,
   isArrayDataType,
 } from '../data.js';
 import {
-  AudioUIContext,
-  BlobUIContext,
-  CodeUIContext,
-  ContextUIContext,
-  FileUIContext,
-  ImageUIContext,
-  MarkdownUIContext,
-  MessageUIContext,
-  PlainUIContext,
-  UIContext,
+  type AudioUIContext,
+  type BlobUIContext,
+  type CodeUIContext,
+  type ContextUIContext,
+  type FileUIContext,
+  type ImageUIContext,
+  type MarkdownUIContext,
+  type MessageUIContext,
+  type PlainUIContext,
+  type UIContext,
   UIDataTypesMap,
   audioTypes,
   fileTypes,
   imageTypes,
+  type ConditionUIContext,
+  type ConditionUI,
 } from '../ui.js';
+
+export async function displayConditionUI(
+  sources: string[],
+  actions: {
+    [target: string]: [IfConditionField, ...ElseConditionField[]];
+  }
+): Promise<ConditionUIContext[]> {
+  const conditionGrp: [string, ConditionField[]][] = Object.entries(actions);
+
+  const uiContexts = [] as ConditionUIContext[];
+  for (const [target, conditionFields] of conditionGrp) {
+    const conditions: ConditionUI[] = [];
+    for (let i = 0; i < conditionFields.length; i++) {
+      const cond: ConditionField = conditionFields[i];
+      const condUI: ConditionUI =
+        cond.type === 'otherwise'
+          ? {
+              type: cond.type,
+              source: cond.source,
+            }
+          : {
+              type: cond.type,
+              description: cond.ruleCollection.getCleanDescription(),
+              metadata: cond.ruleCollection.serialize(),
+              source: cond.source,
+            };
+
+      conditions.push(condUI);
+    }
+
+    uiContexts.push({
+      type: 'condition',
+      target,
+      sources,
+      conditions,
+    });
+  }
+
+  return uiContexts;
+}
 
 export async function displayUIFromDataFields(
   dataFields: DataFields
@@ -120,7 +170,7 @@ function partitionDataGroup(
     const [key, data] = dataGrp[i];
 
     // skip if data is undefined
-    if (!data || !data.value) continue;
+    if (!data) continue;
 
     // if currGrp is empty or current element is of the same type as the previous one
     // (here we only care about whether the element can be displayed in the same UI (e.g.

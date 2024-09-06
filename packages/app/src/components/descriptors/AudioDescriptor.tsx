@@ -69,8 +69,8 @@ const Audio = styled.div`
 
 /* eslint-disable react/prop-types */
 export const AudioNodeContentBody: FC<
-  { node: Node } & Extract<UIContext, { type: 'audio' }>
-> = memo(({ node, mimeType, data }) => {
+  { node: Node; id: string } & Extract<UIContext, { type: 'audio' }>
+> = memo(({ node, id, mimeType, data }) => {
   const [blob, setBlob] = useState<Blob | undefined>(
     new Blob([data], { type: mimeType }),
   );

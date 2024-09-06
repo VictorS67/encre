@@ -19,6 +19,9 @@ html[data-color-mode="light"] {
   --text-color-accent-3: #e42e00;
   --text-color-accent-4: #d800cc;
 
+  --text-color-1: #21212180;
+  --text-color-2: #21212140;
+
   --text-success-color: #009326;
   --text-error-color: #a81000;
   --text-warn-color: #f19606;
@@ -108,6 +111,9 @@ html[data-color-mode="dark"] {
   --text-color-accent-2: #a85aed;
   --text-color-accent-3: #e45c10;
   --text-color-accent-4: #d82ddd;
+
+  --text-color-1: #c2c2c280;
+  --text-color-2: #c2c2c240;
 
   --text-success-color: #00962a;
   --text-error-color: #a81000;

@@ -1,7 +1,5 @@
 import { useMemo } from 'react';
 
-import { useContextMenuConfigCommands } from './useContextMenuConfigCommands';
-import { useContextMenuConfigContexts } from './useContextMenuConfigContexts';
 import {
   ContextMenuConfig,
   ContextMenuConfigCommands,
@@ -9,7 +7,11 @@ import {
   ContextMenuConfigContextItem,
   ContextMenuConfigContexts,
 } from '../types/contextmenu.type';
+import { BuiltInNodeTypePairs } from '../types/studio.type';
 import { entries } from '../utils/safeTypes';
+
+import { useContextMenuConfigCommands } from './useContextMenuConfigCommands';
+import { useContextMenuConfigContexts } from './useContextMenuConfigContexts';
 
 export function useContextMenuConfig(): ContextMenuConfig {
   const contexts: ContextMenuConfigContexts = useContextMenuConfigContexts();

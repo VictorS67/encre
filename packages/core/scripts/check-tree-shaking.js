@@ -23,7 +23,13 @@ export function listExternals(packageJson) {
     "js-tiktoken/lite",
     "js-tiktoken",
     "fs",
-    "ts-pattern"
+    "ts-pattern",
+    "perf_hooks",
+    "axios",
+    "uuid",
+    "stream/web",
+    "yaml",
+    "path"
   ];
 }
 

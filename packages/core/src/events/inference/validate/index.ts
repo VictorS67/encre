@@ -7,6 +7,18 @@ export type ValidateFunc<T = any> = (
   variables?: any
 ) => Promise<boolean>;
 
-// This is the result for all validators. When the validation does not pass
-// (e.g. `isValid` is False), then the `errorMessage` is non-empty.
-export type ValidateResult = { isValid: boolean; errorMessage?: string };
+/**
+ * Type definition for the result of a validation operation.
+ * If the validation does not pass (`isValid` is `false`), the `errorMessage` should describe the issue.
+ */
+export type ValidateResult = { 
+  /**
+   * A boolean indicating whether the validation passed.
+   */
+  isValid: boolean; 
+
+  /**
+   *  An optional string containing a message describing why the validation failed, present only when `isValid` is `false`.
+   */
+  errorMessage?: string 
+};

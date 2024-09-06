@@ -1,7 +1,9 @@
-import { CSSProperties, MutableRefObject } from 'react';
+import React, { CSSProperties, FC, MutableRefObject } from 'react';
 
-import { Node } from './studio.type';
 import { type monaco } from '../utils/monacoEditor';
+
+import { ModalProps } from './modal.type';
+import { Node, UIContext } from './studio.type';
 
 export type SyntaxedEditor =
   | EditorGroupContent
@@ -55,6 +57,8 @@ export type CodeEditorProps = {
   text: string;
   language?: string;
   keywords?: string[];
+  properties?: string[];
+  variables?: string[];
   fontSize?: number;
   fontFamily?: string;
   isReadOnly?: boolean;
@@ -69,8 +73,10 @@ export type CodeEditorProps = {
 
 export type SyntaxedTextProps = {
   text: string;
-  language: string;
-  keywords: string[];
+  language?: string;
+  keywords?: string[];
+  properties?: string[];
+  variables?: string[];
   theme?: string;
   style?: CSSProperties;
 };
@@ -88,3 +94,5 @@ export type DefaultNodeEditorProps = {
   onChange?: NodeChangeFn;
   onClose?: () => void;
 };
+
+export type EditorModalProps = ModalProps;

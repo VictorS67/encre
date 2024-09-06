@@ -5,10 +5,14 @@ import { UIContextDescriptor } from '../../types/uicontext.type';
 
 /* eslint-disable react/prop-types */
 export const PlainTextNodeContentBody: FC<
-  { node: Node } & Extract<UIContext, { type: 'plain' }>
-> = memo(({ node, text }) => {
+  { node: Node; id: string } & Extract<UIContext, { type: 'plain' }>
+> = memo(({ node, id, text }) => {
   return (
-    <pre className="pre-wrap" style={{ userSelect: 'text' }}>
+    <pre
+      className="pre-wrap"
+      style={{ userSelect: 'text', paddingLeft: 10 }}
+      data-label={'editor'}
+    >
       {text}
     </pre>
   );

@@ -9,6 +9,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
@@ -18,14 +19,8 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import clsx from 'clsx';
-import { ErrorBoundary } from 'react-error-boundary';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { Icon } from './Icon';
-import { NodeContentBody } from './NodeContentBody';
-import { NodeContentBodyMask } from './NodeContentBodyMask';
-import { NodePortGroup } from './NodePortGroup';
-import { ResizeBox } from './ResizeBox';
 import { useRipple } from '../hooks/useAnimation';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
@@ -44,6 +39,12 @@ import {
 } from '../types/node.type';
 import { Node } from '../types/studio.type';
 import { getColorMode } from '../utils/colorMode';
+
+import { Icon } from './Icon';
+import { NodeContentBody } from './NodeContentBody';
+import { NodeContentBodyMask } from './NodeContentBodyMask';
+import { NodePortGroup } from './NodePortGroup';
+import { ResizeBox } from './ResizeBox';
 
 const VisualNodeContainer = styled.div<{
   isCollapsed?: boolean;
@@ -523,7 +524,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     };
 
     const onResizeStart = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
@@ -535,7 +535,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     const onResizeMove = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       const mousePositionInCanvas = clientToCanvasPosition(
@@ -579,7 +578,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     const onResizeExpand = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       const [width, height] = getNodeCurrentDimensions(e.target as HTMLElement);
@@ -590,7 +588,6 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
     });
 
     const onResizeCollapse = useStableCallback((e: React.MouseEvent) => {
-      e.preventDefault();
       e.stopPropagation();
 
       if (minCardHeight !== Number.MAX_SAFE_INTEGER) {
@@ -678,7 +675,8 @@ const VisualNodeContent: FC<VisualNodeContentProps> = memo(
                 className={clsx('node-title', { minimized: isMinimized })}
                 style={minTitleStyling}
               >
-                {node.title}
+                {node.title ??
+                  (node.data._id[node.data._id.length - 1] as string)}
               </div>
               {isCollapsed && (
                 <div

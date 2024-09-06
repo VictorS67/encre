@@ -7,6 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import {
   DndContext,
@@ -24,22 +25,14 @@ import {
 } from '@floating-ui/react';
 import { useBoolean, useThrottleFn } from 'ahooks';
 import { produce } from 'immer';
-import { CSSTransition } from 'react-transition-group';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { ContextMenu } from './ContextMenu';
-import { DebugObserver, TimeTravelObserver } from './DebugObserver';
-import { DraggableComment } from './DraggableComment';
-import { DraggableNode } from './DraggableNode';
-import { MouseIcon } from './MouseIcon';
-import { VisualComment } from './VisualComment';
-import { VisualNode } from './VisualNode';
-import { WireLayer } from './WireLayer';
 import { useCanvasPosition } from '../hooks/useCanvasPosition';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useDraggingComment } from '../hooks/useDraggingComment';
 import { useDraggingNode } from '../hooks/useDraggingNode';
 import { useDraggingWire } from '../hooks/useDraggingWire';
+import { useEditorClick } from '../hooks/useEditorClick';
 import { useNodePortPositions } from '../hooks/usePortPosition';
 import { useStableCallback } from '../hooks/useStableCallback';
 import {
@@ -62,7 +55,21 @@ import { draggingWireClosestPortState } from '../state/wire';
 import { NodeCanvasProps, type CanvasPosition } from '../types/canvas.type';
 import { type ContextMenuConfigContextData } from '../types/contextmenu.type';
 import { HighlightedPort } from '../types/port.type';
-import { GraphComment, Node, NodeConnection } from '../types/studio.type';
+import {
+  GraphComment,
+  Node,
+  NodeConnection,
+  RecordId,
+} from '../types/studio.type';
+
+import { ContextMenu } from './ContextMenu';
+import { DebugObserver, TimeTravelObserver } from './DebugObserver';
+import { DraggableComment } from './DraggableComment';
+import { DraggableNode } from './DraggableNode';
+import { MouseIcon } from './MouseIcon';
+import { VisualComment } from './VisualComment';
+import { VisualNode } from './VisualNode';
+import { WireLayer } from './WireLayer';
 
 const styles = css`
   position: relative;
@@ -257,6 +264,8 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     setContextMenu,
     handleContextMenu,
   } = useContextMenu();
+
+  useEditorClick();
 
   const nodesToDrag = useMemo(() => {
     return [...new Set([...draggingNodes, ...draggingNodesInComments])];
@@ -648,7 +657,7 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
   );
 
   const onNodeMouseOver = useStableCallback(
-    (event: React.MouseEvent, nodeId: string) => {
+    (event: React.MouseEvent, nodeId: RecordId) => {
       setHoveringNodeId(nodeId);
     },
   );
