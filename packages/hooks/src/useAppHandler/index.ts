@@ -2,9 +2,9 @@ import {
   createParser,
   ParsedEvent,
   ReconnectInterval,
-} from 'eventsource-parser';
+} from "eventsource-parser";
 
-import { encreCache } from '../cache';
+import { encreCache } from "../cache";
 import {
   Context,
   EncreAppConfig,
@@ -14,8 +14,8 @@ import {
   EncreData,
   Message,
   ProcessStreamEventFilter,
-} from '../types';
-import { coerceEncreData } from '../utils';
+} from "../types";
+import { coerceEncreData } from "../utils";
 
 const runGraphFetch = async (
   req: {
@@ -30,31 +30,31 @@ const runGraphFetch = async (
       onNodeStart?: (
         nodeId: string,
         nodeTitle: string,
-        inputs: Record<string, EncreData>,
+        inputs: Record<string, EncreData>
       ) => unknown;
       onNodeFinish?: (
         nodeId: string,
         nodeTitle: string,
-        outputs: Record<string, EncreData>,
+        outputs: Record<string, EncreData>
       ) => unknown;
     };
   },
   graphCallbacks: {
     onDone?: (
-      graphOutput: Record<string, Record<string, EncreData>>,
+      graphOutput: Record<string, Record<string, EncreData>>
     ) => unknown;
     onError?: (error: string) => unknown;
-  },
+  }
 ) => {
   const url: string =
-    req.url ?? process.env.ENCRE_STUDIO_URL ?? 'http://localhost:5127';
+    req.url ?? process.env.ENCRE_STUDIO_URL ?? "http://localhost:5127";
   const apiUrl = `${url}/api/v1/app/run`;
 
   const res = await fetch(apiUrl, {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify({
       userInputs: req.userInputs ?? {},
       appPath: req.appPath,
@@ -66,7 +66,7 @@ const runGraphFetch = async (
   if (res.status !== 200) {
     const statusText = res.statusText;
     throw new Error(
-      `The Encre Studio API has encountered an error with a status code of ${res.status} and message ${statusText}`,
+      `The Encre Studio API has encountered an error with a status code of ${res.status} and message ${statusText}`
     );
   }
 
@@ -76,10 +76,10 @@ const runGraphFetch = async (
   return new ReadableStream({
     async start(controller) {
       const onParse = (event: ParsedEvent | ReconnectInterval) => {
-        if (event.type === 'event') {
+        if (event.type === "event") {
           const data = event.data;
 
-          if (data === '[DONE]') {
+          if (data === "[DONE]") {
             controller.close();
             return;
           }
@@ -94,85 +94,85 @@ const runGraphFetch = async (
             //   )}`
             // );
 
-            if (json['#event'] === 'nodeStart') {
-              const nodeId = json['nodeId'];
+            if (json["#event"] === "nodeStart") {
+              const nodeId = json["nodeId"];
 
               // console.log(`nodeStart: nodeId: ${nodeId}`);
 
               const onNodeStart = nodeCallbacks[nodeId]?.onNodeStart;
               const text = onNodeStart?.(
-                json['nodeId'],
-                json['nodeTitle'],
-                json['inputs'],
+                json["nodeId"],
+                json["nodeTitle"],
+                json["inputs"]
               );
 
               const metadata = {
-                event: 'nodeStart',
-                nodeId: json['nodeId'],
-                nodeTitle: json['nodeTitle'],
+                event: "nodeStart",
+                nodeId: json["nodeId"],
+                nodeTitle: json["nodeTitle"],
               };
 
               const encodedText = `metadata: ${JSON.stringify(
-                metadata,
+                metadata
               )}\ntext: ${JSON.stringify(text)}\n\n`;
 
               // console.log(`encodedText: ${encodedText}`);
 
               const queue = encoder.encode(encodedText);
               controller.enqueue(queue);
-            } else if (json['#event'] === 'nodeFinish') {
-              const nodeId = json['nodeId'];
+            } else if (json["#event"] === "nodeFinish") {
+              const nodeId = json["nodeId"];
 
               // console.log(`nodeFinish: nodeId: ${nodeId}`);
 
               const onNodeFinish = nodeCallbacks[nodeId]?.onNodeFinish;
               const text = onNodeFinish?.(
-                json['nodeId'],
-                json['nodeTitle'],
-                json['outputs'],
+                json["nodeId"],
+                json["nodeTitle"],
+                json["outputs"]
               );
 
               const metadata = {
-                event: 'nodeFinish',
-                nodeId: json['nodeId'],
-                nodeTitle: json['nodeTitle'],
+                event: "nodeFinish",
+                nodeId: json["nodeId"],
+                nodeTitle: json["nodeTitle"],
               };
 
               const encodedText = `metadata: ${JSON.stringify(
-                metadata,
+                metadata
               )}\ntext: ${JSON.stringify(text)}\n\n`;
 
               // console.log(`encodedText: ${encodedText}`);
 
               const queue = encoder.encode(encodedText);
               controller.enqueue(queue);
-            } else if (json['#event'] === 'done') {
+            } else if (json["#event"] === "done") {
               const onDone = graphCallbacks.onDone;
-              const text = onDone?.(json['graphOutput']);
+              const text = onDone?.(json["graphOutput"]);
 
               const metadata = {
-                event: 'done',
+                event: "done",
               };
 
               const encodedText = `metadata: ${JSON.stringify(
-                metadata,
+                metadata
               )}\ntext: ${JSON.stringify(text)}\n\n`;
 
               // console.log(`encodedText: ${encodedText}`);
 
               const queue = encoder.encode(encodedText);
               controller.enqueue(queue);
-            } else if (json['#event'] === 'error') {
+            } else if (json["#event"] === "error") {
               const onError = graphCallbacks.onError;
 
-              const text = onError?.(json['error']);
+              const text = onError?.(json["error"]);
 
               const metadata = {
-                event: 'error',
+                event: "error",
               };
 
               const encodedText = `metadata: ${JSON.stringify(
-                metadata,
+                metadata
               )}\ntext: ${JSON.stringify(text)}\n\n`;
 
               // console.log(`encodedText: ${encodedText}`);
@@ -200,7 +200,7 @@ export const useAppHandler = () => {
   const cache = encreCache();
 
   const config = process.env.__ENCRE_APP_CONFIG as unknown as EncreAppConfig;
-  const appUrl = process.env.ENCRE_STUDIO_URL ?? 'http://localhost:5127';
+  const appUrl = process.env.ENCRE_STUDIO_URL ?? "http://localhost:5127";
   const appPath = config.workflow ?? undefined;
   const handlerMap = config.handlers;
 
@@ -211,19 +211,19 @@ export const useAppHandler = () => {
         onNodeStart?: (
           nodeId: string,
           nodeTitle: string,
-          inputs: Record<string, EncreData>,
+          inputs: Record<string, EncreData>
         ) => unknown;
         onNodeFinish?: (
           nodeId: string,
           nodeTitle: string,
-          outputs: Record<string, EncreData>,
+          outputs: Record<string, EncreData>
         ) => unknown;
       };
     } = {};
 
     let graphCallbacks: {
       onDone?: (
-        graphOutput: Record<string, Record<string, EncreData>>,
+        graphOutput: Record<string, Record<string, EncreData>>
       ) => unknown;
       onError?: (error: string) => unknown;
     } = {};
@@ -231,7 +231,7 @@ export const useAppHandler = () => {
     // console.log(`runGraph: req: ${JSON.stringify(req)}`);
 
     req.forEach(({ handler: h, value }) => {
-      if (handlerMap[h]?.event === 'userInput') {
+      if (handlerMap[h]?.event === "userInput") {
         const handler = handlerMap[h] as EncreAppInputHandler;
 
         userInputs[handler.nodeId] = {
@@ -240,7 +240,7 @@ export const useAppHandler = () => {
             value,
           },
         };
-      } else if (handlerMap[h]?.event === 'nodeOutput') {
+      } else if (handlerMap[h]?.event === "nodeOutput") {
         const handler = handlerMap[h] as EncreAppOutputHandler;
 
         nodeCallbacks[handler.nodeId] = {
@@ -248,14 +248,14 @@ export const useAppHandler = () => {
           onNodeFinish: (
             nodeId: string,
             nodeTitle: string,
-            outputs: Record<string, EncreData>,
+            outputs: Record<string, EncreData>
           ) => {
             // console.log(`### onNodeFinish: ${JSON.stringify(outputs)}`);
 
             return outputs[handler.portName]?.value;
           },
         };
-      } else if (handlerMap[h]?.event === 'graphOutput') {
+      } else if (handlerMap[h]?.event === "graphOutput") {
         const handler = handlerMap[h] as EncreAppOutputHandler;
 
         graphCallbacks = {
@@ -272,14 +272,14 @@ export const useAppHandler = () => {
     return runGraphFetch(
       { url: appUrl, userInputs, appPath },
       nodeCallbacks,
-      graphCallbacks,
+      graphCallbacks
     );
   };
 
   const onAction = async (handler: string) => {
     const handlerData: EncreAppHander | undefined = handlerMap[handler];
 
-    if (!handlerData || handlerData.handlerType !== 'action') {
+    if (!handlerData || handlerData.handlerType !== "action") {
       return;
     }
 
@@ -290,7 +290,7 @@ export const useAppHandler = () => {
 
     // console.log(`event: ${event}`);
 
-    if (event === 'runGraph') {
+    if (event === "runGraph") {
       let request: { handler: string; value?: unknown }[] = [];
 
       for (let i = 0; i < inputNodeIds.length; i++) {
@@ -301,7 +301,7 @@ export const useAppHandler = () => {
 
           const inputHandlerData: EncreAppHander | undefined =
             handlerMap[inputHandler];
-          if (!inputHandlerData || inputHandlerData.handlerType !== 'input') {
+          if (!inputHandlerData || inputHandlerData.handlerType !== "input") {
             continue;
           }
 
@@ -316,8 +316,8 @@ export const useAppHandler = () => {
         Object.entries(handlerMap)
           .filter(
             ([_, possibleHandlerData]) =>
-              possibleHandlerData.handlerType === 'output' &&
-              outputNodeIds.includes(possibleHandlerData.nodeId),
+              possibleHandlerData.handlerType === "output" &&
+              outputNodeIds.includes(possibleHandlerData.nodeId)
           )
           .map(([outputHandler, _]) => ({
             handler: outputHandler,
@@ -336,7 +336,7 @@ export const useAppHandler = () => {
 
     // console.log(`onInputHandler: ${JSON.stringify(handlerData)}`);
 
-    if (!handlerData || handlerData.handlerType !== 'input') {
+    if (!handlerData || handlerData.handlerType !== "input") {
       return;
     }
 
@@ -345,7 +345,7 @@ export const useAppHandler = () => {
     const nodeId: string = handlerData.nodeId;
     const portName: string = handlerData.portName;
     const dataType = handlerData.dataType;
-    if (event === 'userInput') {
+    if (event === "userInput") {
       if (cache.has(graphId, nodeId)) {
         const [inputHandler, storedData] = cache.get(graphId, nodeId)!;
 
@@ -373,17 +373,18 @@ export const useAppHandler = () => {
     stream: ReadableStream,
     callbacks: {
       onRead?: (
-        value: string | number | boolean | Context | Message | null | undefined,
+        value: string | number | boolean | Context | Message | null | undefined
       ) => void;
       onDone?: () => void;
       onError?: (error: Error) => void;
     },
+    signal?: AbortSignal
   ) => {
     const handlerData: EncreAppHander | undefined = handlerMap[handler];
 
     // console.log(`onOutputHandler: ${JSON.stringify(handlerData)}`);
 
-    if (!handlerData || handlerData.handlerType !== 'output') {
+    if (!handlerData || handlerData.handlerType !== "output") {
       return;
     }
 
@@ -395,11 +396,15 @@ export const useAppHandler = () => {
 
     try {
       const reader = stream.getReader();
-      const decoder = new TextDecoder('utf-8');
+      const decoder = new TextDecoder("utf-8");
       let done = false;
 
       while (!done) {
         const { value, done: readerDone } = await reader.read();
+
+        if (signal?.aborted) {
+          break;
+        }
 
         if (value) {
           const decodeValue = decoder.decode(value);
@@ -408,17 +413,17 @@ export const useAppHandler = () => {
 
           const groups =
             /metadata: (?<metadata>.*)\ntext: (?<text>.*)\n\n/.exec(
-              decodeValue,
+              decodeValue
             )!.groups!;
 
           const metadata = JSON.parse(groups.metadata!);
           const data = coerceEncreData(groups.text!, dataType);
 
-          if (event === 'graphOutput' && metadata.event === 'done') {
+          if (event === "graphOutput" && metadata.event === "done") {
             callbacks.onRead?.(data);
           } else if (
-            event === 'nodeOutput' &&
-            metadata.event === 'nodeFinish' &&
+            event === "nodeOutput" &&
+            metadata.event === "nodeFinish" &&
             metadata.nodeId === nodeId
           ) {
             callbacks.onRead?.(data);
