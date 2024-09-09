@@ -1,6 +1,6 @@
 {
   "name": "@encrejs/hooks",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -80,6 +80,7 @@
     "build": "gulp && webpack-cli",
     "lint": "eslint src/*.ts src/**/*.ts",
     "lint-fix": "eslint --fix src/*.ts src/**/*.ts",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest",
+    "release": "yarn lint-fix && release-it --only-version --config .release-it.json"
   }
 }
