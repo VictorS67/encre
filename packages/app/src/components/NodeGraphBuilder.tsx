@@ -77,7 +77,8 @@ export const NodeGraphBuilder: FC = () => {
     <ErrorBoundary
       fallback={<div>There is something wrong in NodeCanvas...</div>}
     >
-      <NodeCanvas
+      <div>testing...</div>
+      {/* <NodeCanvas
         nodes={nodes}
         connections={connections}
         comments={comments}
@@ -88,7 +89,7 @@ export const NodeGraphBuilder: FC = () => {
         onCommentsSelect={onCommentsSelect}
         onWiresSelect={onWiresSelect}
         onContextMenuSelect={contextMenuNodeGraphHandler}
-      />
+      /> */}
     </ErrorBoundary>
   );
 };

@@ -47,7 +47,6 @@ export const Iframe: FC = () => {
         draggable
         referrerPolicy="no-referrer"
         allow="cross-origin-isolated"
-        aha-samesite="true"
         data-iframe-will-auto-focus="1"
         allowFullScreen
       ></iframe>

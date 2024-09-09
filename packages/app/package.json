@@ -102,7 +102,7 @@
     "yaml": "^2.3.2"
   },
   "scripts": {
-    "start": "cross-env PORT=3002 vite",
+    "start": "cross-env PORT=3001 vite",
     "start:browser": "cross-env ./bin/watch-browser",
     "watch": "cross-env BROWSER=none yarn start",
     "build": "vite build",

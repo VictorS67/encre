@@ -88,7 +88,7 @@ export const EncreStudio: FC = () => {
                     display: 'flex',
                   }}
                 >
-                  <PopupButton />                
+                  <PopupButton />
                 </div>
               </>
             )}
@@ -101,7 +101,11 @@ export const EncreStudio: FC = () => {
 
 const PopupButton = () => {
   const openPopup = () => {
-    const newWindow = window.open('https://www.figma.com/proto/bPCoTdsdoNemAdCxvhJU2K/UI?node-id=768-1602&t=G3xEgguiNbMi8DbC-1&scaling=min-zoom&content-scaling=fixed&page-id=768%3A1601&starting-point-node-id=768%3A1602', 'Example App', 'width=800,height=600');
+    const newWindow = window.open(
+      'https://www.figma.com/proto/bPCoTdsdoNemAdCxvhJU2K/UI?node-id=768-1602&t=G3xEgguiNbMi8DbC-1&scaling=min-zoom&content-scaling=fixed&page-id=768%3A1601&starting-point-node-id=768%3A1602',
+      'Example App',
+      'width=800,height=600',
+    );
     if (newWindow) {
       // Perform further actions with newWindow if necessary
       newWindow.focus();
@@ -109,6 +113,8 @@ const PopupButton = () => {
   };
 
   return (
-    <button style={{ width: 100, height: 50 }} onClick={openPopup}>Open Popup</button>
+    <button style={{ width: 100, height: 50 }} onClick={openPopup}>
+      Open Popup
+    </button>
   );
 };
