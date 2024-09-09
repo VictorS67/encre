@@ -108,7 +108,7 @@ export function getProcessorSSEStream(
     type: T,
     data: ProcessStreamEvents[T]
   ) {
-    const event = `event: ${type}\ndata ${JSON.stringify(data)}\n\n`;
+    const event = `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`;
     controller.enqueue(encoder.encode(event));
   }
 

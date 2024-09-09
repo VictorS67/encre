@@ -1,0 +1,9 @@
+node_modules
+
+build
+es
+lib
+dist
+
+.DS_Store
+.env

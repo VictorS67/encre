@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "lib",
+    "es",
+    "dist",
+    "**/tests",
+    "**/demo",
+    "example",
+    "gulpfile.js"
+  ],
+  "compilerOptions": {
+    "rootDir": "src"
+  }
+}

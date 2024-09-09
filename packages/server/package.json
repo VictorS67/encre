@@ -12,7 +12,8 @@
     "lint-fix": "eslint --fix \"**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
-    "@encrejs/core": "0.0.5",
+    "@encrejs/core": "0.0.6",
+    "@encrejs/api": "0.0.1",
     "axios": "1.7.4",
     "cors": "^2.8.5",
     "express": "4.19.2",
@@ -37,11 +38,11 @@
     "@typescript-eslint/typescript-estree": "^5.39.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.49.0",
-    "eslint-plugin-prettier": "^5.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-markdown": "^3.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^2.0.0",

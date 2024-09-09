@@ -103,6 +103,13 @@ const updateConfig = () => {
   updateJSONFile("./package.json", (json) => ({
     ...json,
     exports: Object.assign(
+      {
+        ".": {
+          types: "./index.d.ts",
+          import: "./index.js",
+          require: "./index.cjs",
+        },
+      },
       Object.fromEntries(
         [...Object.keys(entrypoints)].map((key) => {
           let entryPoint = {
