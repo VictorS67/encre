@@ -137,8 +137,8 @@ export default defineConfig(async ({ mode }) => {
     resolve: {
       extensions: resolveExtensions,
       alias: {
-        'stream/web': 'stream-browserify'
-      }
+        "stream/web": "stream-browserify",
+      },
     },
     plugins: [
       mode === "desktop"
@@ -168,10 +168,10 @@ export default defineConfig(async ({ mode }) => {
       !!env.HTTPS && basicSsl(),
     ],
     test: {
-      include: ['src/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
-      environment: 'jsdom',
+      include: ["src/**/*.{test,spec}.?(c|m)[jt]s?(x)"],
+      environment: "jsdom",
       globals: true,
-      setupFiles: './src/setupTests.js',
+      setupFiles: "./src/setupTests.js",
     },
   };
 });

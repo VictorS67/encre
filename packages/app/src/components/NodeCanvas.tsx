@@ -875,14 +875,14 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
 
 const debugStyles = css`
   position: absolute;
-  top: 30px;
-  left: 30px;
+  top: calc(15px + var(--header-height));
+  left: calc(15px);
   padding: 10px 20px;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.03);
   color: var(--text-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  z-index: 99999;
+  z-index: 99;
   font-size: 12px;
   display: flex;
   flex-direction: column;

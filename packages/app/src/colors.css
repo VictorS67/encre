@@ -29,6 +29,12 @@ html[data-color-mode="light"] {
 
   --audio-track-color: #88e461;
 
+  --choice-card-background-color: #dadada;
+  --choice-card-img-overlay-background-color-1: #f8f8f81a;
+  --choice-card-img-overlay-background-color-2: #f8f8f8cc;
+  --choice-card-img-overlay-background-color-3: #f8f8f8d9;
+  --choice-card-img-overlay-background-color-4: #f8f8f8;
+
   --canvas-background-color: #f8f8f8;
   --canvas-background-color-1: #f8f8f880;
   --canvas-background-color-2: #f8f8f840;
@@ -121,6 +127,12 @@ html[data-color-mode="dark"] {
   --text-disabled-color: #7f7f7f;
 
   --audio-track-color: #89bb29;
+
+  --choice-card-background-color: #3d3d3d;
+  --choice-card-img-overlay-background-color-1: #2020201a;
+  --choice-card-img-overlay-background-color-2: #202020cc;
+  --choice-card-img-overlay-background-color-3: #202020d9;
+  --choice-card-img-overlay-background-color-4: #202020;
 
   --canvas-background-color: #202020;
   --canvas-background-color-1: #20202080;

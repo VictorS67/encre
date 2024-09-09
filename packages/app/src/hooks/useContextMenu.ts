@@ -126,7 +126,7 @@ export function useContextMenu() {
       );
 
       setShowContextMenu(true);
-      setContextMenu({ x: event.clientX, y: event.clientY, data });
+      setContextMenu({ x: event.clientX - 38, y: event.clientY, data });
 
       if (data?.type.startsWith('node-')) {
         const nodeId: RecordId = data.element.dataset.nodeid as RecordId;

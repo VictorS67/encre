@@ -48,7 +48,7 @@ export const NodeGraphBuilder: FC = () => {
   const onCommentsSelect = useStableCallback(
     (newComments: GraphComment[], isMulti?: boolean) => {
       if (isMulti) {
-        setSelectingCommentIds((commentIds: string[]) => [
+        setSelectingCommentIds((commentIds: RecordId[]) => [
           ...new Set([...commentIds, ...newComments.map((c) => c.id)]),
         ]);
       } else {
@@ -74,22 +74,21 @@ export const NodeGraphBuilder: FC = () => {
   );
 
   return (
-    // <ErrorBoundary
-    //   fallback={<div>There is something wrong in NodeCanvas...</div>}
-    // >
-
-    // </ErrorBoundary>
-    <NodeCanvas
-      nodes={nodes}
-      connections={connections}
-      comments={comments}
-      onNodesChange={onNodesChange}
-      onCommentsChange={onCommentsChange}
-      onConnectionsChange={setConnections}
-      onNodesSelect={onNodesSelect}
-      onCommentsSelect={onCommentsSelect}
-      onWiresSelect={onWiresSelect}
-      onContextMenuSelect={contextMenuNodeGraphHandler}
-    />
+    <ErrorBoundary
+      fallback={<div>There is something wrong in NodeCanvas...</div>}
+    >
+      <NodeCanvas
+        nodes={nodes}
+        connections={connections}
+        comments={comments}
+        onNodesChange={onNodesChange}
+        onCommentsChange={onCommentsChange}
+        onConnectionsChange={setConnections}
+        onNodesSelect={onNodesSelect}
+        onCommentsSelect={onCommentsSelect}
+        onWiresSelect={onWiresSelect}
+        onContextMenuSelect={contextMenuNodeGraphHandler}
+      />
+    </ErrorBoundary>
   );
 };
