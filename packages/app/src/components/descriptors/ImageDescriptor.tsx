@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
-import { Node, UIContext, extMap } from '../../types/studio.type';
+import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';
 import { Icon } from '../Icon';
@@ -54,6 +54,23 @@ const Image = styled.div`
   }
 `;
 
+const extMap = {
+  'text/plain': 'bin',
+  'text/html': 'html',
+  'text/javascript': 'js',
+  'text/css': 'css',
+  'application/json': 'json',
+  'application/pdf': 'pdf',
+  'application/xml': 'xml',
+  'image/png': 'png',
+  'image/jpeg': 'jpeg',
+  'image/gif': 'gif',
+  'image/svg+xml': 'svg',
+  'audio/mp3': 'mp3',
+  'audio/ogg': 'ogg',
+  'audio/wav': 'wav',
+};
+
 /* eslint-disable react/prop-types */
 export const ImageNodeContentBody: FC<
   { node: Node; id: string } & Extract<UIContext, { type: 'image' }>
@@ -91,7 +108,9 @@ export const ImageNodeContentBody: FC<
   };
 
   const onClickDownload = (e: React.MouseEvent) => {
-    const filename = `download.${extMap[mimeType]}`;
+    const ext = mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown';
+
+    const filename = `download.${ext}`;
 
     const blob = new Blob([data], {
       type: mimeType,
@@ -123,7 +142,7 @@ export const ImageNodeContentBody: FC<
           )}
           <div className="image-info">
             <div className="file-info" style={{ textTransform: 'uppercase' }}>
-              {extMap[mimeType]}
+              {mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown'}
             </div>
             <div className="file-info">{fileSize}</div>
             <Icon

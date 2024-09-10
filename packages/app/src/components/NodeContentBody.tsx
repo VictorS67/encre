@@ -79,6 +79,8 @@ export const NodeContentBody: FC<NodeContentBodyProps> = memo(
     if (error) return <div>An error occurred: {error.message}</div>;
 
     return <KnownNodeContentBody node={node} uiContexts={uiContexts} />;
+
+    // return <></>;
   },
 );
 

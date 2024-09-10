@@ -50,10 +50,10 @@ import type {
   SerializedRuleMetadata as ISerializedRuleMetadata,
   SerializedRule as ISerializedRule,
   SerializedRuleCollection as ISerializedRuleCollection,
-} from "@encrejs/core";
-import { extMap as coreExtMap } from "@encrejs/core/studio/ui";
-import { getRecordId as coreGetRecordId } from "@encrejs/core/utils/nanoid";
-import { dataTypes as coreDataTypes } from "@encrejs/core/studio/data";
+} from "@encrejs/api";
+// import { extMap as coreExtMap } from "@encrejs/core/studio/ui";
+import { getRecordId as coreGetRecordId } from "@encrejs/api";
+import { dataTypes as coreDataTypes } from "@encrejs/api";
 
 export type RecordId = IRecordId;
 
@@ -138,8 +138,6 @@ export type IfConditionUI = IIfConditionUI;
 export type ElseIfConditionUI = IElseIfConditionUI;
 export type OtherwiseConditionUI = IOtherwiseConditionUI;
 export type ConditionUI = IConditionUI;
-
-export const extMap = coreExtMap;
 
 export type SerializedRuleMetadata = ISerializedRuleMetadata;
 export type SerializedRule = ISerializedRule;

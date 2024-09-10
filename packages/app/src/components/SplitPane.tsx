@@ -106,10 +106,11 @@ export const SplitPane: FC<SplitPaneProps> = ({
 
   const { sizeName, splitPos, splitAxis } = useMemo(
     () => ({
-      sizeName:
-        ((split === 'vertical' ? 'width' : 'height') as 'width') || 'height',
-      splitPos: ((split === 'vertical' ? 'left' : 'top') as 'left') || 'top',
-      splitAxis: ((split === 'vertical' ? 'x' : 'y') as 'x') || 'y',
+      sizeName: (split === 'vertical' ? 'width' : 'height') as
+        | 'width'
+        | 'height',
+      splitPos: (split === 'vertical' ? 'left' : 'top') as 'left' | 'top',
+      splitAxis: (split === 'vertical' ? 'x' : 'y') as 'x' | 'y',
     }),
     [split],
   );
