@@ -21,7 +21,6 @@ import {
   LiveAudioVisualizerProps,
   AudioDataPoint,
 } from '../types/audiovisualizer.type';
-import { extMap } from '../types/studio.type';
 import {
   calculateBarData,
   calculateLiveBarData,
@@ -91,6 +90,23 @@ const AudioTrack = styled.div<{ width: number; height: number }>`
     pointer-events: auto;
   }
 `;
+
+const extMap = {
+  'text/plain': 'bin',
+  'text/html': 'html',
+  'text/javascript': 'js',
+  'text/css': 'css',
+  'application/json': 'json',
+  'application/pdf': 'pdf',
+  'application/xml': 'xml',
+  'image/png': 'png',
+  'image/jpeg': 'jpeg',
+  'image/gif': 'gif',
+  'image/svg+xml': 'svg',
+  'audio/mp3': 'mp3',
+  'audio/ogg': 'ogg',
+  'audio/wav': 'wav',
+};
 
 export const AudioVisualizer = forwardRef<
   HTMLCanvasElement,
@@ -308,7 +324,9 @@ export const AudioVisualizer = forwardRef<
   const onClickDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const filename = `download.${extMap[mimeType]}`;
+    const ext = mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown';
+
+    const filename = `download.${ext}`;
 
     const url = URL.createObjectURL(blob);
 
@@ -340,7 +358,7 @@ export const AudioVisualizer = forwardRef<
       {displayInfo ? (
         <div className="audio-info">
           <div className="file-info" style={{ textTransform: 'uppercase' }}>
-            {extMap[mimeType]}
+            {mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown'}
           </div>
           <div className="file-info">{fileSize}</div>
           <Icon
