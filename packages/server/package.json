@@ -16,7 +16,7 @@
     "@encrejs/api": "0.0.1",
     "axios": "1.7.4",
     "cors": "^2.8.5",
-    "express": "4.19.2",
+    "express": "4.20.0",
     "express-actuator": "1.8.4",
     "express-rate-limit": "^6.7.0",
     "express-response-size": "^0.0.3",
