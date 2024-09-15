@@ -18,7 +18,7 @@ import { RecordId } from 'internal/src/types/encre';
 export function fakeId(length: number): string {
   const _alphabet =
     '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz@';
-  const nanoid = customAlphabet(_alphabet, 17);
+  const nanoid = customAlphabet(_alphabet, length);
 
   return nanoid() as RecordId;
 }

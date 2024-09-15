@@ -51,15 +51,8 @@ import type {
   SerializedRule as ISerializedRule,
   SerializedRuleCollection as ISerializedRuleCollection,
 } from "@encrejs/api";
-// import { extMap as coreExtMap } from "@encrejs/core/studio/ui";
-import { getRecordId as coreGetRecordId } from "@encrejs/api";
-import { dataTypes as coreDataTypes } from "@encrejs/api";
 
 export type RecordId = IRecordId;
-
-export function getRecordId() {
-  return coreGetRecordId() as RecordId;
-}
 
 export type NodeRegistration = INodeRegistration;
 export type BuiltInNodeTypes = IBuiltInNodeTypes;
@@ -106,8 +99,6 @@ export type ScalarData = IScalarData;
 export type ArrayData = IArrayData;
 export type Data = IData;
 export type DataType = IDataType;
-
-export const dataTypes = coreDataTypes;
 
 export interface Guardrail {
   id: string;
