@@ -2965,10 +2965,10 @@
   resolved "https://registry.npmjs.org/@emotion/weak-memoize/-/weak-memoize-0.3.1.tgz"
   integrity sha512-EsBwpc7hBUJWAsNPBmJy4hxWx12v6bshQsldrVmjxJoc3isbxhOrF2IcCpaXxfvq03NwkI7sbsOLXbYuqF/8Ww==
 
-"@encrejs/core@0.0.6", "@encrejs/core@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@encrejs/core/-/core-0.0.6.tgz#1fe51cdd3e1e5a3adde27323f7d533e45587bda0"
-  integrity sha512-0FI6XLaVf/ThEu1oGUflRRrcNE9an7utDAf6YOQn0ctYOHonV8od+nmU1UyFt3rTIQmQQSgr7l1drq2hz2/zfA==
+"@encrejs/core@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@encrejs/core/-/core-0.0.7.tgz#4c3259a8709a892775e2631da75eeefdd72c3629"
+  integrity sha512-tVE8RUJCE3wHYT9zmlenYBVJb43B5rob1RCOZvxUvrnwnPl7WbSxkKLDxFsMNM7XpbU0ydbS3hpQVV6rcoMR/w==
   dependencies:
     "@google/generative-ai" "^0.1.3"
     "@types/object-hash" "^3.0.5"
