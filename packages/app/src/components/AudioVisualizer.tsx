@@ -16,6 +16,8 @@ import styled from '@emotion/styled';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { css } from '@mui/material';
 
+import { extMap } from 'internal/src/constants/encre';
+
 import {
   AudioVisualizerProps,
   LiveAudioVisualizerProps,
@@ -91,22 +93,22 @@ const AudioTrack = styled.div<{ width: number; height: number }>`
   }
 `;
 
-const extMap = {
-  'text/plain': 'bin',
-  'text/html': 'html',
-  'text/javascript': 'js',
-  'text/css': 'css',
-  'application/json': 'json',
-  'application/pdf': 'pdf',
-  'application/xml': 'xml',
-  'image/png': 'png',
-  'image/jpeg': 'jpeg',
-  'image/gif': 'gif',
-  'image/svg+xml': 'svg',
-  'audio/mp3': 'mp3',
-  'audio/ogg': 'ogg',
-  'audio/wav': 'wav',
-};
+// const extMap = {
+//   'text/plain': 'bin',
+//   'text/html': 'html',
+//   'text/javascript': 'js',
+//   'text/css': 'css',
+//   'application/json': 'json',
+//   'application/pdf': 'pdf',
+//   'application/xml': 'xml',
+//   'image/png': 'png',
+//   'image/jpeg': 'jpeg',
+//   'image/gif': 'gif',
+//   'image/svg+xml': 'svg',
+//   'audio/mp3': 'mp3',
+//   'audio/ogg': 'ogg',
+//   'audio/wav': 'wav',
+// };
 
 export const AudioVisualizer = forwardRef<
   HTMLCanvasElement,

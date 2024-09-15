@@ -10,6 +10,8 @@ import HtmlIcon from '@mui/icons-material/Html';
 import JavascriptRoundedIcon from '@mui/icons-material/JavascriptRounded';
 import { match } from 'ts-pattern';
 
+import { extMap } from 'internal/src/constants/encre';
+
 import { SVGIcon } from '../../types/icon.type';
 import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
@@ -51,22 +53,22 @@ const File = styled.div`
   }
 `;
 
-const extMap = {
-  'text/plain': 'bin',
-  'text/html': 'html',
-  'text/javascript': 'js',
-  'text/css': 'css',
-  'application/json': 'json',
-  'application/pdf': 'pdf',
-  'application/xml': 'xml',
-  'image/png': 'png',
-  'image/jpeg': 'jpeg',
-  'image/gif': 'gif',
-  'image/svg+xml': 'svg',
-  'audio/mp3': 'mp3',
-  'audio/ogg': 'ogg',
-  'audio/wav': 'wav',
-};
+// const extMap = {
+//   'text/plain': 'bin',
+//   'text/html': 'html',
+//   'text/javascript': 'js',
+//   'text/css': 'css',
+//   'application/json': 'json',
+//   'application/pdf': 'pdf',
+//   'application/xml': 'xml',
+//   'image/png': 'png',
+//   'image/jpeg': 'jpeg',
+//   'image/gif': 'gif',
+//   'image/svg+xml': 'svg',
+//   'audio/mp3': 'mp3',
+//   'audio/ogg': 'ogg',
+//   'audio/wav': 'wav',
+// };
 
 /* eslint-disable react/prop-types */
 export const FileNodeContentBody: FC<

@@ -1,6 +1,6 @@
 import * as monaco from 'monaco-editor';
 
-import { dataTypes } from 'internal/src/types/encre';
+import { dataTypes } from 'internal/src/constants/encre';
 
 export { monaco };
 

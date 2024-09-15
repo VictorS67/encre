@@ -4,6 +4,8 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
+import { extMap } from 'internal/src/constants/encre';
+
 import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';
@@ -54,22 +56,22 @@ const Image = styled.div`
   }
 `;
 
-const extMap = {
-  'text/plain': 'bin',
-  'text/html': 'html',
-  'text/javascript': 'js',
-  'text/css': 'css',
-  'application/json': 'json',
-  'application/pdf': 'pdf',
-  'application/xml': 'xml',
-  'image/png': 'png',
-  'image/jpeg': 'jpeg',
-  'image/gif': 'gif',
-  'image/svg+xml': 'svg',
-  'audio/mp3': 'mp3',
-  'audio/ogg': 'ogg',
-  'audio/wav': 'wav',
-};
+// const extMap = {
+//   'text/plain': 'bin',
+//   'text/html': 'html',
+//   'text/javascript': 'js',
+//   'text/css': 'css',
+//   'application/json': 'json',
+//   'application/pdf': 'pdf',
+//   'application/xml': 'xml',
+//   'image/png': 'png',
+//   'image/jpeg': 'jpeg',
+//   'image/gif': 'gif',
+//   'image/svg+xml': 'svg',
+//   'audio/mp3': 'mp3',
+//   'audio/ogg': 'ogg',
+//   'audio/wav': 'wav',
+// };
 
 /* eslint-disable react/prop-types */
 export const ImageNodeContentBody: FC<

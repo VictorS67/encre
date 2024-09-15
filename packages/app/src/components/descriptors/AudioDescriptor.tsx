@@ -13,9 +13,11 @@ import styled from '@emotion/styled';
 import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 import { useThrottleFn } from 'ahooks';
 
+import { extMap } from 'internal/src/constants/encre';
+
 import { useAudioRecorder } from '../../hooks/useAudioRecorder';
 import { useStableCallback } from '../../hooks/useStableCallback';
-import { Node, UIContext, extMap } from '../../types/studio.type';
+import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';
 import { AudioRecorder } from '../AudioRecorder';
