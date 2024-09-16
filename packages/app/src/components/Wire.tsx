@@ -33,6 +33,8 @@ import { BaseWire } from './wires/BaseWire';
 import { BezierWire } from './wires/BezierWire';
 import { SmoothStepWire } from './wires/SmoothStepWire';
 import { StraightWire } from './wires/StraightWire';
+import { useNodeIO } from '../hooks/useNodeIO';
+import { getWireColor } from 'packages/internal/src/constants/colorUtils';
 
 export const RenderedWire: FC<RenderedWireProps> = ({
   connection,
@@ -48,6 +50,22 @@ export const RenderedWire: FC<RenderedWireProps> = ({
   if (!fromNode || !toNode) {
     return null;
   }
+
+  const { inputDefs: fromInputDefs, outputDefs: fromOutputDefs } = useNodeIO(connection.fromNodeId);
+  const { inputDefs: toInputDefs, outputDefs: toOutputDefs } = useNodeIO(connection.toNodeId);
+
+  // Compute the color of the wire based on the connected ports' datatypes
+  const wireColor = useMemo(() => {
+    const fromPortDef = fromOutputDefs.find(def => def.name === connection.fromPortName) ||
+                        fromInputDefs.find(def => def.name === connection.fromPortName);
+    const toPortDef = toInputDefs.find(def => def.name === connection.toPortName) ||
+                      toOutputDefs.find(def => def.name === connection.toPortName);
+
+    const fromDataType = Array.isArray(fromPortDef?.type) ? fromPortDef.type[0] : fromPortDef?.type || 'unknown';
+    const toDataType = Array.isArray(toPortDef?.type) ? toPortDef.type[0] : toPortDef?.type || 'unknown';
+
+    return getWireColor(fromDataType, toDataType);
+  }, [connection, fromInputDefs, fromOutputDefs, toInputDefs, toOutputDefs]);
 
   const startPosition = getPortPosition(
     fromNode,
@@ -72,6 +90,7 @@ export const RenderedWire: FC<RenderedWireProps> = ({
         isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
+        wireColor={wireColor}
       />
     </ErrorBoundary>
   );
@@ -116,6 +135,7 @@ export const WireControl: FC<WireControlProps> = ({
   isSelecting,
   isHighlighted,
   isHoveringPort,
+  wireColor,
 }: WireControlProps) => {
   const wireData: WireData | undefined = useRecoilValue(
     wireDataFromWireIdState(id),
@@ -133,6 +153,8 @@ export const WireControl: FC<WireControlProps> = ({
     }
   }, [wireData]);
 
+  const wireStyle = { stroke: wireColor };
+
   if (!wireType) {
     return (
       <AdaptiveBezierWire
@@ -145,6 +167,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as AdaptiveBezierWireOptions}
+        style={wireStyle}
       />
     );
   }
@@ -161,6 +184,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as AdaptiveBezierWireOptions}
+        style={wireStyle}
       />
     );
   } else if (wireType === 'bezier') {
@@ -175,6 +199,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as BezierWireOptions}
+        style={wireStyle}
       />
     );
   } else if (wireType === 'smooth-step') {
@@ -189,6 +214,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as SmoothStepWireOptions}
+        style={wireStyle}
       />
     );
   }
@@ -204,6 +230,7 @@ export const WireControl: FC<WireControlProps> = ({
       isHighlighted={isHighlighted}
       isHoveringPort={isHoveringPort}
       wireOptions={wireOptions as StraightWireOptions}
+      style={wireStyle}
     />
   );
 };

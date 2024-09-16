@@ -85,6 +85,16 @@ async function getNodeIODefs({
           nodeId: node.id,
           name: 'prompt',
           type: ['string'],
+        },
+        {
+          nodeId: node.id,
+          name: 'number',
+          type: ['number'],
+        },
+        {
+          nodeId: node.id,
+          name: 'boolean',
+          type: ['boolean'],
         }
       ],
       outputDefs: [
@@ -92,6 +102,16 @@ async function getNodeIODefs({
           nodeId: node.id,
           name: 'prompt',
           type: ['string'],
+        },
+        {
+          nodeId: node.id,
+          name: 'number',
+          type: ['number'],
+        },
+        {
+          nodeId: node.id,
+          name: 'boolean',
+          type: ['boolean'],
         }
       ],
     };
