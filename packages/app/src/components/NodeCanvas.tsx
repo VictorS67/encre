@@ -69,7 +69,7 @@ import { DraggableNode } from './DraggableNode';
 import { MouseIcon } from './MouseIcon';
 import { VisualComment } from './VisualComment';
 import { VisualNode } from './VisualNode';
-import { WireLayer } from './WireLayer';
+import { WireConnectionLayer, WireDraggingLayer } from './WireLayer';
 
 const styles = css`
   position: relative;
@@ -717,6 +717,13 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
           }}
         >
           <MouseIcon />
+          <WireConnectionLayer
+            connections={connections}
+            portPositions={portPositions}
+            highlightedNodeIds={selectingUniqueNodeIds}
+            highlightedPort={hoveringPort}
+            onWiresSelect={onWiresSelect}
+          />
           <div
             className="canvas-contents"
             style={{
@@ -836,14 +843,10 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
               </div>
             </DragOverlay>
           </div>
-          <WireLayer
-            connections={connections}
+          <WireDraggingLayer
             portPositions={portPositions}
             draggingWire={draggingWire}
             isDraggingFromNode={nodesToDrag.length > 0}
-            highlightedNodeIds={selectingUniqueNodeIds}
-            highlightedPort={hoveringPort}
-            onWiresSelect={onWiresSelect}
           />
           <CSSTransition
             classNames="context-menu-box"

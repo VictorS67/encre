@@ -24,7 +24,11 @@ import {
   selectingWireIdsState,
 } from '../state/wire';
 import { NodeInputPortDef, RecordId } from '../types/studio.type';
-import { WireLayerProps } from '../types/wire.type';
+import {
+  WireConnectionLayerProps,
+  WireDraggingLayerProps,
+  WireLayerProps,
+} from '../types/wire.type';
 
 import { PartialWire, RenderedWire } from './Wire';
 
@@ -273,6 +277,287 @@ export const WireLayer: FC<WireLayerProps> = ({
             )}
           </ErrorBoundary>
         )}
+        {connections.map((c) => {
+          const wireId = `wire-${c.fromNodeId}-${c.fromPortName}-${c.toNodeId}-${c.toPortName}`;
+
+          const isHighlightedNode: boolean | undefined =
+            highlightedNodeIds?.includes(c.fromNodeId) ||
+            highlightedNodeIds?.includes(c.toNodeId);
+
+          const isHighlightedPort: boolean | undefined =
+            highlightedPort &&
+            (highlightedPort.isInput ? c.toNodeId : c.fromNodeId) ===
+              highlightedPort.nodeId &&
+            (highlightedPort.isInput ? c.toPortName : c.fromPortName) ===
+              highlightedPort.portName;
+
+          const isHoveringWire: boolean =
+            hoveringWireId !== undefined && hoveringWireId === wireId;
+
+          const isHoveringWirePort: boolean =
+            hoveringWirePortId !== undefined && hoveringWirePortId === wireId;
+
+          const isHighlighted: boolean =
+            isHighlightedNode ||
+            isHighlightedPort ||
+            isHoveringWire ||
+            isHoveringWirePort;
+
+          return (
+            <ErrorBoundary
+              fallback={<></>}
+              key={`wire-${c.fromNodeId}-${c.fromPortName}-${c.toNodeId}-${c.toPortName}`}
+            >
+              <RenderedWire
+                connection={c}
+                nodeMap={nodeMap}
+                portPositions={portPositions}
+                isSelecting={selectingUniqueWireIds.includes(wireId)}
+                isHighlighted={!!isHighlighted}
+                isHoveringPort={!!isHoveringWirePort}
+              />
+            </ErrorBoundary>
+          );
+        })}
+      </g>
+    </WireLayerContainer>
+  );
+};
+
+export const WireDraggingLayer: FC<WireDraggingLayerProps> = ({
+  portPositions,
+  draggingWire,
+  isDraggingFromNode,
+}: WireDraggingLayerProps) => {
+  const [mousePosition, setMousePosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [closestPort, setClosestPort] = useRecoilState(
+    draggingWireClosestPortState,
+  );
+  const nodeMap = useRecoilValue(nodeMapState);
+  const nodeIODefMap = useRecoilValue(nodeIODefState);
+  const { canvasPosition, clientToCanvasPosition } = useCanvasPosition();
+  const mousePositionCanvas = clientToCanvasPosition(
+    mousePosition.x,
+    mousePosition.y,
+  );
+
+  const onMouseMoveWireLayer = useCallback(
+    (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+
+      setMousePosition({ x: clientX, y: clientY });
+
+      if (draggingWire) {
+        const hoverElements: Element[] = document
+          .elementsFromPoint(clientX, clientY)
+          .filter((el) => el.classList.contains('port-hover-area'));
+
+        if (hoverElements.length === 0) {
+          setClosestPort(undefined);
+        } else {
+          const closestHoverEl = orderBy(hoverElements, (el) => {
+            const elPosition: DOMRect = el.getBoundingClientRect();
+            const elCenter = {
+              x: elPosition.x + elPosition.width / 2,
+              y: elPosition.y + elPosition.height / 2,
+            };
+            const distance = Math.sqrt(
+              Math.pow(clientX - elCenter.x, 2) +
+                Math.pow(clientY - elCenter.y, 2),
+            );
+
+            return distance;
+          })[0] as HTMLElement;
+
+          const nodeId = closestHoverEl!.parentElement!.dataset.nodeid as
+            | RecordId
+            | undefined;
+          const portName = closestHoverEl!.parentElement!.dataset.portname as
+            | string
+            | undefined;
+
+          if (nodeId && portName) {
+            const nodeIO = nodeIODefMap[nodeId!];
+            const input: NodeInputPortDef = nodeIO!.inputDefs.find(
+              (def) => def.nodeId === nodeId && def.name === portName,
+            )!;
+
+            setClosestPort({
+              nodeId,
+              portName,
+              input,
+              portEl: closestHoverEl.parentElement!,
+            });
+            // setClosestPort(undefined);
+          } else {
+            setClosestPort(undefined);
+          }
+        }
+      } else if (closestPort !== undefined) {
+        setClosestPort(undefined);
+      }
+    },
+    [
+      draggingWire,
+      isDraggingFromNode,
+      nodeIODefMap,
+      closestPort,
+      setClosestPort,
+    ],
+  );
+
+  useEffect(() => {
+    window.addEventListener('mousemove', onMouseMoveWireLayer);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMoveWireLayer);
+    };
+  }, [onMouseMoveWireLayer]);
+
+  return (
+    <WireLayerContainer>
+      <g
+        transform={`scale(${canvasPosition.zoom}) translate(${canvasPosition.x}, ${canvasPosition.y})`}
+      >
+        {draggingWire && (
+          <ErrorBoundary fallback={<></>} key="wire-dragging">
+            {draggingWire.toNodeId && draggingWire.toPortName ? (
+              <RenderedWire
+                connection={{
+                  fromNodeId: draggingWire.fromNodeId,
+                  fromPortName: draggingWire.fromPortName,
+                  toNodeId: draggingWire.toNodeId,
+                  toPortName: draggingWire.toPortName,
+                }}
+                nodeMap={nodeMap}
+                portPositions={portPositions}
+              />
+            ) : (
+              <PartialWire
+                connection={{
+                  nodeId: draggingWire.fromNodeId,
+                  portName: draggingWire.fromPortName,
+                  toX: mousePositionCanvas.x,
+                  toY: mousePositionCanvas.y,
+                }}
+                portPositions={portPositions}
+              />
+            )}
+          </ErrorBoundary>
+        )}
+      </g>
+    </WireLayerContainer>
+  );
+};
+
+export const WireConnectionLayer: FC<WireConnectionLayerProps> = ({
+  connections,
+  portPositions,
+  highlightedNodeIds,
+  highlightedPort,
+  onWiresSelect,
+}: WireConnectionLayerProps) => {
+  const nodeMap = useRecoilValue(nodeMapState);
+  const nodeIODefMap = useRecoilValue(nodeIODefState);
+  const showContextMenu = useRecoilValue(showContextMenuState);
+  const isSelectingMultiWires = useRecoilValue(isSelectingMultiWiresState);
+  const [selectingWireIds, setSelectingWireIds] = useRecoilState(
+    selectingWireIdsState,
+  );
+  const [hoveringWireId, setHoveringWireId] =
+    useRecoilState(hoveringWireIdState);
+  const [hoveringWirePortId, setHoveringWirePortId] = useRecoilState(
+    hoveringWirePortIdState,
+  );
+  const { canvasPosition, clientToCanvasPosition } = useCanvasPosition();
+
+  const selectingUniqueWireIds = useMemo(() => {
+    const wireSet = new Set(selectingWireIds);
+
+    return [...wireSet];
+  }, [selectingWireIds]);
+
+  const onWireSelect = useCallback(
+    (wireId: string) => {
+      onWiresSelect?.([wireId], isSelectingMultiWires);
+    },
+    [isSelectingMultiWires],
+  );
+
+  const onMouseDownWireLayer = useStableCallback((e: MouseEvent) => {
+    if (!e.target || e.button !== 0 || showContextMenu) {
+      return;
+    }
+    const clickingWire = (e.target as HTMLElement).closest('.wire-interaction');
+    if (!clickingWire) {
+      setSelectingWireIds([]);
+    } else {
+      onWireSelect?.(clickingWire.id);
+    }
+  });
+
+  const onMouseMoveWireLayer = useCallback(
+    (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+
+      const hoveringEl = document.elementFromPoint(
+        clientX,
+        clientY,
+      ) as HTMLElement;
+
+      if (!hoveringEl) {
+        return;
+      }
+
+      const hoveringWire = hoveringEl.closest('.wire-interaction');
+      const hoveringWirePort = hoveringEl.closest('.wire-port');
+
+      const wireId: string | undefined =
+        hoveringWire?.id || hoveringWirePort?.id;
+
+      if (!wireId) {
+        setHoveringWireId(undefined);
+        setHoveringWirePortId(undefined);
+        return;
+      }
+
+      setHoveringWireId(wireId);
+
+      if (hoveringWirePort) {
+        setHoveringWirePortId(wireId);
+      } else {
+        setHoveringWirePortId(undefined);
+      }
+    },
+    [
+      nodeIODefMap,
+      hoveringWireId,
+      hoveringWirePortId,
+      setHoveringWireId,
+      setHoveringWirePortId,
+    ],
+  );
+
+  useEffect(() => {
+    window.addEventListener('mousedown', onMouseDownWireLayer, {
+      capture: true,
+    });
+    window.addEventListener('mousemove', onMouseMoveWireLayer);
+    return () => {
+      window.removeEventListener('mousedown', onMouseDownWireLayer, {
+        capture: true,
+      });
+      window.removeEventListener('mousemove', onMouseMoveWireLayer);
+    };
+  }, [onMouseDownWireLayer, onMouseMoveWireLayer]);
+
+  return (
+    <WireLayerContainer>
+      <g
+        transform={`scale(${canvasPosition.zoom}) translate(${canvasPosition.x}, ${canvasPosition.y})`}
+      >
         {connections.map((c) => {
           const wireId = `wire-${c.fromNodeId}-${c.fromPortName}-${c.toNodeId}-${c.toPortName}`;
 
