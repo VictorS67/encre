@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { defaultWireOptions } from '../hooks/useDraggingWire';
+import { useNodeIO } from '../hooks/useNodeIO';
 import { getPortPosition } from '../hooks/usePortPosition';
 import { nodeFromNodeIdState } from '../state/node';
 import { selectingWireIdsState, wireDataFromWireIdState } from '../state/wire';
@@ -27,14 +28,13 @@ import {
   WireOptions,
   WireType,
 } from '../types/wire.type';
+import { getWireColor } from '../utils/colorUtils';
 
 import { AdaptiveBezierWire } from './wires/AdaptiveBezierWire';
 import { BaseWire } from './wires/BaseWire';
 import { BezierWire } from './wires/BezierWire';
 import { SmoothStepWire } from './wires/SmoothStepWire';
 import { StraightWire } from './wires/StraightWire';
-import { useNodeIO } from '../hooks/useNodeIO';
-import { getWireColor } from '../utils/colorUtils';
 
 export const RenderedWire: FC<RenderedWireProps> = ({
   connection,
@@ -51,22 +51,32 @@ export const RenderedWire: FC<RenderedWireProps> = ({
     return null;
   }
 
-  const { inputDefs: fromInputDefs, outputDefs: fromOutputDefs } = useNodeIO(connection.fromNodeId);
-  const { inputDefs: toInputDefs, outputDefs: toOutputDefs } = useNodeIO(connection.toNodeId);
+  const { inputDefs: fromInputDefs, outputDefs: fromOutputDefs } = useNodeIO(
+    connection.fromNodeId,
+  );
+  const { inputDefs: toInputDefs, outputDefs: toOutputDefs } = useNodeIO(
+    connection.toNodeId,
+  );
 
   // Find the port definitions
-  const fromPortDef = fromOutputDefs.find(def => def.name === connection.fromPortName) ||
-                      fromInputDefs.find(def => def.name === connection.fromPortName);
-  const toPortDef = toInputDefs.find(def => def.name === connection.toPortName) ||
-                    toOutputDefs.find(def => def.name === connection.toPortName);
+  const fromPortDef =
+    fromOutputDefs.find((def) => def.name === connection.fromPortName) ||
+    fromInputDefs.find((def) => def.name === connection.fromPortName);
+  const toPortDef =
+    toInputDefs.find((def) => def.name === connection.toPortName) ||
+    toOutputDefs.find((def) => def.name === connection.toPortName);
 
   // Determine the wire color by considering all shared data types
   const wireColor = useMemo(() => {
     if (!fromPortDef || !toPortDef) return '#000000'; // Default color if ports are not found
 
     // Extract the data types for both ports
-    const fromDataTypes = Array.isArray(fromPortDef.type) ? fromPortDef.type : [fromPortDef.type];
-    const toDataTypes = Array.isArray(toPortDef.type) ? toPortDef.type : [toPortDef.type];
+    const fromDataTypes = Array.isArray(fromPortDef.type)
+      ? fromPortDef.type
+      : [fromPortDef.type];
+    const toDataTypes = Array.isArray(toPortDef.type)
+      ? toPortDef.type
+      : [toPortDef.type];
 
     // Use the updated getWireColor function to determine the color based on shared data types
     return getWireColor(fromDataTypes, toDataTypes);
