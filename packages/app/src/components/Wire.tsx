@@ -34,7 +34,7 @@ import { BezierWire } from './wires/BezierWire';
 import { SmoothStepWire } from './wires/SmoothStepWire';
 import { StraightWire } from './wires/StraightWire';
 import { useNodeIO } from '../hooks/useNodeIO';
-import { getWireColor } from 'packages/internal/src/constants/colorUtils';
+import { getWireColor } from '../utils/colorUtils';
 
 export const RenderedWire: FC<RenderedWireProps> = ({
   connection,
@@ -54,18 +54,23 @@ export const RenderedWire: FC<RenderedWireProps> = ({
   const { inputDefs: fromInputDefs, outputDefs: fromOutputDefs } = useNodeIO(connection.fromNodeId);
   const { inputDefs: toInputDefs, outputDefs: toOutputDefs } = useNodeIO(connection.toNodeId);
 
-  // Compute the color of the wire based on the connected ports' datatypes
+  // Find the port definitions
+  const fromPortDef = fromOutputDefs.find(def => def.name === connection.fromPortName) ||
+                      fromInputDefs.find(def => def.name === connection.fromPortName);
+  const toPortDef = toInputDefs.find(def => def.name === connection.toPortName) ||
+                    toOutputDefs.find(def => def.name === connection.toPortName);
+
+  // Determine the wire color by considering all shared data types
   const wireColor = useMemo(() => {
-    const fromPortDef = fromOutputDefs.find(def => def.name === connection.fromPortName) ||
-                        fromInputDefs.find(def => def.name === connection.fromPortName);
-    const toPortDef = toInputDefs.find(def => def.name === connection.toPortName) ||
-                      toOutputDefs.find(def => def.name === connection.toPortName);
+    if (!fromPortDef || !toPortDef) return '#000000'; // Default color if ports are not found
 
-    const fromDataType = Array.isArray(fromPortDef?.type) ? fromPortDef.type[0] : fromPortDef?.type || 'unknown';
-    const toDataType = Array.isArray(toPortDef?.type) ? toPortDef.type[0] : toPortDef?.type || 'unknown';
+    // Extract the data types for both ports
+    const fromDataTypes = Array.isArray(fromPortDef.type) ? fromPortDef.type : [fromPortDef.type];
+    const toDataTypes = Array.isArray(toPortDef.type) ? toPortDef.type : [toPortDef.type];
 
-    return getWireColor(fromDataType, toDataType);
-  }, [connection, fromInputDefs, fromOutputDefs, toInputDefs, toOutputDefs]);
+    // Use the updated getWireColor function to determine the color based on shared data types
+    return getWireColor(fromDataTypes, toDataTypes);
+  }, [fromPortDef, toPortDef]);
 
   const startPosition = getPortPosition(
     fromNode,

@@ -1,5 +1,5 @@
 // Import DataType from your types
-import { DataType } from '../../../app/src/types/studio.type';
+import { DataType } from '../types/studio.type';
 
 // Define CSS variable names for each data type
 const dataTypeCssVariables: Record<DataType, string> = {
@@ -48,22 +48,21 @@ export const getWireColor = (
   const fromDataTypes = Array.isArray(fromDataType) ? fromDataType : [fromDataType];
   const toDataTypes = Array.isArray(toDataType) ? toDataType : [toDataType];
 
-  // Determine if either port supports multiple data types
-  const isMultipleFrom = fromDataTypes.length > 1;
-  const isMultipleTo = toDataTypes.length > 1;
+  // Find all common data types
+  const sharedDataTypes = fromDataTypes.filter(dataType => toDataTypes.includes(dataType));
 
-  // If either port supports multiple data types, use the unique CSS variable
-  if (isMultipleFrom || isMultipleTo) {
+  // Handle multiple shared data types
+  if (sharedDataTypes.length > 1) {
+    // Use the color for multiple data types
     return getCSSVariableValue(multiDataTypeCssVariable);
   }
 
-  // Find a common data type
-  const commonDataType = fromDataTypes.find(dataType => toDataTypes.includes(dataType));
-  if (commonDataType) {
-    const cssVariableName = dataTypeCssVariables[commonDataType];
+  // Handle a single shared data type
+  if (sharedDataTypes.length === 1) {
+    const cssVariableName = dataTypeCssVariables[sharedDataTypes[0]];
     return getCSSVariableValue(cssVariableName);
   }
 
-  // If no common data type, use the unique CSS variable
+  // If no shared data types, use the unique CSS variable
   return getCSSVariableValue(multiDataTypeCssVariable);
 };
