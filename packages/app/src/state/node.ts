@@ -191,7 +191,10 @@ export const updateNodeIODefState = selector<{
   set: ({ set, get }, newVal) => {
     if (newVal instanceof DefaultValue) return;
     const id: RecordId = newVal.id;
-    const io = newVal.io;
+    const io = {
+      inputDefs: newVal.io.inputDefs.map((i: NodeInputPortDef) => ({ ...i, nodeId: id})),
+      outputDefs: newVal.io.outputDefs.map((o: NodeOutputPortDef) => ({ ...o, nodeId: id})),
+    };
 
     const currMap = get(nodeIODefState);
     const updatedMap = { ...currMap, [id]: io };
