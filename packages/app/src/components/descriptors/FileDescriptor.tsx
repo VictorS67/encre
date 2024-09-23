@@ -10,8 +10,10 @@ import HtmlIcon from '@mui/icons-material/Html';
 import JavascriptRoundedIcon from '@mui/icons-material/JavascriptRounded';
 import { match } from 'ts-pattern';
 
+import { extMap } from 'internal/src/constants/encre';
+
 import { SVGIcon } from '../../types/icon.type';
-import { Node, UIContext, extMap } from '../../types/studio.type';
+import { Node, UIContext } from '../../types/studio.type';
 import { UIContextDescriptor } from '../../types/uicontext.type';
 import { formatBytes } from '../../utils/format';
 import { Icon } from '../Icon';
@@ -51,6 +53,23 @@ const File = styled.div`
   }
 `;
 
+// const extMap = {
+//   'text/plain': 'bin',
+//   'text/html': 'html',
+//   'text/javascript': 'js',
+//   'text/css': 'css',
+//   'application/json': 'json',
+//   'application/pdf': 'pdf',
+//   'application/xml': 'xml',
+//   'image/png': 'png',
+//   'image/jpeg': 'jpeg',
+//   'image/gif': 'gif',
+//   'image/svg+xml': 'svg',
+//   'audio/mp3': 'mp3',
+//   'audio/ogg': 'ogg',
+//   'audio/wav': 'wav',
+// };
+
 /* eslint-disable react/prop-types */
 export const FileNodeContentBody: FC<
   { node: Node; id: string } & Extract<UIContext, { type: 'file' }>
@@ -78,7 +97,9 @@ export const FileNodeContentBody: FC<
   const fileSize = formatBytes(data.byteLength);
 
   const onClickDownload = (e: React.MouseEvent) => {
-    const filename = `download.${extMap[mimeType]}`;
+    const ext = mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown';
+
+    const filename = `download.${ext}`;
 
     const blob = new Blob([data], {
       type: mimeType,

@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.non-user-select {
+  user-select: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -24,4 +28,8 @@ html[data-color-mode='light'] {
   .node-tag {
     border: 2px solid var(--primary-color);
   }
+}
+
+:root {
+  --header-height: 38px;
 }

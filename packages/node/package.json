@@ -1,6 +1,6 @@
 {
   "name": "@encrejs/api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "node": ">=20"
   },
@@ -63,7 +63,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@encrejs/core": "^0.0.6",
+    "@encrejs/core": "0.0.7",
     "@types/object-hash": "^3.0.5",
     "emittery": "^1.0.3",
     "nanoid": "^5.0.2",

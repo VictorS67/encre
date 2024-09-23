@@ -9,7 +9,7 @@ module.exports = {
   context: path.resolve(__dirname, "../../.."),
   devtool: false,
   output: {
-    path: path.resolve(path.join(__dirname, "/../lib-dist/browser")),
+    path: path.resolve(process.env.OUTPUT_PATH || path.join(__dirname, '../lib-dist/browser')),
     library: "backend",
     publicPath: "/kcab/",
   },

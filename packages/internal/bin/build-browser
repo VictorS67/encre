@@ -21,11 +21,16 @@ if [ $NODE_ENV == 'development' ]; then
   # Make sure to do this before starting the build since watch mode
   # will block
   WEBPACK_ARGS="$WEBPACK_ARGS --watch"
-  if [ "$OSTYPE" == "msys" ]; then
-    # Ensure symlinks are created as native Windows symlinks.
-    export MSYS=winsymlinks:nativestrict
+  if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+    # On Windows, set the output path to the public directory directly
+    export OUTPUT_PATH="$PUBLIC_DIR"/kcab
+  else
+    # Create a symlink on Unix-like systems
+    ln -snf "$ROOT"/../lib-dist/browser "$PUBLIC_DIR"/kcab
+    export OUTPUT_PATH="$ROOT"/../lib-dist/browser
   fi
-  ln -snf "$ROOT"/../lib-dist/browser "$ROOT"/../../app/public/kcab
+else
+  export OUTPUT_PATH="$ROOT"/../lib-dist/browser
 fi
 
 yarn webpack --config "$ROOT"/../webpack/webpack.browser.config.js \

@@ -50,16 +50,9 @@ import type {
   SerializedRuleMetadata as ISerializedRuleMetadata,
   SerializedRule as ISerializedRule,
   SerializedRuleCollection as ISerializedRuleCollection,
-} from "@encrejs/core";
-import { extMap as coreExtMap } from "@encrejs/core/studio/ui";
-import { getRecordId as coreGetRecordId } from "@encrejs/core/utils/nanoid";
-import { dataTypes as coreDataTypes } from "@encrejs/core/studio/data";
+} from "@encrejs/api";
 
 export type RecordId = IRecordId;
-
-export function getRecordId() {
-  return coreGetRecordId() as RecordId;
-}
 
 export type NodeRegistration = INodeRegistration;
 export type BuiltInNodeTypes = IBuiltInNodeTypes;
@@ -107,8 +100,6 @@ export type ArrayData = IArrayData;
 export type Data = IData;
 export type DataType = IDataType;
 
-export const dataTypes = coreDataTypes;
-
 export interface Guardrail {
   id: string;
   name: string;
@@ -138,8 +129,6 @@ export type IfConditionUI = IIfConditionUI;
 export type ElseIfConditionUI = IElseIfConditionUI;
 export type OtherwiseConditionUI = IOtherwiseConditionUI;
 export type ConditionUI = IConditionUI;
-
-export const extMap = coreExtMap;
 
 export type SerializedRuleMetadata = ISerializedRuleMetadata;
 export type SerializedRule = ISerializedRule;

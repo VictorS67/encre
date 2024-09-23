@@ -1,4 +1,6 @@
-import { getRecordId } from 'internal/src/types/encre';
+import { customAlphabet } from 'nanoid';
+
+import { RecordId } from 'internal/src/types/encre';
 
 // export function fakeId(length: number): string {
 //   let result = '';
@@ -14,5 +16,9 @@ import { getRecordId } from 'internal/src/types/encre';
 // }
 
 export function fakeId(length: number): string {
-  return getRecordId();
+  const _alphabet =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz@';
+  const nanoid = customAlphabet(_alphabet, length);
+
+  return nanoid() as RecordId;
 }

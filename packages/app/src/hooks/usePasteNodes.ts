@@ -73,6 +73,7 @@ export function usePasteNodes() {
     const newNodes = clipboard.nodes.map((node) => {
       return produce(node, (draft) => {
         const newNodeId = fakeId(17) as RecordId;
+        // const newNodeId = "123213213123123" as RecordId;
         oldNewNodeIdMap[node.id] = newNodeId;
 
         draft.id = newNodeId;

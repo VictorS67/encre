@@ -1,5 +1,6 @@
 {
   "git": {
+    "requireUpstream": false,
     "requireCleanWorkingDir": false,
     "tag": false
   },

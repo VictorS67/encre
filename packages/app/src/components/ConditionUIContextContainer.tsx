@@ -532,14 +532,14 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
           text: '',
           language: 'encre-code',
           keywords: ['AND', 'OR'],
-          properties: sources,
+          // properties: sources,
         }
       : {
           type: 'code',
           text: condition.description ?? '',
           language: 'encre-code',
           keywords: ['AND', 'OR'],
-          properties: sources,
+          // properties: sources,
         };
 
   const onDropDownMenuClick = useStableCallback((e: React.MouseEvent) => {
