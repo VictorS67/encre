@@ -15,6 +15,7 @@ export const StraightWire: FC<WireProps<'straight'>> = memo(
     isSelecting,
     isHighlighted,
     isHoveringPort,
+    style,
   }: StraightWireProps) => {
     const { path, centerX, centerY } = getStraightPath({
       startX,
@@ -31,6 +32,7 @@ export const StraightWire: FC<WireProps<'straight'>> = memo(
         isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
+        wireStyle={style}
       />
     );
   },

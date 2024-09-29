@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { defaultWireOptions } from '../hooks/useDraggingWire';
+import { useNodeIO } from '../hooks/useNodeIO';
 import { getPortPosition } from '../hooks/usePortPosition';
 import { nodeFromNodeIdState } from '../state/node';
 import { selectingWireIdsState, wireDataFromWireIdState } from '../state/wire';
@@ -27,6 +28,7 @@ import {
   WireOptions,
   WireType,
 } from '../types/wire.type';
+import { getWireColor } from '../utils/colorUtils';
 
 import { AdaptiveBezierWire } from './wires/AdaptiveBezierWire';
 import { BaseWire } from './wires/BaseWire';
@@ -48,6 +50,37 @@ export const RenderedWire: FC<RenderedWireProps> = ({
   if (!fromNode || !toNode) {
     return null;
   }
+
+  const { inputDefs: fromInputDefs, outputDefs: fromOutputDefs } = useNodeIO(
+    connection.fromNodeId,
+  );
+  const { inputDefs: toInputDefs, outputDefs: toOutputDefs } = useNodeIO(
+    connection.toNodeId,
+  );
+
+  // Find the port definitions
+  const fromPortDef =
+    fromOutputDefs.find((def) => def.name === connection.fromPortName) ||
+    fromInputDefs.find((def) => def.name === connection.fromPortName);
+  const toPortDef =
+    toInputDefs.find((def) => def.name === connection.toPortName) ||
+    toOutputDefs.find((def) => def.name === connection.toPortName);
+
+  // Determine the wire color by considering all shared data types
+  const wireColor = useMemo(() => {
+    if (!fromPortDef || !toPortDef) return '#000000'; // Default color if ports are not found
+
+    // Extract the data types for both ports
+    const fromDataTypes = Array.isArray(fromPortDef.type)
+      ? fromPortDef.type
+      : [fromPortDef.type];
+    const toDataTypes = Array.isArray(toPortDef.type)
+      ? toPortDef.type
+      : [toPortDef.type];
+
+    // Use the updated getWireColor function to determine the color based on shared data types
+    return getWireColor(fromDataTypes, toDataTypes);
+  }, [fromPortDef, toPortDef]);
 
   const startPosition = getPortPosition(
     fromNode,
@@ -72,6 +105,7 @@ export const RenderedWire: FC<RenderedWireProps> = ({
         isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
+        wireColor={wireColor}
       />
     </ErrorBoundary>
   );
@@ -116,6 +150,7 @@ export const WireControl: FC<WireControlProps> = ({
   isSelecting,
   isHighlighted,
   isHoveringPort,
+  wireColor,
 }: WireControlProps) => {
   const wireData: WireData | undefined = useRecoilValue(
     wireDataFromWireIdState(id),
@@ -133,6 +168,8 @@ export const WireControl: FC<WireControlProps> = ({
     }
   }, [wireData]);
 
+  const wireStyle = { stroke: wireColor };
+
   if (!wireType) {
     return (
       <AdaptiveBezierWire
@@ -145,6 +182,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as AdaptiveBezierWireOptions}
+        style={wireStyle}
       />
     );
   }
@@ -161,6 +199,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as AdaptiveBezierWireOptions}
+        style={wireStyle}
       />
     );
   } else if (wireType === 'bezier') {
@@ -175,6 +214,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as BezierWireOptions}
+        style={wireStyle}
       />
     );
   } else if (wireType === 'smooth-step') {
@@ -189,6 +229,7 @@ export const WireControl: FC<WireControlProps> = ({
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
         wireOptions={wireOptions as SmoothStepWireOptions}
+        style={wireStyle}
       />
     );
   }
@@ -204,6 +245,7 @@ export const WireControl: FC<WireControlProps> = ({
       isHighlighted={isHighlighted}
       isHoveringPort={isHoveringPort}
       wireOptions={wireOptions as StraightWireOptions}
+      style={wireStyle}
     />
   );
 };

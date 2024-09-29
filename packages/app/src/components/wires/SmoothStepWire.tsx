@@ -15,6 +15,7 @@ export const SmoothStepWire: FC<WireProps<'smooth-step'>> = memo(
     isSelecting,
     isHighlighted,
     isHoveringPort,
+    style,
   }: SmoothStepWireProps) => {
     const { path, centerX, centerY } = getStepPath({
       startX,
@@ -31,6 +32,7 @@ export const SmoothStepWire: FC<WireProps<'smooth-step'>> = memo(
         isSelecting={isSelecting}
         isHighlighted={isHighlighted}
         isHoveringPort={isHoveringPort}
+        wireStyle={style}
       />
     );
   },

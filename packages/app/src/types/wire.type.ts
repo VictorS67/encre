@@ -55,6 +55,7 @@ export type RenderedWireProps = {
   isSelecting?: boolean;
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
+  wireColor: string;
 };
 
 export type PartialWireProps = {
@@ -71,6 +72,7 @@ export type WireControlProps = {
   isSelecting?: boolean;
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
+  wireColor?: string; // New optional property for wire color
 };
 
 export type WireProps<T extends WireOptions['type']> = {
@@ -83,6 +85,7 @@ export type WireProps<T extends WireOptions['type']> = {
   isHighlighted?: boolean;
   isHoveringPort?: boolean;
   wireOptions?: Extract<WireOptions, { type: T }>;
+  style?: CSSProperties;
 };
 
 export type StraightWireProps = WireProps<StraightWireOptions['type']>;
