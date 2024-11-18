@@ -9,14 +9,23 @@ import {
   UIContext,
 } from './studio.type';
 
+export type SharedNodeBodyProps = {
+  node: Node;
+  id: string;
+  onChange: (node: Node) => void;
+  onEditClick?: (node: Node, editingId: string) => void; // TODO: remove this
+}
+
+export type SharedNodeEditorProps = {
+  node: Node;
+  id: string;
+  onChange: (node: Node) => void;
+  onEditClick?: (node: Node, editingId: string) => void; // TODO: remove this
+}
+
 export type UIContextDescriptor<T extends UIContext['type']> = {
-  Body?: FC<
-    {
-      node: Node;
-      id: string;
-      onEditClick?: (node: Node, editingId: string) => void;
-    } & Extract<UIContext, { type: T }>
-  >;
+  Body?: FC<SharedNodeBodyProps & Extract<UIContext, { type: T }>>;
+  Editor?: FC<SharedNodeEditorProps & Extract<UIContext, { type: T }>>;
   PopUpWindow?: FC<
     { node: Node; onChange?: (node: Node) => void } & Extract<
       UIContext,

@@ -265,7 +265,9 @@ export const NodeCanvas: FC<NodeCanvasProps> = ({
     handleContextMenu,
   } = useContextMenu();
 
-  useEditorClick();
+  useEditorClick({
+    onDeselect: () => setShowContextMenu(false)
+  });
 
   const nodesToDrag = useMemo(() => {
     return [...new Set([...draggingNodes, ...draggingNodesInComments])];

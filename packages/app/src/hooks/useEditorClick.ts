@@ -5,7 +5,7 @@ import { useSetRecoilState } from 'recoil';
 import { editingCodeIdState } from '../state/editor';
 import { editingNodeIdState } from '../state/node';
 
-export function useEditorClick() {
+export function useEditorClick({ onDeselect }: { onDeselect?: () => void }) {
   const setEditingNodeId = useSetRecoilState(editingNodeIdState);
   const setEditingCodeId = useSetRecoilState(editingCodeIdState);
 

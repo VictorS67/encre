@@ -1,23 +1,25 @@
+import * as ts from "typescript";
 import * as asyncStorage from "../../asyncStorage";
 import { createApp } from "../../server/app";
 import { getServer, setServer } from "../../server/config";
 import { get, post } from "../../server/post";
-import { Node, NodeConnection } from "../../types/encre";
+import { BuiltInNodeTypePairs, Node, NodeBody, NodeConnection } from "../../types/encre";
+import { compile } from "../../compiler/compile";
+import { APIError } from "../types";
 import { ServerHandlers } from ".";
 
 export const app = createApp<ServerHandlers>();
 
-app.method("get-server-url", async function () {
+app.method("get-server-url", async function (): Promise<string | null> {
   return getServer() && getServer()!.BASE_SERVER;
 });
 
-app.method("set-server-url", async function ({ url }) {
+app.method("set-server-url", async function ({ url }): Promise<void> {
   await asyncStorage.set("server-url", url);
   setServer(url);
-  return {};
 });
 
-app.method("get-all-nodes", async function () {
+app.method("get-all-nodes", async function (): Promise<APIError | Node[]> {
   try {
     const nodes = await get(getServer()!.API_SERVER + "/nodes", {});
     return JSON.parse(nodes);
@@ -37,7 +39,7 @@ app.method(
     type: string;
     subType: string;
     registerArgs?: Record<string, unknown>;
-  }) {
+  }): Promise<APIError | Node> {
     try {
       console.log(`get-node: type: ${type} - subtype: ${subType}`);
 
@@ -53,7 +55,9 @@ app.method(
   },
 );
 
-app.method("get-node-body", async function ({ node }: { node: Node }) {
+app.method(
+  "get-node-body", 
+  async function ({ node }: { node: Node }): Promise<APIError | NodeBody> {
   try {
     console.log(`get-node-body: type: ${node.type} - subtype: ${node.subType}`);
 
@@ -78,7 +82,7 @@ app.method(
     node: Node;
     connections?: NodeConnection[];
     nodeMap?: Record<string, Node>;
-  }) {
+  }):  Promise<APIError | void> {
     try {
       console.log(`get-node-io: type: ${node.type} - subtype: ${node.subType}`);
 
@@ -95,7 +99,9 @@ app.method(
   },
 );
 
-app.method("get-registry-nodes-type-pairs", async function () {
+app.method(
+  "get-registry-nodes-type-pairs", 
+  async function (): Promise<APIError | BuiltInNodeTypePairs> {
   try {
     console.log("get-registry-nodes-type-pairs");
 
@@ -110,3 +116,29 @@ app.method("get-registry-nodes-type-pairs", async function () {
     return { error: "failed" };
   }
 });
+
+app.method(
+  "change-node-attrs", 
+  async function ({
+    id,
+    code,
+    compileType,
+  }: {
+    id: string;
+    code: string;
+    compileType: "json" | "ts";
+  }): Promise<APIError | void> {
+    try {
+      const scriptKind: ts.ScriptKind = 
+        compileType === "json" ? ts.ScriptKind.JSON : ts.ScriptKind.TS;
+      const { api, sourceFile, program, checker } = 
+        await compile(id, code, "typescript", ts.ScriptTarget.Latest, scriptKind);
+
+      
+
+    } catch (e) {
+      console.log(e);
+      return { error: "failed" };
+    }
+  }
+);

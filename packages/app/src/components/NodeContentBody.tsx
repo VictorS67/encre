@@ -1,14 +1,15 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 
 import styled from '@emotion/styled';
+import { produce } from 'immer';
 import { useQuery } from '@tanstack/react-query';
 import { useAsyncEffect } from 'ahooks';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import { useStableCallback } from '../hooks/useStableCallback';
 import { useUIContextDescriptors } from '../hooks/useUIContextDescriptors';
 // import { nodeBodyMapState } from '../state/node';
-import { nodeBodyMapState } from '../state/node';
+import { editingNodeIdState, nodeBodyMapState, nodesState } from '../state/node';
 import {
   KnownNodeContentBodyProps,
   NodeContentBodyProps,
@@ -39,6 +40,15 @@ const NodeContentBodyWrapper = styled.div<{
 export const NodeContentBody: FC<NodeContentBodyProps> = memo(
   ({ node }: NodeContentBodyProps) => {
     const nodeBodyMap = useRecoilValue(nodeBodyMapState);
+    const [editingNodeId, setEditingNodeId] = useRecoilState(editingNodeIdState);
+
+    const select = useStableCallback(() => {
+      setEditingNodeId(node.id);
+    });
+
+    const deselect = useStableCallback(() => {
+      setEditingNodeId(undefined);
+    });
 
     const {
       isPending,
@@ -78,7 +88,15 @@ export const NodeContentBody: FC<NodeContentBodyProps> = memo(
 
     if (error) return <div>An error occurred: {error.message}</div>;
 
-    return <KnownNodeContentBody node={node} uiContexts={uiContexts} />;
+    console.log(`listening editingNodeId === node.id: ${editingNodeId === node.id}`);
+
+    return <KnownNodeContentBody
+      node={node}
+      uiContexts={uiContexts ?? []}
+      isEditing={editingNodeId === node.id}
+      onSelect={select}
+      onDeselect={deselect}
+    />;
 
     // return <></>;
   },
@@ -89,43 +107,74 @@ NodeContentBody.displayName = 'NodeContentBody';
 export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
   node,
   uiContexts,
-  onEditorClick,
+  isEditing,
+  onSelect,
+  onDeselect
+  // onEditorClick,
 }: KnownNodeContentBodyProps) => {
+  const setNodes = useSetRecoilState(nodesState);
+
   const descriptors = useUIContextDescriptors(uiContexts);
 
   const renderedBodies = [] as {
     style: UIContext;
     Body: UIContextDescriptor<UIContext['type']>['Body'];
+    Editor: UIContextDescriptor<UIContext['type']>['Editor'];
   }[];
   for (let i = 0; i < descriptors.length; i++) {
     const ui: UIContext = uiContexts[i];
     const descriptor: UIContextDescriptor<UIContext['type']> = descriptors[i];
+    console.log(`index: ${i}, ui: `, ui);
 
     renderedBodies.push({
       style: ui,
       Body: descriptor.Body,
+      Editor: descriptor.Editor
     });
   }
+
+  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    if (!isEditing) {
+      console.log('node content body clicking!')
+      onSelect?.();
+    }
+  }, [onSelect]);
+
+  const updateNode = useStableCallback((n: Node) => {
+    setNodes((nodes) =>
+      produce(nodes, (draft) => {
+        const index = draft.findIndex((n) => n.id === node.id);
+        draft[index] = node as any;
+      }),
+    );
+  });
 
   return (
     <div
       className="node-content-body"
       style={{ height: '100%', flex: 1, flexDirection: 'column' }}
+      onClick={handleClick}
     >
-      {renderedBodies.map(({ style, Body }, i) => {
+      {renderedBodies.map(({ style, Body, Editor }, i) => {
         const editingId: string = fakeId(14);
-
-        const onBodyClick = onEditorClick
-          ? useStableCallback((n: Node, id: string) => {
-              onEditorClick?.(n, style, id);
-            })
-          : undefined;
 
         const renderedBody = Body ? (
           <Body
             node={node}
             id={editingId}
-            onEditClick={onBodyClick}
+            onChange={updateNode}
+            {...style}
+          />
+        ) : (
+          <UnknownNodeContentBody node={node} />
+        );
+
+        // TODO: Change this to Editor
+        const renderedEditor = Editor ? (
+          <Editor
+            node={node}
+            id={editingId}
+            onChange={updateNode}
             {...style}
           />
         ) : (
@@ -138,7 +187,7 @@ export const KnownNodeContentBody: FC<KnownNodeContentBodyProps> = ({
             fontFamily={style.fontFamily ?? 'sans-serif'}
             fontSize={style.fontSize ?? 14}
           >
-            {renderedBody}
+            {isEditing ? renderedEditor : renderedBody}
           </NodeContentBodyWrapper>
         );
       })}

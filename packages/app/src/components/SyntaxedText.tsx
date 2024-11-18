@@ -21,8 +21,8 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
   const appTheme = useRecoilValue(themeState);
 
   const [tokenDisposable, setTokenDisposable] = useState<monaco.IDisposable>();
-  const [completionDisposable, setCompletionDisposable] =
-    useState<monaco.IDisposable>();
+  // const [completionDisposable, setCompletionDisposable] =
+  //   useState<monaco.IDisposable>();
 
   // const _keywords = keywords;
 
@@ -37,27 +37,23 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
     };
   }, [tokenDisposable]);
 
-  useEffect(() => {
-    return () => {
-      if (
-        completionDisposable?.dispose &&
-        typeof completionDisposable.dispose === 'function'
-      ) {
-        completionDisposable.dispose();
-      }
-    };
-  }, [completionDisposable]);
+  // useEffect(() => {
+  //   return () => {
+  //     if (
+  //       completionDisposable?.dispose &&
+  //       typeof completionDisposable.dispose === 'function'
+  //     ) {
+  //       completionDisposable.dispose();
+  //     }
+  //   };
+  // }, [completionDisposable]);
 
   useEffect(() => {
-    if (!tokenDisposable) {
-      setTokenDisposable(defineTokens(keywords, properties, variables));
-    }
-
-    if (!completionDisposable) {
-      setCompletionDisposable(
-        defineSuggestions(keywords, properties, variables),
-      );
-    }
+    // if (!completionDisposable) {
+    //   setCompletionDisposable(
+    //     defineSuggestions(keywords, properties, variables),
+    //   );
+    // }
 
     const colorMode = getColorMode();
     if (!colorMode) return;
@@ -68,6 +64,9 @@ export const SyntaxedText: FC<SyntaxedTextProps> = ({
     monaco.editor.colorizeElement(editorContainer.current!, {
       theme: actualTheme,
     });
+
+    setTokenDisposable(defineTokens(keywords, properties, variables));
+
   }, [text, appTheme]);
 
   return (

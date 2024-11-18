@@ -1,3 +1,4 @@
+import { useDebounceFn, useLatest } from 'ahooks';
 import React, {
   FC,
   Suspense,
@@ -5,25 +6,25 @@ import React, {
   useCallback,
   useState,
   useEffect,
+  useRef,
 } from 'react';
+
+import { Portal } from '@mui/base'; 
 
 import { useRecoilState } from 'recoil';
 
 import { useStableCallback } from '../../hooks/useStableCallback';
 import { editingCodeIdState } from '../../state/editor';
-import { editingNodeIdState } from '../../state/node';
 import { CodeUIContext, Node, UIContext } from '../../types/studio.type';
-import { UIContextDescriptor } from '../../types/uicontext.type';
-import { fakeId } from '../../utils/fakeId';
+import { SharedNodeBodyProps, SharedNodeEditorProps, UIContextDescriptor } from '../../types/uicontext.type';
 import { LazyCodeEditor, LazySyntaxedText } from '../LazyComponents';
+import { Modal } from '../Modal';
+import { monaco } from '../../utils/monacoEditor';
+import { parseMonacoTextValue } from '../../utils/testFunctions';
 
 /* eslint-disable react/prop-types */
 export const CodeNodeContentBody: FC<
-  {
-    node: Node;
-    id: string;
-    onEditClick?: (node: Node, editingId: string) => void;
-  } & CodeUIContext
+  SharedNodeBodyProps & CodeUIContext
 > = memo(
   ({
     node,
@@ -35,39 +36,99 @@ export const CodeNodeContentBody: FC<
     variables,
     onEditClick,
   }) => {
-    const [editingNodeId, setEditingNodeId] =
-      useRecoilState(editingNodeIdState);
-    const [editingCodeId, setEditingCodeId] =
-      useRecoilState(editingCodeIdState);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
-
-    const onCodeContentClick = useCallback(
-      (e: React.MouseEvent) => {
-        console.log(`on code click: ${node.id}`);
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        onEditClick?.(node, id);
-
-        setEditingNodeId(node.id);
-        setEditingCodeId(id);
-      },
-      [setEditingNodeId, setEditingCodeId],
+    return (
+      <Suspense fallback={<div />}>
+        <div
+          style={{
+            display: 'flex',
+            height: '100%',
+            flex: 1,
+          }}
+          data-label={'editor'}
+        >
+          <div style={{ paddingLeft: 10 }}>
+            <LazySyntaxedText
+              text={text}
+              language={language}
+              keywords={keywords}
+              properties={properties}
+              variables={variables}
+              style={{
+                fontSize: '14px',
+                fontFamily: 'monospace',
+                lineHeight: '21px'
+              }}
+            />
+          </div>
+        </div>
+      </Suspense>
     );
+  },
+);
 
-    // useEffect(() => {
-    //   setEditingNodeId(undefined);
-    //   setEditingCodeId(undefined);
-    // }, []);
+CodeNodeContentBody.displayName = 'CodeNodeContentBody';
+
+/* eslint-disable react/prop-types */
+export const CodeNodeContentEditor: FC<
+  SharedNodeEditorProps & CodeUIContext
+> = memo(
+  ({
+    node,
+    id,
+    text,
+    language,
+    keywords,
+    properties,
+    variables,
+    onChange,
+    onEditClick,
+  }) => {
+    const nodeLatest = useLatest(node);
+
+    const editorInstance = useRef<monaco.editor.IStandaloneCodeEditor>();
+
+    const debouncedOnChange = useDebounceFn<(node: Node) => void>(onChange, { wait: 100 });
+
+    const onEditorChange = async (newText: string) => {
+      const output = await parseMonacoTextValue(newText);
+      // debouncedOnChange.run({
+      //   ...nodeLatest.current,
+      //   data: {
+      //     ...(nodeLatest.current?.data as Record<string, unknown> | undefined),
+      //     [editorDef.dataKey]: newText,
+      //   },
+      // });
+    };
+
+    const onChangeLatest = useLatest(onEditorChange);
 
     useEffect(() => {
-      console.log(
-        `editingNodeId: ${editingNodeId}, editingCodeId: ${editingCodeId}`,
-      );
+      if (editorInstance.current) {
+        const currentValue = text;
+  
+        if (editorInstance.current.getValue() !== currentValue) {
+          editorInstance.current.setValue(currentValue ?? '');
+        }
+  
+        // editorInstance.current.updateOptions({
+        //   readOnly: isReadonly,
+        // });
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [text]);
 
-      setIsEditing(editingNodeId === node.id && editingCodeId === id);
-    }, [editingCodeId, editingNodeId]);
+    const [openEditorModal, setOpenEditorModal] = useState<boolean>(false);
+
+    const onDummyClick = useCallback(() => {
+      console.log('Opening modal');
+      setOpenEditorModal(true);
+    }, [setOpenEditorModal]);
+
+    const onDummyClose = useCallback(() => {
+      setOpenEditorModal(false);
+    }, [setOpenEditorModal]);
+
+    // const container = React.useRef(null);
 
     return (
       <Suspense fallback={<div />}>
@@ -77,37 +138,66 @@ export const CodeNodeContentBody: FC<
             height: '100%',
             flex: 1,
           }}
-          onClick={onCodeContentClick}
           data-label={'editor'}
         >
-          {isEditing && !onEditClick && (
+          {/* <button onClick={onDummyClick}>Open Modal</button> */}
+          {/* <Portal container={() => container.current!} disablePortal >
             <LazyCodeEditor
               text={text}
               language={language}
               keywords={keywords}
               properties={properties}
               variables={variables}
+              fontSize={14}
+              fontFamily={'monospace'}
             />
-          )}
-          {(!isEditing || onEditClick) && (
-            <div style={{ paddingLeft: 10 }}>
-              <LazySyntaxedText
-                text={text}
-                language={language}
-                keywords={keywords}
-                properties={properties}
-                variables={variables}
-              />
-            </div>
-          )}
+          </Portal> */}
+          <LazyCodeEditor
+            editorRef={editorInstance}
+            text={text}
+            language={language}
+            keywords={keywords}
+            properties={properties}
+            variables={variables}
+            fontSize={14}
+            fontFamily={'monospace'}
+            onChange={(newValue) => {
+              onChangeLatest.current?.(newValue);
+            }}
+          />
         </div>
+        {/* <Modal
+          open={openEditorModal}
+          title={'Dummy Modal'}
+          showCloseIcon
+          disableEnforceFocus
+          disableAutoFocus
+          onClose={onDummyClose}
+        >
+          <div style={{
+            display: "flex",
+            height: "200px"
+          }}>
+            <LazyCodeEditor
+              text={text}
+              language={language}
+              keywords={keywords}
+              properties={properties}
+              variables={variables}
+              fontSize={14}
+              fontFamily={'monospace'}
+            />
+          </div>
+        </Modal> */}
+        {/* <div ref={container} /> */}
       </Suspense>
     );
   },
 );
 
-CodeNodeContentBody.displayName = 'CodeNodeContentBody';
+CodeNodeContentEditor.displayName = 'CodeNodeContentEditor';
 
 export const codeDescriptor: UIContextDescriptor<'code'> = {
   Body: CodeNodeContentBody,
+  Editor: CodeNodeContentEditor
 };

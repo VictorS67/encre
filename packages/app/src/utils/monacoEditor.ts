@@ -182,60 +182,143 @@ export const defineSuggestions = (
   properties: string[] = [],
   variables: string[] = [],
 ) => {
+  console.log('MONACO: defineSuggestions')
+
   return monaco.languages.registerCompletionItemProvider('encre-code', {
     provideCompletionItems: (model, position) => {
-      const suggestions = [
-        ...keywords.map((k) => {
-          const word = model.getWordUntilPosition(position);
+      const wordBeforePosition = model.getWordUntilPosition({
+        lineNumber: position.lineNumber,
+        column: position.column - 1,
+      });
 
-          return {
-            label: k,
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: k,
-            range: {
-              startLineNumber: position.lineNumber,
-              endLineNumber: position.lineNumber,
-              startColumn: word.startColumn,
-              endColumn: word.endColumn,
-            },
-          };
-        }),
-        ...properties.map((k) => {
-          const word = model.getWordUntilPosition(position);
+      const wordUntilPosition = model.getWordUntilPosition(position);
 
-          return {
-            label: k,
-            kind: monaco.languages.CompletionItemKind.Property,
-            insertText: k,
-            range: {
-              startLineNumber: position.lineNumber,
-              endLineNumber: position.lineNumber,
-              startColumn: word.startColumn,
-              endColumn: word.endColumn,
-            },
-          };
-        }),
-        ...variables.map((k) => {
-          const word = model.getWordUntilPosition(position);
-
-          return {
-            label: k,
-            kind: monaco.languages.CompletionItemKind.Variable,
-            insertText: k,
-            range: {
-              startLineNumber: position.lineNumber,
-              endLineNumber: position.lineNumber,
-              startColumn: word.startColumn,
-              endColumn: word.endColumn,
-            },
-          };
-        }),
-      ];
-
-      return { suggestions };
+      if (wordBeforePosition.word.trim() === '' ||  wordUntilPosition.word.trim() === '') {
+        const suggestions = [
+          ...keywords.map((k) => {
+            return {
+              label: k,
+              kind: monaco.languages.CompletionItemKind.Keyword,
+              insertText: k,
+              range: {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: wordUntilPosition.startColumn,
+                endColumn: wordUntilPosition.endColumn - 1,
+              },
+            };
+          }),
+          ...properties.map((k) => {
+            return {
+              label: k,
+              kind: monaco.languages.CompletionItemKind.Property,
+              insertText: k,
+              range: {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: wordUntilPosition.startColumn,
+                endColumn: wordUntilPosition.endColumn - 1,
+              },
+            };
+          }),
+          ...variables.map((k) => {
+            return {
+              label: k,
+              kind: monaco.languages.CompletionItemKind.Variable,
+              insertText: k,
+              range: {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: wordUntilPosition.startColumn,
+                endColumn: wordUntilPosition.endColumn - 1,
+              },
+            };
+          }),
+          ...commands.map((c) => {
+            return {
+              label: c.label,
+              kind: c.kind,
+              description: c.description,
+              documentation: c.description,
+              insertText: c.insertText,
+              detail: c.description,
+              insertTextRules: c.insertTextRules,
+              range: {
+                startLineNumber: position.lineNumber,
+                endLineNumber: position.lineNumber,
+                startColumn: wordUntilPosition.startColumn,
+                endColumn: wordUntilPosition.endColumn - 1,
+              },
+            }
+          })
+        ];
+        return { suggestions };
+      }
     },
+    triggerCharacters: ["$"]
   });
 };
+
+// export const defineCommands = (keywords: string[] = []) => {
+//   return monaco.languages.registerCompletionItemProvider('encre-code', {
+//     provideCompletionItems: (model, position) => {
+//       const wordBeforePosition = model.getWordUntilPosition({
+//         lineNumber: position.lineNumber,
+//         column: position.column - 1,
+//       });
+
+//       const wordUntilPosition = model.getWordUntilPosition(position);
+
+//       if (wordBeforePosition.word.trim() === '' ||  wordUntilPosition.word.trim() === '') {
+//         const suggestions = [
+//           ...keywords.map((k) => {
+//             return {
+//               label: k,
+//               kind: monaco.languages.CompletionItemKind.Keyword,
+//               insertText: k,
+//               range: {
+//                 startLineNumber: position.lineNumber,
+//                 endLineNumber: position.lineNumber,
+//                 startColumn: wordUntilPosition.startColumn - 1,
+//                 endColumn: wordUntilPosition.endColumn - 1,
+//               },
+//             };
+//           }),
+//           ...commands.map((c) => {
+//             return {
+//               label: c.label,
+//               kind: c.kind,
+//               description: c.description,
+//               documentation: c.description,
+//               insertText: c.insertText,
+//               detail: c.description,
+//               insertTextRules: c.insertTextRules,
+//               range: {
+//                 startLineNumber: position.lineNumber,
+//                 endLineNumber: position.lineNumber,
+//                 startColumn: wordUntilPosition.startColumn,
+//                 endColumn: wordUntilPosition.endColumn - 1,
+//               },
+//             }
+//           })
+//         ];
+//         return { suggestions };
+//       }
+//     },
+//     triggerCharacters: ["/"]
+//   });
+// }
+
+const commands = [
+  {
+    label: '$image',
+    kind: monaco.languages.CompletionItemKind.Function,
+    insertText: 'image',
+    description: 'Image Content',
+    insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+  }
+];
+
 
 const defineTheme = (
   theme: 'dark' | 'light',

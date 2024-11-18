@@ -669,7 +669,7 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
         )}
       </div>
 
-      {selectedIndex !== undefined && selectedIndex === index ? (
+      {/* {selectedIndex !== undefined && selectedIndex === index ? (
         <div className="ui-context-editor">
           <KnownNodeContentBody
             node={node}
@@ -677,7 +677,7 @@ export const ConditionUIContextItem: FC<ConditionUIContextItemProps> = ({
             onEditorClick={onConditionEditorClick}
           />
         </div>
-      ) : null}
+      ) : null} */}
     </>
   );
 };

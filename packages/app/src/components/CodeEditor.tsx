@@ -4,8 +4,6 @@ import { debounce } from '@mui/material';
 import { useLatest, useThrottleFn } from 'ahooks';
 import { useRecoilValue } from 'recoil';
 
-import { useStableCallback } from '../hooks/useStableCallback';
-import { editingCodeIdState } from '../state/editor';
 import { themeState } from '../state/settings';
 import { CodeEditorProps } from '../types/editor.type';
 import { getColorMode } from '../utils/colorMode';
@@ -20,7 +18,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
   fontSize,
   fontFamily,
   isReadOnly,
-  autoFocus,
+  autoFocus = true,
   showLineNumbers,
   scrollBeyondLastLine = false,
   theme,
@@ -36,52 +34,50 @@ export const CodeEditor: FC<CodeEditorProps> = ({
 
   const appTheme = useRecoilValue(themeState);
 
-  const [tokenDisposable, setTokenDisposable] = useState<monaco.IDisposable>();
-  const [completionDisposable, setCompletionDisposable] =
-    useState<monaco.IDisposable>();
+  // const [tokenDisposable, setTokenDisposable] = useState<monaco.IDisposable>();
+  // const [completionDisposable, setCompletionDisposable] =
+  //   useState<monaco.IDisposable>();
 
-  useEffect(() => {
-    return () => {
-      if (
-        tokenDisposable?.dispose &&
-        typeof tokenDisposable.dispose === 'function'
-      ) {
-        tokenDisposable.dispose();
-        setTokenDisposable(undefined);
-      }
-    };
-  }, [tokenDisposable]);
+  // useEffect(() => {
+  //   setTokenDisposable(defineTokens(keywords, properties, variables));
 
-  useEffect(() => {
-    return () => {
-      if (
-        completionDisposable?.dispose &&
-        typeof completionDisposable.dispose === 'function'
-      ) {
-        completionDisposable.dispose();
-        setCompletionDisposable(undefined);
-      }
-    };
-  }, [completionDisposable]);
+  //   return () => {
+  //     if (
+  //       tokenDisposable?.dispose &&
+  //       typeof tokenDisposable.dispose === 'function'
+  //     ) {
+  //       tokenDisposable.dispose();
+  //     }
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   setCompletionDisposable(defineSuggestions(keywords, properties, variables));
+
+  //   return () => {
+  //     console.log(`MONACO: ${typeof completionDisposable?.dispose}`)
+
+  //     if (
+  //       completionDisposable?.dispose &&
+  //       typeof completionDisposable.dispose === 'function'
+  //     ) {
+  //       console.log('MONACO: defineSuggestions dispose')
+
+  //       completionDisposable.dispose();
+  //     }
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (!editorContainer.current) return;
-
-    if (!tokenDisposable) {
-      setTokenDisposable(defineTokens(keywords, properties, variables));
-    }
-
-    if (!completionDisposable) {
-      setCompletionDisposable(
-        defineSuggestions(keywords, properties, variables),
-      );
-    }
 
     const colorMode: string | null = getColorMode();
     if (!colorMode) return;
 
     const actualTheme: string =
       theme === 'encre-code' || !theme ? `encre-code-${colorMode}` : theme;
+
+    const completionDisposable = defineSuggestions(keywords, properties, variables);
 
     const editor = monaco.editor.create(editorContainer.current, {
       theme: actualTheme,
@@ -128,7 +124,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     };
 
     const contentHeight = editor.getContentHeight();
-    editorContainer.current.style.height = `${contentHeight}px`;
+    editorContainer.current.style.height = `${contentHeight + 100}px`;
     editor.layout();
 
     const onResizeDebounced = debounce(onResize, 300);
@@ -137,7 +133,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
     editor.onDidChangeModelContent(() => {
       onChangeLatest.current?.(editor.getValue());
       if (editorContainer.current) {
-        editorContainer.current.style.height = `${editor.getContentHeight()}px`;
+        editorContainer.current.style.height = `${editor.getContentHeight() + 100}px`;
       }
 
       editor.layout();
@@ -150,9 +146,29 @@ export const CodeEditor: FC<CodeEditorProps> = ({
 
     const latestBeforeDispose = onChangeLatest.current;
 
+    // setTokenDisposable(defineTokens(keywords, properties, variables));
+
+    // setCompletionDisposable(defineSuggestions(keywords, properties, variables));
+
+    // setCommandDisposable(defineCommands(keywords));
+
+    defineTokens(keywords, properties, variables);
+
     return () => {
+      // const tokenDisposable = defineTokens(keywords, properties, variables);
+      // tokenDisposable.dispose();
+      // if (
+      //   completionDisposable?.dispose &&
+      //   typeof completionDisposable.dispose === 'function'
+      // ) {
+      //   console.log('MONACO: defineSuggestions dispose')
+
+      //   completionDisposable.dispose();
+      // }
+
       latestBeforeDispose?.(editor.getValue());
       editor.dispose();
+      completionDisposable.dispose();
       window.removeEventListener('resize', onResizeDebounced);
     };
   }, []);
@@ -194,6 +210,7 @@ export const CodeEditor: FC<CodeEditorProps> = ({
       style={{
         minWidth: 0,
         minHeight: 0,
+        maxHeight: '100%',
         display: 'flex',
         flex: 1,
         height: '100%',

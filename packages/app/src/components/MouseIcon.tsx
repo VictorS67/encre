@@ -13,6 +13,7 @@ import {
   isDraggingMultipleCommentsState,
 } from '../state/comment';
 import { editingCodeIdState } from '../state/editor';
+import { editingNodeIdState } from '../state/node';
 import { isSelectingMultiWiresState } from '../state/wire';
 
 export const MouseIcon: FC = () => {
@@ -30,26 +31,27 @@ export const MouseIcon: FC = () => {
     isSelectingMultiWiresState,
   );
   const editingCodeId = useRecoilValue(editingCodeIdState);
+  const editingNodeId = useRecoilValue(editingNodeIdState);
 
   useGlobalHotkey(
     'Space',
     useCallback(
       (e: KeyboardEvent) => {
-        if (!editingCodeId) {
+        if (!editingNodeId) {
           e.preventDefault();
           setIsOnlyDraggingCanvas(true);
         }
       },
-      [editingCodeId],
+      [editingNodeId],
     ),
     useCallback(
       (e: KeyboardEvent) => {
-        if (!editingCodeId) {
+        if (!editingNodeId) {
           e.preventDefault();
           setIsOnlyDraggingCanvas(false);
         }
       },
-      [editingCodeId],
+      [editingNodeId],
     ),
   );
 

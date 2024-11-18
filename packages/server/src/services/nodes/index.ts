@@ -105,10 +105,13 @@ async function getNodeIODefs({
 
 async function getNodeBody(node: SerializableNode) {
   try {
-    // const nodeImpl = globalNodeRegistry.createImpl(node as any);
+    const nodeImpl = await globalNodeRegistry.createLoadImpl(node as any);
 
-    // const kwargs = nodeImpl.kwargs;
-    // console.log(kwargs);
+    const kwargs = nodeImpl.kwargs;
+    console.log(`kwargs: ${JSON.stringify(kwargs)}`);
+
+    const body = await nodeImpl.getBody();
+    console.log(`body: ${JSON.stringify(body)}`)
 
     return [
       {

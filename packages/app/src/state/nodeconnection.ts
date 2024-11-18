@@ -10,7 +10,7 @@ export const connectionsState = selector({
   get: ({ get }) => {
     return get(graphState).connections;
   },
-  set: ({ set }, newVal) => {
+  set: ({ set }, newVal: NodeConnection[] | DefaultValue) => {
     set(graphState, (oldVal: NodeGraph) => {
       return {
         ...oldVal,
