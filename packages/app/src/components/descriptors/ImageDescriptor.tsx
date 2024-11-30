@@ -1,15 +1,15 @@
-import React, { FC, memo, useEffect, useMemo, useState } from 'react';
+import React, { FC, memo, useEffect, useMemo, useState } from "react";
 
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
-import { extMap } from 'internal/src/constants/encre';
+import { EXT_MAP } from "internal/src/constants/encre";
 
-import { Node, UIContext } from '../../types/studio.type';
-import { UIContextDescriptor } from '../../types/uicontext.type';
-import { formatBytes } from '../../utils/format';
-import { Icon } from '../Icon';
+import { Node, UIContext } from "../../types/studio.type";
+import { UIContextDescriptor } from "../../types/uicontext.type";
+import { formatBytes } from "../../utils/format";
+import { Icon } from "../Icon";
 
 const Image = styled.div`
   align-self: stretch;
@@ -75,7 +75,7 @@ const Image = styled.div`
 
 /* eslint-disable react/prop-types */
 export const ImageNodeContentBody: FC<
-  { node: Node; id: string } & Extract<UIContext, { type: 'image' }>
+  { node: Node; id: string } & Extract<UIContext, { type: "image" }>
 > = memo(({ node, id, mimeType, data }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [svgContent, setSvgContent] = useState<string | undefined>(undefined);
@@ -85,7 +85,7 @@ export const ImageNodeContentBody: FC<
 
     if (!blob) return;
 
-    if (mimeType === 'image/svg+xml') {
+    if (mimeType === "image/svg+xml") {
       const reader = new FileReader();
       reader.onload = (event) => {
         setSvgContent(event.target?.result?.toString());
@@ -110,7 +110,7 @@ export const ImageNodeContentBody: FC<
   };
 
   const onClickDownload = (e: React.MouseEvent) => {
-    const ext = mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown';
+    const ext = mimeType && EXT_MAP[mimeType] ? EXT_MAP[mimeType] : "unknown";
 
     const filename = `download.${ext}`;
 
@@ -119,7 +119,7 @@ export const ImageNodeContentBody: FC<
     });
     const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -143,15 +143,15 @@ export const ImageNodeContentBody: FC<
             <img src={imageUrl} alt="" onDragStart={onDragImgStart} />
           )}
           <div className="image-info">
-            <div className="file-info" style={{ textTransform: 'uppercase' }}>
-              {mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown'}
+            <div className="file-info" style={{ textTransform: "uppercase" }}>
+              {mimeType && EXT_MAP[mimeType] ? EXT_MAP[mimeType] : "unknown"}
             </div>
             <div className="file-info">{fileSize}</div>
             <Icon
               icon={DownloadRoundedIcon}
-              width={'18px'}
-              height={'18px'}
-              fontSize={'20px'}
+              width={"18px"}
+              height={"18px"}
+              fontSize={"20px"}
               additionalStyles={css`
                 cursor: pointer;
                 &:hover {
@@ -167,8 +167,8 @@ export const ImageNodeContentBody: FC<
   );
 });
 
-ImageNodeContentBody.displayName = 'ImageNodeContentBody';
+ImageNodeContentBody.displayName = "ImageNodeContentBody";
 
-export const imageDescriptor: UIContextDescriptor<'image'> = {
+export const imageDescriptor: UIContextDescriptor<"image"> = {
   Body: ImageNodeContentBody,
 };

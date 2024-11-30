@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
   "dependencies": {
-    "@encrejs/api": "0.0.3",
-    "@encrejs/core": "0.0.7",
+    "@encrejs/api": "^0.0.3",
     "@types/uuid": "^9.0.2",
     "mitt": "^3.0.1",
     "uuid": "^9.0.1"
@@ -20,7 +20,6 @@
     "buffer": "^6.0.3",
     "cross-env": "^7.0.3",
     "dts-minify": "^0.3.3",
-    "electron": "^31.0.2",
     "eslint": "^8.49.0",
     "eslint-cjs-to-esm": "^2.2.0",
     "eslint-config-prettier": "^9.0.0",

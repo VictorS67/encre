@@ -1,14 +1,14 @@
 import type {
   NodeConnection,
   SerializableNode,
-} from '@encrejs/core/studio/nodes';
+} from "@encrejs/core/studio/nodes";
 import {
   globalNodeRegistry,
   type NodeImplConstructor,
-} from '@encrejs/core/studio/registration/nodes';
-import { StatusCodes } from 'http-status-codes';
-import { InternalError } from '../../exceptions/internal.js';
-import { getErrorMessage } from '../../utils/getErrorMessage.js';
+} from "@encrejs/core/studio/registration/nodes";
+import { StatusCodes } from "http-status-codes";
+import { InternalError } from "../../exceptions/internal.js";
+import { getErrorMessage } from "../../utils/getErrorMessage.js";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unreachable */
@@ -83,16 +83,16 @@ async function getNodeIODefs({
       inputDefs: [
         {
           nodeId: node.id,
-          name: 'prompt',
-          type: ['string'],
-        }
+          name: "prompt",
+          type: ["string"],
+        },
       ],
       outputDefs: [
         {
           nodeId: node.id,
-          name: 'prompt',
-          type: ['string'],
-        }
+          name: "prompt",
+          type: ["string"],
+        },
       ],
     };
   } catch (error) {
@@ -111,21 +111,17 @@ async function getNodeBody(node: SerializableNode) {
     console.log(`kwargs: ${JSON.stringify(kwargs)}`);
 
     const body = await nodeImpl.getBody();
-    console.log(`body: ${JSON.stringify(body)}`)
+    console.log(`body: ${JSON.stringify(body)}`);
 
     return [
       {
-        'isHoldingValues': false,
-        'keywords': [
-          'shouldSplit',
-          'verbose',
-          'callbacks',
-        ],
-        'language': 'encre-code',
-        'text': `shouldSplit: false
+        isHoldingValues: false,
+        keywords: ["shouldSplit", "verbose", "callbacks"],
+        language: "encre-code",
+        text: `shouldSplit: false
 verbose: undefined
 callbacks: undefined`,
-        'type': 'code',
+        type: "code",
       },
     ];
   } catch (error) {
@@ -136,10 +132,27 @@ callbacks: undefined`,
   }
 }
 
-export default { 
-  getAllNodes, 
-  getNodeById, 
-  getNode, 
-  getNodeIODefs, 
-  getNodeBody
+async function getNodeAttrs(node: SerializableNode) {
+  try {
+    const nodeImpl = await globalNodeRegistry.createLoadImpl(node as any);
+    const kwargs = nodeImpl.kwargs;
+    const secrets = nodeImpl.secrets;
+    const aliases = nodeImpl.aliases;
+
+    return { kwargs, secrets, aliases };
+  } catch (error) {
+    throw new InternalError(
+      StatusCodes.INTERNAL_SERVER_ERROR,
+      `nodesService.getNodeAttrs: ${getErrorMessage(error)}`
+    );
+  }
+}
+
+export default {
+  getAllNodes,
+  getNodeById,
+  getNode,
+  getNodeIODefs,
+  getNodeBody,
+  getNodeAttrs,
 };

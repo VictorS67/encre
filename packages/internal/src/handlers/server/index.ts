@@ -2,7 +2,11 @@ import type {
   BuiltInNodeTypePairs,
   Node,
   NodeConnection,
-  NodeBody
+  NodeBody,
+  DataFields,
+  SecretFields,
+  KeyAlias,
+  NodeAttrs,
 } from "../../types/encre";
 import type { APIError } from "../types";
 
@@ -23,11 +27,14 @@ export interface ServerHandlers {
     nodeMap?: Record<string, Node>;
   }) => Promise<APIError | void>;
   "get-node-body": (arg: { node: Node }) => Promise<APIError | NodeBody>;
-
-  "get-registry-nodes-type-pairs": () => Promise<APIError | BuiltInNodeTypePairs>;
+  "get-node-attrs": (arg: { node: Node }) => Promise<APIError | NodeAttrs>;
+  "get-registry-nodes-type-pairs": () => Promise<
+    APIError | BuiltInNodeTypePairs
+  >;
   "change-node-attrs": (arg: {
-    id: string,
-    code: string,
-    compileType: "json" | "ts"
+    id: string;
+    node: Node;
+    code: string;
+    compileType: "json" | "ts";
   }) => Promise<APIError | void>;
 }

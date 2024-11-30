@@ -10,28 +10,28 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
-import styled from '@emotion/styled';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import { css } from '@mui/material';
+import styled from "@emotion/styled";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import { css } from "@mui/material";
 
-import { extMap } from 'internal/src/constants/encre';
+import { EXT_MAP } from "internal/src/constants/encre";
 
 import {
   AudioVisualizerProps,
   LiveAudioVisualizerProps,
   AudioDataPoint,
-} from '../types/audiovisualizer.type';
+} from "../types/audiovisualizer.type";
 import {
   calculateBarData,
   calculateLiveBarData,
   draw,
   drawLive,
-} from '../utils/audioVisualizer';
-import { formatBytes } from '../utils/format';
+} from "../utils/audioVisualizer";
+import { formatBytes } from "../utils/format";
 
-import { Icon } from './Icon';
+import { Icon } from "./Icon";
 
 const AudioTrack = styled.div<{ width: number; height: number }>`
   position: relative;
@@ -123,11 +123,11 @@ export const AudioVisualizer = forwardRef<
     barWidth = 2,
     gap = 1,
     style,
-    backgroundColor = 'transparent',
-    barColor = 'rgb(184, 184, 184)',
-    barPlayedColor = 'rgb(160, 198, 255)',
+    backgroundColor = "transparent",
+    barColor = "rgb(184, 184, 184)",
+    barPlayedColor = "rgb(160, 198, 255)",
   }: AudioVisualizerProps,
-  ref?: ForwardedRef<HTMLCanvasElement>,
+  ref?: ForwardedRef<HTMLCanvasElement>
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -166,13 +166,13 @@ export const AudioVisualizer = forwardRef<
       source.connect(audioContext.destination);
       source.start(0, startOffsetRef.current);
       source.addEventListener(
-        'ended',
+        "ended",
         () => {
           setIsPlaying(false);
           setDisplayPlayhead(true);
           startOffsetRef.current = 0;
         },
-        { once: true },
+        { once: true }
       );
 
       if (sourceRef.current) {
@@ -207,7 +207,7 @@ export const AudioVisualizer = forwardRef<
   useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(
     ref,
     () => canvasRef.current,
-    [],
+    []
   );
 
   useEffect(() => {
@@ -225,7 +225,7 @@ export const AudioVisualizer = forwardRef<
         gap,
         backgroundColor,
         barColor,
-        barPlayedColor,
+        barPlayedColor
       );
       return;
     }
@@ -249,7 +249,7 @@ export const AudioVisualizer = forwardRef<
           gap,
           backgroundColor,
           barColor,
-          barPlayedColor,
+          barPlayedColor
         );
       });
     });
@@ -269,7 +269,7 @@ export const AudioVisualizer = forwardRef<
       height,
       width,
       barWidth,
-      gap,
+      gap
     );
     setData(barsData);
     draw(
@@ -279,7 +279,7 @@ export const AudioVisualizer = forwardRef<
       gap,
       backgroundColor,
       barColor,
-      barPlayedColor,
+      barPlayedColor
     );
   }, [
     width,
@@ -302,7 +302,7 @@ export const AudioVisualizer = forwardRef<
       barColor,
       barPlayedColor,
       currTime,
-      duration,
+      duration
     );
   }, [
     isPlaying,
@@ -316,7 +316,7 @@ export const AudioVisualizer = forwardRef<
 
   const playHeadStyling = useMemo(() => {
     const styling: CSSProperties = {
-      opacity: displayPlayhead ? '1' : '0',
+      opacity: displayPlayhead ? "1" : "0",
       left: `${(currTime / duration) * 100}%`,
     };
 
@@ -326,13 +326,13 @@ export const AudioVisualizer = forwardRef<
   const onClickDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const ext = mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown';
+    const ext = mimeType && EXT_MAP[mimeType] ? EXT_MAP[mimeType] : "unknown";
 
     const filename = `download.${ext}`;
 
     const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -359,15 +359,15 @@ export const AudioVisualizer = forwardRef<
       </div>
       {displayInfo ? (
         <div className="audio-info">
-          <div className="file-info" style={{ textTransform: 'uppercase' }}>
-            {mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown'}
+          <div className="file-info" style={{ textTransform: "uppercase" }}>
+            {mimeType && EXT_MAP[mimeType] ? EXT_MAP[mimeType] : "unknown"}
           </div>
           <div className="file-info">{fileSize}</div>
           <Icon
             icon={DownloadRoundedIcon}
-            width={'18px'}
-            height={'18px'}
-            fontSize={'20px'}
+            width={"18px"}
+            height={"18px"}
+            fontSize={"20px"}
             additionalStyles={css`
               cursor: pointer;
               &:hover {
@@ -382,16 +382,16 @@ export const AudioVisualizer = forwardRef<
   );
 });
 
-AudioVisualizer.displayName = 'AudioVisualizer';
+AudioVisualizer.displayName = "AudioVisualizer";
 
 export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
   mediaRecorder,
-  width = '100%',
-  height = '100%',
+  width = "100%",
+  height = "100%",
   barWidth = 2,
   gap = 1,
-  backgroundColor = 'transparent',
-  barColor = 'rgb(160, 198, 255)',
+  backgroundColor = "transparent",
+  barColor = "rgb(160, 198, 255)",
   fftSize = 1024,
   maxDecibels = -10,
   minDecibels = -90,
@@ -415,7 +415,7 @@ export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
   }, [mediaRecorder.stream]);
 
   useEffect(() => {
-    if (analyser && mediaRecorder.state === 'recording') {
+    if (analyser && mediaRecorder.state === "recording") {
       report();
     }
   }, [analyser, mediaRecorder.state]);
@@ -425,15 +425,15 @@ export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
 
     const data = new Uint8Array(analyser?.frequencyBinCount);
 
-    if (mediaRecorder.state === 'recording') {
+    if (mediaRecorder.state === "recording") {
       analyser?.getByteFrequencyData(data);
       processFrequencyData(data);
       requestAnimationFrame(report);
-    } else if (mediaRecorder.state === 'paused') {
+    } else if (mediaRecorder.state === "paused") {
       processFrequencyData(data);
     } else if (
-      mediaRecorder.state === 'inactive' &&
-      context.state !== 'closed'
+      mediaRecorder.state === "inactive" &&
+      context.state !== "closed"
     ) {
       context.close();
     }
@@ -446,7 +446,7 @@ export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
       data,
       canvasRef.current.width,
       barWidth,
-      gap,
+      gap
     );
     drawLive(
       dataPoints,
@@ -454,7 +454,7 @@ export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
       barWidth,
       gap,
       backgroundColor,
-      barColor,
+      barColor
     );
   };
 
@@ -464,8 +464,8 @@ export const LiveAudioVisualizer: FC<LiveAudioVisualizerProps> = ({
       width={width}
       height={height}
       style={{
-        aspectRatio: 'unset',
-        width: '100%',
+        aspectRatio: "unset",
+        width: "100%",
       }}
     />
   );

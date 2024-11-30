@@ -1,22 +1,22 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo } from "react";
 
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import AbcRoundedIcon from '@mui/icons-material/AbcRounded';
-import CssIcon from '@mui/icons-material/Css';
-import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import HtmlIcon from '@mui/icons-material/Html';
-import JavascriptRoundedIcon from '@mui/icons-material/JavascriptRounded';
-import { match } from 'ts-pattern';
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import AbcRoundedIcon from "@mui/icons-material/AbcRounded";
+import CssIcon from "@mui/icons-material/Css";
+import DescriptionRoundedIcon from "@mui/icons-material/DescriptionRounded";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import HtmlIcon from "@mui/icons-material/Html";
+import JavascriptRoundedIcon from "@mui/icons-material/JavascriptRounded";
+import { match } from "ts-pattern";
 
-import { extMap } from 'internal/src/constants/encre';
+import { EXT_MAP } from "internal/src/constants/encre";
 
-import { SVGIcon } from '../../types/icon.type';
-import { Node, UIContext } from '../../types/studio.type';
-import { UIContextDescriptor } from '../../types/uicontext.type';
-import { formatBytes } from '../../utils/format';
-import { Icon } from '../Icon';
+import { SVGIcon } from "../../types/icon.type";
+import { Node, UIContext } from "../../types/studio.type";
+import { UIContextDescriptor } from "../../types/uicontext.type";
+import { formatBytes } from "../../utils/format";
+import { Icon } from "../Icon";
 
 const File = styled.div`
   align-self: stretch;
@@ -72,32 +72,32 @@ const File = styled.div`
 
 /* eslint-disable react/prop-types */
 export const FileNodeContentBody: FC<
-  { node: Node; id: string } & Extract<UIContext, { type: 'file' }>
+  { node: Node; id: string } & Extract<UIContext, { type: "file" }>
 > = memo(({ node, id, mimeType, data }) => {
   const FileIcon: SVGIcon = match(mimeType)
-    .with('text/plain', () => AbcRoundedIcon)
-    .with('text/html', () => HtmlIcon)
-    .with('text/javascript', () => JavascriptRoundedIcon)
-    .with('text/css', () => CssIcon)
-    .with('application/json', () => DescriptionRoundedIcon)
-    .with('application/pdf', () => DescriptionRoundedIcon)
-    .with('application/xml', () => DescriptionRoundedIcon)
+    .with("text/plain", () => AbcRoundedIcon)
+    .with("text/html", () => HtmlIcon)
+    .with("text/javascript", () => JavascriptRoundedIcon)
+    .with("text/css", () => CssIcon)
+    .with("application/json", () => DescriptionRoundedIcon)
+    .with("application/pdf", () => DescriptionRoundedIcon)
+    .with("application/xml", () => DescriptionRoundedIcon)
     .exhaustive();
 
   const fileName: string = match(mimeType)
-    .with('text/plain', () => 'Plain text document')
-    .with('text/html', () => 'HTML document')
-    .with('text/javascript', () => 'JS file')
-    .with('text/css', () => 'CSS file')
-    .with('application/json', () => 'JSON file')
-    .with('application/pdf', () => 'PDF file')
-    .with('application/xml', () => 'XML file')
+    .with("text/plain", () => "Plain text document")
+    .with("text/html", () => "HTML document")
+    .with("text/javascript", () => "JS file")
+    .with("text/css", () => "CSS file")
+    .with("application/json", () => "JSON file")
+    .with("application/pdf", () => "PDF file")
+    .with("application/xml", () => "XML file")
     .exhaustive();
 
   const fileSize = formatBytes(data.byteLength);
 
   const onClickDownload = (e: React.MouseEvent) => {
-    const ext = mimeType && extMap[mimeType] ? extMap[mimeType] : 'unknown';
+    const ext = mimeType && EXT_MAP[mimeType] ? EXT_MAP[mimeType] : "unknown";
 
     const filename = `download.${ext}`;
 
@@ -106,7 +106,7 @@ export const FileNodeContentBody: FC<
     });
     const url = URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -120,9 +120,9 @@ export const FileNodeContentBody: FC<
     <File>
       <Icon
         icon={FileIcon}
-        width={'24px'}
-        height={'24px'}
-        fontSize={'24px'}
+        width={"24px"}
+        height={"24px"}
+        fontSize={"24px"}
         additionalStyles={css`
           flex: 0 !important;
           margin-left: 5px;
@@ -133,9 +133,9 @@ export const FileNodeContentBody: FC<
       <div className="spacer"></div>
       <Icon
         icon={DownloadRoundedIcon}
-        width={'18px'}
-        height={'18px'}
-        fontSize={'20px'}
+        width={"18px"}
+        height={"18px"}
+        fontSize={"20px"}
         additionalStyles={css`
           cursor: pointer;
           color: var(--text-disabled-color) !important;
@@ -152,8 +152,8 @@ export const FileNodeContentBody: FC<
   );
 });
 
-FileNodeContentBody.displayName = 'FileNodeContentBody';
+FileNodeContentBody.displayName = "FileNodeContentBody";
 
-export const fileDescriptor: UIContextDescriptor<'file'> = {
+export const fileDescriptor: UIContextDescriptor<"file"> = {
   Body: FileNodeContentBody,
 };

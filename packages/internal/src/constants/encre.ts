@@ -1,4 +1,4 @@
-export const dataTypes = [
+export const ENCRE_DATA_TYPES = [
   "string",
   "string[]",
   "number",
@@ -17,7 +17,7 @@ export const dataTypes = [
   "chat-message[]",
 ];
 
-export const extMap = {
+export const EXT_MAP = {
   "text/plain": "bin",
   "text/html": "html",
   "text/javascript": "js",

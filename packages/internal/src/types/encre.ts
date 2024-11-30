@@ -28,6 +28,8 @@ import type {
   ArrayData as IArrayData,
   Data as IData,
   DataType as IDataType,
+  DataFields as IDataFields,
+  ScalarDataType as IScalarDataType,
   UIContext as IUIContext,
   BaseUIContext as IBaseUIContext,
   PlainUIContext as IPlainUIContext,
@@ -99,6 +101,17 @@ export type ScalarData = IScalarData;
 export type ArrayData = IArrayData;
 export type Data = IData;
 export type DataType = IDataType;
+export type ScalarDataType = IScalarDataType;
+
+export type DataFields = IDataFields;
+export type SecretFields = { [key: string]: string };
+export type KeyAlias = { [key: string]: string };
+
+export type NodeAttrs = {
+  kwargs: DataFields;
+  secrets: SecretFields;
+  aliases: KeyAlias;
+};
 
 export interface Guardrail {
   id: string;

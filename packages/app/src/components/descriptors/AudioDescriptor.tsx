@@ -6,26 +6,26 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
-import { useThrottleFn } from 'ahooks';
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import { useThrottleFn } from "ahooks";
 
-import { extMap } from 'internal/src/constants/encre';
+import { EXT_MAP } from "internal/src/constants/encre";
 
-import { useAudioRecorder } from '../../hooks/useAudioRecorder';
-import { useStableCallback } from '../../hooks/useStableCallback';
-import { Node, UIContext } from '../../types/studio.type';
-import { UIContextDescriptor } from '../../types/uicontext.type';
-import { formatBytes } from '../../utils/format';
-import { AudioRecorder } from '../AudioRecorder';
-import { Icon } from '../Icon';
+import { useAudioRecorder } from "../../hooks/useAudioRecorder";
+import { useStableCallback } from "../../hooks/useStableCallback";
+import { Node, UIContext } from "../../types/studio.type";
+import { UIContextDescriptor } from "../../types/uicontext.type";
+import { formatBytes } from "../../utils/format";
+import { AudioRecorder } from "../AudioRecorder";
+import { Icon } from "../Icon";
 import {
   LazyAudioVisualizer,
   LazyLiveAudioVisualizer,
-} from '../LazyComponents';
+} from "../LazyComponents";
 
 const Audio = styled.div`
   width: 100%;
@@ -71,10 +71,10 @@ const Audio = styled.div`
 
 /* eslint-disable react/prop-types */
 export const AudioNodeContentBody: FC<
-  { node: Node; id: string } & Extract<UIContext, { type: 'audio' }>
+  { node: Node; id: string } & Extract<UIContext, { type: "audio" }>
 > = memo(({ node, id, mimeType, data }) => {
   const [blob, setBlob] = useState<Blob | undefined>(
-    new Blob([data], { type: mimeType }),
+    new Blob([data], { type: mimeType })
   );
   // const recorder = useAudioRecorder();
 
@@ -85,7 +85,7 @@ export const AudioNodeContentBody: FC<
     (width: number) => {
       setAudioCanvasWidth(width);
     },
-    { wait: 25 },
+    { wait: 25 }
   );
 
   const updateAudioCanvasWidth = useStableCallback((width: number) => {
@@ -145,10 +145,10 @@ export const AudioNodeContentBody: FC<
           barWidth={3}
           gap={2}
           barColor={getComputedStyle(document.documentElement)
-            .getPropertyValue('--text-disabled-color')
+            .getPropertyValue("--text-disabled-color")
             .trim()}
           barPlayedColor={getComputedStyle(document.documentElement)
-            .getPropertyValue('--audio-track-color')
+            .getPropertyValue("--audio-track-color")
             .trim()}
         />
       )}
@@ -156,8 +156,8 @@ export const AudioNodeContentBody: FC<
   );
 });
 
-AudioNodeContentBody.displayName = 'AudioNodeContentBody';
+AudioNodeContentBody.displayName = "AudioNodeContentBody";
 
-export const audioDescriptor: UIContextDescriptor<'audio'> = {
+export const audioDescriptor: UIContextDescriptor<"audio"> = {
   Body: AudioNodeContentBody,
 };
