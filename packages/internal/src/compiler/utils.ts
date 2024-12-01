@@ -18,6 +18,8 @@ export function getExtension(api: CompilerAPI, scriptKind: ts.ScriptKind) {
     case api.ScriptKind.Unknown:
       return "";
     default:
-      throw new Error(`Not implemented ScriptKind: ${api.ScriptKind[scriptKind]}`);
+      throw new Error(
+        `Not implemented ScriptKind: ${api.ScriptKind[scriptKind]}`,
+      );
   }
 }

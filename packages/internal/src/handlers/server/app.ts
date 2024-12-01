@@ -55,14 +55,14 @@ app.method(
 
       const node = await post(
         getServer()!.API_SERVER + `/nodes/${type}/${subType}`,
-        registerArgs ?? {}
+        registerArgs ?? {},
       );
       return node;
     } catch (e) {
       console.error(e);
       return { error: "failed" };
     }
-  }
+  },
 );
 
 app.method("get-node-body", async function ({ node }: { node: Node }): Promise<
@@ -73,7 +73,7 @@ app.method("get-node-body", async function ({ node }: { node: Node }): Promise<
 
     const nodeBody = await post(
       getServer()!.API_SERVER + `/nodes/node-body`,
-      JSON.parse(JSON.stringify(node))
+      JSON.parse(JSON.stringify(node)),
     );
     return nodeBody;
   } catch (e) {
@@ -98,7 +98,7 @@ app.method(
 
       const nodeIODefs = await post(
         getServer()!.API_SERVER + `/nodes/node-io`,
-        { node, connections, nodeMap }
+        { node, connections, nodeMap },
       );
 
       return nodeIODefs;
@@ -106,7 +106,7 @@ app.method(
       console.log(e);
       return { error: "failed" };
     }
-  }
+  },
 );
 
 app.method("get-registry-nodes-type-pairs", async function (): Promise<
@@ -117,7 +117,7 @@ app.method("get-registry-nodes-type-pairs", async function (): Promise<
 
     const typePairs = await get(
       getServer()!.API_SERVER + `/registry/nodes/type-pairs`,
-      {}
+      {},
     );
 
     return JSON.parse(typePairs);
@@ -132,12 +132,12 @@ app.method("get-node-attrs", async function ({ node }: { node: Node }): Promise<
 > {
   try {
     console.log(
-      `get-node-attrs: type: ${node.type} - subtype: ${node.subType}`
+      `get-node-attrs: type: ${node.type} - subtype: ${node.subType}`,
     );
 
     const nodeAttrs = await post(
       getServer()!.API_SERVER + `/nodes/node-attrs`,
-      JSON.parse(JSON.stringify(node))
+      JSON.parse(JSON.stringify(node)),
     );
     return nodeAttrs;
   } catch (e) {
@@ -161,7 +161,7 @@ app.method(
   }): Promise<APIError | void> {
     try {
       const nodeAttrs: APIError | NodeAttrs = await send(
-        "get-registry-nodes-type-pairs"
+        "get-registry-nodes-type-pairs",
       );
       if ((nodeAttrs as APIError)?.error) {
         return { error: "failed" };
@@ -174,11 +174,11 @@ app.method(
         code,
         "typescript",
         ts.ScriptTarget.Latest,
-        scriptKind
+        scriptKind,
       );
     } catch (e) {
       console.log(e);
       return { error: "failed" };
     }
-  }
+  },
 );

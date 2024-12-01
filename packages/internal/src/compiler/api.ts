@@ -5,10 +5,11 @@ import { CompilerAPI } from "./types";
 const compilerTypes: { [name: string]: Promise<CompilerAPI> } = {};
 const compilerTypesLoaded: { [name: string]: true } = {};
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 async function loadCompilerAPI(packageName: CompilerPackageNames) {
   const libFilesPromise = importLibFiles(packageName);
   const compilerApiPromise = importCompilerAPI(packageName);
-  const api = { ...await compilerApiPromise as any as CompilerAPI };
+  const api = { ...((await compilerApiPromise) as any as CompilerAPI) };
 
   api.packageName = packageName;
   api.cachedSourceFiles = {};
@@ -23,14 +24,24 @@ async function loadCompilerAPI(packageName: CompilerPackageNames) {
 
   function getLibSourceFiles() {
     return Object.keys(libFiles)
-      .map((key) => (libFiles as any)[key] as { fileName: string; text: string })
+      .map(
+        (key) => (libFiles as any)[key] as { fileName: string; text: string },
+      )
       .map((libFile) =>
-        api.createSourceFile(libFile.fileName, libFile.text, api.ScriptTarget.Latest, false, api.ScriptKind.TS)
+        api.createSourceFile(
+          libFile.fileName,
+          libFile.text,
+          api.ScriptTarget.Latest,
+          false,
+          api.ScriptKind.TS,
+        ),
       );
   }
 }
 
-export function getCompilerAPI(packageName: CompilerPackageNames): Promise<CompilerAPI> {
+export function getCompilerAPI(
+  packageName: CompilerPackageNames,
+): Promise<CompilerAPI> {
   if (compilerTypes[packageName] == null) {
     compilerTypes[packageName] = loadCompilerAPI(packageName);
     compilerTypes[packageName].catch(() => delete compilerTypes[packageName]);

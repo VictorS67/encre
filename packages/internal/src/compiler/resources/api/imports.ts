@@ -14,7 +14,7 @@ export async function importCompilerAPI(packageName: CompilerPackageNames) {
 export async function importLibFiles(packageName: CompilerPackageNames) {
   switch (packageName) {
     case "typescript":
-      return await import("../libFiles/typescript/index.js");
+      return await import("../libFiles/typescript/index");
     default:
       throw new Error(`no valid version in package: ${packageName}`);
   }

@@ -31,7 +31,7 @@ fi
 yarn webpack --config "$ROOT"/../webpack/webpack.browser.config.js \
   --target "webworker" \
   --output-filename "kcab.worker.$OUTPUT_HASH.js" \
-  --output-chunk-filename "[id].[name].kcab.worker.$OUTPUT_HASH.js" \
+  --output-chunk-filename "[id].kcab.worker.$OUTPUT_HASH.js" \
   --progress \
   $WEBPACK_ARGS
 

@@ -12,7 +12,7 @@ export const validateNodeBody = (
   program: ts.Program,
   checker: ts.TypeChecker,
   encreNode: Node,
-  encreNodeAttrs: NodeAttrs
+  encreNodeAttrs: NodeAttrs,
 ): boolean => {
   if (!sourceFile) {
     return false;
@@ -39,8 +39,8 @@ export const validateNodeBody = (
         property,
         api,
         program,
-        checker
-      )
+        checker,
+      ),
     );
   }
   return true;
@@ -52,7 +52,7 @@ const validateNodeAttribute = (
   node: ts.ObjectLiteralElementLike,
   api: CompilerAPI,
   program: ts.Program,
-  checker: ts.TypeChecker
+  checker: ts.TypeChecker,
 ): boolean => {
   const attrs: string[] = Object.keys(encreNodeAttrs.kwargs);
   if (ts.isShorthandPropertyAssignment(node)) {
@@ -101,7 +101,7 @@ const isHiddenAttribute = (node: ts.PropertyAssignment): boolean => {
 
 const isValidProperty = (
   node: ts.PropertyAssignment,
-  attrs: string[]
+  attrs: string[],
 ): boolean => {
   const allowedProperties = new Set([...attrs, ...HIDDEN_NODE_ATTRS]);
   return (
@@ -119,7 +119,7 @@ const hasInitializer = (node: ts.PropertyAssignment): boolean => {
 const isValidInitializer = (
   node: ts.PropertyAssignment,
   type: DataType,
-  api: CompilerAPI
+  api: CompilerAPI,
 ): boolean => {
   if (!ENCRE_DATA_TYPES.includes(type)) {
     return false;
@@ -139,7 +139,7 @@ const isValidInitializer = (
 const hasValidDataType = (
   node: ts.Expression,
   type: ScalarDataType,
-  api: CompilerAPI
+  api: CompilerAPI,
 ) => {
   switch (type) {
     case "string":
@@ -191,7 +191,7 @@ const isValidObject = (node: ts.Expression, api: CompilerAPI): boolean => {
 
 const isValidJSONObject = (
   node: ts.ObjectLiteralExpression,
-  api: CompilerAPI
+  api: CompilerAPI,
 ): boolean => {
   return node.properties.every((property) => {
     if (!ts.isPropertyAssignment(property)) {
@@ -221,7 +221,7 @@ const isValidJSONKey = (node: ts.PropertyAssignment): boolean => {
 
 const isValidJSONValue = (
   node: ts.PropertyAssignment,
-  api: CompilerAPI
+  api: CompilerAPI,
 ): boolean => {
   if (node.initializer) {
     const isUndefined: boolean =

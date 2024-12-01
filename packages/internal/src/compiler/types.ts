@@ -21,8 +21,8 @@ export interface CompilerAPI {
   TransformFlags: object;
   // Internal enum
   TypeMapKind: object;
-  packageName: CompilerPackageNames,
-  cachedSourceFiles: { [name: string]: ts.SourceFile | undefined },
+  packageName: CompilerPackageNames;
+  cachedSourceFiles: { [name: string]: ts.SourceFile | undefined };
   version: string;
   getLeadingCommentRanges: typeof ts.getLeadingCommentRanges;
   getTrailingCommentRanges: typeof ts.getTrailingCommentRanges;
@@ -32,4 +32,3 @@ export interface BindingTools {
   program: ts.Program;
   checker: ts.TypeChecker;
 }
-

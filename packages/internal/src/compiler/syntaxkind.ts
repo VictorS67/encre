@@ -10,10 +10,13 @@ function getKindCacheForAPI(api: CompilerAPI) {
   return kindCache[api.packageName];
 }
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 function getKindNamesForAPI(api: CompilerAPI) {
   // some SyntaxKinds are repeated, so only use the first one
   const kindNames: { [kind: number]: string } = {};
-  for (const name of Object.keys(api.SyntaxKind).filter((k) => isNaN(parseInt(k, 10)))) {
+  for (const name of Object.keys(api.SyntaxKind).filter((k) =>
+    isNaN(parseInt(k, 10)),
+  )) {
     const value = (api.SyntaxKind as any)[name] as number;
     if (kindNames[value] == null) {
       kindNames[value] = name;
