@@ -1,5 +1,4 @@
-// Import DataType from your types
-import { DataType } from '../types/studio.type';
+import { DataType} from 'packages/internal/src/constants/encre';
 
 // Define CSS variable names for each data type
 const dataTypeCssVariables: Record<DataType, string> = {
