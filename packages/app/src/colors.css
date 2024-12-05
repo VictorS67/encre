@@ -95,6 +95,27 @@ html[data-color-mode="light"] {
   --comment-border-razzmatazz-color: #cf0053;
   --comment-border-silver-color: #757575;
   --comment-border-dark-color: #4d4d4d;
+
+  /* Data Type Colors For Wires */
+  --string-color: #FF5733;
+  --string-array-color: #FF8D33;
+  --number-color: #33FF57;
+  --number-array-color: #33FF8D;
+  --prompt-color: #FFC107;          
+  --prompt-array-color: #FFD54F;
+  --boolean-color: #3357FF;
+  --boolean-array-color: #338DFF;
+  --unknown-color: #8D33FF;
+  --unknown-array-color: #5733FF;
+  --object-color: #FF33A8;
+  --object-array-color: #FF33D1;
+  --blob-color: #FF33F5;
+  --blob-array-color: #D133FF;
+  --context-color: #33FFF5;
+  --context-array-color: #33D1FF;
+  --chat-message-color: #FFAA33;
+  --chat-message-array-color: #FFD433;
+  --multi-datatype-color: #FF00FF;
 }
 
 html[data-color-mode="dark"] {
@@ -194,4 +215,26 @@ html[data-color-mode="dark"] {
   --comment-border-razzmatazz-color: #d10046;
   --comment-border-silver-color: #6c6c6c;
   --comment-border-dark-color: #080808;
+
+
+   /* Data Type Colors For Wires */
+   --string-color: #FF8A65;
+   --string-array-color: #FFAB91;
+   --number-color: #81C784;
+   --number-array-color: #A5D6A7;
+   --prompt-color: #FFA000;          
+   --prompt-array-color: #FFB300;
+   --boolean-color: #64B5F6;
+   --boolean-array-color: #90CAF9;
+   --unknown-color: #f5f4f7;
+   --unknown-array-color: #9575CD;
+   --object-color: #F06292;
+   --object-array-color: #F48FB1;
+   --blob-color: #BA68C8;
+   --blob-array-color: #CE93D8;
+   --context-color: #4DB6AC;
+   --context-array-color: #80CBC4;
+   --chat-message-color: #FFCC80;
+   --chat-message-array-color: #FFE0B2;
+   --multi-datatype-color: #E040FB;
 }

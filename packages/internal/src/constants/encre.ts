@@ -15,7 +15,11 @@ export const dataTypes = [
   "context[]",
   "chat-message",
   "chat-message[]",
-];
+  "prompt",
+  "prompt[]"
+] as const;
+
+export type DataType = typeof dataTypes[number];
 
 export const extMap = {
   "text/plain": "bin",
