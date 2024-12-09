@@ -75,7 +75,7 @@
     "emittery": "^1.0.3",
     "js-tiktoken": "^1.0.7",
     "ml-distance": "^4.0.1",
-    "nanoid": "^5.0.2",
+    "nanoid": "^5.0.9",
     "object-hash": "^3.0.0",
     "openai": "^4.29.2",
     "p-queue": "^7.4.1",
