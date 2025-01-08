@@ -36,6 +36,8 @@ import {
   isJSONInContent,
 } from './utils.js';
 import {
+  checkModalForDeepSeek,
+  checkModalForMoonShot,
   checkModelForOpenAIChat,
   checkModelForOpenAIVision,
   type OpenAIChatCallOptions,
@@ -301,21 +303,6 @@ export class OpenAIChat<
 
     super(fields ?? {});
 
-    this.openAIApiKey =
-      fields?.openAIApiKey ?? getEnvironmentVariables('OPENAI_API_KEY');
-
-    if (!this.openAIApiKey) {
-      throw new Error('OpenAI API Key not found');
-    }
-
-    this.modelName = fields?.modelName ?? this.modelName;
-
-    if (!fields.configuration && !checkModelForOpenAIChat(this.modelName)) {
-      throw new Error(
-        'model is not valid for OpenAIChat, please check openai model lists for chat completions'
-      );
-    }
-
     this.temperature = fields?.temperature ?? this.temperature;
     this.maxTokens = fields?.maxTokens ?? this.maxTokens;
     this.topP = fields?.topP ?? this.topP;
@@ -334,10 +321,6 @@ export class OpenAIChat<
     this.streaming = fields?.streaming ?? this.streaming;
     this.chatMessages = fields?.chatMessages;
 
-    this.organization =
-      fields?.configuration?.organization ??
-      getEnvironmentVariables('OPENAI_ORGANIZATION');
-
     this._clientOptions = {
       apiKey: this.openAIApiKey,
       organization: this.organization,
@@ -348,9 +331,11 @@ export class OpenAIChat<
       ...fields?.configuration,
     };
 
-    if (checkModelForOpenAIVision(this.modelName)) {
-      this._isMultimodal = true;
-    }
+    this._validateModels(
+      fields?.openAIApiKey,
+      fields?.modelName,
+      fields?.configuration
+    );
   }
 
   _llmType(): string {
@@ -424,6 +409,10 @@ export class OpenAIChat<
     messages: BaseMessage[],
     options: this['SerializedCallOptions']
   ): Promise<LLMResult> {
+    if (!this.openAIApiKey) {
+      throw new Error('OpenAIChat API Key not found');
+    }
+
     if (this._isMultimodal) {
       if (this.responseFormatType !== undefined) {
         console.warn(
@@ -1198,6 +1187,49 @@ export class OpenAIChat<
     };
 
     return requestOptions;
+  }
+
+  /**
+   * Validate models from the community (e.g. deepseek, moonshot) which supports OpenAI's API.
+   *
+   * @param apiKey - API key. Models can support specific key names from the environment.
+   * @param modelName - model name.
+   * @param configuration - OpenAI's API configuration.
+   */
+  private _validateModels(
+    apiKey?: string,
+    modelName?: string,
+    configuration?: OpenAIClientOptions | undefined
+  ): void {
+    const _modelName: string | undefined = modelName ?? this.modelName;
+
+    if (checkModelForOpenAIChat(_modelName)) {
+      this.modelName = _modelName;
+      this.openAIApiKey = apiKey ?? getEnvironmentVariables('OPENAI_API_KEY');
+      this.organization =
+        configuration?.organization ??
+        getEnvironmentVariables('OPENAI_ORGANIZATION');
+
+      if (checkModelForOpenAIVision(this.modelName)) {
+        this._isMultimodal = true;
+      }
+    } else if (checkModalForDeepSeek(_modelName)) {
+      this.modelName = _modelName;
+      this.openAIApiKey = apiKey ?? getEnvironmentVariables('DEEPSEEK_API_KEY');
+      console.log(`this.openAIApiKey: ${this.openAIApiKey}`);
+      this._clientOptions.baseURL = 'https://api.deepseek.com/v1';
+      this._isMultimodal = false;
+    } else if (checkModalForMoonShot(_modelName)) {
+      this.modelName = _modelName;
+      this.openAIApiKey = apiKey ?? getEnvironmentVariables('MOONSHOT_API_KEY');
+      this._isMultimodal = false;
+      this._clientOptions.baseURL = 'https://api.moonshot.cn/v1';
+    } else if (!configuration) {
+      throw new Error(
+        'model is not valid for OpenAIChat, please check openai model lists for chat completions'
+      );
+    }
+    this._clientOptions.apiKey = this.openAIApiKey;
   }
 }
 
