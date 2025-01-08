@@ -1216,7 +1216,6 @@ export class OpenAIChat<
     } else if (checkModalForDeepSeek(_modelName)) {
       this.modelName = _modelName;
       this.openAIApiKey = apiKey ?? getEnvironmentVariables('DEEPSEEK_API_KEY');
-      console.log(`this.openAIApiKey: ${this.openAIApiKey}`);
       this._clientOptions.baseURL = 'https://api.deepseek.com/v1';
       this._isMultimodal = false;
     } else if (checkModalForMoonShot(_modelName)) {
