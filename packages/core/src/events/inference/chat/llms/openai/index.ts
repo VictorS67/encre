@@ -359,7 +359,6 @@ export interface OpenAIBaseInput {
   openAIApiKey?: string;
 }
 
-
 /**
  * Configuration for standard OpenAI API input parameters.
  */
@@ -430,6 +429,28 @@ export function checkModelForOpenAIChat(modelName?: string): boolean {
     (modelName.startsWith('gpt-3.5-turbo') || modelName.startsWith('gpt-4')) &&
     !modelName.includes('-instruct')
   );
+}
+
+/**
+ * Checks if a model name is suitable for DeepSeek chat functions.
+ * @param modelName The model name to check.
+ * @returns True if the model is compatible with chat functions.
+ */
+export function checkModalForDeepSeek(modelName?: string): boolean {
+  return (
+    modelName !== undefined &&
+    (modelName.startsWith('deepseek-chat') ||
+      modelName.startsWith('deepseek-code'))
+  );
+}
+
+/**
+ * Checks if a model name is suitable for MoonShot chat functions.
+ * @param modelName The model name to check.
+ * @returns True if the model is compatible with chat functions.
+ */
+export function checkModalForMoonShot(modelName?: string): boolean {
+  return modelName !== undefined && modelName.startsWith('moonshot-v1');
 }
 
 /**

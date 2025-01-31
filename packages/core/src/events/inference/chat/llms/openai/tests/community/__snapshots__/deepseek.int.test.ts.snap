@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DeepSeek test DeepSeek text 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "msgs",
+          "assistant",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "Hello! I'm DeepSeek-V3, an artificial intelligence assistant created by DeepSeek. I'm at your service and would be delighted to assist you with any inquiries or tasks you may have.",
+        },
+        "_type": "constructor",
+      },
+      "output": "Hello! I'm DeepSeek-V3, an artificial intelligence assistant created by DeepSeek. I'm at your service and would be delighted to assist you with any inquiries or tasks you may have.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 41,
+      "promptTokens": 9,
+      "totalTokens": 50,
+    },
+  },
+}
+`;
+
+exports[`DeepSeek test DeepSeek text 2`] = `
+{
+  "completionTokens": 45,
+  "promptTokens": 12,
+  "totalTokens": 57,
+}
+`;
