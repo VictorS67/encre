@@ -437,11 +437,7 @@ export function checkModelForOpenAIChat(modelName?: string): boolean {
  * @returns True if the model is compatible with chat functions.
  */
 export function checkModalForDeepSeek(modelName?: string): boolean {
-  return (
-    modelName !== undefined &&
-    (modelName.startsWith('deepseek-chat') ||
-      modelName.startsWith('deepseek-code'))
-  );
+  return modelName !== undefined && modelName.startsWith('deepseek-');
 }
 
 /**
