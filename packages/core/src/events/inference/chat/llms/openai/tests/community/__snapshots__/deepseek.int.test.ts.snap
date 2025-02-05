@@ -1,6 +1,50 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DeepSeek test DeepSeek text 1`] = `
+exports[`DeepSeek test DeepSeek reasoning (deepseek-r1) 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "finishReason": "stop",
+      },
+      "message": {
+        "_grp": 1,
+        "_id": [
+          "events",
+          "input",
+          "load",
+          "msgs",
+          "assistant",
+          "BotMessage",
+        ],
+        "_kwargs": {
+          "additional_kwargs": {},
+          "content": "Hi! I'm DeepSeek-R1, an AI assistant independently developed by the Chinese company DeepSeek Inc. I'm excited to chat with you and help out!",
+        },
+        "_type": "constructor",
+      },
+      "output": "Hi! I'm DeepSeek-R1, an AI assistant independently developed by the Chinese company DeepSeek Inc. I'm excited to chat with you and help out!",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 72,
+      "promptTokens": 11,
+      "totalTokens": 83,
+    },
+  },
+}
+`;
+
+exports[`DeepSeek test DeepSeek reasoning (deepseek-r1) 2`] = `
+{
+  "completionTokens": 35,
+  "promptTokens": 12,
+  "totalTokens": 47,
+}
+`;
+
+exports[`DeepSeek test DeepSeek text (deepseek-v3) 1`] = `
 {
   "generations": [
     {
@@ -36,7 +80,7 @@ exports[`DeepSeek test DeepSeek text 1`] = `
 }
 `;
 
-exports[`DeepSeek test DeepSeek text 2`] = `
+exports[`DeepSeek test DeepSeek text (deepseek-v3) 2`] = `
 {
   "completionTokens": 45,
   "promptTokens": 12,
