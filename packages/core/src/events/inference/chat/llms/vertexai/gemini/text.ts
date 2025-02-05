@@ -17,18 +17,20 @@ import {
 } from '../../../../../../load/keymap.js';
 import { AsyncCallError } from '../../../../../../utils/asyncCaller.js';
 import { getEnvironmentVariables } from '../../../../../../utils/environment.js';
-import { type Generation, type LLMResult } from '../../../../../output/provide/index.js';
+import {
+  type Generation,
+  type LLMResult,
+} from '../../../../../output/provide/index.js';
 import { BaseLLM, type BaseLLMParams } from '../../../base.js';
 import { type TokenUsage } from '../../../index.js';
 import {
   type VertexAIBaseInput,
   wrapGoogleGenerativeAIClientError,
-
   type GeminiCallOptions,
   type GeminiSafetySetting,
   checkModelForGemini,
-  checkModelForGeminiVision } from '../index.js';
-
+  checkModelForGeminiVision,
+} from '../index.js';
 
 /**
  * Base interface for all Gemini API call parameters, specifying the essential prompt
@@ -75,7 +77,7 @@ export type GeminiTextCandidate = Omit<GenerateContentCandidate, 'content'> & {
  * @example
  * ```typescript
  * const geminiAI = new Gemini({
- *   modelName: 'gemini-pro',
+ *   modelName: 'gemini-1.5-pro',
  *   googleApiKey: 'your-api-key',
  * });
  * const prompt = "Hello, world!";
@@ -106,9 +108,9 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   }
 
   /**
-   * ID of the model to use. Only support `gemini-pro` for now
+   * ID of the model to use. Only support `gemini-1.5-pro` for now
    */
-  modelName = 'gemini-pro';
+  modelName = 'gemini-1.5-pro';
 
   /**
    * The temperature is used for sampling during the response generation,
@@ -122,8 +124,6 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
    * is always selected.
    *
    * Range: 0.0 - 1.0
-   *
-   * Default for gemini-pro: 0.9
    */
   temperature = 0.9;
 
@@ -159,8 +159,6 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
    * potentially longer responses.
    *
    * Range: 1-2048
-   *
-   * Default for gemini-pro: 2048
    */
   maxOutputTokens = 2048;
 
@@ -239,23 +237,16 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
 
     if (!checkModelForGemini(this.modelName)) {
       throw new Error(
-        'model is not valid for Gemini, please change it to `gemini-pro` or `gemini-pro-vision`'
+        'model is not valid for Gemini, please check official model versions website.'
       );
     }
 
     if (checkModelForGeminiVision(this.modelName)) {
-      throw new Error('please use `GeminiChat` for `gemini-pro-vision` model.');
+      throw new Error('please use `GeminiChat` for vision model.');
     }
 
     this.topK = fields?.topK ?? 1;
     this.maxOutputTokens = fields?.maxOutputTokens ?? 2048;
-
-    if (this.maxOutputTokens > 2048) {
-      console.warn(
-        'gemini-pro does not support output token larger than 2048, now using 2048 as maxOutputTokens.'
-      );
-      this.maxOutputTokens = 2048;
-    }
 
     this.temperature = fields?.temperature ?? this.temperature;
     this.topP = fields?.topP ?? this.topP;
@@ -333,7 +324,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
    * @example
    * ```typescript
    * const geminiAI = new Gemini({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * const prompt = "Explain the theory of relativity.";
@@ -550,11 +541,11 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
    * @example
    * ```typescript
    * const geminiAI = new Gemini({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * try {
-   *   const response = await geminiAI.completionWithRetry({ model: 'gemini-pro', prompt: "Hello, world!", stream: false });
+   *   const response = await geminiAI.completionWithRetry({ model: 'gemini-1.5-pro', prompt: "Hello, world!", stream: false });
    *   console.log(response);
    * } catch (error) {
    *   console.error("Failed to fetch response:", error);
@@ -617,7 +608,7 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
    * @example
    * ```
    * const geminiAI = new Gemini({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * const tokenCount = await geminiAI.getNumTokens("Example text for tokenization.");
@@ -658,22 +649,44 @@ export class Gemini<CallOptions extends GeminiCallOptions = GeminiCallOptions>
   }
 
   /**
-   * Retrieves the context size of the specified model, which indicates the maximum number 
+   * Retrieves the context size of the specified model, which indicates the maximum number
    * of tokens that can be considered in one response.
    *
    * @param modelName - The name of the model to query.
    * @returns The number of tokens in the model's context size.
    * @example
    * ```
-   * const contextSize = Gemini.getModelContextSize('gemini-pro');
+   * const contextSize = Gemini.getModelContextSize('gemini-1.5-pro');
    * console.log(contextSize); // Outputs: 32768
    * ```
    */
-  static getModelContextSize(modelName: 'gemini-pro'): number {
-    switch (modelName) {
-      case 'gemini-pro':
-        return 32768;
+  static getModelContextSize(modelName: string): number {
+    if (!checkModelForGemini(modelName)) {
+      throw new Error(
+        'model is not valid for Gemini, please check official model versions website.'
+      );
     }
+
+    if (checkModelForGeminiVision(modelName)) {
+      throw new Error('please use `GeminiChat` for vision model.');
+    }
+
+    if (modelName.includes('flash-thinking')) {
+      return 1048576;
+    } else if (modelName.includes('2.0-flash')) {
+      return 1048576;
+    } else if (modelName.includes('1.5-flash')) {
+      return 1048576;
+    } else if (modelName.includes('1.5-pro')) {
+      return 2097152;
+    } else if (
+      modelName.includes('1.0-pro') ||
+      modelName.includes('gemini-pro')
+    ) {
+      return 32760;
+    }
+
+    throw new Error("no official clarification on model's max input.");
   }
 
   /**

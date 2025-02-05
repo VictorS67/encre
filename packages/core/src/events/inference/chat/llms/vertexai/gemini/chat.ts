@@ -70,7 +70,7 @@ export type GeminiChatParams =
  * @example
  * ```typescript
  * const geminiAI = new GeminiChat({
- *   modelName: 'gemini-pro',
+ *   modelName: 'gemini-1.5-pro',
  *   googleApiKey: 'your-api-key',
  * });
  * const message = new HumanMessage("Hello, world!");
@@ -103,9 +103,9 @@ export class GeminiChat<
   }
 
   /**
-   * ID of the model to use. `gemini-pro` or `gemini-pro-vision`
+   * ID of the model to use.
    */
-  modelName = 'gemini-pro';
+  modelName = 'gemini-1.5-flash';
 
   /**
    * The temperature is used for sampling during the response generation,
@@ -120,9 +120,6 @@ export class GeminiChat<
    *
    * Range: 0.0 - 1.0
    *
-   * Default for gemini-pro: 0.9
-   *
-   * Default for gemini-pro-vision: 0.4
    */
   temperature = 0.9;
 
@@ -159,9 +156,6 @@ export class GeminiChat<
    *
    * Range: 1-2048
    *
-   * Default for gemini-pro: 2048
-   *
-   * Default for gemini-pro-vision: 4096
    */
   maxOutputTokens = 2048;
 
@@ -186,9 +180,6 @@ export class GeminiChat<
    *
    * Range: 1 - 40
    *
-   * Default for gemini-pro: none
-   *
-   * Default for gemini-pro-vision: 32
    */
   topK: number;
 
@@ -251,7 +242,7 @@ export class GeminiChat<
 
     if (!checkModelForGemini(this.modelName)) {
       throw new Error(
-        'model is not valid for Gemini, please change it to `gemini-pro` or `gemini-pro-vision`'
+        'model is not valid for Gemini, please check official model versions website.'
       );
     }
 
@@ -260,23 +251,9 @@ export class GeminiChat<
       this.temperature = 0.4;
       this.topK = fields?.topK ?? 32;
       this.maxOutputTokens = fields?.maxOutputTokens ?? 4096;
-
-      if (this.maxOutputTokens > 4096) {
-        console.warn(
-          'gemini-pro-vision does not support output token larger than 4096, now using 4096 as maxOutputTokens.'
-        );
-        this.maxOutputTokens = 4096;
-      }
     } else {
       this.topK = fields?.topK ?? 1;
       this.maxOutputTokens = fields?.maxOutputTokens ?? 2048;
-
-      if (this.maxOutputTokens > 2048) {
-        console.warn(
-          'gemini-pro does not support output token larger than 2048, now using 2048 as maxOutputTokens.'
-        );
-        this.maxOutputTokens = 2048;
-      }
     }
 
     this.temperature = fields?.temperature ?? this.temperature;
@@ -363,7 +340,7 @@ export class GeminiChat<
    * @example
    * ```typescript
    * const geminiChat = new GeminiChat({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * const messages = [new HumanMessage({ content: "Hello, world!" })];
@@ -383,7 +360,7 @@ export class GeminiChat<
       )
     ) {
       throw new Error(
-        'Message contains Image input but modality is not enabled for gemini-pro, please change it to gemini-pro-vision.'
+        'Message contains Image input but modality is not enabled for text model, please change it to vision model.'
       );
     }
 
@@ -619,7 +596,7 @@ export class GeminiChat<
    * @example
    * ```typescript
    * const geminiChat = new GeminiChat({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    *
@@ -719,19 +696,35 @@ export class GeminiChat<
    * @returns The number of tokens in the model's context size.
    * @example
    * ```typescript
-   * const contextSize = GeminiChat.getModelContextSize('gemini-pro-vision');
+   * const contextSize = GeminiChat.getModelContextSize('gemini-1.0-pro-vision');
    * console.log(contextSize); // Outputs: 16384
    * ```
    */
-  static getModelContextSize(
-    modelName: 'gemini-pro' | 'gemini-pro-vision'
-  ): number {
-    switch (modelName) {
-      case 'gemini-pro':
-        return 32768;
-      case 'gemini-pro-vision':
-        return 16384;
+  static getModelContextSize(modelName: string): number {
+    if (!checkModelForGemini(modelName)) {
+      throw new Error(
+        'model is not valid for Gemini, please check official model versions website.'
+      );
     }
+
+    if (modelName.includes('flash-thinking')) {
+      return 1048576;
+    } else if (modelName.includes('2.0-flash')) {
+      return 1048576;
+    } else if (modelName.includes('1.5-flash')) {
+      return 1048576;
+    } else if (modelName.includes('1.5-pro')) {
+      return 2097152;
+    } else if (
+      modelName.includes('1.0-pro') ||
+      modelName.includes('gemini-pro')
+    ) {
+      return 32760;
+    } else if (modelName.includes('pro-vision')) {
+      return 16384;
+    }
+
+    throw new Error("no official clarification on model's max input.");
   }
 
   /**
@@ -742,7 +735,7 @@ export class GeminiChat<
    * @example
    * ```typescript
    * const geminiChat = new GeminiChat({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * const tokens = await geminiChat.getNumTokensInGenerations(generations);
@@ -766,7 +759,7 @@ export class GeminiChat<
    * @example
    * ```typescript
    * const geminiChat = new GeminiChat({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * const messages = [new HumanMessage({ content: "Hello, world!" })];
@@ -790,7 +783,7 @@ export class GeminiChat<
    * @example
    * ```typescript
    * const geminiChat = new GeminiChat({
-   *   modelName: 'gemini-pro',
+   *   modelName: 'gemini-1.5-pro',
    *   googleApiKey: 'your-api-key',
    * });
    * const contents = [

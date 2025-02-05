@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test Gemini simple text 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "citationMetadata": undefined,
+        "completion": 0,
+        "finishMessage": undefined,
+        "finishReason": "STOP",
+        "safetyRatings": undefined,
+      },
+      "output": "Elara wasn't expecting a magical backpack.  She'd expected, at best, a slightly less-torn one for her first year at the prestigious Whispering Woods Academy for Arcane Arts.  Instead, her grandmother, a woman whose smile lines mapped a lifetime of whispered secrets and potent spells, had presented her with a worn leather satchel, smelling faintly of cinnamon and ozone.
+
+"This," Nana Elara said, her voice low and husky, "is a rucksack of possibilities.  It holds more than meets the eye."
+
+At first, it seemed ordinary.  Elara crammed it with her spellbooks (which were alarmingly heavy), a chipped cauldron, and a half-eaten bag of enchanted gingerbread.  But that evening, as she unpacked in her dorm room, she discovered the truth.  She reached for her quill, expecting it to be nestled among her other supplies, but it wasn't there. Then, she felt a tickle in her pocket.  Her quill, feather perfectly smooth, lay nestled beside a perfectly ripe plum.
+
+The backpack was a bottomless marvel.  It seemed to anticipate her needs.  Missing parchment?  A fresh stack appeared.  Need a specific herb for a potion?  It materialized, perfectly preserved.  Low on ink?  A vial of shimmering, self-replenishing ink magically surfaced.  Even her perpetually empty snack bag – a source of constant frustration – was constantly refilled with Nana Elara’s delectable gingerbread.
+
+However, the backpack had a mischievous streak.  It wasn't just anticipating her needs; it seemed to have a sense of humor, albeit a rather chaotic one.  Once, during a particularly challenging Charms lesson, Elara needed a specific type of glittering beetle wing.  The backpack provided it…along with a small, giggling swarm of identical beetles that buzzed around the professor's head. Another time, needing a quiet place to study, she found herself magically transported – backpack and all – to the top of a giant oak, overlooking the entire academy.
+
+This presented its challenges.  During a crucial potion-making exam, the backpack decided to "help" by producing an alarming array of ingredients – including a squawking rubber chicken and a live, rather indignant, gnome – that delayed her significantly.  Yet, it also provided unexpected solutions.  When her rival, the notoriously skilled Zephyr, accidentally set her cauldron ablaze, the backpack conjured a miniature rain cloud to extinguish the flames, leaving Zephyr sputtering and Elara triumphant.
+
+By the end of the year, Elara had learned to work with her unpredictable companion.  She understood that the backpack wasn't just a magical tool; it was a partner, a chaotic, unpredictable yet ultimately helpful one.  It was a testament to her grandmother's love, a reminder that sometimes, the most unexpected gifts hold the greatest magic, even if they occasionally lead to a little controlled chaos. And as for the gnome?  He became a surprisingly helpful study buddy.
+",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 617,
+      "promptTokens": 8,
+      "totalTokens": 625,
+    },
+  },
+}
+`;
+
+exports[`test Gemini text 1`] = `
+{
+  "generations": [
+    {
+      "info": {
+        "citationMetadata": undefined,
+        "completion": 0,
+        "finishMessage": undefined,
+        "finishReason": "STOP",
+        "safetyRatings": [
+          {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "probability": "NEGLIGIBLE",
+          },
+          {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "probability": "NEGLIGIBLE",
+          },
+        ],
+      },
+      "output": "AI: I am Gemini, a multi-modal AI language model developed by Google. I am designed to help and inform people to the best of my abilities.",
+    },
+  ],
+  "llmOutput": {
+    "tokenUsage": {
+      "completionTokens": 33,
+      "promptTokens": 9,
+      "totalTokens": 42,
+    },
+  },
+}
+`;
