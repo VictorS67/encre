@@ -377,11 +377,7 @@ export interface GeminiInput extends VertexAIBaseInput {
  * @returns True if the model is compatible with Gemini, false otherwise.
  */
 export function checkModelForGemini(modelName?: string): boolean {
-  return (
-    modelName !== undefined &&
-    (modelName.startsWith('gemini-pro') ||
-      modelName.startsWith('gemini-pro-vision'))
-  );
+  return modelName !== undefined && modelName.startsWith('gemini-');
 }
 
 /**
@@ -393,7 +389,7 @@ export function checkModelForGemini(modelName?: string): boolean {
 export function checkModelForGeminiVision(modelName?: string): boolean {
   return (
     modelName !== undefined &&
-    modelName.startsWith('gemini') &&
+    modelName.startsWith('gemini-') &&
     modelName.includes('vision')
   );
 }

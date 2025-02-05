@@ -11,7 +11,7 @@ const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 test('test GeminiChat text', async () => {
   const gemini = new GeminiChat({
     googleApiKey: GOOGLE_API_KEY,
-    modelName: 'gemini-pro',
+    modelName: 'gemini-1.5-pro',
   });
 
   const llmResult = await gemini.invoke([
@@ -24,7 +24,7 @@ test('test GeminiChat text', async () => {
 test('test GeminiChat vision', async () => {
   const gemini = new GeminiChat({
     googleApiKey: GOOGLE_API_KEY,
-    modelName: 'gemini-pro-vision',
+    modelName: 'gemini-1.0-pro-vision',
   });
 
   const filePath: string = path.resolve(
@@ -54,7 +54,7 @@ test('test GeminiChat vision', async () => {
 test('test GeminiChat sexual violation', async () => {
   const gemini = new GeminiChat({
     googleApiKey: GOOGLE_API_KEY,
-    modelName: 'gemini-pro',
+    modelName: 'gemini-1.5-flash',
   });
 
   expect(
@@ -73,5 +73,5 @@ test('test GeminiChat sexual violation', async () => {
         ],
       }
     )
-  ).rejects.toThrow('The message is blocked because of SAFETY');
+  ).rejects.toThrow('No candidates from Gemini response.');
 });
